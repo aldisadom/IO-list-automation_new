@@ -216,7 +216,7 @@ namespace IO_list_automation_new
                 //change location to mouse press location and clear previous dropdown
                 comboboxColumn.Location = new System.Drawing.Point(_mouse.X + tabControl1.Location.X, _mouse.Y + tabControl1.Location.Y);
                 comboboxColumn.Items.Clear();
-                
+
                 string _keyword = string.Empty;
                 string _boxText = string.Empty;
                 int _maxTextLength = -1;
@@ -225,7 +225,7 @@ namespace IO_list_automation_new
                 foreach (GeneralColumn column in columnList)
                 {
                     _keyword = column.GetColumnKeyword();
-                    _boxText = Resources.Remove+": " + column.GetColumnName(_keyword);
+                    _boxText = Resources.Remove + ": " + column.GetColumnName(_keyword);
                     if (_maxTextLength < _boxText.Length)
                         _maxTextLength = _boxText.Length;
 
@@ -256,16 +256,19 @@ namespace IO_list_automation_new
                         comboboxColumn.Items.Add(_boxText + "                             #@" + _keyword);
                     }
                 }
-                comboboxColumn.Width = _maxTextLength *6;
+                comboboxColumn.Width = _maxTextLength * 6;
                 comboboxColumn.Visible = true;
             }
             else if (comboboxColumn.Visible)
-            {
-                Debug _debug = new Debug();
-                _debug.ToFile(Resources.ColumnAddDropDown + ": " + Resources.Hidden, DebugLevels.Minimum, DebugMessageType.Info);
+                HideCombobox();
+        }
 
-                comboboxColumn.Visible = false;
-            }
+        private void HideCombobox()
+        {
+            Debug _debug = new Debug();
+            _debug.ToFile(Resources.ColumnAddDropDown + ": " + Resources.Hidden, DebugLevels.Minimum, DebugMessageType.Info);
+
+            comboboxColumn.Visible = false;
         }
 
         private void DesignGridView_Click(object sender, EventArgs e)
@@ -284,6 +287,11 @@ namespace IO_list_automation_new
         {
             ObjectsClass objects = new ObjectsClass(Progress, ObjectsGridView);
             GridView_Click(sender, e, ObjectsGridView, objects.Columns, objects.BaseColumns);
+        }
+
+        private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            HideCombobox();
         }
 
         /// <summary>
