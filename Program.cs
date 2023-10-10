@@ -83,14 +83,6 @@ namespace IO_list_automation_new
         {
             string _versionNumber = "0.0.1";
 
-            Settings.Default.ExcelColumnChannel = 2;
-            Settings.Default.ExcelColumnModuleName = 1;
-            Settings.Default.ExcelColumnIOText = 3;
-            Settings.Default.ExcelColumnPin = -1;
-            Settings.Default.InputDataChannelHasNumber = true;
-            Settings.Default.ExcelColumnCabinet = -1;
-            Settings.Default.ExcelRowOffset = 3;
-
             Debug _debug = new Debug();
             if (Settings.Default.DebugLevel == (uint)DebugLevels.Development)
                 _debug.ClearDebug();
