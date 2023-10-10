@@ -8,10 +8,10 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace IO_list_automation_new.Properties
-{
-
-
+namespace IO_list_automation_new.Properties {
+    using System;
+    
+    
     /// <summary>
     ///   A strongly-typed resource class, for looking up localized strings, etc.
     /// </summary>
@@ -19,52 +19,719 @@ namespace IO_list_automation_new.Properties
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class Resources
-    {
-
+    internal class Resources {
+        
         private static global::System.Resources.ResourceManager resourceMan;
-
+        
         private static global::System.Globalization.CultureInfo resourceCulture;
-
+        
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal Resources()
-        {
+        internal Resources() {
         }
-
+        
         /// <summary>
         ///   Returns the cached ResourceManager instance used by this class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Resources.ResourceManager ResourceManager
-        {
-            get
-            {
-                if ((resourceMan == null))
-                {
+        internal static global::System.Resources.ResourceManager ResourceManager {
+            get {
+                if (object.ReferenceEquals(resourceMan, null)) {
                     global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("IO_list_automation_new.Properties.Resources", typeof(Resources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
             }
         }
-
+        
         /// <summary>
         ///   Overrides the current thread's CurrentUICulture property for all
         ///   resource lookups using this strongly typed resource class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Globalization.CultureInfo Culture
-        {
-            get
-            {
+        internal static global::System.Globalization.CultureInfo Culture {
+            get {
                 return resourceCulture;
             }
-            set
-            {
+            set {
                 resourceCulture = value;
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Add.
+        /// </summary>
+        internal static string Add {
+            get {
+                return ResourceManager.GetString("Add", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Button was pressed.
+        /// </summary>
+        internal static string ButtonPressed {
+            get {
+                return ResourceManager.GetString("ButtonPressed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Canceled.
+        /// </summary>
+        internal static string Canceled {
+            get {
+                return ResourceManager.GetString("Canceled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Height changed.
+        /// </summary>
+        internal static string ChangeHeight {
+            get {
+                return ResourceManager.GetString("ChangeHeight", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Width changed.
+        /// </summary>
+        internal static string ChangeWidth {
+            get {
+                return ResourceManager.GetString("ChangeWidth", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Column.
+        /// </summary>
+        internal static string Column {
+            get {
+                return ResourceManager.GetString("Column", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Column add drop down.
+        /// </summary>
+        internal static string ColumnAddDropDown {
+            get {
+                return ResourceManager.GetString("ColumnAddDropDown", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cabinet.
+        /// </summary>
+        internal static string ColumnCabinet {
+            get {
+                return ResourceManager.GetString("ColumnCabinet", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cable.
+        /// </summary>
+        internal static string ColumnCable {
+            get {
+                return ResourceManager.GetString("ColumnCable", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Changed.
+        /// </summary>
+        internal static string ColumnChanged {
+            get {
+                return ResourceManager.GetString("ColumnChanged", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Channel.
+        /// </summary>
+        internal static string ColumnChannel {
+            get {
+                return ResourceManager.GetString("ColumnChannel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to CPU.
+        /// </summary>
+        internal static string ColumnCPU {
+            get {
+                return ResourceManager.GetString("ColumnCPU", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to False Text.
+        /// </summary>
+        internal static string ColumnFalseText {
+            get {
+                return ResourceManager.GetString("ColumnFalseText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Function.
+        /// </summary>
+        internal static string ColumnFunction {
+            get {
+                return ResourceManager.GetString("ColumnFunction", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Function Text.
+        /// </summary>
+        internal static string ColumnFunctionText {
+            get {
+                return ResourceManager.GetString("ColumnFunctionText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ID.
+        /// </summary>
+        internal static string ColumnID {
+            get {
+                return ResourceManager.GetString("ColumnID", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to IO Text.
+        /// </summary>
+        internal static string ColumnIOText {
+            get {
+                return ResourceManager.GetString("ColumnIOText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to KKS.
+        /// </summary>
+        internal static string ColumnKKS {
+            get {
+                return ResourceManager.GetString("ColumnKKS", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to KKS Device.
+        /// </summary>
+        internal static string ColumnKKSDevice {
+            get {
+                return ResourceManager.GetString("ColumnKKSDevice", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to KKS Function.
+        /// </summary>
+        internal static string ColumnKKSFunction {
+            get {
+                return ResourceManager.GetString("ColumnKKSFunction", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to KKS Location.
+        /// </summary>
+        internal static string ColumnKKSLocation {
+            get {
+                return ResourceManager.GetString("ColumnKKSLocation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to KKS Plant.
+        /// </summary>
+        internal static string ColumnKKSPlant {
+            get {
+                return ResourceManager.GetString("ColumnKKSPlant", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Module Name.
+        /// </summary>
+        internal static string ColumnModuleName {
+            get {
+                return ResourceManager.GetString("ColumnModuleName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Object Detalisation.
+        /// </summary>
+        internal static string ColumnObjectDetalisation {
+            get {
+                return ResourceManager.GetString("ColumnObjectDetalisation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Object Name.
+        /// </summary>
+        internal static string ColumnObjectName {
+            get {
+                return ResourceManager.GetString("ColumnObjectName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Object Type.
+        /// </summary>
+        internal static string ColumnObjectType {
+            get {
+                return ResourceManager.GetString("ColumnObjectType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Operative.
+        /// </summary>
+        internal static string ColumnOperative {
+            get {
+                return ResourceManager.GetString("ColumnOperative", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Page.
+        /// </summary>
+        internal static string ColumnPage {
+            get {
+                return ResourceManager.GetString("ColumnPage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Pin.
+        /// </summary>
+        internal static string ColumnPin {
+            get {
+                return ResourceManager.GetString("ColumnPin", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Range Max.
+        /// </summary>
+        internal static string ColumnRangeMax {
+            get {
+                return ResourceManager.GetString("ColumnRangeMax", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Range Min.
+        /// </summary>
+        internal static string ColumnRangeMin {
+            get {
+                return ResourceManager.GetString("ColumnRangeMin", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Revision.
+        /// </summary>
+        internal static string ColumnRevision {
+            get {
+                return ResourceManager.GetString("ColumnRevision", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Terminal.
+        /// </summary>
+        internal static string ColumnTerminal {
+            get {
+                return ResourceManager.GetString("ColumnTerminal", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to True Text.
+        /// </summary>
+        internal static string ColumnTrueText {
+            get {
+                return ResourceManager.GetString("ColumnTrueText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Units.
+        /// </summary>
+        internal static string ColumnUnits {
+            get {
+                return ResourceManager.GetString("ColumnUnits", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Used.
+        /// </summary>
+        internal static string ColumnUsed {
+            get {
+                return ResourceManager.GetString("ColumnUsed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Do you really whant to exit?.
+        /// </summary>
+        internal static string ConfirmExit {
+            get {
+                return ResourceManager.GetString("ConfirmExit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Created.
+        /// </summary>
+        internal static string Created {
+            get {
+                return ResourceManager.GetString("Created", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Current debug level is set to.
+        /// </summary>
+        internal static string CurrentDebugLevel {
+            get {
+                return ResourceManager.GetString("CurrentDebugLevel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Extract data from excel file error, requested column is out of bound.
+        /// </summary>
+        internal static string DataReadFailBounds {
+            get {
+                return ResourceManager.GetString("DataReadFailBounds", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Extract data from excel file error, this format of cell is not implemented.
+        /// </summary>
+        internal static string DataReadFailFormat {
+            get {
+                return ResourceManager.GetString("DataReadFailFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ALARM.
+        /// </summary>
+        internal static string DebugAlarm {
+            get {
+                return ResourceManager.GetString("DebugAlarm", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to CRIT.
+        /// </summary>
+        internal static string DebugCritical {
+            get {
+                return ResourceManager.GetString("DebugCritical", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Debug level.
+        /// </summary>
+        internal static string DebugLevel {
+            get {
+                return ResourceManager.GetString("DebugLevel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Development.
+        /// </summary>
+        internal static string DebugLevelDevelopment {
+            get {
+                return ResourceManager.GetString("DebugLevelDevelopment", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to High.
+        /// </summary>
+        internal static string DebugLevelHigh {
+            get {
+                return ResourceManager.GetString("DebugLevelHigh", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Medium.
+        /// </summary>
+        internal static string DebugLevelMedium {
+            get {
+                return ResourceManager.GetString("DebugLevelMedium", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Minimum.
+        /// </summary>
+        internal static string DebugLevelMinimum {
+            get {
+                return ResourceManager.GetString("DebugLevelMinimum", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Off.
+        /// </summary>
+        internal static string DebugLevelNone {
+            get {
+                return ResourceManager.GetString("DebugLevelNone", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to WARN.
+        /// </summary>
+        internal static string DebugWarning {
+            get {
+                return ResourceManager.GetString("DebugWarning", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Software is in early release, use with caution.
+        /// </summary>
+        internal static string EarlyReleaseWarning {
+            get {
+                return ResourceManager.GetString("EarlyReleaseWarning", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Extract data from design signals.
+        /// </summary>
+        internal static string ExtractDataFromDesign {
+            get {
+                return ResourceManager.GetString("ExtractDataFromDesign", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to File sellection canceled.
+        /// </summary>
+        internal static string FileSellectCanceled {
+            get {
+                return ResourceManager.GetString("FileSellectCanceled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Finished.
+        /// </summary>
+        internal static string Finished {
+            get {
+                return ResourceManager.GetString("Finished", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Function finished.
+        /// </summary>
+        internal static string FunctionFinished {
+            get {
+                return ResourceManager.GetString("FunctionFinished", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Getting data to grid.
+        /// </summary>
+        internal static string GetDataFromGrid {
+            get {
+                return ResourceManager.GetString("GetDataFromGrid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Hidden.
+        /// </summary>
+        internal static string Hidden {
+            get {
+                return ResourceManager.GetString("Hidden", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to KKS from 4 parts are combined.
+        /// </summary>
+        internal static string KKSCombine {
+            get {
+                return ResourceManager.GetString("KKSCombine", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Loading data from file.
+        /// </summary>
+        internal static string LoadDataFromFile {
+            get {
+                return ResourceManager.GetString("LoadDataFromFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to There is no valid data in grid.
+        /// </summary>
+        internal static string NoDataGrid {
+            get {
+                return ResourceManager.GetString("NoDataGrid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to File does not exist.
+        /// </summary>
+        internal static string NoFile {
+            get {
+                return ResourceManager.GetString("NoFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Function does not exist.
+        /// </summary>
+        internal static string NoFunction {
+            get {
+                return ResourceManager.GetString("NoFunction", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No data to paste.
+        /// </summary>
+        internal static string NoPasteData {
+            get {
+                return ResourceManager.GetString("NoPasteData", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Parameter not found when parsing.
+        /// </summary>
+        internal static string ParameterNotFound {
+            get {
+                return ResourceManager.GetString("ParameterNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Paste at.
+        /// </summary>
+        internal static string PasteAt {
+            get {
+                return ResourceManager.GetString("PasteAt", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Paste data.
+        /// </summary>
+        internal static string PasteData {
+            get {
+                return ResourceManager.GetString("PasteData", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Importing design file.
+        /// </summary>
+        internal static string ProgressBarDesignImport {
+            get {
+                return ResourceManager.GetString("ProgressBarDesignImport", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Progress bar value is out of range.
+        /// </summary>
+        internal static string ProgressBarOutRange {
+            get {
+                return ResourceManager.GetString("ProgressBarOutRange", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Putting data to grid.
+        /// </summary>
+        internal static string PutDataToGrid {
+            get {
+                return ResourceManager.GetString("PutDataToGrid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Remove.
+        /// </summary>
+        internal static string Remove {
+            get {
+                return ResourceManager.GetString("Remove", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Row.
+        /// </summary>
+        internal static string Row {
+            get {
+                return ResourceManager.GetString("Row", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Saving data to file.
+        /// </summary>
+        internal static string SaveDataToFile {
+            get {
+                return ResourceManager.GetString("SaveDataToFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Software is started, version is.
+        /// </summary>
+        internal static string SoftwareStart {
+            get {
+                return ResourceManager.GetString("SoftwareStart", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to To much data to paste.
+        /// </summary>
+        internal static string ToMuchDataPaste {
+            get {
+                return ResourceManager.GetString("ToMuchDataPaste", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Value.
+        /// </summary>
+        internal static string Value {
+            get {
+                return ResourceManager.GetString("Value", resourceCulture);
             }
         }
     }

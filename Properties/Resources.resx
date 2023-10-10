@@ -46,7 +46,7 @@
     
     mimetype: application/x-microsoft.net.object.binary.base64
     value   : The object must be serialized with 
-            : System.Serialization.Formatters.Binary.BinaryFormatter
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
             : and then encoded with base64 encoding.
     
     mimetype: application/x-microsoft.net.object.soap.base64
@@ -60,6 +60,7 @@
             : and then encoded with base64 encoding.
     -->
   <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
     <xsd:element name="root" msdata:IsDataSet="true">
       <xsd:complexType>
         <xsd:choice maxOccurs="unbounded">
@@ -68,9 +69,10 @@
               <xsd:sequence>
                 <xsd:element name="value" type="xsd:string" minOccurs="0" />
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" />
+              <xsd:attribute name="name" use="required" type="xsd:string" />
               <xsd:attribute name="type" type="xsd:string" />
               <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="assembly">
@@ -85,9 +87,10 @@
                 <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
                 <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" msdata:Ordinal="1" />
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
               <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
               <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="resheader">
@@ -109,9 +112,234 @@
     <value>2.0</value>
   </resheader>
   <resheader name="reader">
-    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <resheader name="writer">
-    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="ButtonPressed" xml:space="preserve">
+    <value>Button was pressed</value>
+  </data>
+  <data name="ChangeHeight" xml:space="preserve">
+    <value>Height changed</value>
+  </data>
+  <data name="ChangeWidth" xml:space="preserve">
+    <value>Width changed</value>
+  </data>
+  <data name="ColumnFunction" xml:space="preserve">
+    <value>Function</value>
+  </data>
+  <data name="ColumnFunctionText" xml:space="preserve">
+    <value>Function Text</value>
+  </data>
+  <data name="ColumnKKSDevice" xml:space="preserve">
+    <value>KKS Device</value>
+  </data>
+  <data name="ColumnKKSFunction" xml:space="preserve">
+    <value>KKS Function</value>
+  </data>
+  <data name="ColumnKKSLocation" xml:space="preserve">
+    <value>KKS Location</value>
+  </data>
+  <data name="ColumnKKSPlant" xml:space="preserve">
+    <value>KKS Plant</value>
+  </data>
+  <data name="ColumnObjectDetalisation" xml:space="preserve">
+    <value>Object Detalisation</value>
+  </data>
+  <data name="ColumnObjectName" xml:space="preserve">
+    <value>Object Name</value>
+  </data>
+  <data name="ColumnObjectType" xml:space="preserve">
+    <value>Object Type</value>
+  </data>
+  <data name="ColumnOperative" xml:space="preserve">
+    <value>Operative</value>
+  </data>
+  <data name="ColumnUsed" xml:space="preserve">
+    <value>Used</value>
+  </data>
+  <data name="Column" xml:space="preserve">
+    <value>Column</value>
+  </data>
+  <data name="ColumnCabinet" xml:space="preserve">
+    <value>Cabinet</value>
+  </data>
+  <data name="ColumnCable" xml:space="preserve">
+    <value>Cable</value>
+  </data>
+  <data name="ColumnChanged" xml:space="preserve">
+    <value>Changed</value>
+  </data>
+  <data name="ColumnChannel" xml:space="preserve">
+    <value>Channel</value>
+  </data>
+  <data name="ColumnCPU" xml:space="preserve">
+    <value>CPU</value>
+  </data>
+  <data name="ColumnFalseText" xml:space="preserve">
+    <value>False Text</value>
+  </data>
+  <data name="ColumnID" xml:space="preserve">
+    <value>ID</value>
+  </data>
+  <data name="ColumnIOText" xml:space="preserve">
+    <value>IO Text</value>
+  </data>
+  <data name="ColumnKKS" xml:space="preserve">
+    <value>KKS</value>
+  </data>
+  <data name="ColumnModuleName" xml:space="preserve">
+    <value>Module Name</value>
+  </data>
+  <data name="ColumnPage" xml:space="preserve">
+    <value>Page</value>
+  </data>
+  <data name="ColumnPin" xml:space="preserve">
+    <value>Pin</value>
+  </data>
+  <data name="ColumnRangeMax" xml:space="preserve">
+    <value>Range Max</value>
+  </data>
+  <data name="ColumnRangeMin" xml:space="preserve">
+    <value>Range Min</value>
+  </data>
+  <data name="ColumnRevision" xml:space="preserve">
+    <value>Revision</value>
+  </data>
+  <data name="ColumnTrueText" xml:space="preserve">
+    <value>True Text</value>
+  </data>
+  <data name="ColumnUnits" xml:space="preserve">
+    <value>Units</value>
+  </data>
+  <data name="CurrentDebugLevel" xml:space="preserve">
+    <value>Current debug level is set to</value>
+  </data>
+  <data name="DebugAlarm" xml:space="preserve">
+    <value>ALARM</value>
+  </data>
+  <data name="DebugCritical" xml:space="preserve">
+    <value>CRIT</value>
+  </data>
+  <data name="DebugLevel" xml:space="preserve">
+    <value>Debug level</value>
+  </data>
+  <data name="DebugLevelDevelopment" xml:space="preserve">
+    <value>Development</value>
+  </data>
+  <data name="DebugLevelHigh" xml:space="preserve">
+    <value>High</value>
+  </data>
+  <data name="DebugLevelMedium" xml:space="preserve">
+    <value>Medium</value>
+  </data>
+  <data name="DebugLevelMinimum" xml:space="preserve">
+    <value>Minimum</value>
+  </data>
+  <data name="DebugLevelNone" xml:space="preserve">
+    <value>Off</value>
+  </data>
+  <data name="DebugWarning" xml:space="preserve">
+    <value>WARN</value>
+  </data>
+  <data name="EarlyReleaseWarning" xml:space="preserve">
+    <value>Software is in early release, use with caution</value>
+  </data>
+  <data name="FileSellectCanceled" xml:space="preserve">
+    <value>File sellection canceled</value>
+  </data>
+  <data name="FunctionFinished" xml:space="preserve">
+    <value>Function finished</value>
+  </data>
+  <data name="GetDataFromGrid" xml:space="preserve">
+    <value>Getting data to grid</value>
+  </data>
+  <data name="LoadDataFromFile" xml:space="preserve">
+    <value>Loading data from file</value>
+  </data>
+  <data name="NoDataGrid" xml:space="preserve">
+    <value>There is no valid data in grid</value>
+  </data>
+  <data name="NoFunction" xml:space="preserve">
+    <value>Function does not exist</value>
+  </data>
+  <data name="ParameterNotFound" xml:space="preserve">
+    <value>Parameter not found when parsing</value>
+  </data>
+  <data name="ProgressBarDesignImport" xml:space="preserve">
+    <value>Importing design file</value>
+  </data>
+  <data name="ProgressBarOutRange" xml:space="preserve">
+    <value>Progress bar value is out of range</value>
+  </data>
+  <data name="PutDataToGrid" xml:space="preserve">
+    <value>Putting data to grid</value>
+  </data>
+  <data name="Row" xml:space="preserve">
+    <value>Row</value>
+  </data>
+  <data name="SaveDataToFile" xml:space="preserve">
+    <value>Saving data to file</value>
+  </data>
+  <data name="SoftwareStart" xml:space="preserve">
+    <value>Software is started, version is</value>
+  </data>
+  <data name="Value" xml:space="preserve">
+    <value>Value</value>
+  </data>
+  <data name="Add" xml:space="preserve">
+    <value>Add</value>
+  </data>
+  <data name="Canceled" xml:space="preserve">
+    <value>Canceled</value>
+  </data>
+  <data name="ColumnAddDropDown" xml:space="preserve">
+    <value>Column add drop down</value>
+  </data>
+  <data name="ColumnTerminal" xml:space="preserve">
+    <value>Terminal</value>
+  </data>
+  <data name="ConfirmExit" xml:space="preserve">
+    <value>Do you really whant to exit?</value>
+  </data>
+  <data name="Created" xml:space="preserve">
+    <value>Created</value>
+  </data>
+  <data name="DataReadFailBounds" xml:space="preserve">
+    <value>Extract data from excel file error, requested column is out of bound</value>
+  </data>
+  <data name="DataReadFailFormat" xml:space="preserve">
+    <value>Extract data from excel file error, this format of cell is not implemented</value>
+  </data>
+  <data name="ExtractDataFromDesign" xml:space="preserve">
+    <value>Extract data from design signals</value>
+  </data>
+  <data name="Finished" xml:space="preserve">
+    <value>Finished</value>
+  </data>
+  <data name="Hidden" xml:space="preserve">
+    <value>Hidden</value>
+  </data>
+  <data name="KKSCombine" xml:space="preserve">
+    <value>KKS from 4 parts are combined</value>
+  </data>
+  <data name="NoFile" xml:space="preserve">
+    <value>File does not exist</value>
+  </data>
+  <data name="NoPasteData" xml:space="preserve">
+    <value>No data to paste</value>
+  </data>
+  <data name="PasteAt" xml:space="preserve">
+    <value>Paste at</value>
+  </data>
+  <data name="PasteData" xml:space="preserve">
+    <value>Paste data</value>
+  </data>
+  <data name="Remove" xml:space="preserve">
+    <value>Remove</value>
+  </data>
+  <data name="ToMuchDataPaste" xml:space="preserve">
+    <value>To much data to paste</value>
+  </data>
 </root>
