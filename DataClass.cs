@@ -24,34 +24,36 @@ namespace IO_list_automation_new
 {
     internal class DataSignal : GeneralSignal
     {
-        private string CPU { get; set; }
-        private string Operative { get; set; }
-        private string KKS { get; set; }
-        private string KKSPlant { get; set; }
-        private string KKSLocation { get; set; }
-        private string KKSDevice { get; set; }
-        private string KKSFunction { get; set; }
-        private string Used { get; set; }
-        private string ObjectType { get; set; }
-        private string RangeMin { get; set; }
-        private string RangeMax { get; set; }
-        private string Units { get; set; }
-        private string FalseText { get; set; }
-        private string TrueText { get; set; }
-        private string Revision { get; set; }
-        private string Cable { get; set; }
-        private string Cabinet { get; set; }
-        private string ModuleName { get; set; }
-        private string Pin { get; set; }
-        private string Channel { get; set; }
-        private string IOText { get; set; }
-        private string ObjectName { get; set; }
-        private string ObjectDetalisation { get; set; }
-        private string FunctionText { get; set; }
-        private string Function { get; set; }
-        private string Page { get; set; }
-        private string Changed { get; set; }
-        private string Terminal { get; set; }
+        public string ID { get; private set; }
+        public string CPU { get; private set; }
+        public string Operative { get; private set; }
+        public string KKS { get; private set; }
+        public string KKSPlant { get; private set; }
+        public string KKSLocation { get; private set; }
+        public string KKSDevice { get; private set; }
+        public string KKSFunction { get; private set; }
+        public string Used { get; private set; }
+        public string ObjectType { get; private set; }
+        public string RangeMin { get; private set; }
+        public string RangeMax { get; private set; }
+        public string Units { get; private set; }
+        public string FalseText { get; private set; }
+        public string TrueText { get; private set; }
+        public string Revision { get; private set; }
+        public string Cable { get; private set; }
+        public string Cabinet { get; private set; }
+        public string ModuleName { get; private set; }
+        public string Pin { get; private set; }
+        public string Channel { get; private set; }
+        public string IOText { get; private set; }
+        public string ObjectName { get; private set; }
+        public string ObjectDetalisation { get; private set; }
+        public string FunctionText { get; private set; }
+        public string Function { get; private set; }
+        public string Page { get; private set; }
+        public string Changed { get; private set; }
+        public string Terminal { get; private set; }
+        public string Tag { get; private set; }
 
         public DataSignal() : base()
         {
@@ -83,6 +85,7 @@ namespace IO_list_automation_new
             FunctionText = string.Empty;
             Function = string.Empty;
             Terminal = string.Empty;
+            Tag = string.Empty;
         }
         
         /// <summary>
@@ -94,92 +97,95 @@ namespace IO_list_automation_new
         {
             switch (parameterName)
             {
-                case Const.ColumnNameID:
-                    SetID(value);
+                case ConstCol.ColumnNameID:
+                    ID = value;
                     break;
-                case Const.ColumnNameCPU:
+                case ConstCol.ColumnNameCPU:
                     CPU = value;
                     break;
-                case Const.ColumnNameKKS:
+                case ConstCol.ColumnNameKKS:
                     KKS = value;
                     break;
-                case Const.ColumnNameRangeMin:
+                case ConstCol.ColumnNameRangeMin:
                     RangeMin = value;
                     break;
-                case Const.ColumnNameRangeMax:
+                case ConstCol.ColumnNameRangeMax:
                     RangeMax = value;
                     break;
-                case Const.ColumnNameUnits:
+                case ConstCol.ColumnNameUnits:
                     Units = value;
                     break;
-                case Const.ColumnNameFalseText:
+                case ConstCol.ColumnNameFalseText:
                     FalseText = value;
                     break;
-                case Const.ColumnNameTrueText:
+                case ConstCol.ColumnNameTrueText:
                     TrueText = value;
                     break;
-                case Const.ColumnNameRevision:
+                case ConstCol.ColumnNameRevision:
                     Revision = value;
                     break;
-                case Const.ColumnNameCable:
+                case ConstCol.ColumnNameCable:
                     Cable = value;
                     break;
-                case Const.ColumnNameCabinet:
+                case ConstCol.ColumnNameCabinet:
                     Cabinet = value;
                     break;
-                case Const.ColumnNameModuleName:
+                case ConstCol.ColumnNameModuleName:
                     ModuleName = value;
                     break;
-                case Const.ColumnNamePin:
+                case ConstCol.ColumnNamePin:
                     Pin = value;
                     break;
-                case Const.ColumnNameChannel:
+                case ConstCol.ColumnNameChannel:
                     Channel = value;
                     break;
-                case Const.ColumnNameIOText:
+                case ConstCol.ColumnNameIOText:
                     IOText = value;
                     break;
-                case Const.ColumnNamePage:
+                case ConstCol.ColumnNamePage:
                     Page = value;
                     break;
-                case Const.ColumnNameChanged:
+                case ConstCol.ColumnNameChanged:
                     Changed = value;
                     break;
-                case Const.ColumnNameOperative:
+                case ConstCol.ColumnNameOperative:
                     Operative = value;
                     break;
-                case Const.ColumnNameKKSPlant:
+                case ConstCol.ColumnNameKKSPlant:
                     KKSPlant = value;
                     break;
-                case Const.ColumnNameKKSLocation:
+                case ConstCol.ColumnNameKKSLocation:
                     KKSLocation = value;
                     break;
-                case Const.ColumnNameKKSDevice:
+                case ConstCol.ColumnNameKKSDevice:
                     KKSDevice = value;
                     break;
-                case Const.ColumnNameKKSFunction:
+                case ConstCol.ColumnNameKKSFunction:
                     KKSFunction = value;
                     break;
-                case Const.ColumnNameUsed:
+                case ConstCol.ColumnNameUsed:
                     Used = value;
                     break;
-                case Const.ColumnNameObjectType:
+                case ConstCol.ColumnNameObjectType:
                     ObjectType = value;
                     break;
-                case Const.ColumnNameObjectName:
+                case ConstCol.ColumnNameObjectName:
                     ObjectName = value;
                     break;
-                case Const.ColumnNameObjectDetalisation:
+                case ConstCol.ColumnNameObjectDetalisation:
                     ObjectDetalisation = value;
                     break;
-                case Const.ColumnNameFunctionText:
+                case ConstCol.ColumnNameFunctionText:
                     FunctionText = value;
                     break;
-                case Const.ColumnNameFunction:
+                case ConstCol.ColumnNameFunction:
                     Function = value;
                     break;
-                case Const.ColumnNameTerminal:
+                case ConstCol.ColumnNameTerminal:
                     Terminal = value;
+                    break;
+                case ConstCol.ColumnNameTag:
+                    Tag = value;
                     break;
             }
         }
@@ -195,92 +201,95 @@ namespace IO_list_automation_new
             string _returnValue = string.Empty;
             switch (parameterName)
             {
-                case Const.ColumnNameID:
-                    _returnValue = GetID();
+                case ConstCol.ColumnNameID:
+                    _returnValue = ID;
                     break;
-                case Const.ColumnNameCPU:
+                case ConstCol.ColumnNameCPU:
                     _returnValue = CPU;
                     break;
-                case Const.ColumnNameKKS:
+                case ConstCol.ColumnNameKKS:
                     _returnValue = KKS;
                     break;
-                case Const.ColumnNameRangeMin:
+                case ConstCol.ColumnNameRangeMin:
                     _returnValue = RangeMin;
                     break;
-                case Const.ColumnNameRangeMax:
+                case ConstCol.ColumnNameRangeMax:
                     _returnValue = RangeMax;
                     break;
-                case Const.ColumnNameUnits:
+                case ConstCol.ColumnNameUnits:
                     _returnValue = Units;
                     break;
-                case Const.ColumnNameFalseText:
+                case ConstCol.ColumnNameFalseText:
                     _returnValue = FalseText;
                     break;
-                case Const.ColumnNameTrueText:
+                case ConstCol.ColumnNameTrueText:
                     _returnValue = TrueText;
                     break;
-                case Const.ColumnNameRevision:
+                case ConstCol.ColumnNameRevision:
                     _returnValue = Revision;
                     break;
-                case Const.ColumnNameCable:
+                case ConstCol.ColumnNameCable:
                     _returnValue = Cable;
                     break;
-                case Const.ColumnNameCabinet:
+                case ConstCol.ColumnNameCabinet:
                     _returnValue = Cabinet;
                     break;
-                case Const.ColumnNameModuleName:
+                case ConstCol.ColumnNameModuleName:
                     _returnValue = ModuleName;
                     break;
-                case Const.ColumnNamePin:
+                case ConstCol.ColumnNamePin:
                     _returnValue = Pin;
                     break;
-                case Const.ColumnNameChannel:
+                case ConstCol.ColumnNameChannel:
                     _returnValue = Channel;
                     break;
-                case Const.ColumnNameIOText:
+                case ConstCol.ColumnNameIOText:
                     _returnValue = IOText;
                     break;
-                case Const.ColumnNamePage:
+                case ConstCol.ColumnNamePage:
                     _returnValue = Page;
                     break;
-                case Const.ColumnNameChanged:
+                case ConstCol.ColumnNameChanged:
                     _returnValue = Changed;
                     break;
-                case Const.ColumnNameOperative:
+                case ConstCol.ColumnNameOperative:
                     _returnValue = Operative;
                     break;
-                case Const.ColumnNameKKSPlant:
+                case ConstCol.ColumnNameKKSPlant:
                     _returnValue = KKSPlant ;
                     break;
-                case Const.ColumnNameKKSLocation:
+                case ConstCol.ColumnNameKKSLocation:
                     _returnValue = KKSLocation;
                     break;
-                case Const.ColumnNameKKSDevice:
+                case ConstCol.ColumnNameKKSDevice:
                     _returnValue = KKSDevice;
                     break;
-                case Const.ColumnNameKKSFunction:
+                case ConstCol.ColumnNameKKSFunction:
                     _returnValue = KKSFunction;
                     break;
-                case Const.ColumnNameUsed:
+                case ConstCol.ColumnNameUsed:
                     _returnValue = Used;
                     break;
-                case Const.ColumnNameObjectType:
+                case ConstCol.ColumnNameObjectType:
                     _returnValue = ObjectType;
                     break;
-                case Const.ColumnNameObjectName:
+                case ConstCol.ColumnNameObjectName:
                     _returnValue = ObjectName;
                     break;
-                case Const.ColumnNameObjectDetalisation:
+                case ConstCol.ColumnNameObjectDetalisation:
                     _returnValue = ObjectDetalisation;
                     break;
-                case Const.ColumnNameFunctionText:
+                case ConstCol.ColumnNameFunctionText:
                     _returnValue = FunctionText;
                     break;
-                case Const.ColumnNameFunction:
+                case ConstCol.ColumnNameFunction:
                     _returnValue = Function;
                     break;
-                case Const.ColumnNameTerminal:
+                case ConstCol.ColumnNameTerminal:
                     _returnValue = Terminal;
+                    break;
+                case ConstCol.ColumnNameTag:
+                    _returnValue = Tag;
                     break;
                 default:
                     if (!supressError)
@@ -293,31 +302,10 @@ namespace IO_list_automation_new
             return _returnValue;
         }
 
-        public string GetKKS()
-        {
-            return KKS;
-        }
-
-        public string GetKKSPlant()
-        {
-            return KKSPlant;
-        }
-
-        public string GetKKSLocation()
-        {
-            return KKSLocation;
-        }
-
-        public string GetKKSDevice()
-        {
-            return KKSDevice;
-        }
-
-        public string GetKKSFunction()
-        {
-            return KKSFunction;
-        }
-
+        /// <summary>
+        /// Checks if at least one KKS part has value
+        /// </summary>
+        /// <returns></returns>
         public bool HasKKS()
         {
             return (KKS.Length != 0) || (KKSPlant.Length != 0) || (KKSLocation.Length != 0) || (KKSDevice.Length != 0) || (KKSFunction.Length != 0);
@@ -599,80 +587,86 @@ namespace IO_list_automation_new
     
     internal class DataClass : GeneralClass<DataSignal>
     {
-        public override List<GeneralColumn> GeneralGenerateColumnsList()
+        protected override List<GeneralColumn> GeneralGenerateColumnsList()
         {
             List<GeneralColumn> _columns = new List<GeneralColumn>();
 
-            _columns.Add(new GeneralColumn(Const.ColumnNameID, Settings.Default.DataColumnID));
-            _columns.Add(new GeneralColumn(Const.ColumnNameCPU, Settings.Default.DataColumnCPU));
-            _columns.Add(new GeneralColumn(Const.ColumnNameKKS, Settings.Default.DataColumnKKS));
-            _columns.Add(new GeneralColumn(Const.ColumnNameRangeMin, Settings.Default.DataColumnRangeMin));
-            _columns.Add(new GeneralColumn(Const.ColumnNameRangeMax, Settings.Default.DataColumnRangeMax));
-            _columns.Add(new GeneralColumn(Const.ColumnNameUnits, Settings.Default.DataColumnUnits));
-            _columns.Add(new GeneralColumn(Const.ColumnNameFalseText, Settings.Default.DataColumnFalseText));
-            _columns.Add(new GeneralColumn(Const.ColumnNameTrueText, Settings.Default.DataColumnTrueText));
-            _columns.Add(new GeneralColumn(Const.ColumnNameRevision, Settings.Default.DataColumnRevision));
-            _columns.Add(new GeneralColumn(Const.ColumnNameCable, Settings.Default.DataColumnCable));
-            _columns.Add(new GeneralColumn(Const.ColumnNameCabinet, Settings.Default.DataColumnCabinet));
-            _columns.Add(new GeneralColumn(Const.ColumnNameModuleName, Settings.Default.DataColumnModuleName));
-            _columns.Add(new GeneralColumn(Const.ColumnNamePin, Settings.Default.DataColumnPin));
-            _columns.Add(new GeneralColumn(Const.ColumnNameChannel, Settings.Default.DataColumnChannel));
-            _columns.Add(new GeneralColumn(Const.ColumnNameIOText, Settings.Default.DataColumnIOText));
-            _columns.Add(new GeneralColumn(Const.ColumnNamePage, Settings.Default.DataColumnPage));
-            _columns.Add(new GeneralColumn(Const.ColumnNameChanged, Settings.Default.DataColumnChanged));
-            _columns.Add(new GeneralColumn(Const.ColumnNameOperative, Settings.Default.DataColumnOperative));
-            _columns.Add(new GeneralColumn(Const.ColumnNameKKSPlant, Settings.Default.DataColumnKKSPlant));
-            _columns.Add(new GeneralColumn(Const.ColumnNameKKSLocation, Settings.Default.DataColumnKKSLocation));
-            _columns.Add(new GeneralColumn(Const.ColumnNameKKSDevice, Settings.Default.DataColumnKKSDevice));
-            _columns.Add(new GeneralColumn(Const.ColumnNameKKSFunction, Settings.Default.DataColumnKKSFunction));
-            _columns.Add(new GeneralColumn(Const.ColumnNameUsed, Settings.Default.DataColumnUsed));
-            _columns.Add(new GeneralColumn(Const.ColumnNameObjectType, Settings.Default.DataColumnObjectType));
-            _columns.Add(new GeneralColumn(Const.ColumnNameObjectName, Settings.Default.DataColumnObjectName));
-            _columns.Add(new GeneralColumn(Const.ColumnNameObjectDetalisation, Settings.Default.DataColumnObjectDetalisation));
-            _columns.Add(new GeneralColumn(Const.ColumnNameFunctionText, Settings.Default.DataColumnFunctionText));
-            _columns.Add(new GeneralColumn(Const.ColumnNameFunction, Settings.Default.DataColumnFunction));
-            _columns.Add(new GeneralColumn(Const.ColumnNameTerminal, Settings.Default.DataColumnTerminal));
+            _columns.Add(new GeneralColumn(ConstCol.ColumnNameID, SettingsData.Default.ColumnID, true));
+            _columns.Add(new GeneralColumn(ConstCol.ColumnNameCPU, SettingsData.Default.ColumnCPU, true));
+            _columns.Add(new GeneralColumn(ConstCol.ColumnNameKKS, SettingsData.Default.ColumnKKS, false));
+            _columns.Add(new GeneralColumn(ConstCol.ColumnNameRangeMin, SettingsData.Default.ColumnRangeMin, true));
+            _columns.Add(new GeneralColumn(ConstCol.ColumnNameRangeMax, SettingsData.Default.ColumnRangeMax, true));
+            _columns.Add(new GeneralColumn(ConstCol.ColumnNameUnits, SettingsData.Default.ColumnUnits, true));
+            _columns.Add(new GeneralColumn(ConstCol.ColumnNameFalseText, SettingsData.Default.ColumnFalseText, true));
+            _columns.Add(new GeneralColumn(ConstCol.ColumnNameTrueText, SettingsData.Default.ColumnTrueText, true));
+            _columns.Add(new GeneralColumn(ConstCol.ColumnNameRevision, SettingsData.Default.ColumnRevision, true));
+            _columns.Add(new GeneralColumn(ConstCol.ColumnNameCable, SettingsData.Default.ColumnCable, true));
+            _columns.Add(new GeneralColumn(ConstCol.ColumnNameCabinet, SettingsData.Default.ColumnCabinet, false));
+            _columns.Add(new GeneralColumn(ConstCol.ColumnNameModuleName, SettingsData.Default.ColumnModuleName, false));
+            _columns.Add(new GeneralColumn(ConstCol.ColumnNamePin, SettingsData.Default.ColumnPin, true));
+            _columns.Add(new GeneralColumn(ConstCol.ColumnNameChannel, SettingsData.Default.ColumnChannel, false));
+            _columns.Add(new GeneralColumn(ConstCol.ColumnNameIOText, SettingsData.Default.ColumnIOText, false));
+            _columns.Add(new GeneralColumn(ConstCol.ColumnNamePage, SettingsData.Default.ColumnPage, true));
+            _columns.Add(new GeneralColumn(ConstCol.ColumnNameChanged, SettingsData.Default.ColumnChanged, true));
+            _columns.Add(new GeneralColumn(ConstCol.ColumnNameOperative, SettingsData.Default.ColumnOperative, true));
+            _columns.Add(new GeneralColumn(ConstCol.ColumnNameKKSPlant, SettingsData.Default.ColumnKKSPlant, true));
+            _columns.Add(new GeneralColumn(ConstCol.ColumnNameKKSLocation, SettingsData.Default.ColumnKKSLocation, true));
+            _columns.Add(new GeneralColumn(ConstCol.ColumnNameKKSDevice, SettingsData.Default.ColumnKKSDevice, true));
+            _columns.Add(new GeneralColumn(ConstCol.ColumnNameKKSFunction, SettingsData.Default.ColumnKKSFunction, true));
+            _columns.Add(new GeneralColumn(ConstCol.ColumnNameUsed, SettingsData.Default.ColumnUsed, false));
+            _columns.Add(new GeneralColumn(ConstCol.ColumnNameObjectType, SettingsData.Default.ColumnObjectType, false));
+            _columns.Add(new GeneralColumn(ConstCol.ColumnNameObjectName, SettingsData.Default.ColumnObjectName, false));
+            _columns.Add(new GeneralColumn(ConstCol.ColumnNameObjectDetalisation, SettingsData.Default.ColumnObjectDetalisation, true));
+            _columns.Add(new GeneralColumn(ConstCol.ColumnNameFunctionText, SettingsData.Default.ColumnFunctionText, false));
+            _columns.Add(new GeneralColumn(ConstCol.ColumnNameFunction, SettingsData.Default.ColumnFunction, false));
+            _columns.Add(new GeneralColumn(ConstCol.ColumnNameTerminal, SettingsData.Default.ColumnTerminal, true));
+            _columns.Add(new GeneralColumn(ConstCol.ColumnNameTag, SettingsData.Default.ColumnTag, false));
 
             return _columns;
         }
 
-        public override void UpdateSettingsColumnsList()
+        protected override void UpdateSettingsColumnsList()
         {
             ColumnList _columns = Columns;
 
-            Settings.Default.DataColumnID = _columns.GetColumnNumberFromKeyword(Const.ColumnNameID);
-            Settings.Default.DataColumnCPU = _columns.GetColumnNumberFromKeyword(Const.ColumnNameCPU);
-            Settings.Default.DataColumnKKS = _columns.GetColumnNumberFromKeyword(Const.ColumnNameKKS);
-            Settings.Default.DataColumnRangeMin = _columns.GetColumnNumberFromKeyword(Const.ColumnNameRangeMin);
-            Settings.Default.DataColumnRangeMax = _columns.GetColumnNumberFromKeyword(Const.ColumnNameRangeMax);
-            Settings.Default.DataColumnUnits = _columns.GetColumnNumberFromKeyword(Const.ColumnNameUnits);
-            Settings.Default.DataColumnFalseText = _columns.GetColumnNumberFromKeyword(Const.ColumnNameFalseText);
-            Settings.Default.DataColumnTrueText = _columns.GetColumnNumberFromKeyword(Const.ColumnNameTrueText);
-            Settings.Default.DataColumnRevision = _columns.GetColumnNumberFromKeyword(Const.ColumnNameRevision);
-            Settings.Default.DataColumnCable = _columns.GetColumnNumberFromKeyword(Const.ColumnNameCable);
-            Settings.Default.DataColumnCabinet = _columns.GetColumnNumberFromKeyword(Const.ColumnNameCabinet);
-            Settings.Default.DataColumnModuleName = _columns.GetColumnNumberFromKeyword(Const.ColumnNameModuleName);
-            Settings.Default.DataColumnPin = _columns.GetColumnNumberFromKeyword(Const.ColumnNamePin);
-            Settings.Default.DataColumnChannel = _columns.GetColumnNumberFromKeyword(Const.ColumnNameChannel);
-            Settings.Default.DataColumnIOText = _columns.GetColumnNumberFromKeyword(Const.ColumnNameIOText);
-            Settings.Default.DataColumnPage = _columns.GetColumnNumberFromKeyword(Const.ColumnNamePage);
-            Settings.Default.DataColumnChanged = _columns.GetColumnNumberFromKeyword(Const.ColumnNameChanged);
-            Settings.Default.DataColumnKKSPlant = _columns.GetColumnNumberFromKeyword(Const.ColumnNameKKSPlant);
-            Settings.Default.DataColumnKKSLocation = _columns.GetColumnNumberFromKeyword(Const.ColumnNameKKSLocation);
-            Settings.Default.DataColumnKKSDevice = _columns.GetColumnNumberFromKeyword(Const.ColumnNameKKSDevice);
-            Settings.Default.DataColumnKKSFunction = _columns.GetColumnNumberFromKeyword(Const.ColumnNameKKSFunction);
-            Settings.Default.DataColumnUsed = _columns.GetColumnNumberFromKeyword(Const.ColumnNameUsed);
-            Settings.Default.DataColumnObjectType = _columns.GetColumnNumberFromKeyword(Const.ColumnNameObjectType);
-            Settings.Default.DataColumnObjectName = _columns.GetColumnNumberFromKeyword(Const.ColumnNameObjectName);
-            Settings.Default.DataColumnObjectDetalisation = _columns.GetColumnNumberFromKeyword(Const.ColumnNameObjectDetalisation);
-            Settings.Default.DataColumnFunctionText = _columns.GetColumnNumberFromKeyword(Const.ColumnNameFunctionText);
-            Settings.Default.DataColumnFunction = _columns.GetColumnNumberFromKeyword(Const.ColumnNameFunction);
-            Settings.Default.DataColumnTerminal = _columns.GetColumnNumberFromKeyword(Const.ColumnNameTerminal);
+            SettingsData.Default.ColumnID = _columns.GetColumnNumberFromKeyword(ConstCol.ColumnNameID);
+            SettingsData.Default.ColumnCPU = _columns.GetColumnNumberFromKeyword(ConstCol.ColumnNameCPU);
+            SettingsData.Default.ColumnKKS = _columns.GetColumnNumberFromKeyword(ConstCol.ColumnNameKKS);
+            SettingsData.Default.ColumnRangeMin = _columns.GetColumnNumberFromKeyword(ConstCol.ColumnNameRangeMin);
+            SettingsData.Default.ColumnRangeMax = _columns.GetColumnNumberFromKeyword(ConstCol.ColumnNameRangeMax);
+            SettingsData.Default.ColumnUnits = _columns.GetColumnNumberFromKeyword(ConstCol.ColumnNameUnits);
+            SettingsData.Default.ColumnFalseText = _columns.GetColumnNumberFromKeyword(ConstCol.ColumnNameFalseText);
+            SettingsData.Default.ColumnTrueText = _columns.GetColumnNumberFromKeyword(ConstCol.ColumnNameTrueText);
+            SettingsData.Default.ColumnRevision = _columns.GetColumnNumberFromKeyword(ConstCol.ColumnNameRevision);
+            SettingsData.Default.ColumnCable = _columns.GetColumnNumberFromKeyword(ConstCol.ColumnNameCable);
+            SettingsData.Default.ColumnCabinet = _columns.GetColumnNumberFromKeyword(ConstCol.ColumnNameCabinet);
+            SettingsData.Default.ColumnModuleName = _columns.GetColumnNumberFromKeyword(ConstCol.ColumnNameModuleName);
+            SettingsData.Default.ColumnPin = _columns.GetColumnNumberFromKeyword(ConstCol.ColumnNamePin);
+            SettingsData.Default.ColumnChannel = _columns.GetColumnNumberFromKeyword(ConstCol.ColumnNameChannel);
+            SettingsData.Default.ColumnIOText = _columns.GetColumnNumberFromKeyword(ConstCol.ColumnNameIOText);
+            SettingsData.Default.ColumnPage = _columns.GetColumnNumberFromKeyword(ConstCol.ColumnNamePage);
+            SettingsData.Default.ColumnChanged = _columns.GetColumnNumberFromKeyword(ConstCol.ColumnNameChanged);
+            SettingsData.Default.ColumnKKSPlant = _columns.GetColumnNumberFromKeyword(ConstCol.ColumnNameKKSPlant);
+            SettingsData.Default.ColumnKKSLocation = _columns.GetColumnNumberFromKeyword(ConstCol.ColumnNameKKSLocation);
+            SettingsData.Default.ColumnKKSDevice = _columns.GetColumnNumberFromKeyword(ConstCol.ColumnNameKKSDevice);
+            SettingsData.Default.ColumnKKSFunction = _columns.GetColumnNumberFromKeyword(ConstCol.ColumnNameKKSFunction);
+            SettingsData.Default.ColumnUsed = _columns.GetColumnNumberFromKeyword(ConstCol.ColumnNameUsed);
+            SettingsData.Default.ColumnObjectType = _columns.GetColumnNumberFromKeyword(ConstCol.ColumnNameObjectType);
+            SettingsData.Default.ColumnObjectName = _columns.GetColumnNumberFromKeyword(ConstCol.ColumnNameObjectName);
+            SettingsData.Default.ColumnObjectDetalisation = _columns.GetColumnNumberFromKeyword(ConstCol.ColumnNameObjectDetalisation);
+            SettingsData.Default.ColumnFunctionText = _columns.GetColumnNumberFromKeyword(ConstCol.ColumnNameFunctionText);
+            SettingsData.Default.ColumnFunction = _columns.GetColumnNumberFromKeyword(ConstCol.ColumnNameFunction);
+            SettingsData.Default.ColumnTerminal = _columns.GetColumnNumberFromKeyword(ConstCol.ColumnNameTerminal);
+            SettingsData.Default.ColumnTag = _columns.GetColumnNumberFromKeyword(ConstCol.ColumnNameTag);
 
-            Settings.Default.Save();
+            SettingsData.Default.Save();
         }
 
-        public DataClass(ProgressIndication progress, DataGridView grid) :base(Const.DataName, progress, grid)
+        public DataClass(ProgressIndication progress, DataGridView grid) :base("Data","sheet",false,".data", progress, grid)
+        {
+        }
+
+        public DataClass() : base("Data", "sheet", false, ".data", null, null)
         {
         }
 
@@ -687,24 +681,27 @@ namespace IO_list_automation_new
 
             Progress.RenameProgressBar(Resources.ExtractDataFromDesign, design.Signals.Count );
 
-            design.Gridasikas.GridGetData();
+            UpdateColumnNumbers(design.BaseColumns.Columns);
+
+            Signals.Clear();
+            design.Grid.GetData();
             string _keyword = string.Empty;
-            for (int _signalNumber = 0; _signalNumber < design.Signals.Count; _signalNumber++)
+            for (int _designNumber = 0; _designNumber < design.Signals.Count; _designNumber++)
             {
-                DataSignal _signal = new DataSignal();
-                DesignSignal _designSignal = design.Signals.ElementAt(_signalNumber);
+                DataSignal _dataSignal = new DataSignal();
+                DesignSignal _designSignal = design.Signals.ElementAt(_designNumber);
 
                 // go through all collumn in design and send it to signals
-                foreach (GeneralColumn column in design.Columns)
+                foreach (GeneralColumn _column in design.Columns)
                 {
-                    _keyword = column.GetColumnKeyword();
-                    _signal.SetValueFromString(_designSignal.GetValueString(_keyword,true), _keyword);
+                    _keyword = _column.Keyword;
+                    _dataSignal.SetValueFromString(_designSignal.GetValueString(_keyword,true), _keyword);
                 }
-                _signal.FindKKSInSignal(false);
-                _signal.KKSDecode();
+                _dataSignal.FindKKSInSignal(false);
+                _dataSignal.KKSDecode();
 
-                Signals.Add(_signal);
-                Progress.UpdateProgressBar(_signalNumber);
+                Signals.Add(_dataSignal);
+                Progress.UpdateProgressBar(_designNumber);
             }
             Progress.HideProgressBar();
 
@@ -729,7 +726,7 @@ namespace IO_list_automation_new
                 if(_signal.HasKKS())
                 {
                     //transfer KKS to KKS edit form
-                    _KKSEdit.UpdateKKS(_signal.GetKKS(), _signal.GetKKSPlant(), _signal.GetKKSLocation(), _signal.GetKKSDevice(), _signal.GetKKSFunction());
+                    _KKSEdit.UpdateKKS(_signal.KKS, _signal.KKSPlant, _signal.KKSLocation, _signal.KKSDevice, _signal.KKSFunction);
                     
                     //not configured
                     if (_KKSEdit.Configured == 0)
@@ -742,7 +739,7 @@ namespace IO_list_automation_new
                             break;
                         }
                     }
-                    _signal.SetValueFromString(_KKSEdit.GetCombined(), Const.ColumnNameKKS);
+                    _signal.SetValueFromString(_KKSEdit.GetCombined(), ConstCol.ColumnNameKKS);
                 }
                 Progress.UpdateProgressBar(_signalNumber);
             }

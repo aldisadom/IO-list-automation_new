@@ -32,10 +32,9 @@ namespace IO_list_automation_new
         Design = 0,
         Data = 1,
         Object = 2,
-    }
+    }    
 
-
-    public static class Const
+    public static class ConstCol
     {
         public const string ColumnNameID = "ID";
         public const string ColumnNameCPU = "CPU";
@@ -66,10 +65,35 @@ namespace IO_list_automation_new
         public const string ColumnNameFunctionText = "FunctionText";
         public const string ColumnNameFunction = "Function";
         public const string ColumnNameTerminal = "Terminal";
+        public const string ColumnNameTag = "Tag";
 
-        public const string DesignName = "Design";
-        public const string DataName = "Data";
-        public const string ObjectName = "Object";
+        public const string ColumnNameDeviceTypeText = "DeviceTypeText";
+        public const string ColumnNameFunctionText1 = "FunctionText1";
+        public const string ColumnNameFunctionText1o2 = "FunctionText1o2";
+        public const string ColumnNameFunctionText2o2 = "FunctionText2o2";
+        public const string ColumnNameFunction1 = "Function1";
+        public const string ColumnNameFunction2 = "Function2";
+    }
+
+    public static class ConstDBChoices
+    {
+        public const string ChoiceNone = "";
+        public const string ChoiceIf = "IF";
+        public const string ChoiceTab = "TAB";
+        public const string ChoiceData = "Data";
+        public const string ChoiceObject = "Object";
+        public const string ChoiceText = "Text";
+        public const string ChoiceIO = "IO";
+
+        public const string ChoiceIsEmpty = "is empty";
+        public const string ChoiceIsNotEmpty = "is not empty";
+    }
+
+
+    public static class DeleteMe
+    {
+        public const string LTpath = "C:\\Users\\Aldis\\Desktop\\IO-list-automation_new\\IO-list-automation_new\\bin\\Debug\\DB\\LT";
+        public const string xa800pathVariables = "C:\\Users\\Aldis\\Desktop\\IO-list-automation_new\\IO-list-automation_new\\bin\\Debug\\DB\\800xA\\Declarations";
     }
 
     internal static class Program
@@ -87,10 +111,18 @@ namespace IO_list_automation_new
             if (Settings.Default.DebugLevel == (uint)DebugLevels.Development)
                 _debug.ClearDebug();
 
+
+            Settings.Default.SelectedCPU = "800xA";
+            Settings.Default.Save();
+
             _debug.ToFile("--------------------------------------------------------------", DebugLevels.None, DebugMessageType.Info);
             _debug.ToFile(Resources.SoftwareStart + ": " + _versionNumber , DebugLevels.None, DebugMessageType.Info);
             _debug.CurrentDebugLevel();
-            _debug.ToPopUp(Resources.EarlyReleaseWarning, DebugLevels.None, DebugMessageType.Warning);
+
+            if (Settings.Default.DebugLevel == (uint)DebugLevels.Development)
+                _debug.ToFile(Resources.EarlyReleaseWarning, DebugLevels.None, DebugMessageType.Warning);
+            else
+                _debug.ToPopUp(Resources.EarlyReleaseWarning, DebugLevels.None, DebugMessageType.Warning);
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);

@@ -106,6 +106,96 @@ namespace IO_list_automation_new.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Channel column has number.
+        /// </summary>
+        internal static string ChannelHasNumber {
+            get {
+                return ResourceManager.GetString("ChannelHasNumber", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Channel column is fully number.
+        /// </summary>
+        internal static string ChannelIsNumber {
+            get {
+                return ResourceManager.GetString("ChannelIsNumber", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Data.
+        /// </summary>
+        internal static string ChoiceData {
+            get {
+                return ResourceManager.GetString("ChoiceData", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to IF.
+        /// </summary>
+        internal static string ChoiceIf {
+            get {
+                return ResourceManager.GetString("ChoiceIf", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to IO.
+        /// </summary>
+        internal static string ChoiceIO {
+            get {
+                return ResourceManager.GetString("ChoiceIO", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Is empty.
+        /// </summary>
+        internal static string ChoiceIsEmpty {
+            get {
+                return ResourceManager.GetString("ChoiceIsEmpty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Is not empty.
+        /// </summary>
+        internal static string ChoiceIsNotEmpty {
+            get {
+                return ResourceManager.GetString("ChoiceIsNotEmpty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Object.
+        /// </summary>
+        internal static string ChoiceObject {
+            get {
+                return ResourceManager.GetString("ChoiceObject", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to TAB.
+        /// </summary>
+        internal static string ChoiceTab {
+            get {
+                return ResourceManager.GetString("ChoiceTab", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Text.
+        /// </summary>
+        internal static string ChoiceText {
+            get {
+                return ResourceManager.GetString("ChoiceText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Column.
         /// </summary>
         internal static string Column {
@@ -169,6 +259,15 @@ namespace IO_list_automation_new.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Device type text.
+        /// </summary>
+        internal static string ColumnDeviceTypeText {
+            get {
+                return ResourceManager.GetString("ColumnDeviceTypeText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to False Text.
         /// </summary>
         internal static string ColumnFalseText {
@@ -187,11 +286,56 @@ namespace IO_list_automation_new.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Function.
+        /// </summary>
+        internal static string ColumnFunction1 {
+            get {
+                return ResourceManager.GetString("ColumnFunction1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Function.
+        /// </summary>
+        internal static string ColumnFunction2 {
+            get {
+                return ResourceManager.GetString("ColumnFunction2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Function Text.
         /// </summary>
         internal static string ColumnFunctionText {
             get {
                 return ResourceManager.GetString("ColumnFunctionText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Function text with 1 part.
+        /// </summary>
+        internal static string ColumnFunctionText1 {
+            get {
+                return ResourceManager.GetString("ColumnFunctionText1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Function text with 2 part 1/2.
+        /// </summary>
+        internal static string ColumnFunctionText1o2 {
+            get {
+                return ResourceManager.GetString("ColumnFunctionText1o2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Function text with 2 part 2/2.
+        /// </summary>
+        internal static string ColumnFunctionText2o2 {
+            get {
+                return ResourceManager.GetString("ColumnFunctionText2o2", resourceCulture);
             }
         }
         
@@ -349,6 +493,15 @@ namespace IO_list_automation_new.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Tag name.
+        /// </summary>
+        internal static string ColumnTag {
+            get {
+                return ResourceManager.GetString("ColumnTag", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Terminal.
         /// </summary>
         internal static string ColumnTerminal {
@@ -426,6 +579,15 @@ namespace IO_list_automation_new.Properties {
         internal static string DataReadFailFormat {
             get {
                 return ResourceManager.GetString("DataReadFailFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Database not found.
+        /// </summary>
+        internal static string DBNotFound {
+            get {
+                return ResourceManager.GetString("DBNotFound", resourceCulture);
             }
         }
         
@@ -511,6 +673,15 @@ namespace IO_list_automation_new.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Importing design file.
+        /// </summary>
+        internal static string DesignImport {
+            get {
+                return ResourceManager.GetString("DesignImport", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Software is in early release, use with caution.
         /// </summary>
         internal static string EarlyReleaseWarning {
@@ -529,11 +700,38 @@ namespace IO_list_automation_new.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Automatic save file loading.
+        /// </summary>
+        internal static string FileAutoLoad {
+            get {
+                return ResourceManager.GetString("FileAutoLoad", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to File sellection canceled.
         /// </summary>
         internal static string FileSellectCanceled {
             get {
                 return ResourceManager.GetString("FileSellectCanceled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Finding funtion type in data.
+        /// </summary>
+        internal static string FindFunction {
+            get {
+                return ResourceManager.GetString("FindFunction", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Finding object type in object.
+        /// </summary>
+        internal static string FindObjectType {
+            get {
+                return ResourceManager.GetString("FindObjectType", resourceCulture);
             }
         }
         
@@ -574,6 +772,33 @@ namespace IO_list_automation_new.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Instances.
+        /// </summary>
+        internal static string Instances {
+            get {
+                return ResourceManager.GetString("Instances", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Instances edit generating.
+        /// </summary>
+        internal static string InstancesEditGenerate {
+            get {
+                return ResourceManager.GetString("InstancesEditGenerate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Generate device instances.
+        /// </summary>
+        internal static string InstancesGenerate {
+            get {
+                return ResourceManager.GetString("InstancesGenerate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to KKS from 4 parts are combined.
         /// </summary>
         internal static string KKSCombine {
@@ -588,6 +813,15 @@ namespace IO_list_automation_new.Properties {
         internal static string LoadDataFromFile {
             get {
                 return ResourceManager.GetString("LoadDataFromFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No data.
+        /// </summary>
+        internal static string NoData {
+            get {
+                return ResourceManager.GetString("NoData", resourceCulture);
             }
         }
         
@@ -628,6 +862,24 @@ namespace IO_list_automation_new.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Searching unique KKS signals in Data.
+        /// </summary>
+        internal static string ObjectGenerateUniqueData {
+            get {
+                return ResourceManager.GetString("ObjectGenerateUniqueData", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Transfer object data to data signals .
+        /// </summary>
+        internal static string ObjectTransferToData {
+            get {
+                return ResourceManager.GetString("ObjectTransferToData", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Parameter not found when parsing.
         /// </summary>
         internal static string ParameterNotFound {
@@ -655,11 +907,20 @@ namespace IO_list_automation_new.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Importing design file.
+        ///   Looks up a localized string similar to Pin column has number.
         /// </summary>
-        internal static string ProgressBarDesignImport {
+        internal static string PinHasNumber {
             get {
-                return ResourceManager.GetString("ProgressBarDesignImport", resourceCulture);
+                return ResourceManager.GetString("PinHasNumber", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Pin column is fully number.
+        /// </summary>
+        internal static string PinIsNumber {
+            get {
+                return ResourceManager.GetString("PinIsNumber", resourceCulture);
             }
         }
         
@@ -700,6 +961,15 @@ namespace IO_list_automation_new.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Row offset.
+        /// </summary>
+        internal static string RowOffset {
+            get {
+                return ResourceManager.GetString("RowOffset", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Saving data to file.
         /// </summary>
         internal static string SaveDataToFile {
@@ -732,6 +1002,15 @@ namespace IO_list_automation_new.Properties {
         internal static string Value {
             get {
                 return ResourceManager.GetString("Value", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Variables.
+        /// </summary>
+        internal static string Variables {
+            get {
+                return ResourceManager.GetString("Variables", resourceCulture);
             }
         }
     }

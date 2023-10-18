@@ -14,7 +14,10 @@ namespace IO_list_automation_new
     internal class GeneralGrid<T>
     where T : GeneralSignal, new()
     {
-        public string Name { get; }
+        private string Name { get; }
+        private string SheetName { get; }
+        public string FileExtension { get; }
+        private bool NotSortable { get; set; }
 
         private List<T> Signals;
         //columns in software
@@ -25,30 +28,31 @@ namespace IO_list_automation_new
 
         private DataGridView Grid { get; set; }
 
-        public GeneralGrid(string name, List<T> signals, ProgressIndication progress, DataGridView grid, ColumnList columns, ColumnList baseColumns)
+        public GeneralGrid(string name,string sheetName,bool notSortable, string fileExtension, List<T> signals, ProgressIndication progress, DataGridView grid, ColumnList columns, ColumnList baseColumns)
         {
             Name = name;
+            SheetName = sheetName;
             Signals = signals;
             Columns = columns;
             BaseColumns = baseColumns;
             Progress = progress;
             Grid = grid;
+            FileExtension = fileExtension;
+            NotSortable = notSortable;
         }
 
-        public ColumnList GetColumnList()
-        {
-            return Columns;
-        }
-
-        public ColumnList GetBaseColumnList()
-        {
-            return BaseColumns;
-        }
-
+        /// <summary>
+        /// Cheacks if rows are empty, 1 line is also empty
+        /// </summary>
+        /// <returns></returns>
         public bool IsEmpty()
         {
-            return Grid.RowCount ==0;
+            if (Grid == null)
+                return true;
+
+            return Grid.RowCount <= 1;
         }
+
         /// <summary>
         /// Clear all grid data
         /// </summary>
@@ -65,65 +69,71 @@ namespace IO_list_automation_new
         /// Add Columns to grid
         /// </summary>
         /// <param name="columns">list of columns</param>
-        private void GridAddColumns(List<GeneralColumn> columns)
+        private void AddColumns(List<GeneralColumn> columns)
         {
             int _columnNumber = 0;
 
             Debug debug = new Debug();
             debug.ToFile("Putting new GeneralColumns(" + columns.Count() + ") to grid: " + Name, DebugLevels.Development, DebugMessageType.Info);
 
-            foreach (GeneralColumn column in columns)
+            foreach (GeneralColumn _column in columns)
             {
-                _columnNumber = column.GetColumnNumber();
+                _columnNumber = _column.Number;
                 if (_columnNumber >= 0)
                 {
                     DataGridViewColumn _columnGridView = new DataGridViewColumn();
 
                     DataGridViewTextBoxCell _cell = new DataGridViewTextBoxCell();
                     _columnGridView.CellTemplate = _cell;
-                    _columnGridView.Name = column.GetColumnKeyword();
-                    _columnGridView.HeaderText = column.GetColumnName(_columnGridView.Name);
-                    _columnGridView.SortMode = DataGridViewColumnSortMode.Automatic;
+                    _columnGridView.Name = _column.Keyword;
+                    _columnGridView.HeaderText = _column.GetColumnName();
+                    if (NotSortable)
+                        _columnGridView.SortMode = DataGridViewColumnSortMode.NotSortable;
+                    else
+                        _columnGridView.SortMode = DataGridViewColumnSortMode.Automatic;
                     Grid.Columns.Insert(_columnNumber, _columnGridView);
                 }
             }
         }
 
         /// <summary>
-        /// copy new list to grid column list
-        /// </summary>
-        /// <param name="list">new GeneralColumn list</param>
-        /// <param name="columnsFromZero">true, Columns start from zero</param>
-        public void SetColumnList(List<GeneralColumn> list, bool columnsFromZero)
-        {
-            Debug debug = new Debug();
-            debug.ToFile("Updating : " + Name + " Grid Columns", DebugLevels.Development, DebugMessageType.Info);
-
-            Columns.CopyColumnList(list, columnsFromZero);
-        }
-
-        /// <summary>
         /// Get grid columns and add to columns list
         /// </summary>
         /// <returns>grid column list</returns>
-        public List<GeneralColumn> GridGetColumns()
+        public List<GeneralColumn> GetColumns()
         {
             int _columnNumber = 0;
+            int _columnIndex = 0;
+            string _keyword = "";
+            bool _canHide = false;
+
             Debug debug = new Debug();
             debug.ToFile("Getting columns from grid to memory(" + Grid.ColumnCount + ") to grid: " + Name, DebugLevels.Development, DebugMessageType.Info);
 
-            List<GeneralColumn> _Column = new List<GeneralColumn>();
+            List<GeneralColumn> _columnList = new List<GeneralColumn>();
             for (_columnNumber = 0; _columnNumber < Grid.ColumnCount; _columnNumber++)
-                _Column.Add(new GeneralColumn(Grid.Columns[_columnNumber].Name, Grid.Columns[_columnNumber].DisplayIndex));
+            {
+                _keyword = Grid.Columns[_columnNumber].Name;
+                _columnIndex = Grid.Columns[_columnNumber].DisplayIndex;
 
-            return _Column;
+                foreach (GeneralColumn _column in BaseColumns)
+                {
+                    if (_column.Keyword == _keyword)
+                    {
+                        _canHide = _column.CanHide;
+                        break;
+                    }
+                }
+                _columnList.Add(new GeneralColumn(_keyword, _columnIndex, _canHide));
+            }
+            return _columnList;
         }
 
         /// <summary>
         /// Add rows to grid
         /// </summary>
         /// <param name="count">number of signals</param>
-        private void GridAddRows(int count)
+        private void AddRows(int count)
         {
             Debug debug = new Debug();
             debug.ToFile("Putting new rows(" + count + ") to grid: " + Name, DebugLevels.Development, DebugMessageType.Info);
@@ -134,58 +144,66 @@ namespace IO_list_automation_new
         /// <summary>
         /// Put all design data to grid
         /// </summary>
-        public void GridPutData()
+        public void PutData()
         {
-            //hide grid to speed up
-            Grid.Visible = false;
             Debug debug = new Debug();
-            debug.ToFile(Resources.PutDataToGrid + ": " + Name, DebugLevels.Development, DebugMessageType.Info);
-            GridClear();
-            GridAddColumns(Columns.Columns);
-            GridAddRows(Signals.Count());
-
-            Progress.RenameProgressBar(Resources.PutDataToGrid + ": " + Name, Signals.Count());
-
-            int _columnNumber = 0;
-            string _keyword = "";
-            string _cellValue = "";
-            for (int _signalNumber = 0; _signalNumber < Signals.Count(); _signalNumber++)
+            if (Signals.Count() > 0)
             {
-                string[] _row = new string[Columns.Columns.Count()];
-                foreach (GeneralColumn column in Columns)
+                //hide grid to speed up
+                Grid.Visible = false;
+                Grid.SuspendLayout();
+
+                debug.ToFile(Resources.PutDataToGrid + ": " + Name, DebugLevels.Development, DebugMessageType.Info);
+                GridClear();
+                AddColumns(Columns.Columns);
+                AddRows(Signals.Count());
+
+                Progress.RenameProgressBar(Resources.PutDataToGrid + ": " + Name, Signals.Count());
+
+                int _columnNumber = 0;
+                string _keyword = "";
+                string _cellValue = "";
+                for (int _signalNumber = 0; _signalNumber < Signals.Count(); _signalNumber++)
                 {
-                    _columnNumber = column.GetColumnNumber();
-                    if (_columnNumber >= 0)
+                    string[] _row = new string[Columns.Columns.Count()];
+                    foreach (GeneralColumn _column in Columns)
                     {
-                        //get value based on keyword
-                        _keyword = column.GetColumnKeyword();
-                        _cellValue = Signals.ElementAt(_signalNumber).GetValueString(_keyword, false);
+                        _columnNumber = _column.Number;
+                        if (_columnNumber >= 0)
+                        {
+                            //get value based on keyword
+                            _keyword = _column.Keyword;
+                            _cellValue = Signals.ElementAt(_signalNumber).GetValueString(_keyword, false);
 
-                        _row[_columnNumber] = _cellValue;
+                            _row[_columnNumber] = _cellValue;
+                        }
                     }
+                    Progress.UpdateProgressBar(_signalNumber);
+                    Grid.Rows[_signalNumber].SetValues(_row);
                 }
-                Progress.UpdateProgressBar(_signalNumber);
-                Grid.Rows[_signalNumber].SetValues(_row);
-            }
-            Progress.HideProgressBar();
+                Progress.HideProgressBar();
 
-            Grid.Visible = true;
-            Grid.AutoResizeColumns();
-            debug.ToFile(Resources.PutDataToGrid + ": " + Name + " - finished", DebugLevels.Development, DebugMessageType.Info);
+                Grid.ResumeLayout();
+                Grid.Visible = true;
+                Grid.AutoResizeColumns();
+                debug.ToFile(Resources.PutDataToGrid + ": " + Name + " - finished", DebugLevels.Development, DebugMessageType.Info);
+            }
+            else
+                debug.ToPopUp(Resources.PutDataToGrid + ": " + Name + " - " + Resources.NoData, DebugLevels.Development, DebugMessageType.Info);
         }
 
         /// <summary>
         /// Put all design data to grid
         /// </summary>
         /// <returns>there is data in grid</returns>
-        public bool GridGetData()
+        public bool GetData()
         {
             Debug debug = new Debug();
             debug.ToFile(Resources.GetDataFromGrid + ": " + Name, DebugLevels.Development, DebugMessageType.Info);
 
             Progress.RenameProgressBar(Resources.GetDataFromGrid + ": " + Name, Grid.Rows.Count);
 
-            GridGetColumns();
+            GetColumns();
             int _signalCount = 0;
             Signals.Clear();
             string _keyword = "";
@@ -231,7 +249,7 @@ namespace IO_list_automation_new
         /// <param name="maxCol">maximum columns in row</param>
         /// <param name="excel">opened excel file</param>
         /// <returns>string value of cell value</returns>
-        public string ReadExcelCell(int row, int col, int maxCol, IExcelDataReader excel)
+        private string ReadExcelCell(int row, int col, int maxCol, IExcelDataReader excel)
         {
             string _retunValue = string.Empty;
             if (col >= maxCol || col < 0)
@@ -269,7 +287,7 @@ namespace IO_list_automation_new
             Debug debug = new Debug();
 
             SaveFileDialog _saveFile = new SaveFileDialog();
-            _saveFile.Filter = Name + "Worksheets|*." + Name;
+            _saveFile.Filter = Name + "|*" + FileExtension;
             _saveFile.AddExtension = false;
             if (_saveFile.ShowDialog() == DialogResult.OK)
                 SaveToFile(_saveFile.FileName);
@@ -283,21 +301,18 @@ namespace IO_list_automation_new
         /// <param name="fileName">file name to save</param>
         public void SaveToFile(string fileName)
         {
-            if (GridGetData())
+            if (GetData())
             {
-                string _fileName = System.IO.Path.ChangeExtension(fileName, null) + "." + Name;
+                string _fileName = System.IO.Path.ChangeExtension(fileName, null) + FileExtension;
 
                 Debug debug = new Debug();
                 debug.ToFile(Resources.SaveDataToFile + ": " + _fileName, DebugLevels.Development, DebugMessageType.Info);
 
                 Progress.RenameProgressBar(Resources.SaveDataToFile + ": " + _fileName, Signals.Count());
 
-                Sheet sheet = new Sheet()
-                {
-                    Name = "Data",
-                    ColumnsWidth = new List<double> { 10, 12, 8, 8, 35 }
-                };
-                ExcelWriter _excel = new ExcelWriter(_fileName);
+                Sheet _sheet = new Sheet();
+                _sheet.Name = SheetName;
+                ExcelWriter _excel = new ExcelWriter(_fileName, _sheet);
 
                 string _keyword = "";
                 string _cellValue = "";
@@ -305,12 +320,12 @@ namespace IO_list_automation_new
                 int _rowOffset = 1;
 
                 //first line in excel is column keywords
-                foreach (GeneralColumn column in Columns)
+                foreach (GeneralColumn _column in Columns)
                 {
-                    _ColumnNumber = column.GetColumnNumber();
+                    _ColumnNumber = _column.Number;
                     if (_ColumnNumber >= 0)
                     {
-                        _keyword = column.GetColumnKeyword();
+                        _keyword = _column.Keyword;
 
                         _excel.Write(_keyword, _ColumnNumber + 1, _rowOffset);
                     }
@@ -320,12 +335,12 @@ namespace IO_list_automation_new
                 for (int _signalNumber = 0; _signalNumber < Signals.Count(); _signalNumber++)
                 {
                     string[] _row = new string[Columns.Columns.Count()];
-                    foreach (GeneralColumn column in Columns)
+                    foreach (GeneralColumn _column in Columns)
                     {
-                        _ColumnNumber = column.GetColumnNumber();
+                        _ColumnNumber = _column.Number;
                         if (_ColumnNumber >= 0)
                         {
-                            _keyword = column.GetColumnKeyword();
+                            _keyword = _column.Keyword;
                             _cellValue = Signals.ElementAt(_signalNumber).GetValueString(_keyword, false);
 
                             _excel.Write(_cellValue, _ColumnNumber + 1, _signalNumber + _rowOffset);
@@ -345,25 +360,29 @@ namespace IO_list_automation_new
         /// <summary>
         /// load data from excel to grid with file sellection
         /// </summary>
-        public void LoadSellect()
+        /// <returns>there is valid data</returns>
+        public bool LoadSellect()
         {
             Debug debug = new Debug();
 
             OpenFileDialog _loadFile = new OpenFileDialog();
-            _loadFile.Filter = Name + "Worksheets|*." + Name;
+            _loadFile.Filter = Name + "|*" + FileExtension;
             if (_loadFile.ShowDialog() == DialogResult.OK)
-                LoadFromFile(_loadFile.FileName);
+                return LoadFromFile(_loadFile.FileName);
             else
                 debug.ToFile(Resources.FileSellectCanceled, DebugLevels.Minimum, DebugMessageType.Info);
+
+            return false;
         }
 
         /// <summary>
-        /// load data from excel to grid
+        /// load data from excel to memory
         /// </summary>
         /// <param name="fileName">save file name</param>
-        public void LoadFromFile(string fileName)
+        /// <returns>there is valid data</returns>
+        public bool LoadFromFileToMemory(string fileName)
         {
-            string _fileName = System.IO.Path.ChangeExtension(fileName, null) + "." + Name;
+            string _fileName = System.IO.Path.ChangeExtension(fileName, null) + FileExtension;
 
             Debug debug = new Debug();
             debug.ToFile(Resources.LoadDataFromFile + ": " + _fileName, DebugLevels.Development, DebugMessageType.Info);
@@ -382,63 +401,98 @@ namespace IO_list_automation_new
 
                 List<GeneralColumn> _Column = new List<GeneralColumn>();
 
-                _excel.Read();
-                //read column keywords in line 1
-                for (_columnNumber = 0; _columnNumber < _excel.FieldCount; _columnNumber++)
+                for (int i = 0; i < _excel.ResultsCount; i++)
                 {
-                    _cellValue = _excel.GetString(_columnNumber);
-                    if (_cellValue == null || _cellValue == string.Empty)
-                        break;
-                    else
-                        _Column.Add(new GeneralColumn(_cellValue, _columnNumber));
-                }
-                SetColumnList(_Column, false);
-
-                Signals.Clear();
-
-                //read all excel rows from line 2
-                for (int _row = 2; _row <= _rowCount; _row++)
-                {
-                    // if nothing to read exit
-                    if (!_excel.Read())
-                        break;
-
-                    _columnCount = _excel.FieldCount;
-                    //create signal and add coresponding Columns to each signal element
-                    T _signal = new T();
-
-                    foreach (GeneralColumn _column in GetColumnList())
+                    if (_excel.Name == SheetName)
                     {
-                        _columnNumber = _column.GetColumnNumber();
-                        if (_columnNumber != -1)
+                        _excel.Read();
+                        //read column keywords in line 1
+                        for (_columnNumber = 0; _columnNumber < _excel.FieldCount; _columnNumber++)
                         {
-                            _cellValue = ReadExcelCell(_row, _columnNumber, _columnCount, _excel);
-                            _ColumnName = _column.GetColumnKeyword();
-
-                            //convert null to ""
-                            if (_cellValue == null)
-                                _cellValue = string.Empty;
-
-                            _signal.SetValueFromString(_cellValue, _ColumnName);
+                            _cellValue = _excel.GetString(_columnNumber);
+                            if (_cellValue == null || _cellValue == string.Empty)
+                                break;
+                            else
+                                _Column.Add(new GeneralColumn(_cellValue, _columnNumber, false));
                         }
-                    }
-                    Progress.UpdateProgressBar(_row);
+                        Columns.SetColumns(_Column, false);
 
-                    if (_signal.ValidateSignal())
+                        Signals.Clear();
+
+                        //read all excel rows from line 2
+                        for (int _row = 2; _row <= _rowCount; _row++)
+                        {
+                            // if nothing to read exit
+                            if (!_excel.Read())
+                                break;
+
+                            _columnCount = _excel.FieldCount;
+                            //create signal and add coresponding Columns to each signal element
+                            T _signal = new T();
+
+                            foreach (GeneralColumn _column in Columns.Columns)
+                            {
+                                _columnNumber = _column.Number;
+                                if (_columnNumber != -1)
+                                {
+                                    _cellValue = ReadExcelCell(_row, _columnNumber, _columnCount, _excel);
+                                    _ColumnName = _column.Keyword;
+
+                                    //convert null to ""
+                                    if (_cellValue == null)
+                                        _cellValue = string.Empty;
+
+                                    _signal.SetValueFromString(_cellValue, _ColumnName);
+                                }
+                            }
+                            Progress.UpdateProgressBar(_row);
+
+                            if (_signal.ValidateSignal())
+                            {
+                                Signals.Add(_signal);
+                            }
+                        }
+                        break;
+                    }
+                    else
                     {
-                        Signals.Add(_signal);
+                        if (!_excel.NextResult())
+                            break;
                     }
                 }
                 _excel.Close();
 
                 Progress.HideProgressBar();
-
-                GridPutData();
             }
             else
+            {
                 debug.ToPopUp(Resources.NoFile + ": " + _fileName, DebugLevels.None, DebugMessageType.Alarm);
+                return false;
+            }
 
             debug.ToFile(Resources.LoadDataFromFile + ": " + _fileName + " - finished", DebugLevels.Development, DebugMessageType.Info);
+
+            if (Signals.Count > 0)
+                return true;
+            else
+            {
+                debug.ToPopUp(Resources.LoadDataFromFile + ": " + _fileName + " - " + Resources.NoData, DebugLevels.None, DebugMessageType.Info);
+                return false;
+            }
+        }
+        /// <summary>
+        /// load data from excel to grid
+        /// </summary>
+        /// <param name="fileName">save file name</param>
+        public bool LoadFromFile(string fileName)
+        {
+            if (LoadFromFileToMemory(fileName))
+            {
+                PutData();
+                return true;
+            }
+            else
+                return false;
         }
     }
 }

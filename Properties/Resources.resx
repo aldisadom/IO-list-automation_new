@@ -267,7 +267,7 @@
   <data name="ParameterNotFound" xml:space="preserve">
     <value>Parameter not found when parsing</value>
   </data>
-  <data name="ProgressBarDesignImport" xml:space="preserve">
+  <data name="DesignImport" xml:space="preserve">
     <value>Importing design file</value>
   </data>
   <data name="ProgressBarOutRange" xml:space="preserve">
@@ -330,6 +330,12 @@
   <data name="NoPasteData" xml:space="preserve">
     <value>No data to paste</value>
   </data>
+  <data name="ObjectGenerateUniqueData" xml:space="preserve">
+    <value>Searching unique KKS signals in Data</value>
+  </data>
+  <data name="ObjectTransferToData" xml:space="preserve">
+    <value>Transfer object data to data signals </value>
+  </data>
   <data name="PasteAt" xml:space="preserve">
     <value>Paste at</value>
   </data>
@@ -341,5 +347,92 @@
   </data>
   <data name="ToMuchDataPaste" xml:space="preserve">
     <value>To much data to paste</value>
+  </data>
+  <data name="ChannelHasNumber" xml:space="preserve">
+    <value>Channel column has number</value>
+  </data>
+  <data name="ChannelIsNumber" xml:space="preserve">
+    <value>Channel column is fully number</value>
+  </data>
+  <data name="PinHasNumber" xml:space="preserve">
+    <value>Pin column has number</value>
+  </data>
+  <data name="PinIsNumber" xml:space="preserve">
+    <value>Pin column is fully number</value>
+  </data>
+  <data name="RowOffset" xml:space="preserve">
+    <value>Row offset</value>
+  </data>
+  <data name="NoData" xml:space="preserve">
+    <value>No data</value>
+  </data>
+  <data name="ColumnDeviceTypeText" xml:space="preserve">
+    <value>Device type text</value>
+  </data>
+  <data name="ColumnFunction1" xml:space="preserve">
+    <value>Function</value>
+  </data>
+  <data name="ColumnFunction2" xml:space="preserve">
+    <value>Function</value>
+  </data>
+  <data name="ColumnFunctionText1" xml:space="preserve">
+    <value>Function text with 1 part</value>
+  </data>
+  <data name="ColumnFunctionText1o2" xml:space="preserve">
+    <value>Function text with 2 part 1/2</value>
+  </data>
+  <data name="ColumnFunctionText2o2" xml:space="preserve">
+    <value>Function text with 2 part 2/2</value>
+  </data>
+  <data name="ColumnTag" xml:space="preserve">
+    <value>Tag name</value>
+  </data>
+  <data name="FileAutoLoad" xml:space="preserve">
+    <value>Automatic save file loading</value>
+  </data>
+  <data name="FindFunction" xml:space="preserve">
+    <value>Finding funtion type in data</value>
+  </data>
+  <data name="FindObjectType" xml:space="preserve">
+    <value>Finding object type in object</value>
+  </data>
+  <data name="DBNotFound" xml:space="preserve">
+    <value>Database not found</value>
+  </data>
+  <data name="Instances" xml:space="preserve">
+    <value>Instances</value>
+  </data>
+  <data name="Variables" xml:space="preserve">
+    <value>Variables</value>
+  </data>
+  <data name="InstancesEditGenerate" xml:space="preserve">
+    <value>Instances edit generating</value>
+  </data>
+  <data name="InstancesGenerate" xml:space="preserve">
+    <value>Generate device instances</value>
+  </data>
+  <data name="ChoiceData" xml:space="preserve">
+    <value>Data</value>
+  </data>
+  <data name="ChoiceIf" xml:space="preserve">
+    <value>IF</value>
+  </data>
+  <data name="ChoiceIO" xml:space="preserve">
+    <value>IO</value>
+  </data>
+  <data name="ChoiceIsEmpty" xml:space="preserve">
+    <value>Is empty</value>
+  </data>
+  <data name="ChoiceIsNotEmpty" xml:space="preserve">
+    <value>Is not empty</value>
+  </data>
+  <data name="ChoiceObject" xml:space="preserve">
+    <value>Object</value>
+  </data>
+  <data name="ChoiceTab" xml:space="preserve">
+    <value>TAB</value>
+  </data>
+  <data name="ChoiceText" xml:space="preserve">
+    <value>Text</value>
   </data>
 </root>
