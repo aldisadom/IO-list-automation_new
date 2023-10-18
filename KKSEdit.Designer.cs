@@ -233,6 +233,7 @@
             this.KKSBox34.Name = "KKSBox34";
             this.KKSBox34.Size = new System.Drawing.Size(50, 20);
             this.KKSBox34.TabIndex = 28;
+            this.KKSBox34.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.KKSBox34.TextChanged += new System.EventHandler(this.KKSBox34_TextChanged);
             // 
             // KKSBox23
@@ -241,6 +242,7 @@
             this.KKSBox23.Name = "KKSBox23";
             this.KKSBox23.Size = new System.Drawing.Size(50, 20);
             this.KKSBox23.TabIndex = 29;
+            this.KKSBox23.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.KKSBox23.TextChanged += new System.EventHandler(this.KKSBox23_TextChanged);
             // 
             // KKSBox12
@@ -249,6 +251,7 @@
             this.KKSBox12.Name = "KKSBox12";
             this.KKSBox12.Size = new System.Drawing.Size(50, 20);
             this.KKSBox12.TabIndex = 30;
+            this.KKSBox12.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.KKSBox12.TextChanged += new System.EventHandler(this.KKSBox12_TextChanged);
             // 
             // KKSBox45
@@ -257,6 +260,7 @@
             this.KKSBox45.Name = "KKSBox45";
             this.KKSBox45.Size = new System.Drawing.Size(50, 20);
             this.KKSBox45.TabIndex = 31;
+            this.KKSBox45.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.KKSBox45.TextChanged += new System.EventHandler(this.KKSBox45_TextChanged);
             // 
             // KKSBox01
@@ -265,6 +269,7 @@
             this.KKSBox01.Name = "KKSBox01";
             this.KKSBox01.Size = new System.Drawing.Size(50, 20);
             this.KKSBox01.TabIndex = 32;
+            this.KKSBox01.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.KKSBox01.TextChanged += new System.EventHandler(this.KKSBox01_TextChanged);
             // 
             // KKSPartCheck1

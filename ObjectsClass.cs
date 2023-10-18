@@ -17,6 +17,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Xml.Linq;
 using static System.Net.Mime.MediaTypeNames;
 
 
@@ -24,11 +25,12 @@ namespace IO_list_automation_new
 {
     internal class ObjectSignal : GeneralSignal
     {
-        private string CPU { get; set; }
-        private string Operative { get; set; }
-        private string KKS { get; set; }
-        private string ObjectType { get; set; }
-        private string ObjectName { get; set; }
+        public string ID { get; private set; }
+        public string CPU { get; private set; }
+        public string Operative { get; private set; }
+        public string KKS { get; private set; }
+        public string ObjectType { get; private set; }
+        public string ObjectName { get; private set; }
 
         public ObjectSignal() : base()
         {
@@ -48,22 +50,22 @@ namespace IO_list_automation_new
         {
             switch (parameterName)
             {
-                case Const.ColumnNameID:
-                    SetID(value);
+                case ConstCol.ColumnNameID:
+                    ID = value;
                     break;
-                case Const.ColumnNameCPU:
+                case ConstCol.ColumnNameCPU:
                     CPU = value;
                     break;
-                case Const.ColumnNameKKS:
+                case ConstCol.ColumnNameKKS:
                     KKS = value;
                     break;
-                case Const.ColumnNameOperative:
+                case ConstCol.ColumnNameOperative:
                     Operative = value;
                     break;
-                case Const.ColumnNameObjectType:
+                case ConstCol.ColumnNameObjectType:
                     ObjectType = value;
                     break;
-                case Const.ColumnNameObjectName:
+                case ConstCol.ColumnNameObjectName:
                     ObjectName = value;
                     break;
             }
@@ -80,22 +82,22 @@ namespace IO_list_automation_new
             string _returnValue = string.Empty;
             switch (parameterName)
             {
-                case Const.ColumnNameID:
-                    _returnValue = GetID();
+                case ConstCol.ColumnNameID:
+                    _returnValue = ID;
                     break;
-                case Const.ColumnNameCPU:
+                case ConstCol.ColumnNameCPU:
                     _returnValue = CPU;
                     break;
-                case Const.ColumnNameKKS:
+                case ConstCol.ColumnNameKKS:
                     _returnValue = KKS;
                     break;
-                case Const.ColumnNameOperative:
+                case ConstCol.ColumnNameOperative:
                     _returnValue = Operative;
                     break;
-                case Const.ColumnNameObjectType:
+                case ConstCol.ColumnNameObjectType:
                     _returnValue = ObjectType;
                     break;
-                case Const.ColumnNameObjectName:
+                case ConstCol.ColumnNameObjectName:
                     _returnValue = ObjectName;
                     break;
                 default:
@@ -111,9 +113,8 @@ namespace IO_list_automation_new
 
         /// <summary>
         /// Checks if design signal is valid:
-        /// *Has Channel or PIN
-        /// *Has Module
-        /// *Has IO funcion text
+        /// *Has KKS
+        /// *Has object name
         /// </summary>
         /// <returns>true if minimum signal requirements are met</returns>
         public override bool ValidateSignal()
@@ -122,7 +123,7 @@ namespace IO_list_automation_new
 
             if (KKS == "" || KKS == null)
                 _returnValue = false;
-            else if (ObjectType == "" || ObjectType == null)
+            else if (ObjectName == "" || ObjectName == null)
                 _returnValue = false;
 
             return _returnValue;
@@ -131,69 +132,152 @@ namespace IO_list_automation_new
 
     internal class ObjectsClass : GeneralClass<ObjectSignal>
     {
-        public override List<GeneralColumn> GeneralGenerateColumnsList()
+        protected override List<GeneralColumn> GeneralGenerateColumnsList()
         {
             List<GeneralColumn> _columns = new List<GeneralColumn>();
 
-            _columns.Add(new GeneralColumn(Const.ColumnNameID, Settings.Default.ObjectsColumnID));
-            _columns.Add(new GeneralColumn(Const.ColumnNameCPU, Settings.Default.ObjectsColumnCPU));
-            _columns.Add(new GeneralColumn(Const.ColumnNameKKS, Settings.Default.ObjectsColumnKKS));
-            _columns.Add(new GeneralColumn(Const.ColumnNameOperative, Settings.Default.ObjectsColumnOperative));
-            _columns.Add(new GeneralColumn(Const.ColumnNameObjectType, Settings.Default.ObjectsColumnObjectType));
-            _columns.Add(new GeneralColumn(Const.ColumnNameObjectName, Settings.Default.ObjectsColumnObjectName));
+            _columns.Add(new GeneralColumn(ConstCol.ColumnNameID, SettingsObject.Default.ObjectsColumnID,true));
+            _columns.Add(new GeneralColumn(ConstCol.ColumnNameCPU, SettingsObject.Default.ObjectsColumnCPU, true));
+            _columns.Add(new GeneralColumn(ConstCol.ColumnNameKKS, SettingsObject.Default.ObjectsColumnKKS, false));
+            _columns.Add(new GeneralColumn(ConstCol.ColumnNameOperative, SettingsObject.Default.ObjectsColumnOperative, true));
+            _columns.Add(new GeneralColumn(ConstCol.ColumnNameObjectType, SettingsObject.Default.ObjectsColumnObjectType, false));
+            _columns.Add(new GeneralColumn(ConstCol.ColumnNameObjectName, SettingsObject.Default.ObjectsColumnObjectName, false));
 
             return _columns;
         }
 
-        public override void UpdateSettingsColumnsList()
+        protected override void UpdateSettingsColumnsList()
         {
             ColumnList _columns = Columns;
 
-            Settings.Default.ObjectsColumnID = _columns.GetColumnNumberFromKeyword(Const.ColumnNameID);
-            Settings.Default.ObjectsColumnCPU = _columns.GetColumnNumberFromKeyword(Const.ColumnNameCPU);
-            Settings.Default.ObjectsColumnKKS = _columns.GetColumnNumberFromKeyword(Const.ColumnNameKKS);
-            Settings.Default.ObjectsColumnOperative = _columns.GetColumnNumberFromKeyword(Const.ColumnNameOperative);
-            Settings.Default.ObjectsColumnObjectType = _columns.GetColumnNumberFromKeyword(Const.ColumnNameObjectType);
-            Settings.Default.ObjectsColumnObjectName = _columns.GetColumnNumberFromKeyword(Const.ColumnNameObjectName);
+            SettingsObject.Default.ObjectsColumnID = _columns.GetColumnNumberFromKeyword(ConstCol.ColumnNameID);
+            SettingsObject.Default.ObjectsColumnCPU = _columns.GetColumnNumberFromKeyword(ConstCol.ColumnNameCPU);
+            SettingsObject.Default.ObjectsColumnKKS = _columns.GetColumnNumberFromKeyword(ConstCol.ColumnNameKKS);
+            SettingsObject.Default.ObjectsColumnOperative = _columns.GetColumnNumberFromKeyword(ConstCol.ColumnNameOperative);
+            SettingsObject.Default.ObjectsColumnObjectType = _columns.GetColumnNumberFromKeyword(ConstCol.ColumnNameObjectType);
+            SettingsObject.Default.ObjectsColumnObjectName = _columns.GetColumnNumberFromKeyword(ConstCol.ColumnNameObjectName);
 
-            Settings.Default.Save();
+            SettingsObject.Default.Save();
         }
 
-        public ObjectsClass(ProgressIndication progress, DataGridView grid) : base(Const.ObjectName, progress, grid)
+        public ObjectsClass(ProgressIndication progress, DataGridView grid) : base("Object", "sheet",false, ".object", progress, grid)
+        {
+            
+        }
+
+        public ObjectsClass() : base("Object", "sheet", false, ".object", null, null)
         {
 
         }
 
+        /// <summary>
+        /// Get unique data signals
+        /// </summary>
+        /// <param name="data">data signals object</param>
         public void ExtractFromData(DataClass data)
         {
-/*
             Debug debug = new Debug();
-            debug.ToFile(Resources.ExtractDataFromDesign, DebugLevels.Development, DebugMessageType.Info);
+            debug.ToFile(Resources.ObjectGenerateUniqueData, DebugLevels.Development, DebugMessageType.Info);
 
-            Progress.RenameProgressBar(Resources.ExtractDataFromDesign, data.Signals.Count);
+            Progress.RenameProgressBar(Resources.ObjectGenerateUniqueData, data.Signals.Count);
 
+            UpdateColumnNumbers(data.BaseColumns.Columns);
+            Signals.Clear();
             string _keyword = string.Empty;
-            for (int _signalNumber = 0; _signalNumber < data.Signals.Count; _signalNumber++)
+            for (int _dataNumber = 0; _dataNumber < data.Signals.Count; _dataNumber++)
             {
-                ObjectSignal _signal = new ObjectSignal();
-                DataSignal _dSignal = data.Signals.ElementAt(_signalNumber);
+                DataSignal _dataSignal = data.Signals.ElementAt(_dataNumber);
 
-                // go through all collumn in design and send it to signals
-                foreach (Column column in data.GetColumnList())
+                if (_dataSignal.KKS != string.Empty)
                 {
-                    _keyword = column.GetColumnKeyword();
-                    _signal.SetValueFromString(_dSignal.GetValueString(_keyword, true), _keyword);
-                }
-                _signal.FindKKSInSignal(false);
-                _signal.KKSDecode();
+                    ObjectSignal _objectSignal = new ObjectSignal();
 
-                Signals.Add(_signal);
-                Progress.UpdateProgressBar(_signalNumber);
+                    // go through all collumn in objects and send data to objects
+                    foreach (GeneralColumn _column in Columns)
+                    {
+                        _keyword = _column.Keyword;
+                        _objectSignal.SetValueFromString(_dataSignal.GetValueString(_keyword, true), _keyword);
+                    }
+
+                    if (_objectSignal.ValidateSignal())
+                        Signals.Add(_objectSignal);
+                }
+                
+                Progress.UpdateProgressBar(_dataNumber);
             }
+
+            string _KKS = string.Empty;
+            bool _found = false;
+
+            // go through all objects
+            for (int _objectNumber = Signals.Count-1; _objectNumber >= 0; _objectNumber--)
+            {
+                _found = false;
+                _KKS = Signals.ElementAt(_objectNumber).KKS;
+
+                //find if it repeats, if yes then delete element
+                for (int _findNumber = Signals.Count-1; _findNumber >= 0; _findNumber--)
+                {
+                    if (Signals.ElementAt(_findNumber).KKS == _KKS)
+                    {
+                        if (_found)
+                        {
+                            Signals.RemoveAt(_findNumber);
+                            break;
+                        }
+                        else
+                            _found = true;
+                    }
+                }
+            }
+
             Progress.HideProgressBar();
 
-            debug.ToFile(Resources.ExtractDataFromDesign + " - finished", DebugLevels.Development, DebugMessageType.Info);
-*/
+            debug.ToFile(Resources.ObjectGenerateUniqueData + " - finished", DebugLevels.Development, DebugMessageType.Info);
+        }
+
+        /// <summary>
+        /// Set object data to data signals
+        /// </summary>
+        /// <param name="data">data signals</param>
+        public void SendToData(DataClass data)
+        {
+            Debug debug = new Debug();
+            debug.ToFile(Resources.ObjectTransferToData, DebugLevels.Development, DebugMessageType.Info);
+
+            Progress.RenameProgressBar(Resources.ObjectTransferToData, data.Signals.Count);
+
+            string _KKS = string.Empty;
+            string _keyword = string.Empty;
+            for (int _dataNumber = 0; _dataNumber < data.Signals.Count; _dataNumber++)
+            {
+                DataSignal _dataSignal = data.Signals.ElementAt(_dataNumber);
+
+                _KKS = _dataSignal.KKS;
+                // if data signal has KKS
+                if (_KKS != string.Empty)
+                {
+                    for (int _objectNumber = Signals.Count - 1; _objectNumber >= 0; _objectNumber--)
+                    {
+                        ObjectSignal _objectSignal = Signals.ElementAt(_objectNumber);
+
+                        // and finds this KKS in objects, then transfer all data from objects to data signals
+                        if (_objectSignal.KKS == _KKS)
+                        {
+                            // go through all collumn in objects and send data to objects
+                            foreach (GeneralColumn _column in Columns)
+                            {
+                                _keyword = _column.Keyword;
+                                //do not transfer ID
+                                if (_keyword != "ID")
+                                    _dataSignal.SetValueFromString(_objectSignal.GetValueString(_keyword, false), _keyword);
+                            }
+                        }
+                    }
+                }
+                Progress.UpdateProgressBar(_dataNumber);
+            }
+            debug.ToFile(Resources.ObjectTransferToData + " - finished", DebugLevels.Development, DebugMessageType.Info);
         }
     }
 }

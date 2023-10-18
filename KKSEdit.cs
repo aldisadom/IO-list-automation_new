@@ -19,12 +19,42 @@ namespace IO_list_automation_new.Forms
         public KKSEdit()
         {
             InitializeComponent();
+            InitSettings();
             KKS1Label.Text = Resources.ColumnKKSPlant;
             KKS2Label.Text = Resources.ColumnKKSLocation;
             KKS3Label.Text = Resources.ColumnKKSDevice;
             KKS4Label.Text = Resources.ColumnKKSFunction;
         }
 
+        private void InitSettings()
+        {
+            KKSPartCheck1.Checked = SettingsData.Default.KKSEditCheckPart1;
+            KKSPartCheck2.Checked = SettingsData.Default.KKSEditCheckPart2;
+            KKSPartCheck3.Checked = SettingsData.Default.KKSEditCheckPart3;
+            KKSPartCheck4.Checked = SettingsData.Default.KKSEditCheckPart4;
+
+            KKSBox01.Text = SettingsData.Default.KKSEditText01;
+            KKSBox12.Text = SettingsData.Default.KKSEditText12;
+            KKSBox23.Text = SettingsData.Default.KKSEditText23;
+            KKSBox34.Text = SettingsData.Default.KKSEditText34;
+            KKSBox45.Text = SettingsData.Default.KKSEditText45;
+        }
+
+        private void UpdateSettings()
+        {
+            SettingsData.Default.KKSEditCheckPart1 = KKSPartCheck1.Checked;
+            SettingsData.Default.KKSEditCheckPart2 = KKSPartCheck2.Checked;
+            SettingsData.Default.KKSEditCheckPart3 = KKSPartCheck3.Checked;
+            SettingsData.Default.KKSEditCheckPart4 = KKSPartCheck4.Checked;
+
+            SettingsData.Default.KKSEditText01 = KKSBox01.Text;
+            SettingsData.Default.KKSEditText12 = KKSBox12.Text;
+            SettingsData.Default.KKSEditText23 = KKSBox23.Text;
+            SettingsData.Default.KKSEditText34 = KKSBox34.Text;
+            SettingsData.Default.KKSEditText45 = KKSBox45.Text;
+
+            SettingsData.Default.Save();
+        }
         /// <summary>
         /// Update input data and combine based on form data
         /// </summary>
@@ -47,14 +77,14 @@ namespace IO_list_automation_new.Forms
             KKSPart3.Text = KKSDevice;
             KKSPart4.Text = KKSFunction;
 
-            CombineOnly();
+            Combine();
         }
 
         /// <summary>
         /// Kombines KKS all 4 parts (selectable) and add aditional text
         /// </summary>
         /// <returns></returns>
-        public string CombineOnly()
+        private string Combine()
         {
             string _returnValue = string.Empty;
 
@@ -98,61 +128,55 @@ namespace IO_list_automation_new.Forms
             return KKSOut.Text;
         }
 
-        public string Combine(string _KKS, string _KKSPlant, string _KKSLocation, string _KKSDevice, string _KKSFunction)
-        {
-            UpdateKKS( _KKS,  _KKSPlant,  _KKSLocation,  _KKSDevice,  _KKSFunction);
-
-            return CombineOnly();
-        }
-
         private void KKSBox12_TextChanged(object sender, EventArgs e)
         {
-            CombineOnly();
+            Combine();
         }
 
         private void KKSBox23_TextChanged(object sender, EventArgs e)
         {
-            CombineOnly();
+            Combine();
         }
 
         private void KKSBox34_TextChanged(object sender, EventArgs e)
         {
-            CombineOnly();
+            Combine();
         }
 
         private void KKSBox45_TextChanged(object sender, EventArgs e)
         {
-            CombineOnly();
+            Combine();
         }
 
         private void KKSBox01_TextChanged(object sender, EventArgs e)
         {
-            CombineOnly();
+            Combine();
         }
 
         private void KKSPartCheck1_CheckedChanged(object sender, EventArgs e)
         {
-            CombineOnly();
+            Combine();
         }
 
         private void KKSPartCheck2_CheckedChanged(object sender, EventArgs e)
         {
-            CombineOnly();
+            Combine();
         }
 
         private void KKSPartCheck3_CheckedChanged(object sender, EventArgs e)
         {
-            CombineOnly();
+            Combine();
         }
 
         private void KKSPartCheck4_CheckedChanged(object sender, EventArgs e)
         {
-            CombineOnly();
+            Combine();
         }
 
         private void KKSOkNextButton_Click(object sender, EventArgs e)
         {
             Configured = 0;
+            UpdateSettings();
             this.Close();
         }
 
@@ -165,6 +189,7 @@ namespace IO_list_automation_new.Forms
         private void KKSOKButton_Click(object sender, EventArgs e)
         {
             Configured = 1;
+            UpdateSettings();
             this.Close();
         }
     }

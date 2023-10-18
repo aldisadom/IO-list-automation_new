@@ -91,32 +91,83 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="GeneralClass.cs" />
-    <Compile Include="Debug.cs" />
-    <Compile Include="Forms\KKSEdit.cs">
+    <Compile Include="DB\DBChoices.cs" />
+    <Compile Include="DB\DBGeneralInstace.cs" />
+    <Compile Include="DB\DBGeneralGrid.cs" />
+    <Compile Include="DB\DBIO.cs" />
+    <Compile Include="DB\DBLanguage.cs" />
+    <Compile Include="DB\DBModule.cs" />
+    <Compile Include="DB\DBCellEdit.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\KKSEdit.Designer.cs">
+    <Compile Include="DB\DBCellEdit.Designer.cs">
+      <DependentUpon>DBCellEdit.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DB\DBResultForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DB\DBResultForm.Designer.cs">
+      <DependentUpon>DBResultForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DesignInputData.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DesignInputData.Designer.cs">
+      <DependentUpon>DesignInputData.cs</DependentUpon>
+    </Compile>
+    <Compile Include="General\DropDownClass.cs" />
+    <Compile Include="General\GeneralClass.cs" />
+    <Compile Include="Helper functions\Debug.cs" />
+    <Compile Include="KKSEdit.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="KKSEdit.Designer.cs">
       <DependentUpon>KKSEdit.cs</DependentUpon>
     </Compile>
     <Compile Include="DesignClass.cs" />
-    <Compile Include="GeneralColumn.cs" />
-    <Compile Include="GeneralGrid.cs" />
+    <Compile Include="General\GeneralColumn.cs" />
+    <Compile Include="General\GeneralGrid.cs" />
     <Compile Include="ObjectsClass.cs" />
     <Compile Include="DataClass.cs" />
-    <Compile Include="Forms\MainWindow.cs">
+    <Compile Include="MainWindow.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\MainWindow.Designer.cs">
+    <Compile Include="MainWindow.Designer.cs">
       <DependentUpon>MainWindow.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
-    <Compile Include="ProgressIndication.cs" />
+    <Compile Include="Helper functions\ProgressIndication.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="Forms\KKSEdit.resx">
+    <Compile Include="Properties\SettingsDesignInput.Designer.cs">
+      <DependentUpon>SettingsDesignInput.settings</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <Compile Include="Properties\SettingsObject.Designer.cs">
+      <DependentUpon>SettingsObject.settings</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <Compile Include="Properties\SettingsData.Designer.cs">
+      <DependentUpon>SettingsData.settings</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <Compile Include="Properties\SettingsDesign.Designer.cs">
+      <DependentUpon>SettingsDesign.settings</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <EmbeddedResource Include="DB\DBCellEdit.resx">
+      <DependentUpon>DBCellEdit.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DesignInputData.resx">
+      <DependentUpon>DesignInputData.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="KKSEdit.resx">
       <DependentUpon>KKSEdit.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\MainWindow.resx">
+    <EmbeddedResource Include="MainWindow.resx">
       <DependentUpon>MainWindow.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
@@ -125,14 +176,33 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <Compile Include="PropertiesChange.cs" />
+    <Compile Include="Helper functions\PropertiesChange.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <EmbeddedResource Include="DB\DBResultForm.resx">
+      <DependentUpon>DBResultForm.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="packages.config" />
     <None Include="Properties\DataSources\Design_signal.datasource" />
+    <None Include="Properties\SettingsDesignInput.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>SettingsDesignInput.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="Properties\SettingsObject.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>SettingsObject.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="Properties\SettingsData.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>SettingsData.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="Properties\SettingsDesign.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>SettingsDesign.Designer.cs</LastGenOutput>
+    </None>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -158,5 +228,6 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
