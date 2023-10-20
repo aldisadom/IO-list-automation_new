@@ -1,4 +1,5 @@
-﻿using System;
+﻿using IO_list_automation_new.General;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,6 +10,7 @@ namespace IO_list_automation_new.DB
     internal class DBChoices
     {
         public List<string> ChoicesMain { get; }
+        public List<string> ChoicesMainNoEmpty { get; }
         public List<string> ChoicesIf { get; }
         public List<string> ChoicesIfStatement { get; }
         public List<string> DataColumns { get; }
@@ -16,7 +18,10 @@ namespace IO_list_automation_new.DB
 
         public DBChoices()
         {
+            GeneralFunctions _generalFunctions = new GeneralFunctions();
+
             ChoicesMain = new List<string>();
+            ChoicesMainNoEmpty = new List<string>();
             ChoicesIf = new List<string>();
             ChoicesIfStatement = new List<string>();
             DataColumns = new List<string>();
@@ -29,6 +34,9 @@ namespace IO_list_automation_new.DB
             ChoicesMain.Add(ConstDBChoices.ChoiceObject);
             ChoicesMain.Add(ConstDBChoices.ChoiceData);
             ChoicesMain.Add(ConstDBChoices.ChoiceIO);
+
+            ChoicesMainNoEmpty = _generalFunctions.ListCopy(ChoicesMain);
+            ChoicesMainNoEmpty.RemoveAt(0);
 
             ChoicesIf.Add(ConstDBChoices.ChoiceObject);
             ChoicesIf.Add(ConstDBChoices.ChoiceData);

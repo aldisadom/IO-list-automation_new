@@ -28,46 +28,68 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.tabControl1 = new System.Windows.Forms.TabControl();
-            this.tabControl2 = new System.Windows.Forms.TabControl();
+            this.CellEditCombobox = new System.Windows.Forms.ComboBox();
+            this.PageEditCombobox = new System.Windows.Forms.ComboBox();
+            this.DBTabControl = new System.Windows.Forms.TabControl();
+            this.ResultTabControl = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.ResultDataGridView = new System.Windows.Forms.DataGridView();
-            this.RecalculateButton = new System.Windows.Forms.Button();
-            this.tabControl2.SuspendLayout();
+            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+            this.ResultTabControl.SuspendLayout();
             this.tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.ResultDataGridView)).BeginInit();
+            this.tableLayoutPanel1.SuspendLayout();
             this.SuspendLayout();
             // 
-            // tabControl1
+            // CellEditCombobox
             // 
-            this.tabControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.tabControl1.Location = new System.Drawing.Point(0, 0);
-            this.tabControl1.Name = "tabControl1";
-            this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(711, 694);
-            this.tabControl1.TabIndex = 0;
-            this.tabControl1.SelectedIndexChanged += new System.EventHandler(this.tabControl1_SelectedIndexChanged);
+            this.CellEditCombobox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.CellEditCombobox.FormattingEnabled = true;
+            this.CellEditCombobox.Location = new System.Drawing.Point(3, 3);
+            this.CellEditCombobox.Name = "CellEditCombobox";
+            this.CellEditCombobox.Size = new System.Drawing.Size(121, 21);
+            this.CellEditCombobox.TabIndex = 3;
+            this.CellEditCombobox.Visible = false;
+            this.CellEditCombobox.SelectedIndexChanged += new System.EventHandler(this.CellEditCombobox_SelectedIndexChanged);
             // 
-            // tabControl2
+            // PageEditCombobox
             // 
-            this.tabControl2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.tabControl2.Controls.Add(this.tabPage1);
-            this.tabControl2.Location = new System.Drawing.Point(708, 0);
-            this.tabControl2.Name = "tabControl2";
-            this.tabControl2.SelectedIndex = 0;
-            this.tabControl2.Size = new System.Drawing.Size(476, 694);
-            this.tabControl2.TabIndex = 2;
+            this.PageEditCombobox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.PageEditCombobox.FormattingEnabled = true;
+            this.PageEditCombobox.Location = new System.Drawing.Point(3, 3);
+            this.PageEditCombobox.Name = "PageEditCombobox";
+            this.PageEditCombobox.Size = new System.Drawing.Size(121, 21);
+            this.PageEditCombobox.TabIndex = 3;
+            this.PageEditCombobox.Visible = false;
+            this.PageEditCombobox.SelectedIndexChanged += new System.EventHandler(this.PageEditCombobox_SelectedIndexChanged);
+            // 
+            // DBTabControl
+            // 
+            this.DBTabControl.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.DBTabControl.Location = new System.Drawing.Point(3, 3);
+            this.DBTabControl.Name = "DBTabControl";
+            this.DBTabControl.SelectedIndex = 0;
+            this.DBTabControl.Size = new System.Drawing.Size(734, 693);
+            this.DBTabControl.TabIndex = 0;
+            this.DBTabControl.SelectedIndexChanged += new System.EventHandler(this.DBTabControl_SelectedIndexChanged);
+            this.DBTabControl.MouseClick += new System.Windows.Forms.MouseEventHandler(this.DBTabControl_MouseClick);
+            // 
+            // ResultTabControl
+            // 
+            this.ResultTabControl.Controls.Add(this.tabPage1);
+            this.ResultTabControl.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ResultTabControl.Location = new System.Drawing.Point(743, 3);
+            this.ResultTabControl.Name = "ResultTabControl";
+            this.ResultTabControl.SelectedIndex = 0;
+            this.ResultTabControl.Size = new System.Drawing.Size(438, 693);
+            this.ResultTabControl.TabIndex = 2;
             // 
             // tabPage1
             // 
             this.tabPage1.Controls.Add(this.ResultDataGridView);
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
-            this.tabPage1.Size = new System.Drawing.Size(468, 668);
+            this.tabPage1.Size = new System.Drawing.Size(430, 667);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "If (true)";
             this.tabPage1.UseVisualStyleBackColor = true;
@@ -76,49 +98,63 @@
             // 
             this.ResultDataGridView.AllowUserToAddRows = false;
             this.ResultDataGridView.AllowUserToDeleteRows = false;
+            this.ResultDataGridView.AllowUserToResizeColumns = false;
+            this.ResultDataGridView.AllowUserToResizeRows = false;
+            this.ResultDataGridView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.ResultDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.ResultDataGridView.ColumnHeadersVisible = false;
-            this.ResultDataGridView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.ResultDataGridView.Location = new System.Drawing.Point(0, 0);
             this.ResultDataGridView.Name = "ResultDataGridView";
             this.ResultDataGridView.ReadOnly = true;
             this.ResultDataGridView.RowHeadersVisible = false;
-            this.ResultDataGridView.Size = new System.Drawing.Size(468, 668);
+            this.ResultDataGridView.Size = new System.Drawing.Size(430, 1319);
             this.ResultDataGridView.TabIndex = 0;
             // 
-            // RecalculateButton
+            // tableLayoutPanel1
             // 
-            this.RecalculateButton.Location = new System.Drawing.Point(832, -1);
-            this.RecalculateButton.Name = "RecalculateButton";
-            this.RecalculateButton.Size = new System.Drawing.Size(75, 23);
-            this.RecalculateButton.TabIndex = 3;
-            this.RecalculateButton.Text = "Recalculate";
-            this.RecalculateButton.UseVisualStyleBackColor = true;
-            this.RecalculateButton.Click += new System.EventHandler(this.RecalculateButton_Click);
+            this.tableLayoutPanel1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.tableLayoutPanel1.ColumnCount = 2;
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 62.53264F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 37.46736F));
+            this.tableLayoutPanel1.Controls.Add(this.ResultTabControl, 1, 0);
+            this.tableLayoutPanel1.Controls.Add(this.DBTabControl, 0, 0);
+            this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
+            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
+            this.tableLayoutPanel1.RowCount = 1;
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(1184, 699);
+            this.tableLayoutPanel1.TabIndex = 4;
             // 
             // DBResultForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1184, 699);
-            this.Controls.Add(this.RecalculateButton);
-            this.Controls.Add(this.tabControl2);
-            this.Controls.Add(this.tabControl1);
+            this.Controls.Add(this.tableLayoutPanel1);
+            this.Controls.Add(this.CellEditCombobox);
+            this.Controls.Add(this.PageEditCombobox);
             this.Name = "DBResultForm";
             this.Text = "ResultForm";
             this.Shown += new System.EventHandler(this.ResultForm_Shown);
-            this.tabControl2.ResumeLayout(false);
+            this.ResultTabControl.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.ResultDataGridView)).EndInit();
+            this.tableLayoutPanel1.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
 
         #endregion
-        private System.Windows.Forms.TabControl tabControl1;
-        private System.Windows.Forms.TabControl tabControl2;
+        private System.Windows.Forms.ComboBox CellEditCombobox;
+        private System.Windows.Forms.ComboBox PageEditCombobox;
+        private System.Windows.Forms.TabControl ResultTabControl;
         private System.Windows.Forms.TabPage tabPage1;
         private System.Windows.Forms.DataGridView ResultDataGridView;
-        private System.Windows.Forms.Button RecalculateButton;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
+        public System.Windows.Forms.TabControl DBTabControl;
     }
 }

@@ -79,6 +79,7 @@ namespace IO_list_automation_new
             this.toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
             this.DeclareEditMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.InstanceDropDownButton = new System.Windows.Forms.ToolStripDropDownButton();
+            this.InstancesGenerateMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             this.InstancesEditMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.SCADADropDownButton = new System.Windows.Forms.ToolStripDropDownButton();
@@ -94,7 +95,6 @@ namespace IO_list_automation_new
             this.FindTextBox = new System.Windows.Forms.TextBox();
             this.FindButton = new System.Windows.Forms.Button();
             this.comboboxColumn = new System.Windows.Forms.ComboBox();
-            this.InstancesGenerateMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStrip1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.DesignTab.SuspendLayout();
@@ -449,12 +449,12 @@ namespace IO_list_automation_new
             // toolStripSeparator6
             // 
             this.toolStripSeparator6.Name = "toolStripSeparator6";
-            this.toolStripSeparator6.Size = new System.Drawing.Size(177, 6);
+            this.toolStripSeparator6.Size = new System.Drawing.Size(132, 6);
             // 
             // DeclareEditMenuItem
             // 
             this.DeclareEditMenuItem.Name = "DeclareEditMenuItem";
-            this.DeclareEditMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.DeclareEditMenuItem.Size = new System.Drawing.Size(135, 22);
             this.DeclareEditMenuItem.Text = "Edit declare";
             this.DeclareEditMenuItem.Click += new System.EventHandler(this.DeclareEditMenuItem_Click);
             // 
@@ -471,15 +471,22 @@ namespace IO_list_automation_new
             this.InstanceDropDownButton.Size = new System.Drawing.Size(64, 22);
             this.InstanceDropDownButton.Text = "Instance";
             // 
+            // InstancesGenerateMenuItem
+            // 
+            this.InstancesGenerateMenuItem.Name = "InstancesGenerateMenuItem";
+            this.InstancesGenerateMenuItem.Size = new System.Drawing.Size(146, 22);
+            this.InstancesGenerateMenuItem.Text = "Generate";
+            this.InstancesGenerateMenuItem.Click += new System.EventHandler(this.InstancesGenerateMenuItem_Click);
+            // 
             // toolStripSeparator4
             // 
             this.toolStripSeparator4.Name = "toolStripSeparator4";
-            this.toolStripSeparator4.Size = new System.Drawing.Size(177, 6);
+            this.toolStripSeparator4.Size = new System.Drawing.Size(143, 6);
             // 
             // InstancesEditMenuItem
             // 
             this.InstancesEditMenuItem.Name = "InstancesEditMenuItem";
-            this.InstancesEditMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.InstancesEditMenuItem.Size = new System.Drawing.Size(146, 22);
             this.InstancesEditMenuItem.Text = "Edit instances";
             this.InstancesEditMenuItem.Click += new System.EventHandler(this.InstancesEditMenuItem_Click);
             // 
@@ -537,8 +544,8 @@ namespace IO_list_automation_new
             // DesignGridView
             // 
             this.DesignGridView.AllowUserToOrderColumns = true;
+            this.DesignGridView.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.DesignGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.DesignGridView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.DesignGridView.Location = new System.Drawing.Point(3, 3);
             this.DesignGridView.Name = "DesignGridView";
             this.DesignGridView.Size = new System.Drawing.Size(1270, 616);
@@ -580,9 +587,9 @@ namespace IO_list_automation_new
             // ObjectsGridView
             // 
             this.ObjectsGridView.AllowUserToOrderColumns = true;
+            this.ObjectsGridView.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.ObjectsGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.ObjectsGridView.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.ObjectsGridView.Location = new System.Drawing.Point(0, 0);
+            this.ObjectsGridView.Location = new System.Drawing.Point(3, 3);
             this.ObjectsGridView.Name = "ObjectsGridView";
             this.ObjectsGridView.Size = new System.Drawing.Size(1276, 622);
             this.ObjectsGridView.TabIndex = 1;
@@ -608,6 +615,7 @@ namespace IO_list_automation_new
             // 
             // comboboxColumn
             // 
+            this.comboboxColumn.DisplayMember = "jj";
             this.comboboxColumn.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboboxColumn.FormattingEnabled = true;
             this.comboboxColumn.Location = new System.Drawing.Point(881, 2);
@@ -616,13 +624,6 @@ namespace IO_list_automation_new
             this.comboboxColumn.TabIndex = 11;
             this.comboboxColumn.Visible = false;
             this.comboboxColumn.SelectedValueChanged += new System.EventHandler(this.comboboxColumn_SelectedValueChanged);
-            // 
-            // InstancesGenerateMenuItem
-            // 
-            this.InstancesGenerateMenuItem.Name = "InstancesGenerateMenuItem";
-            this.InstancesGenerateMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.InstancesGenerateMenuItem.Text = "Generate";
-            this.InstancesGenerateMenuItem.Click += new System.EventHandler(this.InstancesGenerateMenuItem_Click);
             // 
             // MainWindow
             // 

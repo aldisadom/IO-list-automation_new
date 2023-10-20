@@ -1,4 +1,5 @@
 ﻿using ExcelDataReader;
+using IO_list_automation_new.General;
 using IO_list_automation_new.Properties;
 using SwiftExcel;
 using System;
@@ -15,7 +16,6 @@ namespace IO_list_automation_new
     where T : GeneralSignal, new()
     {
         private string Name { get; }
-        private string SheetName { get; }
         public string FileExtension { get; }
         private bool NotSortable { get; set; }
 
@@ -28,10 +28,9 @@ namespace IO_list_automation_new
 
         private DataGridView Grid { get; set; }
 
-        public GeneralGrid(string name,string sheetName,bool notSortable, string fileExtension, List<T> signals, ProgressIndication progress, DataGridView grid, ColumnList columns, ColumnList baseColumns)
+        public GeneralGrid(string name,bool notSortable, string fileExtension, List<T> signals, ProgressIndication progress, DataGridView grid, ColumnList columns, ColumnList baseColumns)
         {
             Name = name;
-            SheetName = sheetName;
             Signals = signals;
             Columns = columns;
             BaseColumns = baseColumns;
@@ -186,7 +185,7 @@ namespace IO_list_automation_new
                 Grid.ResumeLayout();
                 Grid.Visible = true;
                 Grid.AutoResizeColumns();
-                debug.ToFile(Resources.PutDataToGrid + ": " + Name + " - finished", DebugLevels.Development, DebugMessageType.Info);
+                debug.ToFile(Resources.PutDataToGrid + ": " + Name + " - " + Resources.Finished, DebugLevels.Development, DebugMessageType.Info);
             }
             else
                 debug.ToPopUp(Resources.PutDataToGrid + ": " + Name + " - " + Resources.NoData, DebugLevels.Development, DebugMessageType.Info);
@@ -233,50 +232,12 @@ namespace IO_list_automation_new
             }
             Progress.HideProgressBar();
 
-            debug.ToFile(Resources.GetDataFromGrid + ": " + Name + " - finished", DebugLevels.Development, DebugMessageType.Info);
+            debug.ToFile(Resources.GetDataFromGrid + ": " + Name + " - " + Resources.Finished, DebugLevels.Development, DebugMessageType.Info);
 
             if (_signalCount == 0)
                 debug.ToPopUp(Resources.NoDataGrid + ": " + Name, DebugLevels.None, DebugMessageType.Warning);
 
             return (_signalCount > 0);
-        }
-
-        /// <summary>
-        /// Get excel cell data, uses general function and always return string
-        /// </summary>
-        /// <param name="row">current row</param>
-        /// <param name="col">column to read</param>
-        /// <param name="maxCol">maximum columns in row</param>
-        /// <param name="excel">opened excel file</param>
-        /// <returns>string value of cell value</returns>
-        private string ReadExcelCell(int row, int col, int maxCol, IExcelDataReader excel)
-        {
-            string _retunValue = string.Empty;
-            if (col >= maxCol || col < 0)
-            {
-                Debug debug = new Debug();
-                debug.ToFile(Resources.DataReadFailBounds + " " + Resources.Column + " " + col + " max(" + maxCol + ")" +
-                                Resources.Row + " " + row, DebugLevels.Minimum, DebugMessageType.Warning);
-            }
-            else
-            {
-                System.Type _type = excel.GetFieldType(col);
-                if (_type == null)
-                    _retunValue = string.Empty;
-                else
-                {
-                    if (_type.Name == "String")
-                        _retunValue = excel.GetString(col);
-                    else if (_type.Name == "Double")
-                        _retunValue = excel.GetDouble(col).ToString();
-                    else
-                    {
-                        Debug debug = new Debug();
-                        debug.ToPopUp(Resources.DataReadFailFormat + ": " + _type.Name, DebugLevels.None, DebugMessageType.Critical);
-                    }
-                }
-            }
-            return _retunValue;
         }
 
         /// <summary>
@@ -303,16 +264,14 @@ namespace IO_list_automation_new
         {
             if (GetData())
             {
-                string _fileName = System.IO.Path.ChangeExtension(fileName, null) + FileExtension;
+                string _fileName = System.IO.Path.ChangeExtension(fileName, null) + "." + FileExtension;
 
                 Debug debug = new Debug();
                 debug.ToFile(Resources.SaveDataToFile + ": " + _fileName, DebugLevels.Development, DebugMessageType.Info);
 
                 Progress.RenameProgressBar(Resources.SaveDataToFile + ": " + _fileName, Signals.Count());
 
-                Sheet _sheet = new Sheet();
-                _sheet.Name = SheetName;
-                ExcelWriter _excel = new ExcelWriter(_fileName, _sheet);
+                ExcelWriter _excel = new ExcelWriter(_fileName);
 
                 string _keyword = "";
                 string _cellValue = "";
@@ -353,7 +312,7 @@ namespace IO_list_automation_new
 
                 Progress.HideProgressBar();
 
-                debug.ToFile(Resources.SaveDataToFile + ": " + _fileName + " - finished", DebugLevels.Development, DebugMessageType.Info);
+                debug.ToFile(Resources.SaveDataToFile + ": " + _fileName + " - " + Resources.Finished, DebugLevels.Development, DebugMessageType.Info);
             }
         }
 
@@ -382,7 +341,7 @@ namespace IO_list_automation_new
         /// <returns>there is valid data</returns>
         public bool LoadFromFileToMemory(string fileName)
         {
-            string _fileName = System.IO.Path.ChangeExtension(fileName, null) + FileExtension;
+            string _fileName = System.IO.Path.ChangeExtension(fileName, null) + "." + FileExtension;
 
             Debug debug = new Debug();
             debug.ToFile(Resources.LoadDataFromFile + ": " + _fileName, DebugLevels.Development, DebugMessageType.Info);
@@ -400,65 +359,60 @@ namespace IO_list_automation_new
                 Progress.RenameProgressBar(Resources.LoadDataFromFile + ": " + _fileName, _rowCount);
 
                 List<GeneralColumn> _Column = new List<GeneralColumn>();
+                GeneralFunctions _generalFunction = new GeneralFunctions();
 
                 for (int i = 0; i < _excel.ResultsCount; i++)
                 {
-                    if (_excel.Name == SheetName)
+                    _excel.Read();
+                    //read column keywords in line 1
+                    for (_columnNumber = 0; _columnNumber < _excel.FieldCount; _columnNumber++)
                     {
-                        _excel.Read();
-                        //read column keywords in line 1
-                        for (_columnNumber = 0; _columnNumber < _excel.FieldCount; _columnNumber++)
-                        {
-                            _cellValue = _excel.GetString(_columnNumber);
-                            if (_cellValue == null || _cellValue == string.Empty)
-                                break;
-                            else
-                                _Column.Add(new GeneralColumn(_cellValue, _columnNumber, false));
-                        }
-                        Columns.SetColumns(_Column, false);
-
-                        Signals.Clear();
-
-                        //read all excel rows from line 2
-                        for (int _row = 2; _row <= _rowCount; _row++)
-                        {
-                            // if nothing to read exit
-                            if (!_excel.Read())
-                                break;
-
-                            _columnCount = _excel.FieldCount;
-                            //create signal and add coresponding Columns to each signal element
-                            T _signal = new T();
-
-                            foreach (GeneralColumn _column in Columns.Columns)
-                            {
-                                _columnNumber = _column.Number;
-                                if (_columnNumber != -1)
-                                {
-                                    _cellValue = ReadExcelCell(_row, _columnNumber, _columnCount, _excel);
-                                    _ColumnName = _column.Keyword;
-
-                                    //convert null to ""
-                                    if (_cellValue == null)
-                                        _cellValue = string.Empty;
-
-                                    _signal.SetValueFromString(_cellValue, _ColumnName);
-                                }
-                            }
-                            Progress.UpdateProgressBar(_row);
-
-                            if (_signal.ValidateSignal())
-                            {
-                                Signals.Add(_signal);
-                            }
-                        }
-                        break;
-                    }
-                    else
-                    {
-                        if (!_excel.NextResult())
+                        _cellValue = _excel.GetString(_columnNumber);
+                        if (_cellValue == null || _cellValue == string.Empty)
                             break;
+                        else
+                            _Column.Add(new GeneralColumn(_cellValue, _columnNumber, false));
                     }
+                    Columns.SetColumns(_Column, false);
+
+                    Signals.Clear();
+
+                    //read all excel rows from line 2
+                    for (int _row = 2; _row <= _rowCount; _row++)
+                    {
+                        // if nothing to read exit
+                        if (!_excel.Read())
+                            break;
+
+                        _columnCount = _excel.FieldCount;
+                        //create signal and add coresponding Columns to each signal element
+                        T _signal = new T();
+
+                        foreach (GeneralColumn _column in Columns.Columns)
+                        {
+                            _columnNumber = _column.Number;
+                            if (_columnNumber != -1)
+                            {
+                                _cellValue = _generalFunction.ReadExcelCell(_row, _columnNumber, _columnCount, _excel);
+                                _ColumnName = _column.Keyword;
+
+                                //convert null to ""
+                                if (_cellValue == null)
+                                    _cellValue = string.Empty;
+
+                                _signal.SetValueFromString(_cellValue, _ColumnName);
+                            }
+                        }
+                        Progress.UpdateProgressBar(_row);
+
+                        if (_signal.ValidateSignal())
+                        {
+                            Signals.Add(_signal);
+                        }
+                    }
+                    if (!_excel.NextResult())
+                       break;
+
                 }
                 _excel.Close();
 
@@ -470,7 +424,7 @@ namespace IO_list_automation_new
                 return false;
             }
 
-            debug.ToFile(Resources.LoadDataFromFile + ": " + _fileName + " - finished", DebugLevels.Development, DebugMessageType.Info);
+            debug.ToFile(Resources.LoadDataFromFile + ": " + _fileName + " - " + Resources.Finished, DebugLevels.Development, DebugMessageType.Info);
 
             if (Signals.Count > 0)
                 return true;

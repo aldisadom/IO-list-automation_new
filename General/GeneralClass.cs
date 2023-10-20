@@ -123,7 +123,7 @@ namespace IO_list_automation_new
         }
         protected abstract void UpdateSettingsColumnsList();
 
-        public GeneralClass(string name, string sheetName,bool notSortable, string fileExtension,  ProgressIndication progress, DataGridView grid)
+        public GeneralClass(string name,bool notSortable, string fileExtension,  ProgressIndication progress, DataGridView grid)
         {
             Name = name;
             Signals = new List<T>();
@@ -131,7 +131,7 @@ namespace IO_list_automation_new
             BaseColumns = new ColumnList();
             Progress = progress;
 
-            Grid = new GeneralGrid<T>(name, sheetName, notSortable, fileExtension, Signals, progress,grid, Columns, BaseColumns);
+            Grid = new GeneralGrid<T>(name, notSortable, fileExtension, Signals, progress,grid, Columns, BaseColumns);
 
             BaseColumns.SetColumns(GenerateColumnsList(false), false);
             Columns.SetColumns(GenerateColumnsList(true),true);
@@ -140,43 +140,5 @@ namespace IO_list_automation_new
 
             UpdateSettingsColumnsList();
         }
-
-        /// <summary>
-        /// Get excel cell data, uses general function and always return string
-        /// </summary>
-        /// <param name="row">current row</param>
-        /// <param name="col">column to read</param>
-        /// <param name="maxCol">maximum columns in row</param>
-        /// <param name="excel">opened excel file</param>
-        /// <returns>string value of cell value</returns>
-        public string ReadExcelCell(int row, int col,int maxCol, IExcelDataReader excel)
-        {
-            string _retunValue = string.Empty;
-            if (col >= maxCol || col < 0)
-            {
-                Debug debug = new Debug();
-                debug.ToFile(Resources.DataReadFailBounds + " " + Resources.Column +" "+ col + " max(" + maxCol + ")"+
-                                Resources.Row + " " + row, DebugLevels.Minimum, DebugMessageType.Warning);
-            }
-            else
-            {
-                System.Type _type = excel.GetFieldType(col);
-                if (_type == null)
-                    _retunValue = string.Empty;
-                else
-                {
-                    if (_type.Name == "String")
-                        _retunValue = excel.GetString(col);
-                    else if (_type.Name == "Double")
-                        _retunValue = excel.GetDouble(col).ToString();
-                    else
-                    {
-                        Debug debug = new Debug();
-                        debug.ToPopUp(Resources.DataReadFailFormat + ": " + _type.Name, DebugLevels.None, DebugMessageType.Critical);
-                    }
-                }
-            }
-            return _retunValue;
-        }
-    }  
+    }
 }

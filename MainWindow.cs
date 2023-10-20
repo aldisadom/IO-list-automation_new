@@ -45,13 +45,6 @@ namespace IO_list_automation_new
                 data.Grid.LoadFromFile(Settings.Default.AutoLoadFile);
                 objects.Grid.LoadFromFile(Settings.Default.AutoLoadFile);
             }
-
-            this.comboboxColumn.DisplayMember = "Name";
-            this.comboboxColumn.Format += (s, e) =>
-            {
-                if (e.ListItem is DropDownClass.DropDownElement item)
-                    e.Value = item.GetName();
-            };
         }
 
         private DataGridView GetCurrentGrid()
@@ -127,6 +120,7 @@ namespace IO_list_automation_new
 
             return MessageBox.Show(message, _title, _buttons, _icon);
         }
+
         private void MainWindow_KeyDown(object sender, KeyEventArgs e)
         {
             KeyDownEvent(sender, e);
@@ -157,37 +151,34 @@ namespace IO_list_automation_new
             if (comboBox.ValidCheck())
             {
                 string _keyword = comboBox.SelectedKeyword();
-                bool _columnAdd = comboBox.SelectedMod().Contains(Resources.Add);
-                string _columnName = comboBox.GetName();
 
                 TabIndexs _index = (TabIndexs)tabControl1.SelectedIndex;
                 DataGridView _grid = GetCurrentGrid();
 
-                if (_columnAdd)
+                //if add column
+                if (comboBox.SelectedMod().Contains(Resources.Add))
                 {
                     DataGridViewColumn _columnGridView = new DataGridViewColumn();
 
                     DataGridViewTextBoxCell _cell = new DataGridViewTextBoxCell();
                     _columnGridView.CellTemplate = _cell;
                     _columnGridView.Name = _keyword;
-                    _columnGridView.HeaderText = _columnName;
+                    _columnGridView.HeaderText = comboBox.SelectedName();
                     _columnGridView.SortMode = DataGridViewColumnSortMode.Automatic;
                     _grid.Columns.Insert(_grid.ColumnCount, _columnGridView);
                 }
+                //remove column
                 else
                 {
                     //get collumn name and number of column to remove
-                    int _collumnNumber = 0;
-                    for (_collumnNumber = 0; _collumnNumber < _grid.ColumnCount; _collumnNumber++)
+                    for (int _collumnNumber = 0; _collumnNumber < _grid.ColumnCount; _collumnNumber++)
                     {
                         if (_grid.Columns[_collumnNumber].Name == _keyword)
                         {
-                            _columnName = _grid.Columns[_collumnNumber].HeaderText;
+                            _grid.Columns.Remove(_grid.Columns[_collumnNumber]);
                             break;
                         }
                     }
-
-                    _grid.Columns.Remove(_grid.Columns[_collumnNumber]);
                 }
 
                 switch (_index)
@@ -206,8 +197,8 @@ namespace IO_list_automation_new
                         break;
                 }
                 //after add/remove hide combobox
-                comboboxColumn.Visible = false;
-                comboboxColumn.SelectedIndex = -1;
+                comboBox.Visible = false;
+                comboBox.SelectedIndex = -1;
             }
         }
 
@@ -219,19 +210,17 @@ namespace IO_list_automation_new
         /// <param name="baseColumnList">base column list</param>
         private void GridView_Click(EventArgs e,  ColumnList columnList, ColumnList baseColumnList)
         {
-            Point relativePoint = PointToClient(Cursor.Position);
-
+            DropDownClass comboBox = new DropDownClass(comboboxColumn);
             MouseEventArgs _mouse = (MouseEventArgs)e;
+
             if (_mouse.Button == MouseButtons.Right)
             {
                 Debug _debug = new Debug();
                 _debug.ToFile(Resources.ColumnAddDropDown + ": " + Resources.Created, DebugLevels.Minimum, DebugMessageType.Info);
 
                 //change location to mouse press location and clear previous dropdown
-                comboboxColumn.Location = relativePoint;
-
-                List<DropDownClass.DropDownElement> _items = new List<DropDownClass.DropDownElement>();
-                DropDownClass DropDowns = new DropDownClass(comboboxColumn);
+                comboBox.Location = PointToClient(Cursor.Position);
+                comboBox.ClearItems();
 
                 //current columns that are shown can be removed
                 foreach (GeneralColumn _column in columnList)
@@ -239,7 +228,7 @@ namespace IO_list_automation_new
                     if (!_column.CanHide)
                         continue;
 
-                    DropDowns.AddItemColumn(Resources.Remove + ": ", _column.Keyword);
+                    comboBox.AddItemColumn(Resources.Remove + ": ", _column.Keyword);
                 }
 
                 string _keyword = string.Empty;
@@ -259,14 +248,14 @@ namespace IO_list_automation_new
                     }
                     // when column list doesn not have keyword that is in base than column can be added
                     if (!_found)
-                        DropDowns.AddItemColumn(Resources.Remove + ": ", _keyword);
+                        comboBox.AddItemColumn(Resources.Add + ": ", _keyword);
 
                 }
-                comboboxColumn.DataSource = _items;
-                comboboxColumn.Visible = true;
+                comboBox.ChangeDisplayMember(DropDownElementType.FullName);
+                comboBox.Visible = true;
             }
-            else if (comboboxColumn.Visible)
-                comboboxColumn.Visible = false;
+            else if (comboBox.Visible)
+                comboBox.Visible = false;
         }
 
         private void DesignGridView_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
@@ -709,7 +698,7 @@ namespace IO_list_automation_new
 
             if (design.Grid.GetData() && data.Grid.GetData() && objects.Grid.GetData())
             {
-                DBGeneralInstances Instances = new DBGeneralInstances(Progress);
+                DBGeneral Instances = new DBGeneral(Progress, FileExtensions.instDB.ToString(),"");
                 Instances.DecodeAll(data, objects);
             }
             ButtonFunctionFinished(sender);
@@ -719,15 +708,9 @@ namespace IO_list_automation_new
         {
             ButtonPressed(sender);
 
-            DesignClass design = new DesignClass(Progress, DesignGridView);
-            DataClass data = new DataClass(Progress, DataGridView);
-            ObjectsClass objects = new ObjectsClass(Progress, ObjectsGridView);
+            DBGeneral Instances = new DBGeneral(Progress, FileExtensions.instDB.ToString(), "");
+            Instances.EditAll();
 
-            if (design.Grid.GetData() && data.Grid.GetData() && objects.Grid.GetData())
-            {
-                DBGeneralInstances Instances = new DBGeneralInstances(Progress);
-                Instances.EditAll(data, objects);
-            }
             ButtonFunctionFinished(sender);
         }
 

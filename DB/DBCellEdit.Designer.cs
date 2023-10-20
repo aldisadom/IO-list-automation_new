@@ -38,6 +38,7 @@
             this.DoubleBuffered = true;
             this.Name = "DBCellEdit";
             this.Text = "DBEdit";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.DBCellEdit_FormClosing);
             this.ResumeLayout(false);
 
         }
