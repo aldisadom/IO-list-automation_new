@@ -1,5 +1,6 @@
 ﻿using ExcelDataReader;
 using IO_list_automation_new.Forms;
+using IO_list_automation_new.General;
 using IO_list_automation_new.Properties;
 using SharpCompress.Common;
 using SharpCompress.Readers.Zip;
@@ -390,24 +391,7 @@ namespace IO_list_automation_new
             SetExcelColumnList(_excelColumn, false);
         }
 
-        /// <summary>
-        /// add aditional zeros before number for better sorting
-        /// </summary>
-        /// <param name="_input">value</param>
-        /// <returns>formated string</returns>
-        private string AddZeroes(int _input)
-        {
-            if (_input < 10)
-                return ("000" + _input.ToString());
-            else if (_input < 100)
-                return ("00" + _input.ToString());
-            else if (_input < 1000)
-                return ("0" + _input.ToString());
-            else
-                return _input.ToString();
-        }
-
-        public DesignClass(ProgressIndication progress, DataGridView grid) : base("Design", "sheet",false, ".design", progress, grid)
+        public DesignClass(ProgressIndication progress, DataGridView grid) : base("Design", false, FileExtensions.design.ToString(), progress, grid)
         {
             ExcelColumns = new ColumnList();
         }
@@ -440,6 +424,8 @@ namespace IO_list_automation_new
 
                 _columnCount = _excel.FieldCount;
                 string [,] _inputData = new string[_rowCount, _columnCount+1];
+
+                GeneralFunctions _generalFunction = new GeneralFunctions();
                 //read all excel rows
                 for (int _row = 1; _row <= _rowCount; _row++)
                 {
@@ -448,13 +434,13 @@ namespace IO_list_automation_new
                         break;
 
                     //first column is row number
-                    _inputData[_row - 1, 0] = AddZeroes(_row);
+                    _inputData[_row - 1, 0] = _generalFunction.AddZeroes(_row);
                     for (int _column = 0; _column < _columnCount; _column++)
-                        _inputData[_row-1,_column+1] = ReadExcelCell(_row, _column, _columnCount, _excel);
+                        _inputData[_row-1,_column+1] = _generalFunction.ReadExcelCell(_row, _column, _columnCount, _excel);
 
                     Progress.UpdateProgressBar(_row);
                 }
-                debug.ToFile("Processing input file - finished", DebugLevels.Development, DebugMessageType.Info);
+                debug.ToFile("Processing input file - " + Resources.Finished, DebugLevels.Development, DebugMessageType.Info);
                 Progress.HideProgressBar();
                 _excel.Close();
 
@@ -500,7 +486,7 @@ namespace IO_list_automation_new
                     Progress.UpdateProgressBar(_row);
                 }
 
-                debug.ToFile("Extracting data from input file - finished", DebugLevels.Development, DebugMessageType.Info);
+                debug.ToFile("Extracting data from input file - " + Resources.Finished, DebugLevels.Development, DebugMessageType.Info);
                 Progress.HideProgressBar();
             }
             else

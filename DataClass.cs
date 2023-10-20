@@ -662,11 +662,11 @@ namespace IO_list_automation_new
             SettingsData.Default.Save();
         }
 
-        public DataClass(ProgressIndication progress, DataGridView grid) :base("Data","sheet",false,".data", progress, grid)
+        public DataClass(ProgressIndication progress, DataGridView grid) :base("Data",false, FileExtensions.data.ToString(), progress, grid)
         {
         }
 
-        public DataClass() : base("Data", "sheet", false, ".data", null, null)
+        public DataClass() : base("Data", false, FileExtensions.data.ToString(), null, null)
         {
         }
 
@@ -705,7 +705,7 @@ namespace IO_list_automation_new
             }
             Progress.HideProgressBar();
 
-            debug.ToFile(Resources.ExtractDataFromDesign + " - finished", DebugLevels.Development, DebugMessageType.Info);
+            debug.ToFile(Resources.ExtractDataFromDesign + " - " + Resources.Finished, DebugLevels.Development, DebugMessageType.Info);
         }
 
         /// <summary>
@@ -745,7 +745,7 @@ namespace IO_list_automation_new
             }
             Progress.HideProgressBar();
 
-            debug.ToFile(Resources.KKSCombine + " - finished", DebugLevels.Development, DebugMessageType.Info);
+            debug.ToFile(Resources.KKSCombine + " - " + Resources.Finished, DebugLevels.Development, DebugMessageType.Info);
         }
     }
 }

@@ -7,6 +7,7 @@ using SwiftExcel;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Data.Common;
 using System.Diagnostics;
 using System.Drawing;
@@ -160,12 +161,12 @@ namespace IO_list_automation_new
             SettingsObject.Default.Save();
         }
 
-        public ObjectsClass(ProgressIndication progress, DataGridView grid) : base("Object", "sheet",false, ".object", progress, grid)
+        public ObjectsClass(ProgressIndication progress, DataGridView grid) : base("Object",false, FileExtensions.objects.ToString(), progress, grid)
         {
             
         }
 
-        public ObjectsClass() : base("Object", "sheet", false, ".object", null, null)
+        public ObjectsClass() : base("Object", false, FileExtensions.objects.ToString(), null, null)
         {
 
         }
@@ -233,7 +234,7 @@ namespace IO_list_automation_new
 
             Progress.HideProgressBar();
 
-            debug.ToFile(Resources.ObjectGenerateUniqueData + " - finished", DebugLevels.Development, DebugMessageType.Info);
+            debug.ToFile(Resources.ObjectGenerateUniqueData + " - " + Resources.Finished, DebugLevels.Development, DebugMessageType.Info);
         }
 
         /// <summary>
@@ -277,7 +278,7 @@ namespace IO_list_automation_new
                 }
                 Progress.UpdateProgressBar(_dataNumber);
             }
-            debug.ToFile(Resources.ObjectTransferToData + " - finished", DebugLevels.Development, DebugMessageType.Info);
+            debug.ToFile(Resources.ObjectTransferToData + " - " + Resources.Finished, DebugLevels.Development, DebugMessageType.Info);
         }
     }
 }

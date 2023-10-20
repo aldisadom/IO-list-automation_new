@@ -2,6 +2,7 @@
 using IO_list_automation_new.DB;
 using IO_list_automation_new.Properties;
 using SharpCompress.Compressors.Xz;
+using SharpCompress.Crypto;
 using SwiftExcel;
 using System;
 using System.CodeDom;
@@ -20,12 +21,12 @@ using System.Windows.Forms;
 
 namespace IO_list_automation_new
 {
-    internal class DBGeneralInstanceSignal
-    {         
+    internal class DBGeneralSignal
+    {
         public List<string> Line { get; private set; }
 
         private int Index = 0;
-        public DBGeneralInstanceSignal()
+        public DBGeneralSignal()
         {
             Line = new List<string>();
         }
@@ -276,25 +277,25 @@ namespace IO_list_automation_new
         }
     }
 
-    internal class DBGeneralInstance
+    internal class DBGeneralType
     {
         public string Name { get; }
 
         public string InstanceType { get; }
 
-        public List<DBGeneralInstanceSignal> Data;
+        public List<DBGeneralSignal> Data;
 
         public ProgressIndication Progress { get; set; }
 
         public DBGeneralGrid Grid { get; private set; }
 
-        public DBGeneralInstance(string name, string filePath, string instanceType, string fileExtension, ProgressIndication progress, DataGridView grid, bool editableGrid)
+        public DBGeneralType(string name, string filePath, string instanceType, string fileExtension, ProgressIndication progress, DataGridView grid, bool editableGrid)
         {
             Name = name;
             InstanceType = instanceType;
-            Data = new List<DBGeneralInstanceSignal>();
+            Data = new List<DBGeneralSignal>();
             Progress = progress;
-            Grid = new DBGeneralGrid(Name, filePath, InstanceType, fileExtension, Progress, grid, editableGrid);
+            Grid = new DBGeneralGrid(Name, filePath, fileExtension, Progress, grid, editableGrid);
         }
 
         /// <summary>
@@ -343,7 +344,7 @@ namespace IO_list_automation_new
             {
                 for (int j = 0; j < inputData.Count; j++)
                 {
-                    DBGeneralInstanceSignal _signal = new DBGeneralInstanceSignal();
+                    DBGeneralSignal _signal = new DBGeneralSignal();
 
                     _signal.SetValue(inputData[j]);
                     Data.Add(_signal);
@@ -353,72 +354,101 @@ namespace IO_list_automation_new
         }
     }
 
-    internal class DBGeneralInstances
+    internal class DBGeneral
     {
-        public List<DBGeneralInstance> Devices { get; set; }
+        public List<DBGeneralType> Devices { get; set; }
         public string FileExtension { get; private set; }
         private ProgressIndication Progress { get; set; }
 
-        public DBGeneralInstances(ProgressIndication progress)
+        private string Directory;
+        public DBGeneral(ProgressIndication progress, string fileExtension, string aditionalFolder)
         {
-            FileExtension = ".instDB";
+            FileExtension = fileExtension;
             Progress = progress;
 
-            Devices = new List<DBGeneralInstance>();
-            GetDeviceTypes();
-        }
-
-        private void CreateInstancesDB()
-        {
-            string _function = "CreateInstancesDB";
-            Debug debug = new Debug();
-            debug.ToPopUp("Function not created: " + _function, DebugLevels.None, DebugMessageType.Critical);
+            Devices = new List<DBGeneralType>();
+            Directory = System.IO.Path.GetDirectoryName(Application.ExecutablePath) + "\\DB\\" + aditionalFolder + Settings.Default.SelectedCPU;
+            GetDeviceTypesFromFile();
         }
 
         /// <summary>
-        /// Get all instances configuration to Devices
+        /// Get all instances from DB configuration files to Devices
         /// </summary>
-        private void GetDeviceTypes()
+        private void GetDeviceTypesFromFile()
         {
-            string _fileName = System.IO.Path.GetDirectoryName(Application.ExecutablePath) + "\\DB\\" + Settings.Default.SelectedCPU +  "\\Instances" + FileExtension;
-
             Debug debug = new Debug();
-            debug.ToFile("Serching instances configuration", DebugLevels.Development, DebugMessageType.Info);
+            debug.ToFile("Serching instances configuration from file", DebugLevels.Development, DebugMessageType.Info);
+            Devices.Clear();
 
-            if (File.Exists(_fileName))
+            try
+            {
+                string[] _files = System.IO.Directory.GetFiles(Directory, "*" + FileExtension);
+
+                if (_files.Length > 0)
+                {
+                    List<string> _instancesTypes = new List<string>();
+
+                    string _fileName = string.Empty;
+                    string _type = string.Empty;
+
+                    for (int i = 0; i < _files.Length; i++)
+                    {
+                        _fileName = _files[i];
+                        _type = _fileName.Replace(Directory + "\\", "").Replace("." + FileExtension, "");
+
+                        //assign dummy grid
+                        DataGridView _gridas = new DataGridView();
+                        DBGeneralType _instance = new DBGeneralType("Instances", _fileName, _type, FileExtension, Progress, _gridas, false);
+                        List<List<string>> _fileData = _instance.Grid.LoadFromFileToMemory();
+                        _instance.SetData(_fileData);
+
+                        Devices.Add(_instance);
+                    }
+                }
+                else
+                    debug.ToPopUp(Resources.DBNotFound + ": " + Settings.Default.SelectedCPU + " - " + Resources.Instances, DebugLevels.Development, DebugMessageType.Info);
+            }
+            catch (Exception ex)
+            {
+                debug.ToPopUp(Resources.DebugCritical + ": " + ex.Message, DebugLevels.None, DebugMessageType.Critical);
+            }
+
+            debug.ToFile("Serching instances configuration from file - " + Resources.Finished, DebugLevels.Development, DebugMessageType.Info);
+        }
+
+        /// <summary>
+        /// Get all instances from grid to Devices
+        /// </summary>
+        private void GetDeviceTypesFromGrid(TabControl tabControl)
+        {
+            Debug debug = new Debug();
+            debug.ToFile("Serching instances configuration from grid", DebugLevels.Development, DebugMessageType.Info);
+            Devices.Clear();
+
+            if (tabControl.TabPages.Count > 0)
             {
                 List<string> _instancesTypes = new List<string>();
-                FileStream stream = File.Open(_fileName, FileMode.Open, FileAccess.Read);
-                IExcelDataReader _excel = ExcelReaderFactory.CreateReader(stream);
 
-                //get list of sheets
-                for (int i = 0; i < _excel.ResultsCount; i++)
+                string _fileName = string.Empty;
+                string _type = string.Empty;
+
+                for (int i = 0; i < tabControl.TabPages.Count; i++)
                 {
-                    _instancesTypes.Add(_excel.Name);
+                    _type = tabControl.TabPages[i].Name;
+                    _fileName = Directory + "\\" + _type + "." + FileExtension;
 
-                    if (!_excel.NextResult())
-                        break;
-                }
-                _excel.Close();
-
-                //get all data from sheets
-                for (int i = 0; i < _instancesTypes.Count; i++)
-                {
-                    //assign dummy grid
-                    DataGridView _gridas = new DataGridView();
-                    DBGeneralInstance _instance = new DBGeneralInstance("Instances", _fileName, _instancesTypes[i], FileExtension, Progress, _gridas, false);
-                    List<List<string>> _fileData = _instance.Grid.LoadFromFileToMemory();
+                    DataGridView _gridas = (DataGridView)tabControl.TabPages[i].Controls[0];
+                    DBGeneralType _instance = new DBGeneralType("Instances", _fileName, _type, FileExtension, Progress, _gridas, false);
+                    List<List<string>> _fileData = _instance.Grid.GetData();
                     _instance.SetData(_fileData);
 
                     Devices.Add(_instance);
                 }
             }
             else
-            {
                 debug.ToPopUp(Resources.DBNotFound + ": " + Settings.Default.SelectedCPU + " - " + Resources.Instances, DebugLevels.Development, DebugMessageType.Info);
-                CreateInstancesDB();
-            }
 
+            debug.ToFile("Serching instances configuration from grid - " + Resources.Finished, DebugLevels.Development, DebugMessageType.Info);
         }
 
         /// <summary>
@@ -444,7 +474,7 @@ namespace IO_list_automation_new
         {
             if (Devices.Count > 0)
             {
-                List<List<string>> _decodedObject = new List<List<string>>();                
+                List<List<string>> _decodedObject = new List<List<string>>();
 
                 Debug debug = new Debug();
                 debug.ToFile("Generating instances", DebugLevels.Development, DebugMessageType.Info);
@@ -473,7 +503,7 @@ namespace IO_list_automation_new
                 }
                 Progress.HideProgressBar();
 
-                debug.ToFile("Generating instances - finished", DebugLevels.Development, DebugMessageType.Info);
+                debug.ToFile("Generating instances - " + Resources.Finished, DebugLevels.Development, DebugMessageType.Info);
                 //put updated data with used collumn
                 data.Grid.PutData();
 
@@ -487,7 +517,7 @@ namespace IO_list_automation_new
         /// </summary>
         /// <param name="data"></param>
         /// <param name="objects"></param>
-        public void EditAll(DataClass data, ObjectsClass objects)
+        public void EditAll()
         {
             if (Devices.Count > 0)
             {
@@ -513,9 +543,17 @@ namespace IO_list_automation_new
                 }
                 Progress.HideProgressBar();
 
-                debug.ToFile("Editing instances - finished", DebugLevels.Development, DebugMessageType.Info);
+                debug.ToFile("Editing instances - " + Resources.Finished, DebugLevels.Development, DebugMessageType.Info);
 
                 _form.ShowDialog();
+
+                GetDeviceTypesFromGrid(_form.DBTabControl);
+                //go through all device types
+                for (int i = 0; i < Devices.Count; i++)
+                {
+                    Devices[i].Grid.GetData();
+                    Devices[i].Grid.SaveToFile();
+                }
             }
         }
     }

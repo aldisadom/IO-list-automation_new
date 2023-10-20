@@ -129,7 +129,7 @@ namespace IO_list_automation_new
 
         }
 
-        public DBIO(ProgressIndication progress, DataGridView grid) : base("DB Language", "Type",false, ".langDB", progress, grid)
+        public DBIO(ProgressIndication progress, DataGridView grid) : base("DB Language", false, ".langDB", progress, grid)
         {
 
         }

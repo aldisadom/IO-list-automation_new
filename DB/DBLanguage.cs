@@ -100,7 +100,7 @@ namespace IO_list_automation_new
 
         }
 
-        public DBLanguageType(ProgressIndication progress, DataGridView grid) : base("DBLanguageType", "Type",true, ".langDB", progress, grid)
+        public DBLanguageType(ProgressIndication progress, DataGridView grid) : base("DBLanguageType",true, FileExtensions.langTypeDB.ToString(), progress, grid)
         {
 
         }
@@ -272,7 +272,7 @@ namespace IO_list_automation_new
 
         }
 
-        public DBLanguageFunctionType(ProgressIndication progress, DataGridView grid) : base("DBFunctionLanguage", "Function",true, ".langDB", progress, grid)
+        public DBLanguageFunctionType(ProgressIndication progress, DataGridView grid) : base("DBFunctionLanguage",true, FileExtensions.langfuncDB.ToString(), progress, grid)
         {
 
         }
@@ -361,7 +361,7 @@ namespace IO_list_automation_new
             Progress.HideProgressBar();
 
             data.Grid.PutData();
-            debug.ToFile("Finding function type in data - finished", DebugLevels.Development, DebugMessageType.Info);
+            debug.ToFile("Finding function type in data - " + Resources.Finished, DebugLevels.Development, DebugMessageType.Info);
         }
     }
 

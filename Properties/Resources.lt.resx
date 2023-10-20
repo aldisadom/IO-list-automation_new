@@ -1,0 +1,438 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="ButtonPressed" xml:space="preserve">
+    <value>Button was pressed</value>
+  </data>
+  <data name="ChangeHeight" xml:space="preserve">
+    <value>Height changed</value>
+  </data>
+  <data name="ChangeWidth" xml:space="preserve">
+    <value>Width changed</value>
+  </data>
+  <data name="ColumnFunction" xml:space="preserve">
+    <value>Function</value>
+  </data>
+  <data name="ColumnFunctionText" xml:space="preserve">
+    <value>Function Text</value>
+  </data>
+  <data name="ColumnKKSDevice" xml:space="preserve">
+    <value>KKS Device</value>
+  </data>
+  <data name="ColumnKKSFunction" xml:space="preserve">
+    <value>KKS Function</value>
+  </data>
+  <data name="ColumnKKSLocation" xml:space="preserve">
+    <value>KKS Location</value>
+  </data>
+  <data name="ColumnKKSPlant" xml:space="preserve">
+    <value>KKS Plant</value>
+  </data>
+  <data name="ColumnObjectDetalisation" xml:space="preserve">
+    <value>Object Detalisation</value>
+  </data>
+  <data name="ColumnObjectName" xml:space="preserve">
+    <value>Object Name</value>
+  </data>
+  <data name="ColumnObjectType" xml:space="preserve">
+    <value>Object Type</value>
+  </data>
+  <data name="ColumnOperative" xml:space="preserve">
+    <value>Operative</value>
+  </data>
+  <data name="ColumnUsed" xml:space="preserve">
+    <value>Used</value>
+  </data>
+  <data name="Column" xml:space="preserve">
+    <value>Column</value>
+  </data>
+  <data name="ColumnCabinet" xml:space="preserve">
+    <value>Cabinet</value>
+  </data>
+  <data name="ColumnCable" xml:space="preserve">
+    <value>Cable</value>
+  </data>
+  <data name="ColumnChanged" xml:space="preserve">
+    <value>Changed</value>
+  </data>
+  <data name="ColumnChannel" xml:space="preserve">
+    <value>Channel</value>
+  </data>
+  <data name="ColumnCPU" xml:space="preserve">
+    <value>CPU</value>
+  </data>
+  <data name="ColumnFalseText" xml:space="preserve">
+    <value>False Text</value>
+  </data>
+  <data name="ColumnID" xml:space="preserve">
+    <value>ID</value>
+  </data>
+  <data name="ColumnIOText" xml:space="preserve">
+    <value>IO Text</value>
+  </data>
+  <data name="ColumnKKS" xml:space="preserve">
+    <value>KKS</value>
+  </data>
+  <data name="ColumnModuleName" xml:space="preserve">
+    <value>Module Name</value>
+  </data>
+  <data name="ColumnPage" xml:space="preserve">
+    <value>Page</value>
+  </data>
+  <data name="ColumnPin" xml:space="preserve">
+    <value>Pin</value>
+  </data>
+  <data name="ColumnRangeMax" xml:space="preserve">
+    <value>Range Max</value>
+  </data>
+  <data name="ColumnRangeMin" xml:space="preserve">
+    <value>Range Min</value>
+  </data>
+  <data name="ColumnRevision" xml:space="preserve">
+    <value>Revision</value>
+  </data>
+  <data name="ColumnTrueText" xml:space="preserve">
+    <value>True Text</value>
+  </data>
+  <data name="ColumnUnits" xml:space="preserve">
+    <value>Units</value>
+  </data>
+  <data name="CurrentDebugLevel" xml:space="preserve">
+    <value>Current debug level is set to</value>
+  </data>
+  <data name="DebugAlarm" xml:space="preserve">
+    <value>ALARM</value>
+  </data>
+  <data name="DebugCritical" xml:space="preserve">
+    <value>CRIT</value>
+  </data>
+  <data name="DebugLevel" xml:space="preserve">
+    <value>Debug level</value>
+  </data>
+  <data name="DebugLevelDevelopment" xml:space="preserve">
+    <value>Development</value>
+  </data>
+  <data name="DebugLevelHigh" xml:space="preserve">
+    <value>High</value>
+  </data>
+  <data name="DebugLevelMedium" xml:space="preserve">
+    <value>Medium</value>
+  </data>
+  <data name="DebugLevelMinimum" xml:space="preserve">
+    <value>Minimum</value>
+  </data>
+  <data name="DebugLevelNone" xml:space="preserve">
+    <value>Off</value>
+  </data>
+  <data name="DebugWarning" xml:space="preserve">
+    <value>WARN</value>
+  </data>
+  <data name="EarlyReleaseWarning" xml:space="preserve">
+    <value>Software is in early release, use with caution</value>
+  </data>
+  <data name="FileSellectCanceled" xml:space="preserve">
+    <value>File sellection canceled</value>
+  </data>
+  <data name="FunctionFinished" xml:space="preserve">
+    <value>Function finished</value>
+  </data>
+  <data name="GetDataFromGrid" xml:space="preserve">
+    <value>Getting data to grid</value>
+  </data>
+  <data name="LoadDataFromFile" xml:space="preserve">
+    <value>Loading data from file</value>
+  </data>
+  <data name="NoDataGrid" xml:space="preserve">
+    <value>There is no valid data in grid</value>
+  </data>
+  <data name="NoFunction" xml:space="preserve">
+    <value>Function does not exist</value>
+  </data>
+  <data name="ParameterNotFound" xml:space="preserve">
+    <value>Parameter not found when parsing</value>
+  </data>
+  <data name="DesignImport" xml:space="preserve">
+    <value>Importing design file</value>
+  </data>
+  <data name="ProgressBarOutRange" xml:space="preserve">
+    <value>Progress bar value is out of range</value>
+  </data>
+  <data name="PutDataToGrid" xml:space="preserve">
+    <value>Putting data to grid</value>
+  </data>
+  <data name="Row" xml:space="preserve">
+    <value>Row</value>
+  </data>
+  <data name="SaveDataToFile" xml:space="preserve">
+    <value>Saving data to file</value>
+  </data>
+  <data name="SoftwareStart" xml:space="preserve">
+    <value>Vaziuojam Dzesika</value>
+  </data>
+  <data name="Value" xml:space="preserve">
+    <value>Value</value>
+  </data>
+  <data name="Add" xml:space="preserve">
+    <value>Add</value>
+  </data>
+  <data name="Canceled" xml:space="preserve">
+    <value>Canceled</value>
+  </data>
+  <data name="ColumnAddDropDown" xml:space="preserve">
+    <value>Column add drop down</value>
+  </data>
+  <data name="ColumnTerminal" xml:space="preserve">
+    <value>Terminal</value>
+  </data>
+  <data name="ConfirmExit" xml:space="preserve">
+    <value>Do you really whant to exit?</value>
+  </data>
+  <data name="Created" xml:space="preserve">
+    <value>Created</value>
+  </data>
+  <data name="DataReadFailBounds" xml:space="preserve">
+    <value>Extract data from excel file error, requested column is out of bound</value>
+  </data>
+  <data name="DataReadFailFormat" xml:space="preserve">
+    <value>Extract data from excel file error, this format of cell is not implemented</value>
+  </data>
+  <data name="ExtractDataFromDesign" xml:space="preserve">
+    <value>Extract data from design signals</value>
+  </data>
+  <data name="Finished" xml:space="preserve">
+    <value>Baige</value>
+  </data>
+  <data name="Hidden" xml:space="preserve">
+    <value>Hidden</value>
+  </data>
+  <data name="KKSCombine" xml:space="preserve">
+    <value>KKS from 4 parts are combined</value>
+  </data>
+  <data name="NoFile" xml:space="preserve">
+    <value>File does not exist</value>
+  </data>
+  <data name="NoPasteData" xml:space="preserve">
+    <value>No data to paste</value>
+  </data>
+  <data name="ObjectGenerateUniqueData" xml:space="preserve">
+    <value>Searching unique KKS signals in Data</value>
+  </data>
+  <data name="ObjectTransferToData" xml:space="preserve">
+    <value>Transfer object data to data signals </value>
+  </data>
+  <data name="PasteAt" xml:space="preserve">
+    <value>Paste at</value>
+  </data>
+  <data name="PasteData" xml:space="preserve">
+    <value>Paste data</value>
+  </data>
+  <data name="Remove" xml:space="preserve">
+    <value>Remove</value>
+  </data>
+  <data name="ToMuchDataPaste" xml:space="preserve">
+    <value>To much data to paste</value>
+  </data>
+  <data name="ChannelHasNumber" xml:space="preserve">
+    <value>Channel column has number</value>
+  </data>
+  <data name="ChannelIsNumber" xml:space="preserve">
+    <value>Channel column is fully number</value>
+  </data>
+  <data name="PinHasNumber" xml:space="preserve">
+    <value>Pin column has number</value>
+  </data>
+  <data name="PinIsNumber" xml:space="preserve">
+    <value>Pin column is fully number</value>
+  </data>
+  <data name="RowOffset" xml:space="preserve">
+    <value>Row offset</value>
+  </data>
+  <data name="NoData" xml:space="preserve">
+    <value>No data</value>
+  </data>
+  <data name="ColumnDeviceTypeText" xml:space="preserve">
+    <value>Device type text</value>
+  </data>
+  <data name="ColumnFunction1" xml:space="preserve">
+    <value>Function</value>
+  </data>
+  <data name="ColumnFunction2" xml:space="preserve">
+    <value>Function</value>
+  </data>
+  <data name="ColumnFunctionText1" xml:space="preserve">
+    <value>Function text with 1 part</value>
+  </data>
+  <data name="ColumnFunctionText1o2" xml:space="preserve">
+    <value>Function text with 2 part 1/2</value>
+  </data>
+  <data name="ColumnFunctionText2o2" xml:space="preserve">
+    <value>Function text with 2 part 2/2</value>
+  </data>
+  <data name="ColumnTag" xml:space="preserve">
+    <value>Tag name</value>
+  </data>
+  <data name="FileAutoLoad" xml:space="preserve">
+    <value>Automatic save file loading</value>
+  </data>
+  <data name="FindFunction" xml:space="preserve">
+    <value>Finding funtion type in data</value>
+  </data>
+  <data name="FindObjectType" xml:space="preserve">
+    <value>Finding object type in object</value>
+  </data>
+  <data name="DBNotFound" xml:space="preserve">
+    <value>Database not found</value>
+  </data>
+  <data name="Instances" xml:space="preserve">
+    <value>Instances</value>
+  </data>
+  <data name="Variables" xml:space="preserve">
+    <value>Variables</value>
+  </data>
+  <data name="InstancesEditGenerate" xml:space="preserve">
+    <value>Instances edit generating</value>
+  </data>
+  <data name="InstancesGenerate" xml:space="preserve">
+    <value>Generate device instances</value>
+  </data>
+  <data name="ChoiceData" xml:space="preserve">
+    <value>Data</value>
+  </data>
+  <data name="ChoiceIf" xml:space="preserve">
+    <value>IF</value>
+  </data>
+  <data name="ChoiceIO" xml:space="preserve">
+    <value>IO</value>
+  </data>
+  <data name="ChoiceIsEmpty" xml:space="preserve">
+    <value>Is empty</value>
+  </data>
+  <data name="ChoiceIsNotEmpty" xml:space="preserve">
+    <value>Is not empty</value>
+  </data>
+  <data name="ChoiceObject" xml:space="preserve">
+    <value>Object</value>
+  </data>
+  <data name="ChoiceTab" xml:space="preserve">
+    <value>TAB</value>
+  </data>
+  <data name="ChoiceText" xml:space="preserve">
+    <value>Text</value>
+  </data>
+</root>

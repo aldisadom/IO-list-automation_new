@@ -9,9 +9,21 @@ using System.Security.Cryptography;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
+using System.Resources;
+using System.Globalization;
+using System.Threading;
 
 namespace IO_list_automation_new
 {
+    enum FileExtensions
+    {
+        data,
+        design,
+        objects,
+        langfuncDB,
+        langTypeDB,
+        instDB,
+    }
     enum DebugLevels
     {
         None = 0,
@@ -32,7 +44,17 @@ namespace IO_list_automation_new
         Design = 0,
         Data = 1,
         Object = 2,
-    }    
+    }
+    enum ComboboxType
+    {
+        Main,
+        MainNoEmpty,
+        If,
+        IfStatement,
+        Data,
+        Object,
+        Text,
+    }
 
     public static class ConstCol
     {
@@ -105,6 +127,8 @@ namespace IO_list_automation_new
 
         static public void Main()
         {
+            Thread.CurrentThread.CurrentUICulture = CultureInfo.GetCultureInfo("lt");
+
             string _versionNumber = "0.0.1";
 
             Debug _debug = new Debug();
