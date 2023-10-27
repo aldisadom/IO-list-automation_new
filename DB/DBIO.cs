@@ -37,22 +37,22 @@ namespace IO_list_automation_new
         {
             switch (parameterName)
             {
-                case ConstCol.ColumnNameID:
+                case KeywordColumn.ID:
                     ID = value;
                     break;
-                case ConstCol.ColumnNameCPU:
+                case KeywordColumn.CPU:
                     CPU = value;
                     break;
-                case ConstCol.ColumnNameKKS:
+                case KeywordColumn.KKS:
                     KKS = value;
                     break;
-                case ConstCol.ColumnNameOperative:
+                case KeywordColumn.Operative:
                     Operative = value;
                     break;
-                case ConstCol.ColumnNameObjectType:
+                case KeywordColumn.ObjectType:
                     ObjectType = value;
                     break;
-                case ConstCol.ColumnNameObjectName:
+                case KeywordColumn.ObjectName:
                     ObjectName = value;
                     break;
             }
@@ -62,36 +62,36 @@ namespace IO_list_automation_new
         /// Parsing data signal element to string for grid
         /// </summary>
         /// <param name="parameterName">parameter to be read</param>
-        /// <param name="supressError">supress alarm message, used only for transfering from one type to another type data classes</param>
+        /// <param name="suppressError">suppress alarm message, used only for transferring from one type to another type data classes</param>
         /// <returns>value of parameter</returns>
-        public override string GetValueString(string parameterName, bool supressError)
+        public override string GetValueString(string parameterName, bool suppressError)
         {
             string _returnValue = string.Empty;
             switch (parameterName)
             {
-                case ConstCol.ColumnNameID:
+                case KeywordColumn.ID:
                     _returnValue = ID;
                     break;
-                case ConstCol.ColumnNameCPU:
+                case KeywordColumn.CPU:
                     _returnValue = CPU;
                     break;
-                case ConstCol.ColumnNameKKS:
+                case KeywordColumn.KKS:
                     _returnValue = KKS;
                     break;
-                case ConstCol.ColumnNameOperative:
+                case KeywordColumn.Operative:
                     _returnValue = Operative;
                     break;
-                case ConstCol.ColumnNameObjectType:
+                case KeywordColumn.ObjectType:
                     _returnValue = ObjectType;
                     break;
-                case ConstCol.ColumnNameObjectName:
+                case KeywordColumn.ObjectName:
                     _returnValue = ObjectName;
                     break;
                 default:
-                    if (!supressError)
+                    if (!suppressError)
                     {
                         Debug _debug = new Debug();
-                        _debug.ToPopUp(Resources.ParameterNotFound + ":" + parameterName, DebugLevels.None, DebugMessageType.Critical);
+                        _debug.ToPopUp("DBIOSignal.GetValueString " + Resources.ParameterNotFound + ":" + parameterName, DebugLevels.None, DebugMessageType.Critical);
                     }
                     break;
             }
@@ -112,26 +112,23 @@ namespace IO_list_automation_new
     {
         protected override List<GeneralColumn> GeneralGenerateColumnsList()
         {
-            List<GeneralColumn> _columns = new List<GeneralColumn>();
-
-            _columns.Add(new GeneralColumn(ConstCol.ColumnNameID, SettingsObject.Default.ObjectsColumnID, true));
-            _columns.Add(new GeneralColumn(ConstCol.ColumnNameCPU, SettingsObject.Default.ObjectsColumnCPU, true));
-            _columns.Add(new GeneralColumn(ConstCol.ColumnNameKKS, SettingsObject.Default.ObjectsColumnKKS, false));
-            _columns.Add(new GeneralColumn(ConstCol.ColumnNameOperative, SettingsObject.Default.ObjectsColumnOperative, true));
-            _columns.Add(new GeneralColumn(ConstCol.ColumnNameObjectType, SettingsObject.Default.ObjectsColumnObjectType, false));
-            _columns.Add(new GeneralColumn(ConstCol.ColumnNameObjectName, SettingsObject.Default.ObjectsColumnObjectName, false));
+            List<GeneralColumn> _columns = new List<GeneralColumn>()
+            {
+                new GeneralColumn(KeywordColumn.ID, SettingsObject.Default.ColumnID, true),
+                new GeneralColumn(KeywordColumn.CPU, SettingsObject.Default.ColumnCPU, true),
+                new GeneralColumn(KeywordColumn.KKS, SettingsObject.Default.ColumnKKS, false),
+                new GeneralColumn(KeywordColumn.Operative, SettingsObject.Default.ColumnOperative, true),
+                new GeneralColumn(KeywordColumn.ObjectType, SettingsObject.Default.ColumnObjectType, false),
+                new GeneralColumn(KeywordColumn.ObjectName, SettingsObject.Default.ColumnObjectName, false),
+            };
 
             return _columns;
         }
 
         protected override void UpdateSettingsColumnsList()
-        {
-
-        }
+        {}
 
         public DBIO(ProgressIndication progress, DataGridView grid) : base("DB Language", false, ".langDB", progress, grid)
-        {
-
-        }
+        {}
     }
 }

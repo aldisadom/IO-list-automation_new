@@ -77,7 +77,7 @@
     <Setting Name="ColumnObjectName" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">10</Value>
     </Setting>
-    <Setting Name="ColumnObjectDetalisation" Type="System.Int32" Scope="User">
+    <Setting Name="ColumnObjectSpecifics" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">11</Value>
     </Setting>
     <Setting Name="ColumnFunctionText" Type="System.Int32" Scope="User">

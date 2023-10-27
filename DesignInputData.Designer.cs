@@ -35,7 +35,7 @@
             this.ChannelHasNumber = new System.Windows.Forms.CheckBox();
             this.RowOffsetInput = new System.Windows.Forms.TextBox();
             this.RowOffsetLabel = new System.Windows.Forms.Label();
-            this.comboboxColumn = new System.Windows.Forms.ComboBox();
+            this.comboBoxColumn = new System.Windows.Forms.ComboBox();
             ((System.ComponentModel.ISupportInitialize)(this.InputDataGridView)).BeginInit();
             this.SuspendLayout();
             // 
@@ -110,7 +110,7 @@
             this.RowOffsetInput.TabIndex = 41;
             this.RowOffsetInput.Text = "2";
             this.RowOffsetInput.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.RowOffsetInput.TextChanged += new System.EventHandler(this.RowOffsetInput_TextChanged);
+            this.RowOffsetInput.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.RowOffsetInput_KeyPress);
             // 
             // RowOffsetLabel
             // 
@@ -124,22 +124,22 @@
             this.RowOffsetLabel.Text = "RowOffset";
             this.RowOffsetLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // comboboxColumn
+            // comboBoxColumn
             // 
-            this.comboboxColumn.FormattingEnabled = true;
-            this.comboboxColumn.Location = new System.Drawing.Point(563, 43);
-            this.comboboxColumn.Name = "comboboxColumn";
-            this.comboboxColumn.Size = new System.Drawing.Size(101, 21);
-            this.comboboxColumn.TabIndex = 43;
-            this.comboboxColumn.Visible = false;
-            this.comboboxColumn.SelectedValueChanged += new System.EventHandler(this.comboboxColumn_SelectedValueChanged);
+            this.comboBoxColumn.FormattingEnabled = true;
+            this.comboBoxColumn.Location = new System.Drawing.Point(563, 43);
+            this.comboBoxColumn.Name = "comboBoxColumn";
+            this.comboBoxColumn.Size = new System.Drawing.Size(101, 21);
+            this.comboBoxColumn.TabIndex = 43;
+            this.comboBoxColumn.Visible = false;
+            this.comboBoxColumn.SelectedValueChanged += new System.EventHandler(this.comboBoxColumn_SelectedValueChanged);
             // 
             // DesignInputData
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1000, 631);
-            this.Controls.Add(this.comboboxColumn);
+            this.Controls.Add(this.comboBoxColumn);
             this.Controls.Add(this.RowOffsetLabel);
             this.Controls.Add(this.RowOffsetInput);
             this.Controls.Add(this.PinIsNumber);
@@ -165,6 +165,6 @@
         private System.Windows.Forms.CheckBox ChannelHasNumber;
         private System.Windows.Forms.TextBox RowOffsetInput;
         private System.Windows.Forms.Label RowOffsetLabel;
-        private System.Windows.Forms.ComboBox comboboxColumn;
+        private System.Windows.Forms.ComboBox comboBoxColumn;
     }
 }

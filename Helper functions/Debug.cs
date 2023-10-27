@@ -25,11 +25,11 @@ namespace IO_list_automation_new
         /// <returns>number as string with additional zeroes</returns>
         private string NumberToString(int _number, int decimals)
         {
-            string _formatedString = _number.ToString();
+            string _formattedString = _number.ToString();
             //check size of number if not enought numbers add 0 in front
-            for (int i = _formatedString.Length; i < decimals; i++)
-                _formatedString = "0" + _formatedString;
-            return _formatedString;
+            for (int i = _formattedString.Length; i < decimals; i++)
+                _formattedString = "0" + _formattedString;
+            return _formattedString;
         }
 
         /// <summary>
@@ -39,10 +39,10 @@ namespace IO_list_automation_new
         private string FormatTime()
         {
             System.DateTime currentTime = DateTime.Now;
-            string _formatedTime = NumberToString(currentTime.Year, 4) + "-" + NumberToString(currentTime.Month, 2) + "-" + NumberToString(currentTime.Day, 2) + " " +
+            string _formattedTime = NumberToString(currentTime.Year, 4) + "-" + NumberToString(currentTime.Month, 2) + "-" + NumberToString(currentTime.Day, 2) + " " +
                                     NumberToString(currentTime.Hour, 2) + ":" + NumberToString(currentTime.Minute, 2) + ":" + NumberToString(currentTime.Second, 2) + "." +
                                     NumberToString(currentTime.Millisecond, 3);
-            return _formatedTime;
+            return _formattedTime;
         }
 
         /// <summary>
@@ -69,7 +69,7 @@ namespace IO_list_automation_new
         /// <param name="icon">debug message icon</param>
         private void PopUp(string message, MessageBoxIcon icon)
         {
-            string _title = "";
+            string _title = string.Empty;
             MessageBoxButtons _buttons = MessageBoxButtons.OK;
             MessageBox.Show(message, _title, _buttons, icon); // DialogResult result = MessageBox.Show(message, title, buttons, _icon);
         }
@@ -151,37 +151,14 @@ namespace IO_list_automation_new
             }
         }
 
-        private string DecodeDebugLevel (DebugLevels debugLevel)
-        {
-            string _text = "";
-            switch (debugLevel)
-            {
-                case DebugLevels.None:
-                    _text = Resources.DebugLevelNone;
-                    break;
-                case DebugLevels.Minimum:
-                    _text = Resources.DebugLevelMinimum;
-                    break;
-                case DebugLevels.Medium:
-                    _text = Resources.DebugLevelMedium;
-                    break;
-                case DebugLevels.High:
-                    _text = Resources.DebugLevelHigh;
-                    break;
-                case DebugLevels.Development:
-                    _text = Resources.DebugLevelDevelopment;
-                    break;
-            }
-            return _text;
-        }
-
         /// <summary>
         /// Prints current debug level to file
         /// </summary>
         /// <returns>current debug level</returns>
         public uint CurrentDebugLevel ()
         {
-            string _currentDebugLevel = DecodeDebugLevel((DebugLevels)Settings.Default.DebugLevel);
+            string _currentDebugLevel = ((DebugLevels)Settings.Default.DebugLevel).ToString();
+
             ToFile($"{Resources.CurrentDebugLevel}: {_currentDebugLevel}", DebugLevels.None, DebugMessageType.Info);
             return Settings.Default.DebugLevel;
         }
@@ -192,9 +169,8 @@ namespace IO_list_automation_new
         /// <param name="newDebugLevel">new debugging level</param>
         public void SetDebugLevel(uint newDebugLevel)
         {
-            string _currentDebugLevel = DecodeDebugLevel((DebugLevels)Settings.Default.DebugLevel);
-            string _newDebugLevel = DecodeDebugLevel((DebugLevels)newDebugLevel);
-
+            string _currentDebugLevel = ((DebugLevels)Settings.Default.DebugLevel).ToString();
+            string _newDebugLevel = ((DebugLevels)newDebugLevel).ToString();
 
             ToPopUp($"{Resources.DebugLevel} {_currentDebugLevel} -> {_newDebugLevel}", DebugLevels.High, DebugMessageType.Info);
             Settings.Default.DebugLevel = newDebugLevel;

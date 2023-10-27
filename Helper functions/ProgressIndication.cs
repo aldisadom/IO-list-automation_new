@@ -14,33 +14,34 @@ namespace IO_list_automation_new
 
         private Label BarLabel { get; set; }
 
-        private int Max = 100;
+        private int PreviousValue;
 
-        private float multiplier = 0;
+        private int Deadband;
+
+        private int SuppressLevel { get { return (int)Bar.Tag; } set { Bar.Tag = value; } }
 
         public ProgressIndication(ProgressBar bar, Label barLabel)
         {
             Bar = bar;
             BarLabel = barLabel;
-            Bar.Maximum = 100;
-            Bar.Minimum = 0;
+            if (Bar.Tag == null)
+                SuppressLevel = 0;
         }
 
         private void ShowProgressBar(int max)
         {
-            BarLabel.Visible = true;
-            Bar.Visible = true;
-            Bar.Value = 0;
+            SuppressLevel++;
+            if (SuppressLevel <= 1)
+            {
+                BarLabel.Visible = true;
+                Bar.Visible = true;
+                Bar.Value = 0;
+                PreviousValue = 0;
 
-            if (max > 0)
-            {
-                Max = max;
-                multiplier = 100.0f / (float)max;
-            }
-            else
-            {
-                Max = 100;
-                multiplier = 1.0f;
+                // progress bar update every 5%
+                Deadband = max / 20;
+
+                Bar.Maximum = max;
             }
         }
 
@@ -49,39 +50,49 @@ namespace IO_list_automation_new
         /// </summary>
         public void HideProgressBar()
         {
+            SuppressLevel--;
             BarLabel.Visible = false;
             Bar.Visible = false;
             Bar.Value = 0;
         }
 
         /// <summary>
-        /// Update progress bar
+        /// Progress bar update
         /// </summary>
-        /// <param name="value">new progress bar value in percentage 0-100/param>
+        /// <param name="value">new value of progress bar</param>
         public void UpdateProgressBar(int value)
         {
-            if ((value >= 0) && (value <= Max))
+            if (SuppressLevel <= 1)
             {
-                int _scaledValue = (int)((float)value * multiplier);
-                Bar.Value = _scaledValue;
-            }
-            else
-            {
-                Debug _debug = new Debug();
-                _debug.ToFile(Resources.ProgressBarOutRange + value.ToString() + " of " + Bar.Maximum, DebugLevels.None, DebugMessageType.Info);
+                if ((value >= 0) && (value <= Bar.Maximum))
+                {
+                    if (value - PreviousValue >= Deadband)
+                    {
+                        PreviousValue = value;
+                        Bar.Value = value;
+                        Bar.Update();
+                    }
+                }
+                else
+                {
+                    Debug _debug = new Debug();
+                    _debug.ToFile(Resources.ProgressBarOutRange + " " + value.ToString() + " Max: " + Bar.Maximum, DebugLevels.None, DebugMessageType.Warning);
+                }
             }
         }
 
         /// <summary>
         /// Rename progress bar label
         /// </summary>
-        /// <param name="name">new progres bar label</param>
+        /// <param name="name">new progress bar label</param>
         public void RenameProgressBar(string name, int max)
         {
             Debug _debug = new Debug();
             _debug.ToFile("Progress bar renamed to " + name, DebugLevels.Development, DebugMessageType.Info);
             BarLabel.Text = name;
             ShowProgressBar(max);
+            Bar.Update();
+            BarLabel.Update();
         }
     }
 }

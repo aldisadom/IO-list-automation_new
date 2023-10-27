@@ -28,74 +28,74 @@ namespace IO_list_automation_new.DB
 
         private void DBTabControl_SelectedIndexChanged(object sender, EventArgs e)
         {
-            PageEditCombobox.Visible = false;
-            CellEditCombobox.Visible = false;
+            PageEditComboBox.Visible = false;
+            CellEditComboBox.Visible = false;
             UpdateResult();
         }
 
         private void DBTabControl_MouseClick(object sender, MouseEventArgs e)
         {
-            PageEditCombobox.Visible = false;
-            CellEditCombobox.Visible = false;
+            PageEditComboBox.Visible = false;
+            CellEditComboBox.Visible = false;
 
             if (e.Button == MouseButtons.Right)
             {
-                PageEditCombobox.Items.Clear();
-                PageEditCombobox.Items.Add(string.Empty);
-                PageEditCombobox.Items.Add(Resources.Add);
+                PageEditComboBox.Items.Clear();
+                PageEditComboBox.Items.Add(string.Empty);
+                PageEditComboBox.Items.Add(Resources.Add);
 
                 for (int i = 0; i < DBTabControl.TabPages.Count; i++)
-                    PageEditCombobox.Items.Add(Resources.Remove + ": " + DBTabControl.TabPages[i].Name);
+                    PageEditComboBox.Items.Add(Resources.Remove + ": " + DBTabControl.TabPages[i].Name);
 
 
-                PageEditCombobox.Visible = true;
-                PageEditCombobox.Location = PointToClient(Cursor.Position);
-                PageEditCombobox.BringToFront();
+                PageEditComboBox.Visible = true;
+                PageEditComboBox.Location = PointToClient(Cursor.Position);
+                PageEditComboBox.BringToFront();
             }
         }
 
-        private void PageEditCombobox_SelectedIndexChanged(object sender, EventArgs e)
+        private void PageEditComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            string _text = PageEditCombobox.SelectedItem.ToString();
-            PageEditCombobox.Visible = false;
+            string _text = PageEditComboBox.SelectedItem.ToString();
+            PageEditComboBox.Visible = false;
 
             if (_text == Resources.Add)
             {
-                NewName _form = new NewName(Resources.Add + " " + Resources.Instances);
-                _form.ShowDialog();
-                DataGridView _grid = AddData(_form.Output);
+                NewName _newName = new NewName(Resources.Add + " " + Resources.DeleteMe);
+                _newName.ShowDialog();
+                DataGridView _grid = AddData(_newName.Output);
 
                 _grid.Columns.Add("0", "0");
                 _grid.Rows.Add();
             }
             else if (_text != string.Empty)
-                DBTabControl.TabPages.RemoveByKey(_text.Replace(Resources.Remove + ": ",""));
+                DBTabControl.TabPages.RemoveByKey(_text.Replace(Resources.Remove + ": ",string.Empty));
         }
 
         private void DataGridView_RowHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
         {
-            PageEditCombobox.Visible = false;
-            CellEditCombobox.Visible = false;
+            PageEditComboBox.Visible = false;
+            CellEditComboBox.Visible = false;
 
             if (e.Button == MouseButtons.Right)
             {
-                CellEditCombobox.Items.Clear();
-                CellEditCombobox.Items.Add(string.Empty);
-                CellEditCombobox.Items.Add(Resources.Add);
-                CellEditCombobox.Items.Add(Resources.Remove);
+                CellEditComboBox.Items.Clear();
+                CellEditComboBox.Items.Add(string.Empty);
+                CellEditComboBox.Items.Add(Resources.Add);
+                CellEditComboBox.Items.Add(Resources.Remove);
 
-                CellEditCombobox.Tag = e.RowIndex;
+                CellEditComboBox.Tag = e.RowIndex;
 
-                CellEditCombobox.Visible = true;
-                CellEditCombobox.Location = PointToClient(Cursor.Position);
-                CellEditCombobox.BringToFront();
+                CellEditComboBox.Visible = true;
+                CellEditComboBox.Location = PointToClient(Cursor.Position);
+                CellEditComboBox.BringToFront();
             }
         }
 
         private void DataGridView_CellClick(object sender, EventArgs e)
         {
-            PageEditCombobox.Visible = false;
-            CellEditCombobox.Visible = false;
+            PageEditComboBox.Visible = false;
+            CellEditComboBox.Visible = false;
 
             int _row = ((System.Windows.Forms.DataGridViewCellEventArgs)e).RowIndex;
             DataGridView _grid = (DataGridView)sender;
@@ -107,9 +107,9 @@ namespace IO_list_automation_new.DB
                 else
                     _line.Add(_grid.Rows[_row].Cells[i].Value.ToString());
 
-            DBCellEdit _form = new DBCellEdit(_line);
-            _form.ShowDialog();
-            _line = _form.OutputData;
+            DBCellEdit _DBCellEdit = new DBCellEdit(_line);
+            _DBCellEdit.ShowDialog();
+            _line = _DBCellEdit.OutputData;
 
             if (_line.Count > _grid.ColumnCount)
             {
@@ -141,22 +141,22 @@ namespace IO_list_automation_new.DB
             UpdateResult();
         }
 
-        private void CellEditCombobox_SelectedIndexChanged(object sender, EventArgs e)
+        private void CellEditComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
             DataGridView _grid = (DataGridView)DBTabControl.SelectedTab.Controls[0];
 
             //add after sellected row
-            if (CellEditCombobox.SelectedItem.ToString() == Resources.Add)
+            if (CellEditComboBox.SelectedItem.ToString() == Resources.Add)
             {
-                _grid.Rows.Insert((int)CellEditCombobox.Tag + 1, 1);
+                _grid.Rows.Insert((int)CellEditComboBox.Tag + 1, 1);
                 for (int i = 0; i < _grid.ColumnCount; i++)
-                    _grid.Rows[(int)CellEditCombobox.Tag + 1].Cells[i].Value = string.Empty;
+                    _grid.Rows[(int)CellEditComboBox.Tag + 1].Cells[i].Value = string.Empty;
             }
-            else if (CellEditCombobox.SelectedItem.ToString() == Resources.Remove)
-                _grid.Rows.RemoveAt((int)CellEditCombobox.Tag);
+            else if (CellEditComboBox.SelectedItem.ToString() == Resources.Remove)
+                _grid.Rows.RemoveAt((int)CellEditComboBox.Tag);
 
-            DBTabControl.SelectedTab.Controls.Remove(this.CellEditCombobox);
-            CellEditCombobox.Visible = false;
+            DBTabControl.SelectedTab.Controls.Remove(this.CellEditComboBox);
+            CellEditComboBox.Visible = false;
             UpdateResult();
         }
 
@@ -248,7 +248,7 @@ namespace IO_list_automation_new.DB
 
                     //decode current line
                     _instance.SetValue(_line);
-                    List<string> _decodedline = _instance.DecodeLine(null, null, true);
+                    List<string> _decodedline = _instance.DecodeLine(0,null, null, true);
 
                     string[] _row = new string[_decodedline.Count];
                     for (int j = 0; j < _decodedline.Count; j++)

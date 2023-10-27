@@ -103,7 +103,7 @@ namespace IO_list_automation_new
         {
             int _columnNumber = 0;
             int _columnIndex = 0;
-            string _keyword = "";
+            string _keyword = string.Empty;
             bool _canHide = false;
 
             Debug debug = new Debug();
@@ -160,8 +160,8 @@ namespace IO_list_automation_new
                 Progress.RenameProgressBar(Resources.PutDataToGrid + ": " + Name, Signals.Count());
 
                 int _columnNumber = 0;
-                string _keyword = "";
-                string _cellValue = "";
+                string _keyword = string.Empty;
+                string _cellValue = string.Empty;
                 for (int _signalNumber = 0; _signalNumber < Signals.Count(); _signalNumber++)
                 {
                     string[] _row = new string[Columns.Columns.Count()];
@@ -205,8 +205,8 @@ namespace IO_list_automation_new
             GetColumns();
             int _signalCount = 0;
             Signals.Clear();
-            string _keyword = "";
-            string _cellValue = "";
+            string _keyword = string.Empty;
+            string _cellValue = string.Empty;
             for (int _rowNumber = 0; _rowNumber < Grid.Rows.Count; _rowNumber++)
             {
                 T _signal = new T();
@@ -228,7 +228,6 @@ namespace IO_list_automation_new
                     _signalCount++;
                     Signals.Add(_signal);
                 }
-
             }
             Progress.HideProgressBar();
 
@@ -237,13 +236,13 @@ namespace IO_list_automation_new
             if (_signalCount == 0)
                 debug.ToPopUp(Resources.NoDataGrid + ": " + Name, DebugLevels.None, DebugMessageType.Warning);
 
-            return (_signalCount > 0);
+            return _signalCount > 0;
         }
 
         /// <summary>
-        /// Create save file of current grid to excel with file sellection
+        /// Create save file of current grid to excel with file selection
         /// </summary>
-        public void SaveSellect()
+        public void SaveSelect()
         {
             Debug debug = new Debug();
 
@@ -273,8 +272,8 @@ namespace IO_list_automation_new
 
                 ExcelWriter _excel = new ExcelWriter(_fileName);
 
-                string _keyword = "";
-                string _cellValue = "";
+                string _keyword = string.Empty;
+                string _cellValue = string.Empty;
                 int _ColumnNumber = 0;
                 int _rowOffset = 1;
 
@@ -317,10 +316,10 @@ namespace IO_list_automation_new
         }
 
         /// <summary>
-        /// load data from excel to grid with file sellection
+        /// load data from excel to grid with file selection
         /// </summary>
         /// <returns>there is valid data</returns>
-        public bool LoadSellect()
+        public bool LoadSelect()
         {
             Debug debug = new Debug();
 
@@ -354,12 +353,11 @@ namespace IO_list_automation_new
                 int _rowCount = _excel.RowCount;
                 int _columnCount = 0;
                 int _columnNumber = 0;
-                string _cellValue = "";
-                string _ColumnName = "";
+                string _cellValue = string.Empty;
+                string _ColumnName = string.Empty;
                 Progress.RenameProgressBar(Resources.LoadDataFromFile + ": " + _fileName, _rowCount);
 
                 List<GeneralColumn> _Column = new List<GeneralColumn>();
-                GeneralFunctions _generalFunction = new GeneralFunctions();
 
                 for (int i = 0; i < _excel.ResultsCount; i++)
                 {
@@ -393,7 +391,7 @@ namespace IO_list_automation_new
                             _columnNumber = _column.Number;
                             if (_columnNumber != -1)
                             {
-                                _cellValue = _generalFunction.ReadExcelCell(_row, _columnNumber, _columnCount, _excel);
+                                _cellValue = GeneralFunctions.ReadExcelCell(_row, _columnNumber, _columnCount, _excel);
                                 _ColumnName = _column.Keyword;
 
                                 //convert null to ""
@@ -412,7 +410,6 @@ namespace IO_list_automation_new
                     }
                     if (!_excel.NextResult())
                        break;
-
                 }
                 _excel.Close();
 

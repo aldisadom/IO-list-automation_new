@@ -326,12 +326,12 @@ namespace IO_list_automation_new.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("11")]
-        public int ColumnObjectDetalisation {
+        public int ColumnObjectSpecifics {
             get {
-                return ((int)(this["ColumnObjectDetalisation"]));
+                return ((int)(this["ColumnObjectSpecifics"]));
             }
             set {
-                this["ColumnObjectDetalisation"] = value;
+                this["ColumnObjectSpecifics"] = value;
             }
         }
         

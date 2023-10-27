@@ -2,22 +2,22 @@
 <SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="IO_list_automation_new.Properties" GeneratedClassName="SettingsObject">
   <Profiles />
   <Settings>
-    <Setting Name="ObjectsColumnID" Type="System.Int32" Scope="User">
+    <Setting Name="ColumnID" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">0</Value>
     </Setting>
-    <Setting Name="ObjectsColumnCPU" Type="System.Int32" Scope="User">
+    <Setting Name="ColumnCPU" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">1</Value>
     </Setting>
-    <Setting Name="ObjectsColumnKKS" Type="System.Int32" Scope="User">
+    <Setting Name="ColumnKKS" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">3</Value>
     </Setting>
-    <Setting Name="ObjectsColumnOperative" Type="System.Int32" Scope="User">
+    <Setting Name="ColumnOperative" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">2</Value>
     </Setting>
-    <Setting Name="ObjectsColumnObjectType" Type="System.Int32" Scope="User">
+    <Setting Name="ColumnObjectType" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">4</Value>
     </Setting>
-    <Setting Name="ObjectsColumnObjectName" Type="System.Int32" Scope="User">
+    <Setting Name="ColumnObjectName" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">5</Value>
     </Setting>
   </Settings>

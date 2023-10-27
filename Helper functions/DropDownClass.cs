@@ -6,7 +6,9 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static System.Windows.Forms.AxHost;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.Menu;
 
 namespace IO_list_automation_new.General
 {
@@ -32,16 +34,14 @@ namespace IO_list_automation_new.General
             Name = name;
             FullName = Mod + Name;
         }
-
-        
-
     }
-    internal class ComboboxTag
+
+    internal class ComboBoxTag
     {
-        public ComboboxType Type { get; }
+        public ComboBoxType Type { get; }
         public string PreviousValue { get; set; }
 
-        public ComboboxTag(ComboboxType type, string previousValue)
+        public ComboBoxTag(ComboBoxType type, string previousValue)
         {
             Type = type;
             PreviousValue = previousValue;
@@ -50,48 +50,60 @@ namespace IO_list_automation_new.General
 
     internal class DropDownClass
     {
-        public ComboboxTag Tag
+        public ComboBoxTag Tag
         {
             get
             {
-                return (ComboboxTag)Element.Tag;
+                return (ComboBoxTag)Element.Tag;
             }
         }
-
         public string Name
         {
             get { return Element.Name; }
         }
-
         public bool Visible
         {
             set { Element.Visible = value; }
             get {return Element.Visible;}
         }
-
         public int SelectedIndex
         {
             set { Element.SelectedIndex = value; }
             get { return Element.SelectedIndex; }
         }
-
         public Point Location
         {
             set { Element.Location = value; }
             get { return Element.Location; }
         }        
 
+        public EventHandler OpenEvent {set { Element.DropDown += value; } }
+        public KeyPressEventHandler KeyPressEvent { set { Element.KeyPress += value; } }
+        public EventHandler IndexChangedEvent { set { Element.SelectedIndexChanged += value; } }
+        public EventHandler OpenEventRemove { set { Element.DropDown -= value; } }
+        public KeyPressEventHandler KeyPressEventRemove { set { Element.KeyPress -= value; } }
+        public EventHandler IndexChangedEventRemove { set { Element.SelectedIndexChanged -= value; } }
+
         private GeneralColumnName ColumnNames = new GeneralColumnName();
 
-        private System.Windows.Forms.ComboBox Element {get;set; }
+        public System.Windows.Forms.ComboBox Element {get;private set; }
 
         public DropDownClass(System.Windows.Forms.ComboBox element)
         {
             Element = element;
         }
 
+        public DropDownClass(string name)
+        {
+            Element = new System.Windows.Forms.ComboBox();
+            Element.FormattingEnabled = true;
+            Element.Size = new System.Drawing.Size(120, 21);
+            Element.Location = new System.Drawing.Point(20, 20);
+            Element.Name = name;
+        }
+
         /// <summary>
-        /// Clear all items of combobox
+        /// Clear all items of comboBox
         /// </summary>
         public void ClearItems()
         {
@@ -110,13 +122,13 @@ namespace IO_list_automation_new.General
             }
         }
 
-        public void SetTag(ComboboxType type, string previousValue)
+        public void SetTag(ComboBoxType type, string previousValue)
         {
-            Element.Tag = new ComboboxTag(type,previousValue);
+            Element.Tag = new ComboBoxTag(type,previousValue);
         }
 
         /// <summary>
-        /// Change display member of combobox
+        /// Change display member of comboBox
         /// </summary>
         /// <param name="displayMember">display member enum</param>
         public void ChangeDisplayMember(DropDownElementType displayMember)
@@ -171,7 +183,7 @@ namespace IO_list_automation_new.General
         /// <param name="text">name of item</param>
         public void AddItemText(string text)
         {
-            DropDownElement _element = new DropDownElement("",text,text);
+            DropDownElement _element = new DropDownElement(string.Empty, text,text);
             Element.Items.Add(_element);
         }
 
@@ -182,7 +194,7 @@ namespace IO_list_automation_new.General
         /// <param name="keyword">keyword of item</param>
         public void AddItemFull(string mod, string keyword)
         {
-            DropDownElement _element = new DropDownElement(mod, keyword, ColumnNames.GetName(keyword));
+            DropDownElement _element = new DropDownElement(mod, keyword, ColumnNames.GetColumnOrChoicesName(keyword));
 
             Element.Items.Add(_element);
         }

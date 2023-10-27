@@ -1,10 +1,12 @@
 ﻿using IO_list_automation_new.DB;
 using IO_list_automation_new.General;
+using IO_list_automation_new.Properties;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -13,6 +15,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml.Linq;
 using static IO_list_automation_new.GeneralColumnName;
+using static System.Net.Mime.MediaTypeNames;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace IO_list_automation_new.Forms
@@ -27,23 +30,22 @@ namespace IO_list_automation_new.Forms
         private int StartY = 30;
 
         /// <summary>
-        /// Combobox value changed event
+        /// ComboBox value changed event
         /// </summary>
-        /// <param name="sender">combobox</param>
+        /// <param name="sender">ComboBox</param>
         /// <param name="e">event arguments</param>
-        private void ComboboxValueChangedEvent(object sender, EventArgs e)
+        private void ComboBox_ValueChangedEvent(object sender, EventArgs e)
         {
             DropDownClass _box = new DropDownClass((System.Windows.Forms.ComboBox)sender);
 
             string _currentValue = _box.SelectedKeyword();
 
-            //combobox type is of type that need to change layout
-            if (_box.Tag.Type != ComboboxType.Text || _box.Tag.Type != ComboboxType.Data || _box.Tag.Type != ComboboxType.Object)
+            //ComboBox type is of type that need to change layout
+            if (_box.Tag.Type != ComboBoxType.Text || _box.Tag.Type != ComboBoxType.Data || _box.Tag.Type != ComboBoxType.Object)
             {
                 //dropdown value changed
                 if (_box.Tag.PreviousValue != _currentValue)
                 {
-                    GeneralFunctions _generalFunctions = new GeneralFunctions();
                     List<string> _list = SortElements();
                     OutputData.Clear();
 
@@ -59,51 +61,68 @@ namespace IO_list_automation_new.Forms
                         //extracting keyword to list
                         OutputData.Add(GetDropDownSelectedKeyword(_list[i]));
                     }
-
                     //delete elements
                     DeleteOldElements(_index, _list, _box.Tag.PreviousValue);
 
                     //add new
                     switch (_currentValue)
                     {
-                        case ConstDBChoices.ChoiceIf:
+                        case KeywordDBChoices.If:
                             //if
-                            OutputData.Add(ConstDBChoices.ChoiceIf);
+                            OutputData.Add(KeywordDBChoices.If);
                             //object
-                            OutputData.Add(ConstDBChoices.ChoiceObject);
+                            OutputData.Add(KeywordDBChoices.Object);
                             OutputData.Add(Choices.ObjectColumns[0]);
                             //statement
                             OutputData.Add(Choices.ChoicesIfStatement[0]);
                             //true object
-                            OutputData.Add(ConstDBChoices.ChoiceText);
+                            OutputData.Add(KeywordDBChoices.Text);
                             OutputData.Add("edit");
                             //false object
-                            OutputData.Add(ConstDBChoices.ChoiceText);
+                            OutputData.Add(KeywordDBChoices.Text);
                             OutputData.Add("edit");
 
                             break;
-                        case ConstDBChoices.ChoiceTab:
-                            OutputData.Add(ConstDBChoices.ChoiceTab);
+                        case KeywordDBChoices.Index:
+                            OutputData.Add(KeywordDBChoices.Index);
+                            //index memory area
+                            OutputData.Add(string.Empty);
+                            //index multiplier
+                            OutputData.Add("1");
+                            //index offset
+                            OutputData.Add("0");
                             break;
-                        case ConstDBChoices.ChoiceNone:
+                        case KeywordDBChoices.Tab:
+                            OutputData.Add(KeywordDBChoices.Tab);
+                            break;
+                        case KeywordDBChoices.None:
 
                             break;
-                        case ConstDBChoices.ChoiceText:
-                            OutputData.Add(ConstDBChoices.ChoiceText);
+                        case KeywordDBChoices.Text:
+                            OutputData.Add(KeywordDBChoices.Text);
                             OutputData.Add("edit");
                             break;
-                        case ConstDBChoices.ChoiceData:
-                            OutputData.Add(ConstDBChoices.ChoiceData);
+                        case KeywordDBChoices.Data:
+                            OutputData.Add(KeywordDBChoices.Data);
                             OutputData.Add(Choices.DataColumns[0]);
                             break;
-                        case ConstDBChoices.ChoiceObject:
-                            OutputData.Add(ConstDBChoices.ChoiceObject);
+                        case KeywordDBChoices.Object:
+                            OutputData.Add(KeywordDBChoices.Object);
                             OutputData.Add(Choices.ObjectColumns[0]);
                             break;
-                        case ConstDBChoices.ChoiceIO:
-                            OutputData.Add(ConstDBChoices.ChoiceIO);
+                        case KeywordDBChoices.IO:
+                            OutputData.Add(KeywordDBChoices.IO);
                             OutputData.Add("ON");
                             break;
+                        case KeywordDBChoices.TagType:
+                            OutputData.Add(KeywordDBChoices.TagType);
+                            OutputData.Add("Status");
+                            break;
+                        default:
+                            Debug _debug = new Debug();
+                            string text = "DBCellEdit.ComboBoxValueChangedEvent";
+                            _debug.ToFile("Report to programmer that there is error in " + text + " " + _currentValue, DebugLevels.None, DebugMessageType.Critical);
+                            throw new InvalidProgramException("Error in - " + text + "." + _currentValue);
                     }
 
                     //add after
@@ -111,13 +130,43 @@ namespace IO_list_automation_new.Forms
                         OutputData.Add(GetDropDownSelectedKeyword(_list[i]));
 
                     DeleteAllItem();
-                    DecodeAll(OutputData);
+                    DecodeElementsAll(OutputData);
                 }
             }
         }
 
         /// <summary>
-        /// Read all comboboxes and update Output Data
+        /// ComboBox accept only numbers
+        /// </summary>
+        /// <param name="sender">ComboBox</param>
+        /// <param name="e">event arguments</param>
+        private void ComboBox_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            // Check if the key is not a digit and not a control key (e.g., Backspace)
+            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar))
+            {
+                e.Handled = true; // Block the input
+            }
+        }
+
+        /// <summary>
+        /// ComboBox opened event, to get previous value
+        /// </summary>
+        /// <param name="sender">ComboBox</param>
+        /// <param name="e">event arguments</param>
+        private void ComboBox_OpenEvent(object sender, EventArgs e)
+        {
+            DropDownClass _box = new DropDownClass((System.Windows.Forms.ComboBox)sender);
+            if (_box.Tag == null)
+            {
+                _box.SetTag(ComboBoxType.Text, _box.SelectedKeyword());
+            }
+            else
+                _box.Tag.PreviousValue = _box.SelectedKeyword();
+        }
+
+        /// <summary>
+        /// Read all comboBoxes and update Output Data
         /// </summary>
         private void UpdateOutputData()
         {
@@ -126,22 +175,6 @@ namespace IO_list_automation_new.Forms
 
             for (int i = 0; i < _list.Count; i++)
                 OutputData.Add(GetDropDownSelectedKeyword(_list[i]));
-        }
-
-        /// <summary>
-        /// Combobox opened event, to get previous value
-        /// </summary>
-        /// <param name="sender">combobox</param>
-        /// <param name="e">event arguments</param>
-        private void ComboboxOpenEvent(object sender, EventArgs e)
-        {
-            DropDownClass _box = new DropDownClass((System.Windows.Forms.ComboBox)sender);
-            if (_box.Tag == null)
-            {
-                _box.SetTag(ComboboxType.Text, _box.SelectedKeyword());
-            }
-            else
-                _box.Tag.PreviousValue = _box.SelectedKeyword();
         }
 
         /// <summary>
@@ -156,23 +189,21 @@ namespace IO_list_automation_new.Forms
 
                 if (_item.GetType().Name.Contains("ComboBox"))
                 {
-                    System.Windows.Forms.ComboBox _box = ((System.Windows.Forms.ComboBox)_item);
-                    _box.SelectedIndexChanged -= ComboboxValueChangedEvent;
-                    _box.DropDown -= ComboboxOpenEvent;
-
-                    this.Controls.Remove(_box);
+                    DropDownClass DropDowns = new DropDownClass((System.Windows.Forms.ComboBox)_item);
+                    DropDowns.IndexChangedEventRemove=ComboBox_ValueChangedEvent;
+                    DropDowns.KeyPressEventRemove=ComboBox_KeyPress;
+                    DropDowns.OpenEventRemove=ComboBox_OpenEvent;
                 }
-                else 
-                    this.Controls.Remove(_item);
+                this.Controls.Remove(_item);
             }
             this.ResumeLayout();
         }
 
         /// <summary>
-        /// Find object by name and return selected keyword of combobox
+        /// Find object by name and return selected keyword of comboBox
         /// </summary>
         /// <param name="name">object name</param>
-        /// <returns>combobox selected keyword</returns>
+        /// <returns>comboBox selected keyword</returns>
         private string GetDropDownSelectedKeyword(string name)
         {
             DropDownClass _boxFound = new DropDownClass((System.Windows.Forms.ComboBox)this.Controls.Find(name, false)[0]);
@@ -180,9 +211,9 @@ namespace IO_list_automation_new.Forms
         }
 
         /// <summary>
-        /// Create and sort all comboboxes names
+        /// Create and sort all comboBoxes names
         /// </summary>
-        /// <returns>comboboxes names</returns>
+        /// <returns>comboBoxes names</returns>
         private List<string> SortElements()
         {
             List<string> _list = new List<string>();
@@ -200,16 +231,16 @@ namespace IO_list_automation_new.Forms
         }
 
         /// <summary>
-        /// Deleting all items based on type combobox current value
+        /// Deleting all items based on type comboBox current value
         /// </summary>
-        /// <param name="startIndex">combobox index from list to be deleted</param>
-        /// <param name="list">combobox list</param>
+        /// <param name="startIndex">comboBox index from list to be deleted</param>
+        /// <param name="list">comboBox list</param>
         /// <param name="cellValue">current cell value</param>
         private void DeleteOldElements(int startIndex, List<string> list, string cellValue)
         {
             switch (cellValue)
             {
-                case ConstDBChoices.ChoiceIf:
+                case KeywordDBChoices.If:
                     //remove If element
                     list.RemoveAt(startIndex);
                     //remove variable
@@ -221,40 +252,56 @@ namespace IO_list_automation_new.Forms
                     //remove false variable
                     DeleteOldElements(startIndex, list, GetDropDownSelectedKeyword(list[startIndex]));
                     break;
-
-                case ConstDBChoices.ChoiceTab:
+                case KeywordDBChoices.Index:
+                    //remove 4 element
+                    list.RemoveAt(startIndex);
+                    list.RemoveAt(startIndex);
+                    list.RemoveAt(startIndex);
+                    list.RemoveAt(startIndex);
+                    break;
+                case KeywordDBChoices.TagType:
+                    //remove 2 element
+                    list.RemoveAt(startIndex);
+                    list.RemoveAt(startIndex);
+                    break;
+                case KeywordDBChoices.Tab:
                     //remove 1 element
                     list.RemoveAt(startIndex);
                     break;
 
-                case ConstDBChoices.ChoiceNone:
+                case KeywordDBChoices.None:
                     //remove 1 element
                     list.RemoveAt(startIndex);
                     break;
 
-                case ConstDBChoices.ChoiceText:
+                case KeywordDBChoices.Text:
                     //remove 2 elements
                     list.RemoveAt(startIndex);
                     list.RemoveAt(startIndex);
                     break;
 
-                case ConstDBChoices.ChoiceData:
+                case KeywordDBChoices.Data:
                     //remove 2 elements
                     list.RemoveAt(startIndex);
                     list.RemoveAt(startIndex);
                     break;
 
-                case ConstDBChoices.ChoiceObject:
+                case KeywordDBChoices.Object:
                     //remove 2 elements
                     list.RemoveAt(startIndex);
                     list.RemoveAt(startIndex);
                     break;
 
-                case ConstDBChoices.ChoiceIO:
+                case KeywordDBChoices.IO:
                     //remove 2 elements
                     list.RemoveAt(startIndex);
                     list.RemoveAt(startIndex);
                     break;
+                default:
+                    Debug _debug = new Debug();
+                    string text = "DBCellEdit.DeleteOldElements";
+                    _debug.ToFile("Report to programmer that there is error in " + text + " " + cellValue, DebugLevels.None, DebugMessageType.Critical);
+                    throw new InvalidProgramException("Error in - " + text + "." + cellValue);
             }
         }
 
@@ -263,14 +310,13 @@ namespace IO_list_automation_new.Forms
         /// </summary>
         /// <param name="x">x location</param>
         /// <param name="y">y location </param>
-        /// <param name="selectedText">selected text of combobox</param>
+        /// <param name="selectedText">selected text of comboBox</param>
         /// <param name="labelText">Text of label</param>
-        /// <param name="selectList">Combobox selection list</param>
-        private void AddElement(int x, int y, string selectedText, string labelText, List<string> selectList, ComboboxType elementType)
+        /// <param name="selectList">ComboBox selection list</param>
+        private void AddElement(int x, int y, string selectedText, string labelText, List<string> selectList, ComboBoxType elementType)
         {
             int _offsetX = 150;
             int _offsetY = 50;
-            GeneralFunctions _generalFunctions = new GeneralFunctions();
 
             // 
             // label1
@@ -280,8 +326,8 @@ namespace IO_list_automation_new.Forms
                 System.Windows.Forms.Label label1 = new System.Windows.Forms.Label();
                 label1.AutoSize = true;
                 label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
-                label1.Location = new System.Drawing.Point(x * _offsetX + StartX, y * _offsetY + StartY);
-                label1.Name = "Row" + _generalFunctions.AddZeroes(y) + "Col" + _generalFunctions.AddZeroes(x) + ":Label";
+                label1.Location = new System.Drawing.Point((x * _offsetX) + StartX, (y * _offsetY) + StartY);
+                label1.Name = "Row" + GeneralFunctions.AddZeroes(y) + "Col" + GeneralFunctions.AddZeroes(x) + ":Label";
                 label1.Size = new System.Drawing.Size(46, 17);
                 label1.Text = labelText;
                 this.Controls.Add(label1);
@@ -289,20 +335,11 @@ namespace IO_list_automation_new.Forms
             // 
             // comboBox1
             //
-            System.Windows.Forms.ComboBox comboBox1 = new System.Windows.Forms.ComboBox();
-            comboBox1.FormattingEnabled = true;
-            comboBox1.Location = new System.Drawing.Point(x * _offsetX + StartX, y * _offsetY + StartY + 20);
-            comboBox1.Name = "Row"+ _generalFunctions.AddZeroes(y) + "Col" + _generalFunctions.AddZeroes(x) + ":Dropdown";
-            comboBox1.Size = new System.Drawing.Size(120, 21);
 
-            
-            //combobox open event to get previous value
- //           if (elementType != ComboboxType.Text || elementType != ComboboxType.Data || elementType != ComboboxType.Object)
- //               comboBox1.DropDown += new System.EventHandler(ComboboxOpenEvent);
-
-            DropDownClass DropDowns = new DropDownClass(comboBox1);
+            DropDownClass DropDowns = new DropDownClass("Row" + GeneralFunctions.AddZeroes(y) + "Col" + GeneralFunctions.AddZeroes(x) + ":Dropdown");
             DropDowns.SetTag(elementType, selectedText);
             DropDowns.ChangeDisplayMember(DropDownElementType.Name);
+            DropDowns.Location = new System.Drawing.Point((x * _offsetX) + StartX, (y * _offsetY) + StartY + 20);
 
             if (selectList == null)
             {
@@ -316,20 +353,24 @@ namespace IO_list_automation_new.Forms
                 DropDowns.Editable(false);
                 for (int i = 0; i < selectList.Count; i++)
                 {
-                    DropDowns.AddItemFull("", selectList[i]);
+                    DropDowns.AddItemFull(string.Empty, selectList[i]);
                     if (selectedText == selectList[i])
                         DropDowns.SelectedIndex = i;
                 }
             }
 
-            //combobox open event to get previous value
-            if (elementType != ComboboxType.Text || elementType != ComboboxType.Data || elementType != ComboboxType.Object)
-                comboBox1.DropDown += new System.EventHandler(ComboboxOpenEvent);
+            //comboBox open event to get previous value
+            if (elementType != ComboBoxType.Text || elementType != ComboBoxType.Data || elementType != ComboBoxType.Object)
+                DropDowns.OpenEvent = ComboBox_OpenEvent;
+
+            //to check if entered text is number
+            if (elementType == ComboBoxType.Number)
+                DropDowns.KeyPressEvent = ComboBox_KeyPress;
 
             //change index event
-            comboBox1.SelectedIndexChanged += new System.EventHandler(ComboboxValueChangedEvent);
+            DropDowns.IndexChangedEvent = ComboBox_ValueChangedEvent;
 
-            this.Controls.Add(comboBox1);
+            this.Controls.Add(DropDowns.Element);
         }
 
         /// <summary>
@@ -341,95 +382,124 @@ namespace IO_list_automation_new.Forms
         /// <param name="column">column index of element</param>
         /// <param name="row">row index of element</param>
         /// <returns></returns>
-        public int Decode(List<string> inputData, int index, string labelText,ref int column,ref int row, bool emptySelectionAvailable)
+        public int DecodeElement(List<string> inputData, int index, string labelText,ref int column,ref int row, bool emptySelectionAvailable)
         {
             int _index = index;
             List<string> _choicesMain;
-            ComboboxType _typeMain;
+            ComboBoxType _typeMain;
+            string text = string.Empty;
+            Debug _debug = new Debug();
 
             if (emptySelectionAvailable)
             {
                 _choicesMain = Choices.ChoicesMain;
-                _typeMain = ComboboxType.Main;
-
+                _typeMain = ComboBoxType.Main;
             }
             else
             {
                 _choicesMain = Choices.ChoicesMainNoEmpty;
-                _typeMain = ComboboxType.MainNoEmpty;
+                _typeMain = ComboBoxType.MainNoEmpty;
             }
-            
+
             switch (inputData[_index])
             {
-                case ConstDBChoices.ChoiceTab:
+                case KeywordDBChoices.Tab:
                     AddElement(column, row, inputData[_index], labelText, _choicesMain, _typeMain);
                     row++;
                     break;
-                case ConstDBChoices.ChoiceText:
-                    AddElement(column, row, inputData[_index], labelText, _choicesMain, _typeMain);
-                    _index++;
-                    AddElement(column+1, row, inputData[_index],null,null, ComboboxType.Text);
-                    row++;
-                    break;
-                case ConstDBChoices.ChoiceObject:
+                case KeywordDBChoices.Text:
                     AddElement(column, row, inputData[_index], labelText, _choicesMain, _typeMain);
                     _index++;
-                    AddElement(column+1, row, inputData[_index],null, Choices.ObjectColumns, ComboboxType.Object);
+                    AddElement(column+1, row, inputData[_index],null,null, ComboBoxType.Text);
                     row++;
                     break;
-                case ConstDBChoices.ChoiceData:
+                case KeywordDBChoices.Object:
                     AddElement(column, row, inputData[_index], labelText, _choicesMain, _typeMain);
                     _index++;
-                    AddElement(column+1, row, inputData[_index], null, Choices.DataColumns, ComboboxType.Data);
+                    AddElement(column+1, row, inputData[_index],null, Choices.ObjectColumns, ComboBoxType.Object);
                     row++;
                     break;
-                case ConstDBChoices.ChoiceIO:
+                case KeywordDBChoices.Data:
                     AddElement(column, row, inputData[_index], labelText, _choicesMain, _typeMain);
                     _index++;
-                    AddElement(column+1, row, inputData[_index], null, null, ComboboxType.Text);
+                    AddElement(column+1, row, inputData[_index], null, Choices.DataColumns, ComboBoxType.Data);
                     row++;
                     break;
-                case ConstDBChoices.ChoiceIf:
+                case KeywordDBChoices.IO:
+                    AddElement(column, row, inputData[_index], labelText, _choicesMain, _typeMain);
+                    _index++;
+                    AddElement(column+1, row, inputData[_index], null, null, ComboBoxType.Text);
+                    row++;
+                    break;
+                case KeywordDBChoices.TagType:
+                    AddElement(column, row, inputData[_index], labelText, _choicesMain, _typeMain);
+                    _index++;
+                    AddElement(column + 1, row, inputData[_index], null, null, ComboBoxType.Text);
+                    row++;
+                    break;
+                case KeywordDBChoices.Index:
+                    AddElement(column, row, inputData[_index], labelText, _choicesMain, _typeMain);
+                    _index++;
+                    //memory area
+                    AddElement(column + 1, row, inputData[_index], Resources.MemoryArea, null, ComboBoxType.Text);
+                    _index++;
+                    //multiplyer
+                    AddElement(column + 2, row, inputData[_index], Resources.Multiplyer, null, ComboBoxType.Number);
+                    _index++;
+                    //offset
+                    AddElement(column + 3, row, inputData[_index], Resources.Offset, null, ComboBoxType.Number);
+                    row++;
+                    break;
+                case KeywordDBChoices.If:
                     AddElement(column, row, inputData[_index], labelText, _choicesMain, _typeMain);
                     _index++;
                     column++;
                     // variable
                     switch (inputData[_index])
                     {
-                        case ConstDBChoices.ChoiceObject:
-                            AddElement(column, row, inputData[_index],null, Choices.ChoicesIf, ComboboxType.If);
+                        case KeywordDBChoices.Object:
+                            AddElement(column, row, inputData[_index],null, Choices.ChoicesIf, ComboBoxType.If);
                             _index++;
-                            AddElement(column+1, row, inputData[_index],null, Choices.ObjectColumns, ComboboxType.Object);
+                            AddElement(column+1, row, inputData[_index],null, Choices.ObjectColumns, ComboBoxType.Object);
                             break;
-                        case ConstDBChoices.ChoiceData:
-                            AddElement(column, row, inputData[_index], null, Choices.ChoicesIf, ComboboxType.If);
+                        case KeywordDBChoices.Data:
+                            AddElement(column, row, inputData[_index], null, Choices.ChoicesIf, ComboBoxType.If);
                             _index++;
-                            AddElement(column+1, row, inputData[_index], null, Choices.DataColumns, ComboboxType.Data);
+                            AddElement(column+1, row, inputData[_index], null, Choices.DataColumns, ComboBoxType.Data);
                             break;
-                        case ConstDBChoices.ChoiceIO:
-                            AddElement(column, row, inputData[_index], null, Choices.ChoicesIf, ComboboxType.If);
+                        case KeywordDBChoices.IO:
+                            AddElement(column, row, inputData[_index], null, Choices.ChoicesIf, ComboBoxType.If);
                             _index++;
-                            AddElement(column+1, row, inputData[_index],null,null, ComboboxType.Text);
+                            AddElement(column+1, row, inputData[_index],null,null, ComboBoxType.Text);
                             break;
+                        default:
+                            text = "DBCellEdit.Decode.IF";
+                            _debug.ToFile("Report to programmer that there is error in " + text + " " + inputData[_index], DebugLevels.None, DebugMessageType.Critical);
+                            throw new InvalidProgramException("Error in - " + text + "." + inputData[_index]);
                     }
                     column++;
                     row++;
                     _index++;
                     //if statement
-                    AddElement(column, row, inputData[_index], "Statement", Choices.ChoicesIfStatement, ComboboxType.IfStatement);
+                    AddElement(column, row, inputData[_index], Resources.Statement, Choices.ChoicesIfStatement, ComboBoxType.IfStatement);
 
                     column++;
                     _index++;
                     //true statement
-                    _index = Decode(inputData, _index, "true",ref column, ref row,false);
+                    _index = DecodeElement(inputData, _index, Resources.True,ref column, ref row,false);
 
                     _index++;
                     //false statement
-                    _index = Decode(inputData, _index,"false", ref column, ref row,false);
+                    _index = DecodeElement(inputData, _index,Resources.False, ref column, ref row,false);
 
                     column -= 3;
                     break;
-
+                case KeywordDBChoices.None:
+                    break;
+                default:
+                    text = "DBCellEdit.Decode";
+                    _debug.ToFile("Report to programmer that there is error in " + text + " " + inputData[_index], DebugLevels.None, DebugMessageType.Critical);
+                    throw new InvalidProgramException("Error in - " + text + "." + inputData[_index]);
             }
             return _index;
         }
@@ -438,15 +508,15 @@ namespace IO_list_automation_new.Forms
         /// Decode all input data
         /// </summary>
         /// <param name="inputData">DB line</param>
-        public void DecodeAll(List<string> inputData)
+        public void DecodeElementsAll(List<string> inputData)
         {
             this.SuspendLayout();
             int x = 0;
             int y = 0;
             for (int i = 0; i < inputData.Count; i++)
-                i = Decode(inputData, i, null, ref x, ref y, true);
+                i = DecodeElement(inputData, i, null, ref x, ref y, true);
 
-            AddElement(x, y,ConstDBChoices.ChoiceNone,null, Choices.ChoicesMain, ComboboxType.Main);
+            AddElement(x, y,KeywordDBChoices.None,null, Choices.ChoicesMain, ComboBoxType.Main);
 
             List<string> sortas = SortElements();
             this.ResumeLayout();
@@ -455,11 +525,10 @@ namespace IO_list_automation_new.Forms
 
         public DBCellEdit(List<string> inputData)
         {
-            GeneralFunctions _generalFunctions = new GeneralFunctions();
-            OutputData = _generalFunctions.ListCopy(inputData);
+            OutputData = GeneralFunctions.ListCopy(inputData);
 
             InitializeComponent();
-            DecodeAll (inputData);
+            DecodeElementsAll (inputData);
         }
 
         private void DBCellEdit_FormClosing(object sender, FormClosingEventArgs e)

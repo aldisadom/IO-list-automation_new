@@ -11,13 +11,17 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Diagnostics;
+using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.ComTypes;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Xml.Linq;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace IO_list_automation_new
 {
@@ -25,9 +29,16 @@ namespace IO_list_automation_new
     {
         public List<string> Line { get; private set; }
 
+        public string TagType { get; private set; }
+        public string MemoryArea { get; private set; }
+        public string Adress { get; private set; }
+
         private int Index = 0;
         public DBGeneralSignal()
         {
+            TagType = string.Empty;
+            MemoryArea = string.Empty;
+            Adress = string.Empty;
             Line = new List<string>();
         }
 
@@ -38,59 +49,6 @@ namespace IO_list_automation_new
         public void SetValue(List<string> newList)
         {
             Line = newList;
-        }
-
-        /// <summary>
-        /// Checks if design signal is valid:
-        /// </summary>
-        /// <returns>true if minimum signal requirements are met</returns>
-        public bool ValidateSignal()
-        {
-            bool _returnValue = true;
-            return _returnValue;
-        }
-
-        /// <summary>
-        /// Peek to next cell and return next cell to read next
-        /// </summary>
-        /// <param name="inIndex">index to search from</param>
-        /// <returns>last index to of data</returns>
-        private int DecodePeek(int inIndex)
-        {
-            int _newIndex = inIndex + 1;
-            string _text = Line[_newIndex];
-
-            if (_text == ConstDBChoices.ChoiceIf)
-            {
-                //peek for variable
-                _newIndex = DecodePeek(_newIndex);
-
-                //skip operation
-                _newIndex++;
-
-                //peek for true
-                _newIndex = DecodePeek(_newIndex);
-
-                //peek for false
-                _newIndex = DecodePeek(_newIndex);
-
-                return _newIndex;
-            }
-            else if (_text == ConstDBChoices.ChoiceTab)
-                return _newIndex;
-            else
-            {
-                if (_text == ConstDBChoices.ChoiceData)
-                    _newIndex++;
-                else if (_text == ConstDBChoices.ChoiceObject)
-                    _newIndex++;
-                else if (_text == ConstDBChoices.ChoiceIO)
-                    _newIndex++;
-                else if (_text == ConstDBChoices.ChoiceText)
-                    _newIndex++;
-
-                return _newIndex;
-            }
         }
 
         /// <summary>
@@ -155,48 +113,90 @@ namespace IO_list_automation_new
         }
 
         /// <summary>
+        /// Set Tag of this line
+        /// </summary>
+        /// <param name="tagType">tag type</param>
+        private void DecodeTagType(string tagType)
+        {
+            TagType = tagType;
+        }
+
+        /// <summary>
+        /// Calculate value
+        /// </summary>
+        /// <param name="index">index of object</param>
+        /// <param name="decodedLine">line of DB</param>
+        /// <returns>value calculated with offset and multiplyer</returns>
+        private string DecodeIndex(int index,int indexLine, List<string> line)
+        {
+            int _value = 0;
+            int _returnValue = 0;
+
+            MemoryArea = line[indexLine];
+            if (int.TryParse(line[indexLine+1], out _value))
+            {
+                _returnValue = index * _value;
+                if (int.TryParse(line[indexLine + 2], out _value))
+                    _returnValue = _returnValue + _value;
+
+                Adress = _returnValue.ToString();
+                return Adress;
+            }
+            else
+                return string.Empty;
+        }
+
+        /// <summary>
         /// decoding if statement from 4 cells
         /// </summary>
+        /// <param name="index">index of object</param>
         /// <param name="decodedLine">decoded list</param>
         /// <param name="data">data</param>
         /// <param name="objectSignal">object</param>
         /// <param name="simulation">simulate data</param>
-        private void DecodeIf(List<string> decodedLine, DataClass data, ObjectSignal objectSignal, bool simulation)
+        private void DecodeIf(int index, List<string> decodedLine, DataClass data, ObjectSignal objectSignal, bool simulation)
         {
             Index++;
             string _text = Line[Index];
             string _returnPart1 = string.Empty;
             int _newIndex = 0;
+            Debug _debug = new Debug();
+            string text = string.Empty;
 
-            if (_text == ConstDBChoices.ChoiceData)
-            {
-                Index++;
+            Index++;
+            if (_text == KeywordDBChoices.Data)
                 _returnPart1 = DecodeData(Line[Index], data, objectSignal, simulation);
-            }
-            else if (_text == ConstDBChoices.ChoiceObject)
-            {
-                Index++;
+            else if (_text == KeywordDBChoices.Object)
                 _returnPart1 = DecodeObjects(Line[Index], objectSignal, simulation);
-            }
-            else if (_text == ConstDBChoices.ChoiceIO)
-            {
-                Index++;
+            else if (_text == KeywordDBChoices.IO)
                 _returnPart1 = DecodeIO(Line[Index], data, objectSignal, simulation);
+            else
+            {
+                text = "DBGeneralSignal.DecodeIf";
+                _debug.ToFile("Report to programmer that there is error in " + text + " " + _text, DebugLevels.None, DebugMessageType.Critical);
+                throw new InvalidProgramException("Error in - " + text + "." + _text);
             }
 
             Index++;
             _text = Line[Index];
-            bool _returnPart2 = false;
-            if (_text == ConstDBChoices.ChoiceIsEmpty)
-                _returnPart2 = _returnPart1 == string.Empty;
+            bool _ifTrue = false;
+
+            if (_text == KeywordDBChoices.IsEmpty)
+                _ifTrue = _returnPart1 == string.Empty;
+            else if (_text == KeywordDBChoices.IsNotEmpty)
+                _ifTrue = _returnPart1 != string.Empty;
             else
-                _returnPart2 = _returnPart1 != string.Empty;
+            {
+                text = "DBGeneralSignal.DecodeIf";
+                _debug.ToFile("Report to programmer that there is error in " + text + " " + _text, DebugLevels.None, DebugMessageType.Critical);
+                throw new InvalidProgramException("Error in - " + text + "." + _text);
+            }
 
             //if = true
-            if (_returnPart2)
+            if (_ifTrue)
             {
                 Index++;
-                DecodeCell(decodedLine, data, objectSignal, simulation);
+                DecodeCell(index, decodedLine, data, objectSignal, simulation);
 
                 //peek false statement and update index to skip it
                 _newIndex = DecodePeek(Index);
@@ -207,48 +207,114 @@ namespace IO_list_automation_new
             {
                 //peek true statement and update index to skip it
                 _newIndex = DecodePeek(Index) + 1;
+
                 Index = _newIndex;
-                DecodeCell(decodedLine, data, objectSignal, simulation);
+                DecodeCell(index, decodedLine, data, objectSignal, simulation);
+            }
+        }
+
+        /// <summary>
+        /// Peek to next cell and return next cell to read next
+        /// </summary>
+        /// <param name="inIndex">index to search from</param>
+        /// <returns>last index to of data</returns>
+        private int DecodePeek(int inIndex)
+        {
+            int _newIndex = inIndex + 1;
+            string _text = Line[_newIndex];
+
+            if (_text == KeywordDBChoices.If)
+            {
+                //peek for variable
+                _newIndex = DecodePeek(_newIndex);
+
+                //skip operation
+                _newIndex++;
+
+                //peek for true
+                _newIndex = DecodePeek(_newIndex);
+
+                //peek for false
+                _newIndex = DecodePeek(_newIndex);
+
+                return _newIndex;
+            }
+            else if (_text == KeywordDBChoices.Tab)
+                return _newIndex;
+            else
+            {
+                if (_text == KeywordDBChoices.Data)
+                    _newIndex++;
+                else if (_text == KeywordDBChoices.Object)
+                    _newIndex++;
+                else if (_text == KeywordDBChoices.IO)
+                    _newIndex++;
+                else if (_text == KeywordDBChoices.Text)
+                    _newIndex++;
+                else if (_text == KeywordDBChoices.TagType)
+                    _newIndex++;
+                else if (_text == KeywordDBChoices.Index)
+                    _newIndex += 3;
+                else
+                {
+                    Debug _debug = new Debug();
+                    string text = "DBGeneralSignal.DecodePeek.IF";
+                    _debug.ToFile("Report to programmer that there is error in " + text + " " + _text, DebugLevels.None, DebugMessageType.Critical);
+                    throw new InvalidProgramException("Error in - " + text + "." + _text);
+                }
+
+                return _newIndex;
             }
         }
 
         /// <summary>
         /// 1 cell decoding
         /// </summary>
+        /// <param name="index">index of object</param>
         /// <param name="decodedLine"></param>
         /// <param name="data">data</param>
         /// <param name="objectSignal">object</param>
         /// <param name="simulation">simulate data</param>
-        private void DecodeCell(List<string> decodedLine, DataClass data, ObjectSignal objectSignal, bool simulation)
+        private void DecodeCell(int index, List<string> decodedLine, DataClass data, ObjectSignal objectSignal, bool simulation)
         {
             string _text = Line[Index];
 
-            if (_text == ConstDBChoices.ChoiceIf)
-                DecodeIf(decodedLine, data, objectSignal, simulation);
-            else if (_text == ConstDBChoices.ChoiceTab)
+            if (_text == KeywordDBChoices.If)
+                DecodeIf(index, decodedLine, data, objectSignal, simulation);
+            else if (_text == KeywordDBChoices.Tab)
                 decodedLine.Add(string.Empty);
             else
             {
-                if (_text == ConstDBChoices.ChoiceData)
+                Index++;
+                switch (_text)
                 {
-                    Index++;
-                    decodedLine[decodedLine.Count - 1] += DecodeData(Line[Index], data, objectSignal, simulation);
-                }
-                else if (_text == ConstDBChoices.ChoiceObject)
-                {
-                    Index++;
-                    decodedLine[decodedLine.Count - 1] += DecodeObjects(Line[Index], objectSignal, simulation);
-                }
-                else if (_text == ConstDBChoices.ChoiceText)
-                {
-                    Index++;
-                    _text = Line[Index];
-                    decodedLine[decodedLine.Count - 1] += _text;
-                }
-                else if (_text == ConstDBChoices.ChoiceIO)
-                {
-                    Index++;
-                    decodedLine[decodedLine.Count - 1] += DecodeIO(Line[Index], data, objectSignal, simulation);
+                    case KeywordDBChoices.Data:
+                        decodedLine[decodedLine.Count - 1] += DecodeData(Line[Index], data, objectSignal, simulation);
+                        break;
+                    case KeywordDBChoices.Index:
+                        decodedLine[decodedLine.Count - 1] += DecodeIndex(index, Index, Line);
+                        Index += 2;
+                        break;
+                    case KeywordDBChoices.Object:
+                        decodedLine[decodedLine.Count - 1] += DecodeObjects(Line[Index], objectSignal, simulation);
+                        break;
+                    case KeywordDBChoices.TagType:
+                        DecodeTagType(Line[Index]);
+                        break;
+                    case KeywordDBChoices.Text:
+                        _text = Line[Index];
+                        decodedLine[decodedLine.Count - 1] += _text;
+                        break;
+                    case KeywordDBChoices.IO:
+                        decodedLine[decodedLine.Count - 1] += DecodeIO(Line[Index], data, objectSignal, simulation);
+                        break;
+                    case KeywordDBChoices.None:
+                        break;
+                    default:
+                        Debug _debug = new Debug();
+                        string text = "DBGeneralSignal.DecodeCell";
+                        _debug.ToFile("Report to programmer that there is error in " + text + " " + _text, DebugLevels.None, DebugMessageType.Critical);
+                        throw new InvalidProgramException("Error in - " + text + "." + _text);
                 }
             }
         }
@@ -260,7 +326,7 @@ namespace IO_list_automation_new
         /// <param name="objectSignal">object</param>
         /// <param name="simulation">simulate data</param>
         /// <returns>decoded text line</returns>
-        public List<string> DecodeLine(DataClass data, ObjectSignal objectSignal, bool simulation)
+        public List<string> DecodeLine(int index,DataClass data, ObjectSignal objectSignal, bool simulation)
         {
             Index = 0;
             List<string> decodedLine = new List<string>();
@@ -268,7 +334,7 @@ namespace IO_list_automation_new
 
             for (int i=0; i< Line.Count; i++)
             {
-                DecodeCell(decodedLine, data, objectSignal, simulation);
+                DecodeCell(index,decodedLine, data, objectSignal, simulation);
                 i = Index;
                 Index++;
             }
@@ -304,15 +370,16 @@ namespace IO_list_automation_new
         /// <param name="data">data</param>
         /// <param name="objectSignal">object to be decoded</param>
         /// <returns>decoded text</returns>
-        public List<List<string>> Decode(DataClass data, ObjectSignal objectSignal, bool simulation)
+        public List<List<string>> Decode(ref int index,DataClass data, ObjectSignal objectSignal, bool simulation)
         {
             //if type mismatch skip
             if (objectSignal.ObjectType == InstanceType)
             {
                 List<List<string>> _decodedObject = new List<List<string>>();
                 for (int i = 0; i < Data.Count; i++)
-                    _decodedObject.Add(Data[i].DecodeLine(data, objectSignal, simulation));
+                    _decodedObject.Add(Data[i].DecodeLine(index,data, objectSignal, simulation));
 
+                index++;
                 return _decodedObject;
             }
             return null;
@@ -333,7 +400,7 @@ namespace IO_list_automation_new
         }
 
         /// <summary>
-        /// Set data from list list string
+        /// Set data from list of list string
         /// </summary>
         /// <param name="inputData">list string</param>
         public void SetData(List<List<string>> inputData)
@@ -350,7 +417,6 @@ namespace IO_list_automation_new
                     Data.Add(_signal);
                 }
             }
-
         }
     }
 
@@ -361,14 +427,165 @@ namespace IO_list_automation_new
         private ProgressIndication Progress { get; set; }
 
         private string Directory;
-        public DBGeneral(ProgressIndication progress, string fileExtension, string aditionalFolder)
-        {
-            FileExtension = fileExtension;
-            Progress = progress;
 
+        private string BaseDirectory;
+
+        private string NameDB;
+
+        private DBTypeLevel Level;
+
+        public DBGeneral(ProgressIndication progress, string nameDB, string fileExtension, DBTypeLevel level)
+        {
+            Progress = progress;
+            NameDB = nameDB;
+            FileExtension = fileExtension;
             Devices = new List<DBGeneralType>();
-            Directory = System.IO.Path.GetDirectoryName(Application.ExecutablePath) + "\\DB\\" + aditionalFolder + Settings.Default.SelectedCPU;
-            GetDeviceTypesFromFile();
+            Level = level;
+
+            switch (level)
+            {
+                case DBTypeLevel.Base:
+                    BaseDirectory = System.IO.Path.GetDirectoryName(System.Windows.Forms.Application.ExecutablePath) + "\\DB";
+                    Directory = BaseDirectory;
+                    break;
+                case DBTypeLevel.CPU:
+                    BaseDirectory = System.IO.Path.GetDirectoryName(System.Windows.Forms.Application.ExecutablePath) + "\\DB";
+                    Directory = BaseDirectory + "\\" + Settings.Default.SelectedCPU;
+                    break;
+                case DBTypeLevel.SCADA:
+                    BaseDirectory = System.IO.Path.GetDirectoryName(System.Windows.Forms.Application.ExecutablePath) + "\\DB\\" + Settings.Default.SelectedCPU;
+                    Directory = BaseDirectory + "\\" + Settings.Default.SelectedSCADA;
+                    break;
+                default:
+                    Debug _debug = new Debug();
+                    string text = "DBGeneral.DBInit";
+                    _debug.ToFile("Report to programmer that there is error in " + text + " " + level.ToString(), DebugLevels.None, DebugMessageType.Critical);
+                    throw new InvalidProgramException("Error in - " + text + "." + level.ToString());
+            }
+        }
+
+        /// <summary>
+        /// Creates DB file
+        /// </summary>
+        /// <param name="fileName">file to check and create</param>
+        /// <returns>DB files exists</returns>
+        public bool CreateDBFile(string fileName)
+        {
+            string _fileName = Directory + "\\" + fileName + "." + FileExtension;
+
+            Debug debug = new Debug();
+            debug.ToFile(Resources.CreateNew + " " + Level.ToString() + ": " + _fileName, DebugLevels.Development, DebugMessageType.Info);
+
+            ExcelWriter _excel = new ExcelWriter(_fileName);
+
+            //write 1 empty cell
+            _excel.Write(string.Empty, 1, 1);
+            _excel.Save();
+            _excel.Dispose();
+
+            debug.ToFile(Resources.CreateNew + " " + Level.ToString() + ": " + _fileName + Resources.Finished, DebugLevels.Development, DebugMessageType.Info);
+
+            return DBFileExists(fileName);
+        }
+
+        /// <summary>
+        /// Check if database files exists and ask if needed to create
+        /// </summary>
+        /// <param name="fileName">file to check and create</param>
+        /// <returns>DB files exists</returns>
+        public bool DBFileExists(string fileName)
+        {
+            //get files in folder
+            string[] _files = System.IO.Directory.GetFiles(Directory, fileName + "." + FileExtension);
+            return _files.Length>0;
+        }
+
+        /// <summary>
+        /// Check if database files exists
+        /// </summary>
+        /// <returns>DB files exists</returns>
+        private bool DBFilesExists()
+        {
+            //get files in folder
+            string[] _files = System.IO.Directory.GetFiles(Directory, "*" + FileExtension);
+            return _files.Length > 0;
+        }
+
+        /// <summary>
+        /// Get DB file list
+        /// </summary>
+        /// <returns>list of files in database with needed extension </returns>
+        public List<string> GetDBFileList()
+        {
+            List<string> _filesList = new List<string>();
+
+            string[] _files = System.IO.Directory.GetFiles(Directory, "*" + FileExtension);
+            if (_files.Length > 0)
+            {
+                for (int i = 0; i < _files.Length; i++)
+                    _filesList.Add(_files[i].Replace(Directory + "\\", string.Empty).Replace("."+FileExtension, string.Empty));
+            }
+
+            return _filesList;
+        }
+
+        /// <summary>
+        /// Check if database folder exists and ask if needed to create
+        /// </summary>
+        /// <param name="folderName">folder to check and create</param>
+        /// <returns>DB folder exists</returns>
+        public bool DBFolderExists(string folderName)
+        {
+            return System.IO.Directory.Exists(BaseDirectory + "\\" + folderName);
+        }
+
+        /// <summary>
+        /// Check if database folder exists and ask if needed to create
+        /// </summary>
+        /// <param name="folderName">folder to check and create</param>
+        /// <returns>DB folder exists</returns>
+        public bool DBFolderCreate(string folderName)
+        {
+            string folderPath = BaseDirectory + "\\" + folderName;
+
+            //check if folder exists
+            if (DBFolderExists(folderPath))
+                return true;
+            else
+            {
+                Debug _debug = new Debug();
+                _debug.ToFile(Resources.CreateNew + " " + Level.ToString() + " " + folderName + " " + NameDB, DebugLevels.Development, DebugMessageType.Info);
+
+                System.IO.Directory.CreateDirectory(folderPath);
+                return DBFolderExists(folderName);
+            }
+        }
+
+        /// <summary>
+        /// Get DB folder list
+        /// </summary>
+        /// <returns>list of folders in database </returns>
+        public List<string> GetDBFolderList()
+        {
+            List<string> _folderList = new List<string>();
+
+            string[] _folders = System.IO.Directory.GetDirectories(BaseDirectory);
+            if (_folders.Length > 0)
+            {
+                for (int i = 0; i < _folders.Length; i++)
+                    _folderList.Add(_folders[i].Replace(BaseDirectory, string.Empty).Replace("\\", string.Empty));
+            }
+
+            return _folderList;
+        }
+
+        /// <summary>
+        /// Check DB files and folders
+        /// </summary>
+        /// <returns>DB files exists</returns>
+        private bool CheckDBFiles()
+        {
+            return DBFolderExists(Directory.Replace(BaseDirectory, string.Empty).Replace("\\", string.Empty)) && DBFilesExists();
         }
 
         /// <summary>
@@ -377,40 +594,26 @@ namespace IO_list_automation_new
         private void GetDeviceTypesFromFile()
         {
             Debug debug = new Debug();
-            debug.ToFile("Serching instances configuration from file", DebugLevels.Development, DebugMessageType.Info);
+            debug.ToFile("Searching instances configuration from file", DebugLevels.Development, DebugMessageType.Info);
             Devices.Clear();
 
-            try
+            List<string> _files = GetDBFileList();
+
+            string _fileName = string.Empty;
+            string _type = string.Empty;
+
+            for (int i = 0; i < _files.Count; i++)
             {
-                string[] _files = System.IO.Directory.GetFiles(Directory, "*" + FileExtension);
+                _fileName = Directory + "\\" + _files[i] + "." + FileExtension;
+                _type = _files[i];
 
-                if (_files.Length > 0)
-                {
-                    List<string> _instancesTypes = new List<string>();
+                //assign dummy grid
+                DataGridView _gridas = new DataGridView();
+                DBGeneralType _instance = new DBGeneralType("Instances", _fileName, _type, FileExtension, Progress, _gridas, false);
+                List<List<string>> _fileData = _instance.Grid.LoadFromFileToMemory();
+                _instance.SetData(_fileData);
 
-                    string _fileName = string.Empty;
-                    string _type = string.Empty;
-
-                    for (int i = 0; i < _files.Length; i++)
-                    {
-                        _fileName = _files[i];
-                        _type = _fileName.Replace(Directory + "\\", "").Replace("." + FileExtension, "");
-
-                        //assign dummy grid
-                        DataGridView _gridas = new DataGridView();
-                        DBGeneralType _instance = new DBGeneralType("Instances", _fileName, _type, FileExtension, Progress, _gridas, false);
-                        List<List<string>> _fileData = _instance.Grid.LoadFromFileToMemory();
-                        _instance.SetData(_fileData);
-
-                        Devices.Add(_instance);
-                    }
-                }
-                else
-                    debug.ToPopUp(Resources.DBNotFound + ": " + Settings.Default.SelectedCPU + " - " + Resources.Instances, DebugLevels.Development, DebugMessageType.Info);
-            }
-            catch (Exception ex)
-            {
-                debug.ToPopUp(Resources.DebugCritical + ": " + ex.Message, DebugLevels.None, DebugMessageType.Critical);
+                Devices.Add(_instance);
             }
 
             debug.ToFile("Serching instances configuration from file - " + Resources.Finished, DebugLevels.Development, DebugMessageType.Info);
@@ -422,7 +625,7 @@ namespace IO_list_automation_new
         private void GetDeviceTypesFromGrid(TabControl tabControl)
         {
             Debug debug = new Debug();
-            debug.ToFile("Serching instances configuration from grid", DebugLevels.Development, DebugMessageType.Info);
+            debug.ToFile("Searching instances configuration from grid", DebugLevels.Development, DebugMessageType.Info);
             Devices.Clear();
 
             if (tabControl.TabPages.Count > 0)
@@ -446,7 +649,7 @@ namespace IO_list_automation_new
                 }
             }
             else
-                debug.ToPopUp(Resources.DBNotFound + ": " + Settings.Default.SelectedCPU + " - " + Resources.Instances, DebugLevels.Development, DebugMessageType.Info);
+                debug.ToPopUp(Resources.DBNotFound + ": " + Settings.Default.SelectedCPU + " - " + Resources.DeleteMe, DebugLevels.Development, DebugMessageType.Info);
 
             debug.ToFile("Serching instances configuration from grid - " + Resources.Finished, DebugLevels.Development, DebugMessageType.Info);
         }
@@ -472,88 +675,165 @@ namespace IO_list_automation_new
         /// <param name="objects">object signals</param>
         public void DecodeAll(DataClass data, ObjectsClass objects)
         {
-            if (Devices.Count > 0)
+            if (!CheckDBFiles())
             {
-                List<List<string>> _decodedObject = new List<List<string>>();
+                DialogResult _result = MessageBox.Show(Resources.CreateNew + " " + Level.ToString() + "?", Resources.CreateNew, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                if (_result != DialogResult.Yes)
+                    return;
 
-                Debug debug = new Debug();
-                debug.ToFile("Generating instances", DebugLevels.Development, DebugMessageType.Info);
-                Progress.RenameProgressBar(Resources.InstancesGenerate, Devices.Count);
-
-                DBResultForm _form = new DBResultForm("Instances", false);
-                //clear all used columns
-                for (int i = 0; i < data.Signals.Count; i++)
-                    data.Signals[i].SetValueFromString(string.Empty, ConstCol.ColumnNameUsed);
-
-                //go through all device types
-                for (int i = 0; i < Devices.Count; i++)
+                NewName _newName = new NewName(Resources.CreateNew + ": " + ResourcesUI.IO + " " + Resources.Language);
+                _newName.ShowDialog();
+                if (_newName.Output != null && _newName.Output != string.Empty)
                 {
-                    List<List<string>> _decodedDevices = new List<List<string>>();
-                    for (int j = 0; j < objects.Signals.Count; j++)
+                    CreateDBFile(_newName.Output);
+                    DecodeAll(data, objects);
+                }
+                return;
+            }
+            GetDeviceTypesFromFile();
+
+            if (Devices.Count < 1)
+                return;
+
+            List<List<string>> _decodedObject = new List<List<string>>();
+            List<string> _CPUList = new List<string>();
+
+            Debug debug = new Debug();
+            debug.ToFile("Generating " + NameDB, DebugLevels.Development, DebugMessageType.Info);
+            Progress.RenameProgressBar(Resources.InstancesGenerate, Devices.Count);
+
+            DBResultForm _DBResultForm = new DBResultForm(NameDB, false);
+
+            //add first signal elemet CPU to CPU list
+            _CPUList.Add(objects.Signals[0].CPU);
+            bool _found;
+
+            //clear all used columns and find CPU list
+            for (int _objectIndex = 0; _objectIndex < objects.Signals.Count; _objectIndex++)
+            {
+                _found = false;
+                objects.Signals[_objectIndex].SetValueFromString(string.Empty, KeywordColumn.Used);
+                for (int _CPUIndex = 0; _CPUIndex < _CPUList.Count; _CPUIndex++)
+                {
+                    if (_CPUList[_CPUIndex] == objects.Signals[_objectIndex].CPU)
                     {
-                        _decodedObject = Devices[i].Decode(data, objects.Signals[j],false);
+                        _found = true;
+                        break;
+                    }
+                }
+                if (!_found)
+                    _CPUList.Add(data.Signals[_objectIndex].CPU);
+            }
+
+            int [] _indexes = new int [_CPUList.Count];
+            int _typeCount = 0;
+            //go through all device types                    
+            for (int _deviceIndex = 0; _deviceIndex < Devices.Count; _deviceIndex++)
+            {
+                List<List<string>> _decodedDevices = new List<List<string>>();
+                for (int _CPUIndex = 0; _CPUIndex < _CPUList.Count; _CPUIndex++)
+                {
+                    // if more than 1 cpu create visual division
+                    if (_CPUList.Count > 1)
+                        _decodedDevices.Add(new List<string> { "----------------------------" + _CPUList[_CPUIndex] + "----------------------------" });
+
+                    //restore index
+                    if (!Settings.Default.NewTypeResetIndex)
+                        _typeCount = _indexes[_CPUIndex];
+                    else
+                        _typeCount = 0;
+
+                    for (int _objectIndex = 0; _objectIndex < objects.Signals.Count; _objectIndex++)
+                    {
+                        if (_CPUList[_CPUIndex] != objects.Signals[_objectIndex].CPU)
+                            continue;
+                        _decodedObject = Devices[_deviceIndex].Decode(ref _typeCount, data, objects.Signals[_objectIndex], false);
                         CopyDecodedList(_decodedObject, _decodedDevices);
                     }
-                    DataGridView _grid = _form.AddData(Devices[i].InstanceType);
 
-                    //add grid to form and update grid of device to mach in form
-                    Devices[i].Grid.ChangeGrid(_grid);
-                    Devices[i].Grid.PutData(_decodedDevices);
-                    Progress.UpdateProgressBar(i);
+                    //if no devices found clear last line if in multi cpu mode
+                    if ((_indexes[_CPUIndex] == _typeCount) && (_CPUList.Count > 1))
+                        _decodedDevices.RemoveAt(_decodedDevices.Count-1);
+
+                    //increase index
+                    if (!Settings.Default.NewTypeResetIndex)
+                        _indexes[_CPUIndex] += _typeCount;
                 }
-                Progress.HideProgressBar();
+                DataGridView _grid = _DBResultForm.AddData(Devices[_deviceIndex].InstanceType);
 
-                debug.ToFile("Generating instances - " + Resources.Finished, DebugLevels.Development, DebugMessageType.Info);
-                //put updated data with used collumn
-                data.Grid.PutData();
-
-                
-                _form.ShowDialog();
+                //add grid to form and update grid of device to mach in form
+                Devices[_deviceIndex].Grid.ChangeGrid(_grid);
+                Devices[_deviceIndex].Grid.PutData(_decodedDevices);
+                Progress.UpdateProgressBar(_deviceIndex);
             }
+
+            Progress.HideProgressBar();
+
+            debug.ToFile("Generating " + NameDB + " - " + Resources.Finished, DebugLevels.Development, DebugMessageType.Info);
+            //put updated data with used column
+            data.Grid.PutData();
+
+            _DBResultForm.ShowDialog();
         }
 
         /// <summary>
         /// Edit instances data
         /// </summary>
-        /// <param name="data"></param>
-        /// <param name="objects"></param>
         public void EditAll()
         {
-            if (Devices.Count > 0)
+            if (!CheckDBFiles())
             {
-                List<List<string>> _deviceData = new List<List<string>>();
-
-                Debug debug = new Debug();
-                debug.ToFile("Editing instances", DebugLevels.Development, DebugMessageType.Info);
-                Progress.RenameProgressBar(Resources.InstancesEditGenerate, Devices.Count);
-
-                DBResultForm _form = new DBResultForm("Instances Edit",true);
-
-                //go through all device types
-                for (int i = 0; i < Devices.Count; i++)
+                DialogResult _result = MessageBox.Show(Resources.CreateNew + " " + Level.ToString() + "?", Resources.CreateNew, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                if (_result == DialogResult.Yes)
                 {
-                    _deviceData = Devices[i].ConvertDataToList();
-                    DataGridView _grid = _form.AddData(Devices[i].InstanceType);
-
-                    //add grid to form and update grid of device to mach in form
-                    Devices[i].Grid.ChangeGrid(_grid);
-                    Devices[i].Grid.PutData(_deviceData);
-
-                    Progress.UpdateProgressBar(i);
+                    NewName _newName = new NewName(Resources.CreateNew + ": " + ResourcesUI.IO + " " + Resources.Language);
+                    _newName.ShowDialog();
+                    if (_newName.Output != null && _newName.Output != string.Empty)
+                    {
+                        CreateDBFile(_newName.Output);
+                        EditAll();
+                    }
                 }
-                Progress.HideProgressBar();
+                return;
+            }
+            GetDeviceTypesFromFile();
 
-                debug.ToFile("Editing instances - " + Resources.Finished, DebugLevels.Development, DebugMessageType.Info);
+            if (Devices.Count < 1)
+                return;
 
-                _form.ShowDialog();
+            List<List<string>> _deviceData = new List<List<string>>();
 
-                GetDeviceTypesFromGrid(_form.DBTabControl);
-                //go through all device types
-                for (int i = 0; i < Devices.Count; i++)
-                {
-                    Devices[i].Grid.GetData();
-                    Devices[i].Grid.SaveToFile();
-                }
+            Debug debug = new Debug();
+            debug.ToFile("Editing " + NameDB, DebugLevels.Development, DebugMessageType.Info);
+            Progress.RenameProgressBar(Resources.InstancesEditGenerate, Devices.Count);
+
+            DBResultForm _DBResultForm = new DBResultForm(NameDB + " Edit", true);
+
+            //go through all device types
+            for (int _deviceIndex = 0; _deviceIndex < Devices.Count; _deviceIndex++)
+            {
+                _deviceData = Devices[_deviceIndex].ConvertDataToList();
+                DataGridView _grid = _DBResultForm.AddData(Devices[_deviceIndex].InstanceType);
+
+                //add grid to form and update grid of device to mach in form
+                Devices[_deviceIndex].Grid.ChangeGrid(_grid);
+                Devices[_deviceIndex].Grid.PutData(_deviceData);
+
+                Progress.UpdateProgressBar(_deviceIndex);
+            }
+            Progress.HideProgressBar();
+
+            debug.ToFile("Editing " + NameDB + " - " + Resources.Finished, DebugLevels.Development, DebugMessageType.Info);
+
+            _DBResultForm.ShowDialog();
+
+            GetDeviceTypesFromGrid(_DBResultForm.DBTabControl);
+
+            //go through all device types
+            for (int _deviceIndex = 0; _deviceIndex < Devices.Count; _deviceIndex++)
+            {
+                Devices[_deviceIndex].Grid.GetData();
+                Devices[_deviceIndex].Grid.SaveToFile();
             }
         }
     }

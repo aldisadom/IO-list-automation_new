@@ -18,8 +18,6 @@ namespace IO_list_automation_new.DB
 
         public DBChoices()
         {
-            GeneralFunctions _generalFunctions = new GeneralFunctions();
-
             ChoicesMain = new List<string>();
             ChoicesMainNoEmpty = new List<string>();
             ChoicesIf = new List<string>();
@@ -27,23 +25,25 @@ namespace IO_list_automation_new.DB
             DataColumns = new List<string>();
             ObjectColumns = new List<string>();
 
-            ChoicesMain.Add(ConstDBChoices.ChoiceNone);
-            ChoicesMain.Add(ConstDBChoices.ChoiceIf);
-            ChoicesMain.Add(ConstDBChoices.ChoiceTab);
-            ChoicesMain.Add(ConstDBChoices.ChoiceText);
-            ChoicesMain.Add(ConstDBChoices.ChoiceObject);
-            ChoicesMain.Add(ConstDBChoices.ChoiceData);
-            ChoicesMain.Add(ConstDBChoices.ChoiceIO);
+            ChoicesMain.Add(KeywordDBChoices.None);
+            ChoicesMain.Add(KeywordDBChoices.If);
+            ChoicesMain.Add(KeywordDBChoices.Tab);
+            ChoicesMain.Add(KeywordDBChoices.Text);
+            ChoicesMain.Add(KeywordDBChoices.Index);
+            ChoicesMain.Add(KeywordDBChoices.Object);
+            ChoicesMain.Add(KeywordDBChoices.Data);
+            ChoicesMain.Add(KeywordDBChoices.IO);
+            ChoicesMain.Add(KeywordDBChoices.TagType);
 
-            ChoicesMainNoEmpty = _generalFunctions.ListCopy(ChoicesMain);
+            ChoicesMainNoEmpty = GeneralFunctions.ListCopy(ChoicesMain);
             ChoicesMainNoEmpty.RemoveAt(0);
 
-            ChoicesIf.Add(ConstDBChoices.ChoiceObject);
-            ChoicesIf.Add(ConstDBChoices.ChoiceData);
-            ChoicesIf.Add(ConstDBChoices.ChoiceIO);
+            ChoicesIf.Add(KeywordDBChoices.Object);
+            ChoicesIf.Add(KeywordDBChoices.Data);
+            ChoicesIf.Add(KeywordDBChoices.IO);
 
-            ChoicesIfStatement.Add(ConstDBChoices.ChoiceIsEmpty);
-            ChoicesIfStatement.Add(ConstDBChoices.ChoiceIsNotEmpty);
+            ChoicesIfStatement.Add(KeywordDBChoices.IsEmpty);
+            ChoicesIfStatement.Add(KeywordDBChoices.IsNotEmpty);
 
             DataClass Data = new DataClass();
             ObjectsClass Objects = new ObjectsClass();

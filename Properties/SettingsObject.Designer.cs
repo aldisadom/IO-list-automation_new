@@ -26,72 +26,72 @@ namespace IO_list_automation_new.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("0")]
-        public int ObjectsColumnID {
+        public int ColumnID {
             get {
-                return ((int)(this["ObjectsColumnID"]));
+                return ((int)(this["ColumnID"]));
             }
             set {
-                this["ObjectsColumnID"] = value;
+                this["ColumnID"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("1")]
-        public int ObjectsColumnCPU {
+        public int ColumnCPU {
             get {
-                return ((int)(this["ObjectsColumnCPU"]));
+                return ((int)(this["ColumnCPU"]));
             }
             set {
-                this["ObjectsColumnCPU"] = value;
+                this["ColumnCPU"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("3")]
-        public int ObjectsColumnKKS {
+        public int ColumnKKS {
             get {
-                return ((int)(this["ObjectsColumnKKS"]));
+                return ((int)(this["ColumnKKS"]));
             }
             set {
-                this["ObjectsColumnKKS"] = value;
+                this["ColumnKKS"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("2")]
-        public int ObjectsColumnOperative {
+        public int ColumnOperative {
             get {
-                return ((int)(this["ObjectsColumnOperative"]));
+                return ((int)(this["ColumnOperative"]));
             }
             set {
-                this["ObjectsColumnOperative"] = value;
+                this["ColumnOperative"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("4")]
-        public int ObjectsColumnObjectType {
+        public int ColumnObjectType {
             get {
-                return ((int)(this["ObjectsColumnObjectType"]));
+                return ((int)(this["ColumnObjectType"]));
             }
             set {
-                this["ObjectsColumnObjectType"] = value;
+                this["ColumnObjectType"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("5")]
-        public int ObjectsColumnObjectName {
+        public int ColumnObjectName {
             get {
-                return ((int)(this["ObjectsColumnObjectName"]));
+                return ((int)(this["ColumnObjectName"]));
             }
             set {
-                this["ObjectsColumnObjectName"] = value;
+                this["ColumnObjectName"] = value;
             }
         }
     }
