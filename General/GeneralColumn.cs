@@ -16,6 +16,7 @@ using System.Security.AccessControl;
 using IO_list_automation_new.Properties;
 using System.Data.Common;
 using System.Security.Cryptography;
+using SharpCompress;
 
 namespace IO_list_automation_new
 {
@@ -25,144 +26,157 @@ namespace IO_list_automation_new
         {
         }
 
-        public string GetName(string keyword)
+        /// <summary>
+        /// Get name from column keyword and from DB choices
+        /// </summary>
+        /// <param name="keyword">column keyword</param>
+        /// <returns>name of column</returns>
+        /// <exception cref="InvalidProgramException"></exception>
+        public string GetColumnOrChoicesName(string keyword)
         {
-            string _returnName = GetChoicesName(keyword, true);
-            if (_returnName == null)
-                _returnName = GetColumnName(keyword, true);
+            string _returnName = GetChoicesName(keyword, true) ?? GetColumnName(keyword, true);
 
             if (_returnName == null)
             {
-                string text = "GetName";
+                const string text = "GetName";
                 Debug _debug = new Debug();
-                _debug.ToFile("Report to programer that " + text + "." + keyword + " is not created for this element", DebugLevels.None, DebugMessageType.Critical);
+                _debug.ToFile("Report to programmer that " + text + "." + keyword + " is not created for this element", DebugLevels.None, DebugMessageType.Critical);
                 throw new InvalidProgramException(text + "." + keyword + " is not created for this element");
             }
-
             return _returnName;
         }
 
-        public string GetColumnName(string keyword, bool supressError)
+        /// <summary>
+        /// Get name from column keyword
+        /// </summary>
+        /// <param name="keyword">column keyword</param>
+        /// <param name="suppressError">suppress error if not found</param>
+        /// <returns>name of column</returns>
+        /// <exception cref="InvalidProgramException"></exception>
+        public string GetColumnName(string keyword, bool suppressError)
         {
             string _returnName = string.Empty;
 
             switch (keyword)
             {
-                case ConstCol.ColumnNameID:
-                    _returnName = Resources.ColumnID;
+                case KeywordColumn.ID:
+                    _returnName = ResourcesColumns.ID;
                     break;
-                case ConstCol.ColumnNameCPU:
-                    _returnName = Resources.ColumnCPU;
+                case KeywordColumn.CPU:
+                    _returnName = ResourcesColumns.CPU;
                     break;
-                case ConstCol.ColumnNameKKS:
-                    _returnName = Resources.ColumnKKS;
+                case KeywordColumn.KKS:
+                    _returnName = ResourcesColumns.KKS;
                     break;
-                case ConstCol.ColumnNameRangeMin:
-                    _returnName = Resources.ColumnRangeMin;
+                case KeywordColumn.RangeMin:
+                    _returnName = ResourcesColumns.RangeMin;
                     break;
-                case ConstCol.ColumnNameRangeMax:
-                    _returnName = Resources.ColumnRangeMax;
+                case KeywordColumn.RangeMax:
+                    _returnName = ResourcesColumns.RangeMax;
                     break;
-                case ConstCol.ColumnNameUnits:
-                    _returnName = Resources.ColumnUnits;
+                case KeywordColumn.Units:
+                    _returnName = ResourcesColumns.Units;
                     break;
-                case ConstCol.ColumnNameFalseText:
-                    _returnName = Resources.ColumnFalseText;
+                case KeywordColumn.FalseText:
+                    _returnName = ResourcesColumns.FalseText;
                     break;
-                case ConstCol.ColumnNameTrueText:
-                    _returnName = Resources.ColumnTrueText;
+                case KeywordColumn.TrueText:
+                    _returnName = ResourcesColumns.TrueText;
                     break;
-                case ConstCol.ColumnNameRevision:
-                    _returnName = Resources.ColumnRevision;
+                case KeywordColumn.Revision:
+                    _returnName = ResourcesColumns.Revision;
                     break;
-                case ConstCol.ColumnNameCable:
-                    _returnName = Resources.ColumnCable;
+                case KeywordColumn.Cable:
+                    _returnName = ResourcesColumns.Cable;
                     break;
-                case ConstCol.ColumnNameCabinet:
-                    _returnName = Resources.ColumnCabinet;
+                case KeywordColumn.Cabinet:
+                    _returnName = ResourcesColumns.Cabinet;
                     break;
-                case ConstCol.ColumnNameModuleName:
-                    _returnName = Resources.ColumnModuleName;
+                case KeywordColumn.ModuleName:
+                    _returnName = ResourcesColumns.ModuleName;
                     break;
-                case ConstCol.ColumnNamePin:
-                    _returnName = Resources.ColumnPin;
+                case KeywordColumn.Pin:
+                    _returnName = ResourcesColumns.Pin;
                     break;
-                case ConstCol.ColumnNameChannel:
-                    _returnName = Resources.ColumnChannel;
+                case KeywordColumn.Channel:
+                    _returnName = ResourcesColumns.Channel;
                     break;
-                case ConstCol.ColumnNameIOText:
-                    _returnName = Resources.ColumnIOText;
+                case KeywordColumn.IOText:
+                    _returnName = ResourcesColumns.IOText;
                     break;
-                case ConstCol.ColumnNamePage:
-                    _returnName = Resources.ColumnPage;
+                case KeywordColumn.Page:
+                    _returnName = ResourcesColumns.Page;
                     break;
-                case ConstCol.ColumnNameChanged:
-                    _returnName = Resources.ColumnChanged;
+                case KeywordColumn.Changed:
+                    _returnName = ResourcesColumns.Changed;
                     break;
-                case ConstCol.ColumnNameOperative:
-                    _returnName = Resources.ColumnOperative;
+                case KeywordColumn.Operative:
+                    _returnName = ResourcesColumns.Operative;
                     break;
-                case ConstCol.ColumnNameKKSPlant:
-                    _returnName = Resources.ColumnKKSPlant;
+                case KeywordColumn.KKSPlant:
+                    _returnName = ResourcesColumns.KKSPlant;
                     break;
-                case ConstCol.ColumnNameKKSLocation:
-                    _returnName = Resources.ColumnKKSLocation;
+                case KeywordColumn.KKSLocation:
+                    _returnName = ResourcesColumns.KKSLocation;
                     break;
-                case ConstCol.ColumnNameKKSDevice:
-                    _returnName = Resources.ColumnKKSDevice;
+                case KeywordColumn.KKSDevice:
+                    _returnName = ResourcesColumns.KKSDevice;
                     break;
-                case ConstCol.ColumnNameKKSFunction:
-                    _returnName = Resources.ColumnKKSFunction;
+                case KeywordColumn.KKSFunction:
+                    _returnName = ResourcesColumns.KKSFunction;
                     break;
-                case ConstCol.ColumnNameUsed:
-                    _returnName = Resources.ColumnUsed;
+                case KeywordColumn.Used:
+                    _returnName = ResourcesColumns.Used;
                     break;
-                case ConstCol.ColumnNameObjectType:
-                    _returnName = Resources.ColumnObjectType;
+                case KeywordColumn.ObjectType:
+                    _returnName = ResourcesColumns.ObjectType;
                     break;
-                case ConstCol.ColumnNameObjectName:
-                    _returnName = Resources.ColumnObjectName;
+                case KeywordColumn.ObjectName:
+                    _returnName = ResourcesColumns.ObjectName;
                     break;
-                case ConstCol.ColumnNameObjectDetalisation:
-                    _returnName = Resources.ColumnObjectDetalisation;
+                case KeywordColumn.ObjectSpecifics:
+                    _returnName = ResourcesColumns.ObjectSpecifics;
                     break;
-                case ConstCol.ColumnNameFunctionText:
-                    _returnName = Resources.ColumnFunctionText;
+                case KeywordColumn.FunctionText:
+                    _returnName = ResourcesColumns.FunctionText;
                     break;
-                case ConstCol.ColumnNameFunction:
-                    _returnName = Resources.ColumnFunction;
+                case KeywordColumn.Function:
+                    _returnName = ResourcesColumns.Function;
                     break;
-                case ConstCol.ColumnNameTerminal:
-                    _returnName = Resources.ColumnTerminal;
+                case KeywordColumn.Terminal:
+                    _returnName = ResourcesColumns.Terminal;
                     break;
-                case ConstCol.ColumnNameDeviceTypeText:
-                    _returnName = Resources.ColumnDeviceTypeText;
+                case KeywordColumn.DeviceTypeText:
+                    _returnName = ResourcesColumns.DeviceTypeText;
                     break;
-                case ConstCol.ColumnNameFunctionText1:
-                    _returnName = Resources.ColumnFunctionText1;
+                case KeywordColumn.FunctionText1:
+                    _returnName = ResourcesColumns.FunctionText1;
                     break;
-                case ConstCol.ColumnNameFunction1:
-                    _returnName = Resources.ColumnFunction1;
+                case KeywordColumn.Function1:
+                    _returnName = ResourcesColumns.Function1;
                     break;
-                case ConstCol.ColumnNameFunctionText1o2:
-                    _returnName = Resources.ColumnFunctionText1o2;
+                case KeywordColumn.FunctionText1o2:
+                    _returnName = ResourcesColumns.FunctionText1o2;
                     break;
-                case ConstCol.ColumnNameFunctionText2o2:
-                    _returnName = Resources.ColumnFunctionText2o2;
+                case KeywordColumn.FunctionText2o2:
+                    _returnName = ResourcesColumns.FunctionText2o2;
                     break;
-                case ConstCol.ColumnNameFunction2:
-                    _returnName = Resources.ColumnFunction2;
+                case KeywordColumn.Function2:
+                    _returnName = ResourcesColumns.Function2;
                     break;
-                case ConstCol.ColumnNameTag:
-                    _returnName = Resources.ColumnTag;
+                case KeywordColumn.Tag:
+                    _returnName = ResourcesColumns.Tag;
+                    break;
+                case KeywordColumn.ModuleType:
+                    _returnName = ResourcesColumns.ModuleType;
                     break;
                 default:
                     _returnName = string.Empty;
-                    if (!supressError)
+                    if (!suppressError)
                     {
-                        string text = "GetColumnName";
+                        const string text = "GetColumnName";
                         Debug _debug = new Debug();
-                        _debug.ToFile("Report to programer that " + text + "." + keyword + " is not created for this element", DebugLevels.None, DebugMessageType.Critical);
+                        _debug.ToFile("Report to programmer that " + text + "." + keyword + " is not created for this element", DebugLevels.None, DebugMessageType.Critical);
                         throw new InvalidProgramException(text + "." + keyword + " is not created for this element");
                     }
                     break;
@@ -170,62 +184,61 @@ namespace IO_list_automation_new
             return _returnName;
         }
 
-        public string GetChoicesName(string keyword, bool supressError)
+        /// <summary>
+        /// Get name from choices keyword
+        /// </summary>
+        /// <param name="keyword">choices keyword</param>
+        /// <param name="suppressError">suppress error if not found</param>
+        /// <returns>name of choice</returns>
+        /// <exception cref="InvalidProgramException"></exception>
+        public string GetChoicesName(string keyword, bool suppressError)
         {
-            string _returnName = string.Empty;
-
             switch (keyword)
             {
-                case ConstDBChoices.ChoiceNone:
-                    _returnName = "";
-                    break;
-                case ConstDBChoices.ChoiceTab:
-                    _returnName = Resources.ChoiceTab;
-                    break;
-                case ConstDBChoices.ChoiceIf:
-                    _returnName = Resources.ChoiceIf;
-                    break;
-                case ConstDBChoices.ChoiceText:
-                    _returnName = Resources.ChoiceText;
-                    break;
-                case ConstDBChoices.ChoiceData:
-                    _returnName = Resources.ChoiceData;
-                    break;
-                case ConstDBChoices.ChoiceObject:
-                    _returnName = Resources.ChoiceObject;
-                    break;
-                case ConstDBChoices.ChoiceIO:
-                    _returnName = Resources.ChoiceIO;
-                    break;
-                case ConstDBChoices.ChoiceIsEmpty:
-                    _returnName = Resources.ChoiceIsEmpty;
-                    break;
-                case ConstDBChoices.ChoiceIsNotEmpty:
-                    _returnName = Resources.ChoiceIsNotEmpty;
-                    break;
+                case KeywordDBChoices.None:
+                    return string.Empty;
+                case KeywordDBChoices.Tab:
+                    return ResourcesChoices.Tab;
+                case KeywordDBChoices.If:
+                    return ResourcesChoices.If;
+                case KeywordDBChoices.Text:
+                    return ResourcesChoices.Text;
+                case KeywordDBChoices.Data:
+                    return ResourcesChoices.Data;
+                case KeywordDBChoices.Object:
+                    return ResourcesChoices.Object;
+                case KeywordDBChoices.IO:
+                    return ResourcesChoices.IO;
+                case KeywordDBChoices.TagType:
+                    return ResourcesChoices.TagType;
+                case KeywordDBChoices.IsEmpty:
+                    return ResourcesChoices.IsEmpty;
+                case KeywordDBChoices.Index:
+                    return ResourcesChoices.Index;
+                case KeywordDBChoices.IsNotEmpty:
+                    return ResourcesChoices.IsNotEmpty;
                 default:
-                    _returnName = null;
-                    if (!supressError)
+                    if (!suppressError)
                     {
-                        string text = "GetChoicesName";
+                        const string text = "GetChoicesName";
                         Debug _debug = new Debug();
-                        _debug.ToFile("Report to programer that " + text + "." + keyword + " is not created for this element", DebugLevels.None, DebugMessageType.Critical);
+                        _debug.ToFile("Report to programmer that " + text + "." + keyword + " is not created for this element", DebugLevels.None, DebugMessageType.Critical);
                         throw new InvalidProgramException(text + "." + keyword + " is not created for this element");
                     }
-                    break;
+                    else
+                    {
+                        return null;
+                    }
             }
-            return _returnName;
         }
-
     }
 
     internal class GeneralColumn
     {
-        //culumn keyword
+        //column keyword
         public string Keyword { get; private set; }
         //column number for sorting
         public int Number { get; private set; }
-
         public bool CanHide { get; private set; }
 
         private GeneralColumnName ColumnName = new GeneralColumnName();
@@ -239,7 +252,7 @@ namespace IO_list_automation_new
         /// <summary>
         /// Get column name based on software language
         /// </summary>
-        /// <returns>collumn name of column based on language</returns>
+        /// <returns>column name of column based on language</returns>
         /// <exception cref="InvalidProgramException"></exception>
         public string GetColumnName()
         {
@@ -254,8 +267,7 @@ namespace IO_list_automation_new
         /// <summary>
         /// Sort all columns from lowest to highest
         /// </summary>
-        /// <param name="columnList">list to be sorted</param>
-        /// <param name="columnsFromZero">for writing data to grid, to dont have empty columns</param>
+        /// <param name="columnsFromZero">for writing data to grid, to do not have empty columns</param>
         /// <returns>sorted list</returns>
         public void SortColumnsList(bool columnsFromZero)
         {
@@ -266,53 +278,49 @@ namespace IO_list_automation_new
             List<GeneralColumn> _tmpList = new List<GeneralColumn>();
             for (int _index = 0; _index < Columns.Count; _index++)
             {
-                _keyword = Columns.ElementAt(_index).Keyword;
-                _columnNumber = Columns.ElementAt(_index).Number;
-                _canHide = Columns.ElementAt(_index).CanHide;
-                // if columnsFromZero and collumn number is -1 then do not add to array
+                GeneralColumn _column = Columns[_index];
+
+                _keyword = _column.Keyword;
+                _columnNumber = _column.Number;
+                _canHide = _column.CanHide;
+                // if columnsFromZero and column number is -1 then do not add to array
                 if (!columnsFromZero || _columnNumber >= 0)
-                {
-                    GeneralColumn _column = new GeneralColumn(_keyword, _columnNumber, _canHide);
-                    _tmpList.Add(_column);
-                }
+                    _tmpList.Add(new GeneralColumn(_keyword, _columnNumber, _canHide));
             }
             Columns.Clear();
 
             //set 0 index in list to minimum value
             int _minIndex = 0;
             int _minValue = int.MaxValue;
-            
             int _columnIndex = 0;
-
             int _count = _tmpList.Count;
-            //sorting from lowet to higher
+
+            //sorting from lower to higher
             for (int _index = 0; _index < _count; _index++)
             {
                 _minValue = int.MaxValue;
                 for (int i = 0; i < _tmpList.Count(); i++)
                 {
-                    if (_tmpList.ElementAt(i).Number < _minValue)
+                    if (_tmpList[i].Number < _minValue)
                     {
                         _minIndex = i;
-                        _minValue = _tmpList.ElementAt(i).Number;
+                        _minValue = _tmpList[i].Number;
                     }
                 }
 
-                _columnNumber = _tmpList.ElementAt(_minIndex).Number;
+                _columnNumber = _tmpList[_minIndex].Number;
 
                 if (columnsFromZero)
                 {
-                    if (_columnNumber >= 0)
-                    {
-                        _columnNumber = _columnIndex;
-                        _columnIndex++;
-                    }
-                    else
+                    if (_columnNumber < 0)
                         continue;
+
+                    _columnNumber = _columnIndex;
+                    _columnIndex++;
                 }
 
-                _keyword = _tmpList.ElementAt(_minIndex).Keyword;
-                _canHide = _tmpList.ElementAt(_minIndex).CanHide;
+                _keyword = _tmpList[_minIndex].Keyword;
+                _canHide = _tmpList[_minIndex].CanHide;
                 GeneralColumn _column = new GeneralColumn(_keyword, _columnNumber, _canHide);
 
                 Columns.Add(_column);
@@ -343,9 +351,8 @@ namespace IO_list_automation_new
             SortColumnsList(columnsFromZero);
         }
 
-
         /// <summary>
-        /// Find collumn with keyword and return its column number
+        /// Find column with keyword and return its column number
         /// </summary>
         /// <param name="_keyword">column keyword</param>
         /// <returns>column number</returns>

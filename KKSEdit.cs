@@ -20,12 +20,15 @@ namespace IO_list_automation_new.Forms
         {
             InitializeComponent();
             InitSettings();
-            KKS1Label.Text = Resources.ColumnKKSPlant;
-            KKS2Label.Text = Resources.ColumnKKSLocation;
-            KKS3Label.Text = Resources.ColumnKKSDevice;
-            KKS4Label.Text = Resources.ColumnKKSFunction;
+            KKS1Label.Text = ResourcesColumns.KKSPlant;
+            KKS2Label.Text = ResourcesColumns.KKSLocation;
+            KKS3Label.Text = ResourcesColumns.KKSDevice;
+            KKS4Label.Text = ResourcesColumns.KKSFunction;
         }
 
+        /// <summary>
+        /// put settings to form elements
+        /// </summary>
         private void InitSettings()
         {
             KKSPartCheck1.Checked = SettingsData.Default.KKSEditCheckPart1;
@@ -40,6 +43,9 @@ namespace IO_list_automation_new.Forms
             KKSBox45.Text = SettingsData.Default.KKSEditText45;
         }
 
+        /// <summary>
+        /// update settings from form elements
+        /// </summary>
         private void UpdateSettings()
         {
             SettingsData.Default.KKSEditCheckPart1 = KKSPartCheck1.Checked;
@@ -81,9 +87,18 @@ namespace IO_list_automation_new.Forms
         }
 
         /// <summary>
-        /// Kombines KKS all 4 parts (selectable) and add aditional text
+        /// Elements data changed, event
         /// </summary>
-        /// <returns></returns>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Combine_Event(object sender, EventArgs e)
+        {
+            Combine();
+        }
+
+        /// <summary>
+        /// Kombines KKS all 4 parts (selectable) and add additional text
+        /// </summary>
         private string Combine()
         {
             string _returnValue = string.Empty;
@@ -126,51 +141,6 @@ namespace IO_list_automation_new.Forms
         public string GetCombined()
         {
             return KKSOut.Text;
-        }
-
-        private void KKSBox12_TextChanged(object sender, EventArgs e)
-        {
-            Combine();
-        }
-
-        private void KKSBox23_TextChanged(object sender, EventArgs e)
-        {
-            Combine();
-        }
-
-        private void KKSBox34_TextChanged(object sender, EventArgs e)
-        {
-            Combine();
-        }
-
-        private void KKSBox45_TextChanged(object sender, EventArgs e)
-        {
-            Combine();
-        }
-
-        private void KKSBox01_TextChanged(object sender, EventArgs e)
-        {
-            Combine();
-        }
-
-        private void KKSPartCheck1_CheckedChanged(object sender, EventArgs e)
-        {
-            Combine();
-        }
-
-        private void KKSPartCheck2_CheckedChanged(object sender, EventArgs e)
-        {
-            Combine();
-        }
-
-        private void KKSPartCheck3_CheckedChanged(object sender, EventArgs e)
-        {
-            Combine();
-        }
-
-        private void KKSPartCheck4_CheckedChanged(object sender, EventArgs e)
-        {
-            Combine();
         }
 
         private void KKSOkNextButton_Click(object sender, EventArgs e)

@@ -20,7 +20,6 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using static System.Net.Mime.MediaTypeNames;
 
-
 namespace IO_list_automation_new
 {
     internal class DesignSignal : GeneralSignal
@@ -43,8 +42,9 @@ namespace IO_list_automation_new
         public string Page { get; private set; }
         public string Changed { get; private set; }
         public string Terminal { get; private set; }
-
         public string Tag { get; private set; }
+        public string UniqueKKS { get { return KKS + "_" + CPU; } }
+        public string UniqueModuleName { get { return Cabinet + "_" + ModuleName + "_" + CPU; } }
 
         public DesignSignal() : base()
         {
@@ -77,61 +77,61 @@ namespace IO_list_automation_new
         {
             switch (parameterName)
             {
-                case ConstCol.ColumnNameID:
+                case KeywordColumn.ID:
                     ID = value;
                     break;
-                case ConstCol.ColumnNameCPU:
+                case KeywordColumn.CPU:
                     CPU = value;
                     break;
-                case ConstCol.ColumnNameKKS:
+                case KeywordColumn.KKS:
                     KKS = value;
                     break;
-                case ConstCol.ColumnNameRangeMin:
+                case KeywordColumn.RangeMin:
                     RangeMin = value;
                     break;
-                case ConstCol.ColumnNameRangeMax:
+                case KeywordColumn.RangeMax:
                     RangeMax = value;
                     break;
-                case ConstCol.ColumnNameUnits:
+                case KeywordColumn.Units:
                     Units = value;
                     break;
-                case ConstCol.ColumnNameFalseText:
+                case KeywordColumn.FalseText:
                     FalseText = value;
                     break;
-                case ConstCol.ColumnNameTrueText:
+                case KeywordColumn.TrueText:
                     TrueText = value;
                     break;
-                case ConstCol.ColumnNameRevision:
+                case KeywordColumn.Revision:
                     Revision = value;
                     break;
-                case ConstCol.ColumnNameCable:
+                case KeywordColumn.Cable:
                     Cable = value;
                     break;
-                case ConstCol.ColumnNameCabinet:
+                case KeywordColumn.Cabinet:
                     Cabinet = value;
                     break;
-                case ConstCol.ColumnNameModuleName:
+                case KeywordColumn.ModuleName:
                     ModuleName = value;
                     break;
-                case ConstCol.ColumnNamePin:
+                case KeywordColumn.Pin:
                     Pin = value;
                     break;
-                case ConstCol.ColumnNameChannel:
+                case KeywordColumn.Channel:
                     Channel = value;
                     break;
-                case ConstCol.ColumnNameIOText:
+                case KeywordColumn.IOText:
                     IOText = value;
                     break;
-                case ConstCol.ColumnNamePage:
+                case KeywordColumn.Page:
                     Page = value;
                     break;
-                case ConstCol.ColumnNameChanged:
+                case KeywordColumn.Changed:
                     Changed = value;
                     break;
-                case ConstCol.ColumnNameTerminal:
+                case KeywordColumn.Terminal:
                     Terminal = value;
                     break;
-                case ConstCol.ColumnNameTag:
+                case KeywordColumn.Tag:
                     Tag = value;
                     break;
             }
@@ -141,75 +141,75 @@ namespace IO_list_automation_new
         /// Parsing data signal element to string for grid
         /// </summary>
         /// <param name="parameterName">parameter to be read</param>
-        /// <param name="supressError">supress alarm message, used only for transfering from one type to another type data classes</param>
+        /// <param name="suppressError">suppress alarm message, used only for transferring from one type to another type data classes</param>
         /// <returns>value of parameter</returns>
-        public override string GetValueString(string parameterName, bool supressError)
+        public override string GetValueString(string parameterName, bool suppressError)
         {
             string _returnValue = string.Empty;
             switch (parameterName)
             {
-                case ConstCol.ColumnNameID:
+                case KeywordColumn.ID:
                     _returnValue = ID;
                     break;
-                case ConstCol.ColumnNameCPU:
+                case KeywordColumn.CPU:
                     _returnValue = CPU;
                     break;
-                case ConstCol.ColumnNameKKS:
+                case KeywordColumn.KKS:
                     _returnValue = KKS;
                     break;
-                case ConstCol.ColumnNameRangeMin:
+                case KeywordColumn.RangeMin:
                     _returnValue = RangeMin;
                     break;
-                case ConstCol.ColumnNameRangeMax:
+                case KeywordColumn.RangeMax:
                     _returnValue = RangeMax;
                     break;
-                case ConstCol.ColumnNameUnits:
+                case KeywordColumn.Units:
                     _returnValue = Units;
                     break;
-                case ConstCol.ColumnNameFalseText:
+                case KeywordColumn.FalseText:
                     _returnValue = FalseText;
                     break;
-                case ConstCol.ColumnNameTrueText:
+                case KeywordColumn.TrueText:
                     _returnValue = TrueText;
                     break;
-                case ConstCol.ColumnNameRevision:
+                case KeywordColumn.Revision:
                     _returnValue = Revision;
                     break;
-                case ConstCol.ColumnNameCable:
+                case KeywordColumn.Cable:
                     _returnValue = Cable;
                     break;
-                case ConstCol.ColumnNameCabinet:
+                case KeywordColumn.Cabinet:
                     _returnValue = Cabinet;
                     break;
-                case ConstCol.ColumnNameModuleName:
+                case KeywordColumn.ModuleName:
                     _returnValue = ModuleName;
                     break;
-                case ConstCol.ColumnNamePin:
+                case KeywordColumn.Pin:
                     _returnValue = Pin;
                     break;
-                case ConstCol.ColumnNameChannel:
+                case KeywordColumn.Channel:
                     _returnValue = Channel;
                     break;
-                case ConstCol.ColumnNameIOText:
+                case KeywordColumn.IOText:
                     _returnValue = IOText;
                     break;
-                case ConstCol.ColumnNamePage:
+                case KeywordColumn.Page:
                     _returnValue = Page;
                     break;
-                case ConstCol.ColumnNameChanged:
+                case KeywordColumn.Changed:
                     _returnValue = Changed;
                     break;
-                case ConstCol.ColumnNameTerminal:
+                case KeywordColumn.Terminal:
                     _returnValue = Terminal;
                     break;
-                case ConstCol.ColumnNameTag:
+                case KeywordColumn.Tag:
                     _returnValue = Tag;
                     break;
                 default:
-                    if (!supressError)
+                    if (!suppressError)
                     {
                         Debug _debug = new Debug();
-                        _debug.ToPopUp(Resources.ParameterNotFound + ":" + parameterName, DebugLevels.None, DebugMessageType.Critical);
+                        _debug.ToPopUp("DesignSignal.GetValueString " + Resources.ParameterNotFound + ":" + parameterName, DebugLevels.None, DebugMessageType.Critical);
                     }
                     break;
             }
@@ -218,23 +218,18 @@ namespace IO_list_automation_new
 
         /// <summary>
         /// Checks if design signal is valid:
-        /// *Has Channel or PIN
-        /// *Has Module
-        /// *Has IO funcion text
         /// </summary>
         /// <returns>true if minimum signal requirements are met</returns>
         public override bool ValidateSignal()
         {
-            bool _returnValue = true;
+            if (string.IsNullOrEmpty(ModuleName))
+                return false;
+            else if (string.IsNullOrEmpty(IOText))
+                return false;
+            else if (string.IsNullOrEmpty(Pin) && !string.IsNullOrEmpty(Channel))
+                return false;
 
-            if (ModuleName == "" || ModuleName == null)
-                _returnValue = false;
-            else if (IOText == "" || IOText == null)
-                _returnValue = false;
-            else if ((Pin == "" || Pin == null) && (Channel == "" || Channel == null))
-                _returnValue = false;
-
-            return _returnValue;
+            return true;
         }
 
         /// <summary>
@@ -250,7 +245,6 @@ namespace IO_list_automation_new
                     return true;
             }
             return false;
-
         }
 
         /// <summary>
@@ -258,7 +252,7 @@ namespace IO_list_automation_new
         /// </summary>
         /// <param name="_checkPin">pin check for number is needed</param>
         /// <param name="_checkChannel">channel check for number is needed</param>
-        /// <returns></returns>
+        /// <returns>has useful data</returns>
         public bool ExtractUseful(bool _checkPin, bool _checkChannel)
         {
             bool _returnValue = true;
@@ -301,27 +295,28 @@ namespace IO_list_automation_new
 
         protected override List<GeneralColumn> GeneralGenerateColumnsList()
         {
-            List<GeneralColumn> _columns = new List<GeneralColumn>();
-
-            _columns.Add(new GeneralColumn(ConstCol.ColumnNameID, SettingsDesign.Default.ColumnID,false));
-            _columns.Add(new GeneralColumn(ConstCol.ColumnNameCPU, SettingsDesign.Default.ColumnCPU, true));
-            _columns.Add(new GeneralColumn(ConstCol.ColumnNameKKS, SettingsDesign.Default.ColumnKKS, true));
-            _columns.Add(new GeneralColumn(ConstCol.ColumnNameRangeMin, SettingsDesign.Default.ColumnRangeMin, true));
-            _columns.Add(new GeneralColumn(ConstCol.ColumnNameRangeMax, SettingsDesign.Default.ColumnRangeMax, true));
-            _columns.Add(new GeneralColumn(ConstCol.ColumnNameUnits, SettingsDesign.Default.ColumnUnits, true));
-            _columns.Add(new GeneralColumn(ConstCol.ColumnNameFalseText, SettingsDesign.Default.ColumnFalseText, true));
-            _columns.Add(new GeneralColumn(ConstCol.ColumnNameTrueText, SettingsDesign.Default.ColumnTrueText, true));
-            _columns.Add(new GeneralColumn(ConstCol.ColumnNameRevision, SettingsDesign.Default.ColumnRevision, true));
-            _columns.Add(new GeneralColumn(ConstCol.ColumnNameCable, SettingsDesign.Default.ColumnCable, true));
-            _columns.Add(new GeneralColumn(ConstCol.ColumnNameCabinet, SettingsDesign.Default.ColumnCabinet, false));
-            _columns.Add(new GeneralColumn(ConstCol.ColumnNameModuleName, SettingsDesign.Default.ColumnModuleName, false));
-            _columns.Add(new GeneralColumn(ConstCol.ColumnNamePin, SettingsDesign.Default.ColumnPin, false));
-            _columns.Add(new GeneralColumn(ConstCol.ColumnNameChannel, SettingsDesign.Default.ColumnChannel, false));
-            _columns.Add(new GeneralColumn(ConstCol.ColumnNameIOText, SettingsDesign.Default.ColumnIOText, false));
-            _columns.Add(new GeneralColumn(ConstCol.ColumnNamePage, SettingsDesign.Default.ColumnPage, true));
-            _columns.Add(new GeneralColumn(ConstCol.ColumnNameChanged, SettingsDesign.Default.ColumnChanged, true));
-            _columns.Add(new GeneralColumn(ConstCol.ColumnNameTerminal, SettingsDesign.Default.ColumnTerminal, true));
-            _columns.Add(new GeneralColumn(ConstCol.ColumnNameTag, SettingsDesign.Default.ColumnTag, true));
+            List<GeneralColumn> _columns = new List<GeneralColumn>()
+            {
+                new GeneralColumn(KeywordColumn.ID, SettingsDesign.Default.ColumnID,false),
+                new GeneralColumn(KeywordColumn.CPU, SettingsDesign.Default.ColumnCPU, true),
+                new GeneralColumn(KeywordColumn.KKS, SettingsDesign.Default.ColumnKKS, true),
+                new GeneralColumn(KeywordColumn.RangeMin, SettingsDesign.Default.ColumnRangeMin, true),
+                new GeneralColumn(KeywordColumn.RangeMax, SettingsDesign.Default.ColumnRangeMax, true),
+                new GeneralColumn(KeywordColumn.Units, SettingsDesign.Default.ColumnUnits, true),
+                new GeneralColumn(KeywordColumn.FalseText, SettingsDesign.Default.ColumnFalseText, true),
+                new GeneralColumn(KeywordColumn.TrueText, SettingsDesign.Default.ColumnTrueText, true),
+                new GeneralColumn(KeywordColumn.Revision, SettingsDesign.Default.ColumnRevision, true),
+                new GeneralColumn(KeywordColumn.Cable, SettingsDesign.Default.ColumnCable, true),
+                new GeneralColumn(KeywordColumn.Cabinet, SettingsDesign.Default.ColumnCabinet, false),
+                new GeneralColumn(KeywordColumn.ModuleName, SettingsDesign.Default.ColumnModuleName, false),
+                new GeneralColumn(KeywordColumn.Pin, SettingsDesign.Default.ColumnPin, false),
+                new GeneralColumn(KeywordColumn.Channel, SettingsDesign.Default.ColumnChannel, false),
+                new GeneralColumn(KeywordColumn.IOText, SettingsDesign.Default.ColumnIOText, false),
+                new GeneralColumn(KeywordColumn.Page, SettingsDesign.Default.ColumnPage, true),
+                new GeneralColumn(KeywordColumn.Changed, SettingsDesign.Default.ColumnChanged, true),
+                new GeneralColumn(KeywordColumn.Terminal, SettingsDesign.Default.ColumnTerminal, true),
+                new GeneralColumn(KeywordColumn.Tag, SettingsDesign.Default.ColumnTag, true),
+            };
 
             return _columns;
         }
@@ -330,25 +325,25 @@ namespace IO_list_automation_new
         {
             ColumnList _columns = Columns;
 
-            SettingsDesign.Default.ColumnID = _columns.GetColumnNumberFromKeyword(ConstCol.ColumnNameID);
-            SettingsDesign.Default.ColumnCPU = _columns.GetColumnNumberFromKeyword(ConstCol.ColumnNameCPU);
-            SettingsDesign.Default.ColumnKKS = _columns.GetColumnNumberFromKeyword(ConstCol.ColumnNameKKS);
-            SettingsDesign.Default.ColumnRangeMin = _columns.GetColumnNumberFromKeyword(ConstCol.ColumnNameRangeMin);
-            SettingsDesign.Default.ColumnRangeMax = _columns.GetColumnNumberFromKeyword(ConstCol.ColumnNameRangeMax);
-            SettingsDesign.Default.ColumnUnits = _columns.GetColumnNumberFromKeyword(ConstCol.ColumnNameUnits);
-            SettingsDesign.Default.ColumnFalseText = _columns.GetColumnNumberFromKeyword(ConstCol.ColumnNameFalseText);
-            SettingsDesign.Default.ColumnTrueText = _columns.GetColumnNumberFromKeyword(ConstCol.ColumnNameTrueText);
-            SettingsDesign.Default.ColumnRevision = _columns.GetColumnNumberFromKeyword(ConstCol.ColumnNameRevision);
-            SettingsDesign.Default.ColumnCable = _columns.GetColumnNumberFromKeyword(ConstCol.ColumnNameCable);
-            SettingsDesign.Default.ColumnCabinet = _columns.GetColumnNumberFromKeyword(ConstCol.ColumnNameCabinet);
-            SettingsDesign.Default.ColumnModuleName = _columns.GetColumnNumberFromKeyword(ConstCol.ColumnNameModuleName);
-            SettingsDesign.Default.ColumnPin = _columns.GetColumnNumberFromKeyword(ConstCol.ColumnNamePin);
-            SettingsDesign.Default.ColumnChannel = _columns.GetColumnNumberFromKeyword(ConstCol.ColumnNameChannel);
-            SettingsDesign.Default.ColumnIOText = _columns.GetColumnNumberFromKeyword(ConstCol.ColumnNameIOText);
-            SettingsDesign.Default.ColumnPage = _columns.GetColumnNumberFromKeyword(ConstCol.ColumnNamePage);
-            SettingsDesign.Default.ColumnChanged = _columns.GetColumnNumberFromKeyword(ConstCol.ColumnNameChanged);
-            SettingsDesign.Default.ColumnTerminal = _columns.GetColumnNumberFromKeyword(ConstCol.ColumnNameTerminal);
-            SettingsDesign.Default.ColumnTag = _columns.GetColumnNumberFromKeyword(ConstCol.ColumnNameTag);
+            SettingsDesign.Default.ColumnID = _columns.GetColumnNumberFromKeyword(KeywordColumn.ID);
+            SettingsDesign.Default.ColumnCPU = _columns.GetColumnNumberFromKeyword(KeywordColumn.CPU);
+            SettingsDesign.Default.ColumnKKS = _columns.GetColumnNumberFromKeyword(KeywordColumn.KKS);
+            SettingsDesign.Default.ColumnRangeMin = _columns.GetColumnNumberFromKeyword(KeywordColumn.RangeMin);
+            SettingsDesign.Default.ColumnRangeMax = _columns.GetColumnNumberFromKeyword(KeywordColumn.RangeMax);
+            SettingsDesign.Default.ColumnUnits = _columns.GetColumnNumberFromKeyword(KeywordColumn.Units);
+            SettingsDesign.Default.ColumnFalseText = _columns.GetColumnNumberFromKeyword(KeywordColumn.FalseText);
+            SettingsDesign.Default.ColumnTrueText = _columns.GetColumnNumberFromKeyword(KeywordColumn.TrueText);
+            SettingsDesign.Default.ColumnRevision = _columns.GetColumnNumberFromKeyword(KeywordColumn.Revision);
+            SettingsDesign.Default.ColumnCable = _columns.GetColumnNumberFromKeyword(KeywordColumn.Cable);
+            SettingsDesign.Default.ColumnCabinet = _columns.GetColumnNumberFromKeyword(KeywordColumn.Cabinet);
+            SettingsDesign.Default.ColumnModuleName = _columns.GetColumnNumberFromKeyword(KeywordColumn.ModuleName);
+            SettingsDesign.Default.ColumnPin = _columns.GetColumnNumberFromKeyword(KeywordColumn.Pin);
+            SettingsDesign.Default.ColumnChannel = _columns.GetColumnNumberFromKeyword(KeywordColumn.Channel);
+            SettingsDesign.Default.ColumnIOText = _columns.GetColumnNumberFromKeyword(KeywordColumn.IOText);
+            SettingsDesign.Default.ColumnPage = _columns.GetColumnNumberFromKeyword(KeywordColumn.Page);
+            SettingsDesign.Default.ColumnChanged = _columns.GetColumnNumberFromKeyword(KeywordColumn.Changed);
+            SettingsDesign.Default.ColumnTerminal = _columns.GetColumnNumberFromKeyword(KeywordColumn.Terminal);
+            SettingsDesign.Default.ColumnTag = _columns.GetColumnNumberFromKeyword(KeywordColumn.Tag);
 
             SettingsDesign.Default.Save();
         }
@@ -367,31 +362,33 @@ namespace IO_list_automation_new
         }
         public void InitExcelColumnsList()
         {
-            List<GeneralColumn> _excelColumn = new List<GeneralColumn>();
-            _excelColumn.Add(new GeneralColumn(ConstCol.ColumnNameID, SettingsDesignInput.Default.ColumnID, true));
-            _excelColumn.Add(new GeneralColumn(ConstCol.ColumnNameCPU, SettingsDesignInput.Default.ColumnCPU, true));
-            _excelColumn.Add(new GeneralColumn(ConstCol.ColumnNameKKS, SettingsDesignInput.Default.ColumnKKS, true));
-            _excelColumn.Add(new GeneralColumn(ConstCol.ColumnNameRangeMin, SettingsDesignInput.Default.ColumnRangeMin, true));
-            _excelColumn.Add(new GeneralColumn(ConstCol.ColumnNameRangeMax, SettingsDesignInput.Default.ColumnRangeMax, true));
-            _excelColumn.Add(new GeneralColumn(ConstCol.ColumnNameUnits, SettingsDesignInput.Default.ColumnUnits, true));
-            _excelColumn.Add(new GeneralColumn(ConstCol.ColumnNameFalseText, SettingsDesignInput.Default.ColumnFalseText, true));
-            _excelColumn.Add(new GeneralColumn(ConstCol.ColumnNameTrueText, SettingsDesignInput.Default.ColumnTrueText, true));
-            _excelColumn.Add(new GeneralColumn(ConstCol.ColumnNameRevision, SettingsDesignInput.Default.ColumnRevision, true));
-            _excelColumn.Add(new GeneralColumn(ConstCol.ColumnNameCable, SettingsDesignInput.Default.ColumnCable, true));
-            _excelColumn.Add(new GeneralColumn(ConstCol.ColumnNameCabinet, SettingsDesignInput.Default.ColumnCabinet, true));
-            _excelColumn.Add(new GeneralColumn(ConstCol.ColumnNameModuleName, SettingsDesignInput.Default.ColumnModuleName, false));
-            _excelColumn.Add(new GeneralColumn(ConstCol.ColumnNamePin, SettingsDesignInput.Default.ColumnPin, false));
-            _excelColumn.Add(new GeneralColumn(ConstCol.ColumnNameChannel, SettingsDesignInput.Default.ColumnChannel, false));
-            _excelColumn.Add(new GeneralColumn(ConstCol.ColumnNameIOText, SettingsDesignInput.Default.ColumnIOText, false));
-            _excelColumn.Add(new GeneralColumn(ConstCol.ColumnNamePage, SettingsDesignInput.Default.ColumnPage, true));
-            _excelColumn.Add(new GeneralColumn(ConstCol.ColumnNameChanged, SettingsDesignInput.Default.ColumnChanged, true));
-            _excelColumn.Add(new GeneralColumn(ConstCol.ColumnNameTerminal, SettingsDesignInput.Default.ColumnTerminal, true));
-            _excelColumn.Add(new GeneralColumn(ConstCol.ColumnNameTag, SettingsDesignInput.Default.ColumnTag, true));
+            List<GeneralColumn> _excelColumn = new List<GeneralColumn>()
+            {
+                new GeneralColumn(KeywordColumn.ID, SettingsDesignInput.Default.ColumnID, true),
+                new GeneralColumn(KeywordColumn.CPU, SettingsDesignInput.Default.ColumnCPU, true),
+                new GeneralColumn(KeywordColumn.KKS, SettingsDesignInput.Default.ColumnKKS, true),
+                new GeneralColumn(KeywordColumn.RangeMin, SettingsDesignInput.Default.ColumnRangeMin, true),
+                new GeneralColumn(KeywordColumn.RangeMax, SettingsDesignInput.Default.ColumnRangeMax, true),
+                new GeneralColumn(KeywordColumn.Units, SettingsDesignInput.Default.ColumnUnits, true),
+                new GeneralColumn(KeywordColumn.FalseText, SettingsDesignInput.Default.ColumnFalseText, true),
+                new GeneralColumn(KeywordColumn.TrueText, SettingsDesignInput.Default.ColumnTrueText, true),
+                new GeneralColumn(KeywordColumn.Revision, SettingsDesignInput.Default.ColumnRevision, true),
+                new GeneralColumn(KeywordColumn.Cable, SettingsDesignInput.Default.ColumnCable, true),
+                new GeneralColumn(KeywordColumn.Cabinet, SettingsDesignInput.Default.ColumnCabinet, true),
+                new GeneralColumn(KeywordColumn.ModuleName, SettingsDesignInput.Default.ColumnModuleName, false),
+                new GeneralColumn(KeywordColumn.Pin, SettingsDesignInput.Default.ColumnPin, false),
+                new GeneralColumn(KeywordColumn.Channel, SettingsDesignInput.Default.ColumnChannel, false),
+                new GeneralColumn(KeywordColumn.IOText, SettingsDesignInput.Default.ColumnIOText, false),
+                new GeneralColumn(KeywordColumn.Page, SettingsDesignInput.Default.ColumnPage, true),
+                new GeneralColumn(KeywordColumn.Changed, SettingsDesignInput.Default.ColumnChanged, true),
+                new GeneralColumn(KeywordColumn.Terminal, SettingsDesignInput.Default.ColumnTerminal, true),
+                new GeneralColumn(KeywordColumn.Tag, SettingsDesignInput.Default.ColumnTag, true),
+            };
 
             SetExcelColumnList(_excelColumn, false);
         }
 
-        public DesignClass(ProgressIndication progress, DataGridView grid) : base("Design", false, FileExtensions.design.ToString(), progress, grid)
+        public DesignClass(ProgressIndication progress, DataGridView grid) : base("Design", false, nameof(FileExtensions.design), progress, grid)
         {
             ExcelColumns = new ColumnList();
         }
@@ -399,19 +396,19 @@ namespace IO_list_automation_new
         /// <summary>
         /// Get data from excel file and get relevant signals
         /// </summary>
-        /// <returns>succesful data read</returns>
+        /// <returns>successful data read</returns>
         public bool GetDataFromImportFile()
         {
             Debug debug = new Debug();
 
             //crate open file dialog to open excel files only
-            OpenFileDialog _importfile = new OpenFileDialog();
-            _importfile.Filter = "Excel Worksheets|*.xls;*.xlsx" + "|All Files|*.*";
-            if (_importfile.ShowDialog() == DialogResult.OK)
+            OpenFileDialog _importFile = new OpenFileDialog();
+            _importFile.Filter = "Excel Worksheets|*.xls;*.xlsx";
+            if (_importFile.ShowDialog() == DialogResult.OK)
             {
-                debug.ToFile("Excel file for design is: " + _importfile.FileName, DebugLevels.Development, DebugMessageType.Info);
+                debug.ToFile("Excel file for design is: " + _importFile.FileName, DebugLevels.Development, DebugMessageType.Info);
                 //open excel file
-                FileStream stream = File.Open(_importfile.FileName, FileMode.Open, FileAccess.Read);
+                FileStream stream = File.Open(_importFile.FileName, FileMode.Open, FileAccess.Read);
                 IExcelDataReader _excel = ExcelReaderFactory.CreateReader(stream);
 
                 int _rowCount = _excel.RowCount;
@@ -425,7 +422,6 @@ namespace IO_list_automation_new
                 _columnCount = _excel.FieldCount;
                 string [,] _inputData = new string[_rowCount, _columnCount+1];
 
-                GeneralFunctions _generalFunction = new GeneralFunctions();
                 //read all excel rows
                 for (int _row = 1; _row <= _rowCount; _row++)
                 {
@@ -434,9 +430,9 @@ namespace IO_list_automation_new
                         break;
 
                     //first column is row number
-                    _inputData[_row - 1, 0] = _generalFunction.AddZeroes(_row);
+                    _inputData[_row - 1, 0] = GeneralFunctions.AddZeroes(_row);
                     for (int _column = 0; _column < _columnCount; _column++)
-                        _inputData[_row-1,_column+1] = _generalFunction.ReadExcelCell(_row, _column, _columnCount, _excel);
+                        _inputData[_row-1,_column+1] = GeneralFunctions.ReadExcelCell(_row, _column, _columnCount, _excel);
 
                     Progress.UpdateProgressBar(_row);
                 }
@@ -451,8 +447,8 @@ namespace IO_list_automation_new
 
                 int _columnNumber = 0;
                 int _maxColumns = _inputData.GetLength(1);
-                string _cellValue = "";
-                string _ColumnName = "";
+                string _cellValue = string.Empty;
+                string _ColumnName = string.Empty;
 
                 UpdateColumnNumbers(ExcelColumns.Columns);
 
@@ -462,7 +458,7 @@ namespace IO_list_automation_new
 
                 for (int _row = SettingsDesignInput.Default.RowOffset; _row < _rowCount; _row++)
                 {
-                    //create signal and add coresponding Columns to each signal element
+                    //create signal and add corresponding Columns to each signal element
                     DesignSignal _signalNew = new DesignSignal();
                     foreach (GeneralColumn _column in ExcelColumns)
                     {

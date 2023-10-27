@@ -234,7 +234,7 @@
             this.KKSBox34.Size = new System.Drawing.Size(50, 20);
             this.KKSBox34.TabIndex = 28;
             this.KKSBox34.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.KKSBox34.TextChanged += new System.EventHandler(this.KKSBox34_TextChanged);
+            this.KKSBox34.TextChanged += new System.EventHandler(this.Combine_Event);
             // 
             // KKSBox23
             // 
@@ -243,7 +243,7 @@
             this.KKSBox23.Size = new System.Drawing.Size(50, 20);
             this.KKSBox23.TabIndex = 29;
             this.KKSBox23.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.KKSBox23.TextChanged += new System.EventHandler(this.KKSBox23_TextChanged);
+            this.KKSBox23.TextChanged += new System.EventHandler(this.Combine_Event);
             // 
             // KKSBox12
             // 
@@ -252,7 +252,7 @@
             this.KKSBox12.Size = new System.Drawing.Size(50, 20);
             this.KKSBox12.TabIndex = 30;
             this.KKSBox12.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.KKSBox12.TextChanged += new System.EventHandler(this.KKSBox12_TextChanged);
+            this.KKSBox12.TextChanged += new System.EventHandler(this.Combine_Event);
             // 
             // KKSBox45
             // 
@@ -261,7 +261,7 @@
             this.KKSBox45.Size = new System.Drawing.Size(50, 20);
             this.KKSBox45.TabIndex = 31;
             this.KKSBox45.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.KKSBox45.TextChanged += new System.EventHandler(this.KKSBox45_TextChanged);
+            this.KKSBox45.TextChanged += new System.EventHandler(this.Combine_Event);
             // 
             // KKSBox01
             // 
@@ -270,7 +270,7 @@
             this.KKSBox01.Size = new System.Drawing.Size(50, 20);
             this.KKSBox01.TabIndex = 32;
             this.KKSBox01.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.KKSBox01.TextChanged += new System.EventHandler(this.KKSBox01_TextChanged);
+            this.KKSBox01.TextChanged += new System.EventHandler(this.Combine_Event);
             // 
             // KKSPartCheck1
             // 
@@ -283,7 +283,7 @@
             this.KKSPartCheck1.TabIndex = 33;
             this.KKSPartCheck1.Text = "Use";
             this.KKSPartCheck1.UseVisualStyleBackColor = true;
-            this.KKSPartCheck1.CheckedChanged += new System.EventHandler(this.KKSPartCheck1_CheckedChanged);
+            this.KKSPartCheck1.CheckedChanged += new System.EventHandler(this.Combine_Event);
             // 
             // KKSPartCheck2
             // 
@@ -296,7 +296,7 @@
             this.KKSPartCheck2.TabIndex = 34;
             this.KKSPartCheck2.Text = "Use";
             this.KKSPartCheck2.UseVisualStyleBackColor = true;
-            this.KKSPartCheck2.CheckedChanged += new System.EventHandler(this.KKSPartCheck2_CheckedChanged);
+            this.KKSPartCheck2.CheckedChanged += new System.EventHandler(this.Combine_Event);
             // 
             // KKSPartCheck4
             // 
@@ -309,7 +309,7 @@
             this.KKSPartCheck4.TabIndex = 36;
             this.KKSPartCheck4.Text = "Use";
             this.KKSPartCheck4.UseVisualStyleBackColor = true;
-            this.KKSPartCheck4.CheckedChanged += new System.EventHandler(this.KKSPartCheck4_CheckedChanged);
+            this.KKSPartCheck4.CheckedChanged += new System.EventHandler(this.Combine_Event);
             // 
             // KKSPartCheck3
             // 
@@ -322,7 +322,7 @@
             this.KKSPartCheck3.TabIndex = 35;
             this.KKSPartCheck3.Text = "Use";
             this.KKSPartCheck3.UseVisualStyleBackColor = true;
-            this.KKSPartCheck3.CheckedChanged += new System.EventHandler(this.KKSPartCheck3_CheckedChanged);
+            this.KKSPartCheck3.CheckedChanged += new System.EventHandler(this.Combine_Event);
             // 
             // KKSEdit
             // 

@@ -40,9 +40,9 @@ namespace IO_list_automation_new
         }
 
         /// <summary>
-        /// Cheacks if rows are empty, 1 line is also empty
+        /// Checks if rows are empty, 1 line is also empty
         /// </summary>
-        /// <returns></returns>
+        /// <returns>grid is empty</returns>
         public bool IsEmpty()
         {
             return Grid.RowCount <= 1;
@@ -75,7 +75,7 @@ namespace IO_list_automation_new
         /// <summary>
         /// Get all data from grid
         /// </summary>
-        /// <returns>grid data as list list string</returns>
+        /// <returns>grid data as list of list string</returns>
         public List<List<string>> GetData()
         {
             Debug debug = new Debug();
@@ -206,11 +206,10 @@ namespace IO_list_automation_new
             }
         }
 
-
         /// <summary>
         /// load data from excel to memory
         /// </summary>
-        /// <returns>list list string array of data</returns>
+        /// <returns>list of list string array of data</returns>
         public List<List<string>> LoadFromFileToMemory()
         {
             string _fileName = System.IO.Path.ChangeExtension(FilePaths, null) + "." + FileExtension;
@@ -222,7 +221,6 @@ namespace IO_list_automation_new
 
             if (File.Exists(_fileName))
             {
-                GeneralFunctions _generalFunction = new GeneralFunctions();
                 FileStream stream = File.Open(_fileName, FileMode.Open, FileAccess.Read);
                 IExcelDataReader _excel = ExcelReaderFactory.CreateReader(stream);
 
@@ -244,7 +242,7 @@ namespace IO_list_automation_new
                         List<string> _line = new List<string>();
 
                         for (int _column = 0; _column < _columnCount; _column++)
-                            _line.Add(_generalFunction.ReadExcelCell(_row, _column, _columnCount, _excel));
+                            _line.Add(GeneralFunctions.ReadExcelCell(_row, _column, _columnCount, _excel));
 
                         Progress.UpdateProgressBar(_row);
 
@@ -253,7 +251,6 @@ namespace IO_list_automation_new
 
                     if (!_excel.NextResult())
                         break;
-                    
                 }
                 _excel.Close();
 

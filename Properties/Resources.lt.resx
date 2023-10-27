@@ -126,119 +126,20 @@
   <data name="ChangeWidth" xml:space="preserve">
     <value>Width changed</value>
   </data>
-  <data name="ColumnFunction" xml:space="preserve">
-    <value>Function</value>
-  </data>
-  <data name="ColumnFunctionText" xml:space="preserve">
-    <value>Function Text</value>
-  </data>
-  <data name="ColumnKKSDevice" xml:space="preserve">
-    <value>KKS Device</value>
-  </data>
-  <data name="ColumnKKSFunction" xml:space="preserve">
-    <value>KKS Function</value>
-  </data>
-  <data name="ColumnKKSLocation" xml:space="preserve">
-    <value>KKS Location</value>
-  </data>
-  <data name="ColumnKKSPlant" xml:space="preserve">
-    <value>KKS Plant</value>
-  </data>
-  <data name="ColumnObjectDetalisation" xml:space="preserve">
-    <value>Object Detalisation</value>
-  </data>
-  <data name="ColumnObjectName" xml:space="preserve">
-    <value>Object Name</value>
-  </data>
-  <data name="ColumnObjectType" xml:space="preserve">
-    <value>Object Type</value>
-  </data>
-  <data name="ColumnOperative" xml:space="preserve">
-    <value>Operative</value>
-  </data>
-  <data name="ColumnUsed" xml:space="preserve">
-    <value>Used</value>
-  </data>
   <data name="Column" xml:space="preserve">
     <value>Column</value>
-  </data>
-  <data name="ColumnCabinet" xml:space="preserve">
-    <value>Cabinet</value>
-  </data>
-  <data name="ColumnCable" xml:space="preserve">
-    <value>Cable</value>
-  </data>
-  <data name="ColumnChanged" xml:space="preserve">
-    <value>Changed</value>
-  </data>
-  <data name="ColumnChannel" xml:space="preserve">
-    <value>Channel</value>
-  </data>
-  <data name="ColumnCPU" xml:space="preserve">
-    <value>CPU</value>
-  </data>
-  <data name="ColumnFalseText" xml:space="preserve">
-    <value>False Text</value>
-  </data>
-  <data name="ColumnID" xml:space="preserve">
-    <value>ID</value>
-  </data>
-  <data name="ColumnIOText" xml:space="preserve">
-    <value>IO Text</value>
-  </data>
-  <data name="ColumnKKS" xml:space="preserve">
-    <value>KKS</value>
-  </data>
-  <data name="ColumnModuleName" xml:space="preserve">
-    <value>Module Name</value>
-  </data>
-  <data name="ColumnPage" xml:space="preserve">
-    <value>Page</value>
-  </data>
-  <data name="ColumnPin" xml:space="preserve">
-    <value>Pin</value>
-  </data>
-  <data name="ColumnRangeMax" xml:space="preserve">
-    <value>Range Max</value>
-  </data>
-  <data name="ColumnRangeMin" xml:space="preserve">
-    <value>Range Min</value>
-  </data>
-  <data name="ColumnRevision" xml:space="preserve">
-    <value>Revision</value>
-  </data>
-  <data name="ColumnTrueText" xml:space="preserve">
-    <value>True Text</value>
-  </data>
-  <data name="ColumnUnits" xml:space="preserve">
-    <value>Units</value>
   </data>
   <data name="CurrentDebugLevel" xml:space="preserve">
     <value>Current debug level is set to</value>
   </data>
   <data name="DebugAlarm" xml:space="preserve">
-    <value>ALARM</value>
+    <value>aaaaa</value>
   </data>
   <data name="DebugCritical" xml:space="preserve">
     <value>CRIT</value>
   </data>
   <data name="DebugLevel" xml:space="preserve">
     <value>Debug level</value>
-  </data>
-  <data name="DebugLevelDevelopment" xml:space="preserve">
-    <value>Development</value>
-  </data>
-  <data name="DebugLevelHigh" xml:space="preserve">
-    <value>High</value>
-  </data>
-  <data name="DebugLevelMedium" xml:space="preserve">
-    <value>Medium</value>
-  </data>
-  <data name="DebugLevelMinimum" xml:space="preserve">
-    <value>Minimum</value>
-  </data>
-  <data name="DebugLevelNone" xml:space="preserve">
-    <value>Off</value>
   </data>
   <data name="DebugWarning" xml:space="preserve">
     <value>WARN</value>
@@ -283,7 +184,7 @@
     <value>Saving data to file</value>
   </data>
   <data name="SoftwareStart" xml:space="preserve">
-    <value>Vaziuojam Dzesika</value>
+    <value>Software is started, version is</value>
   </data>
   <data name="Value" xml:space="preserve">
     <value>Value</value>
@@ -296,9 +197,6 @@
   </data>
   <data name="ColumnAddDropDown" xml:space="preserve">
     <value>Column add drop down</value>
-  </data>
-  <data name="ColumnTerminal" xml:space="preserve">
-    <value>Terminal</value>
   </data>
   <data name="ConfirmExit" xml:space="preserve">
     <value>Do you really whant to exit?</value>
@@ -316,7 +214,7 @@
     <value>Extract data from design signals</value>
   </data>
   <data name="Finished" xml:space="preserve">
-    <value>Baige</value>
+    <value>Finished</value>
   </data>
   <data name="Hidden" xml:space="preserve">
     <value>Hidden</value>
@@ -366,27 +264,6 @@
   <data name="NoData" xml:space="preserve">
     <value>No data</value>
   </data>
-  <data name="ColumnDeviceTypeText" xml:space="preserve">
-    <value>Device type text</value>
-  </data>
-  <data name="ColumnFunction1" xml:space="preserve">
-    <value>Function</value>
-  </data>
-  <data name="ColumnFunction2" xml:space="preserve">
-    <value>Function</value>
-  </data>
-  <data name="ColumnFunctionText1" xml:space="preserve">
-    <value>Function text with 1 part</value>
-  </data>
-  <data name="ColumnFunctionText1o2" xml:space="preserve">
-    <value>Function text with 2 part 1/2</value>
-  </data>
-  <data name="ColumnFunctionText2o2" xml:space="preserve">
-    <value>Function text with 2 part 2/2</value>
-  </data>
-  <data name="ColumnTag" xml:space="preserve">
-    <value>Tag name</value>
-  </data>
   <data name="FileAutoLoad" xml:space="preserve">
     <value>Automatic save file loading</value>
   </data>
@@ -411,28 +288,37 @@
   <data name="InstancesGenerate" xml:space="preserve">
     <value>Generate device instances</value>
   </data>
-  <data name="ChoiceData" xml:space="preserve">
-    <value>Data</value>
+  <data name="False" xml:space="preserve">
+    <value>False</value>
   </data>
-  <data name="ChoiceIf" xml:space="preserve">
-    <value>IF</value>
+  <data name="Multiplyer" xml:space="preserve">
+    <value>Multiplyer</value>
   </data>
-  <data name="ChoiceIO" xml:space="preserve">
-    <value>IO</value>
+  <data name="Offset" xml:space="preserve">
+    <value>Offset</value>
   </data>
-  <data name="ChoiceIsEmpty" xml:space="preserve">
-    <value>Is empty</value>
+  <data name="Statement" xml:space="preserve">
+    <value>Statement</value>
   </data>
-  <data name="ChoiceIsNotEmpty" xml:space="preserve">
-    <value>Is not empty</value>
+  <data name="True" xml:space="preserve">
+    <value>True</value>
   </data>
-  <data name="ChoiceObject" xml:space="preserve">
-    <value>Object</value>
+  <data name="Declare" xml:space="preserve">
+    <value>Declare</value>
   </data>
-  <data name="ChoiceTab" xml:space="preserve">
-    <value>TAB</value>
+  <data name="MemoryArea" xml:space="preserve">
+    <value>Memory area</value>
   </data>
-  <data name="ChoiceText" xml:space="preserve">
-    <value>Text</value>
+  <data name="CreateNew" xml:space="preserve">
+    <value>Create new</value>
+  </data>
+  <data name="IOLanguage" xml:space="preserve">
+    <value>IO language</value>
+  </data>
+  <data name="ModuleGenerateUniqueData" xml:space="preserve">
+    <value>Searching unique Modules signals in Data</value>
+  </data>
+  <data name="Scada" xml:space="preserve">
+    <value>Scada</value>
   </data>
 </root>

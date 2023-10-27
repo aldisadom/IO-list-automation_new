@@ -96,7 +96,6 @@
     <Compile Include="DB\DBGeneralGrid.cs" />
     <Compile Include="DB\DBIO.cs" />
     <Compile Include="DB\DBLanguage.cs" />
-    <Compile Include="DB\DBModule.cs" />
     <Compile Include="DB\DBCellEdit.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -121,7 +120,7 @@
     <Compile Include="DesignInputData.Designer.cs">
       <DependentUpon>DesignInputData.cs</DependentUpon>
     </Compile>
-    <Compile Include="General\DropDownClass.cs" />
+    <Compile Include="Helper functions\DropDownClass.cs" />
     <Compile Include="General\GeneralClass.cs" />
     <Compile Include="General\GeneralFunctions.cs" />
     <Compile Include="Helper functions\Debug.cs" />
@@ -134,6 +133,7 @@
     <Compile Include="DesignClass.cs" />
     <Compile Include="General\GeneralColumn.cs" />
     <Compile Include="General\GeneralGrid.cs" />
+    <Compile Include="ModuleClass.cs" />
     <Compile Include="ObjectsClass.cs" />
     <Compile Include="DataClass.cs" />
     <Compile Include="MainWindow.cs">
@@ -145,13 +145,33 @@
     <Compile Include="Program.cs" />
     <Compile Include="Helper functions\ProgressIndication.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\ResourcesUI.Designer.cs">
+      <DependentUpon>ResourcesUI.resx</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
     <Compile Include="Properties\Resources.lt.Designer.cs">
       <DependentUpon>Resources.lt.resx</DependentUpon>
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
     </Compile>
+    <Compile Include="Properties\ResourcesChoices.Designer.cs">
+      <DependentUpon>ResourcesChoices.resx</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="Properties\ResourcesColumns.Designer.cs">
+      <DependentUpon>ResourcesColumns.resx</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
     <Compile Include="Properties\SettingsDesignInput.Designer.cs">
       <DependentUpon>SettingsDesignInput.settings</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <Compile Include="Properties\SettingsModule.Designer.cs">
+      <DependentUpon>SettingsModule.settings</DependentUpon>
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
@@ -172,6 +192,7 @@
     </Compile>
     <EmbeddedResource Include="DB\DBCellEdit.resx">
       <DependentUpon>DBCellEdit.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="DB\NewName.resx">
       <DependentUpon>NewName.cs</DependentUpon>
@@ -186,9 +207,24 @@
       <DependentUpon>MainWindow.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <EmbeddedResource Include="Properties\ResourcesUI.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>ResourcesUI.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.lt.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.lt.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\ResourcesChoices.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>ResourcesChoices.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\ResourcesColumns.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>ResourcesColumns.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
@@ -210,6 +246,10 @@
     <None Include="Properties\SettingsDesignInput.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>SettingsDesignInput.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="Properties\SettingsModule.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>SettingsModule.Designer.cs</LastGenOutput>
     </None>
     <None Include="Properties\SettingsObject.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

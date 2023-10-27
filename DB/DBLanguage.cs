@@ -29,10 +29,10 @@ namespace IO_list_automation_new
         {
             switch (parameterName)
             {
-                case ConstCol.ColumnNameObjectType:
+                case KeywordColumn.ObjectType:
                     ObjectType = value;
                     break;
-                case ConstCol.ColumnNameDeviceTypeText:
+                case KeywordColumn.DeviceTypeText:
                     DeviceTypeText = value;
                     break;
             }
@@ -42,24 +42,24 @@ namespace IO_list_automation_new
         /// Parsing data signal element to string for grid
         /// </summary>
         /// <param name="parameterName">parameter to be read</param>
-        /// <param name="supressError">supress alarm message, used only for transfering from one type to another type data classes</param>
+        /// <param name="suppressError">suppress alarm message, used only for transfering from one type to another type data classes</param>
         /// <returns>value of parameter</returns>
-        public override string GetValueString(string parameterName, bool supressError)
+        public override string GetValueString(string parameterName, bool suppressError)
         {
             string _returnValue = string.Empty;
             switch (parameterName)
             {
-                case ConstCol.ColumnNameObjectType:
+                case KeywordColumn.ObjectType:
                     _returnValue = ObjectType;
                     break;
-                case ConstCol.ColumnNameDeviceTypeText:
+                case KeywordColumn.DeviceTypeText:
                     _returnValue = DeviceTypeText;
                     break;
                 default:
-                    if (!supressError)
+                    if (!suppressError)
                     {
                         Debug _debug = new Debug();
-                        _debug.ToPopUp(Resources.ParameterNotFound + ":" + parameterName, DebugLevels.None, DebugMessageType.Critical);
+                        _debug.ToPopUp("DBLanguageTypeSignal.GetValueString " + Resources.ParameterNotFound + ":" + parameterName, DebugLevels.None, DebugMessageType.Critical);
                     }
                     break;
             }
@@ -74,9 +74,9 @@ namespace IO_list_automation_new
         {
             bool _returnValue = true;
 
-            if (ObjectType == "" || ObjectType == null)
+            if (string.IsNullOrEmpty(ObjectType))
                 _returnValue = false;
-            else if (DeviceTypeText == "" || DeviceTypeText == null)
+            else if (string.IsNullOrEmpty(DeviceTypeText))
                 _returnValue = false;
 
             return _returnValue;
@@ -89,8 +89,8 @@ namespace IO_list_automation_new
         {
             List<GeneralColumn> _columns = new List<GeneralColumn>();
 
-            _columns.Add(new GeneralColumn(ConstCol.ColumnNameDeviceTypeText, 0, true));
-            _columns.Add(new GeneralColumn(ConstCol.ColumnNameObjectType, 1, true));
+            _columns.Add(new GeneralColumn(KeywordColumn.DeviceTypeText, 0, true));
+            _columns.Add(new GeneralColumn(KeywordColumn.ObjectType, 1, true));
 
             return _columns;
         }
@@ -150,7 +150,7 @@ namespace IO_list_automation_new
             for (int i = 0; i < objects.Signals.Count; i++)
             {
                 _functionType = FindType(objects.Signals[i].ObjectName);
-                objects.Signals[i].SetValueFromString(_functionType, ConstCol.ColumnNameObjectType);
+                objects.Signals[i].SetValueFromString(_functionType, KeywordColumn.ObjectType);
 
                 Progress.UpdateProgressBar(i);
             }
@@ -187,19 +187,19 @@ namespace IO_list_automation_new
         {
             switch (parameterName)
             {
-                case ConstCol.ColumnNameFunctionText1:
+                case KeywordColumn.FunctionText1:
                     FunctionText1 = value;
                     break;
-                case ConstCol.ColumnNameFunction1:
+                case KeywordColumn.Function1:
                     Funcion1 = value;
                     break;
-                case ConstCol.ColumnNameFunctionText1o2:
+                case KeywordColumn.FunctionText1o2:
                     FunctionText1o2 = value;
                     break;
-                case ConstCol.ColumnNameFunctionText2o2:
+                case KeywordColumn.FunctionText2o2:
                     FunctionText2o2 = value;
                     break;
-                case ConstCol.ColumnNameFunction2:
+                case KeywordColumn.Function2:
                     Funcion2 = value;
                     break;
             }
@@ -209,33 +209,33 @@ namespace IO_list_automation_new
         /// Parsing data signal element to string for grid
         /// </summary>
         /// <param name="parameterName">parameter to be read</param>
-        /// <param name="supressError">supress alarm message, used only for transfering from one type to another type data classes</param>
+        /// <param name="suppressError">suppress alarm message, used only for transfering from one type to another type data classes</param>
         /// <returns>value of parameter</returns>
-        public override string GetValueString(string parameterName, bool supressError)
+        public override string GetValueString(string parameterName, bool suppressError)
         {
             string _returnValue = string.Empty;
             switch (parameterName)
             {
-                case ConstCol.ColumnNameFunctionText1:
+                case KeywordColumn.FunctionText1:
                     _returnValue = FunctionText1;
                     break;
-                case ConstCol.ColumnNameFunction1:
+                case KeywordColumn.Function1:
                     _returnValue = Funcion1;
                     break;
-                case ConstCol.ColumnNameFunctionText1o2:
+                case KeywordColumn.FunctionText1o2:
                     _returnValue = FunctionText1o2;
                     break;
-                case ConstCol.ColumnNameFunctionText2o2:
+                case KeywordColumn.FunctionText2o2:
                     _returnValue = FunctionText2o2;
                     break;
-                case ConstCol.ColumnNameFunction2:
+                case KeywordColumn.Function2:
                     _returnValue = Funcion2;
                     break;
                 default:
-                    if (!supressError)
+                    if (!suppressError)
                     {
                         Debug _debug = new Debug();
-                        _debug.ToPopUp(Resources.ParameterNotFound + ":" + parameterName, DebugLevels.None, DebugMessageType.Critical);
+                        _debug.ToPopUp("DBLanguageFunctionSignal.GetValueString " + Resources.ParameterNotFound + ":" + parameterName, DebugLevels.None, DebugMessageType.Critical);
                     }
                     break;
             }
@@ -258,11 +258,11 @@ namespace IO_list_automation_new
         {
             List<GeneralColumn> _columns = new List<GeneralColumn>();
 
-            _columns.Add(new GeneralColumn(ConstCol.ColumnNameFunctionText1, 0, true));
-            _columns.Add(new GeneralColumn(ConstCol.ColumnNameFunction1, 1, true));
-            _columns.Add(new GeneralColumn(ConstCol.ColumnNameFunctionText1o2, 2, true));
-            _columns.Add(new GeneralColumn(ConstCol.ColumnNameFunctionText2o2, 3, true));
-            _columns.Add(new GeneralColumn(ConstCol.ColumnNameFunction2, 4, true));
+            _columns.Add(new GeneralColumn(KeywordColumn.FunctionText1, 0, true));
+            _columns.Add(new GeneralColumn(KeywordColumn.Function1, 1, true));
+            _columns.Add(new GeneralColumn(KeywordColumn.FunctionText1o2, 2, true));
+            _columns.Add(new GeneralColumn(KeywordColumn.FunctionText2o2, 3, true));
+            _columns.Add(new GeneralColumn(KeywordColumn.Function2, 4, true));
 
             return _columns;
         }
@@ -272,7 +272,7 @@ namespace IO_list_automation_new
 
         }
 
-        public DBLanguageFunctionType(ProgressIndication progress, DataGridView grid) : base("DBFunctionLanguage",true, FileExtensions.langfuncDB.ToString(), progress, grid)
+        public DBLanguageFunctionType(ProgressIndication progress, DataGridView grid) : base("DBFunctionLanguage",true, FileExtensions.langFuncDB.ToString(), progress, grid)
         {
 
         }
@@ -353,7 +353,7 @@ namespace IO_list_automation_new
             for (int i = 0; i < data.Signals.Count; i++)
             {
                 _functionType = FindFunctionType(data.Signals[i].IOText);
-                data.Signals[i].SetValueFromString(_functionType, ConstCol.ColumnNameFunction);
+                data.Signals[i].SetValueFromString(_functionType, KeywordColumn.Function);
 
                 Progress.UpdateProgressBar(i);
             }

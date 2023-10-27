@@ -8,14 +8,14 @@ using System.Threading.Tasks;
 
 namespace IO_list_automation_new.General
 {
-    internal class GeneralFunctions
+    internal static class GeneralFunctions
     {
         /// <summary>
         /// Copy one list to another
         /// </summary>
         /// <param name="input">input list</param>
         /// <returns>new list</returns>
-        public List<string> ListCopy(List<string> input)
+        public static List<string> ListCopy(List<string> input)
         {
             List<string> _list = new List<string>();
 
@@ -26,18 +26,18 @@ namespace IO_list_automation_new.General
         }
 
         /// <summary>
-        /// add aditional zeros before number for better sorting
+        /// add additional zeros before number for better sorting
         /// </summary>
         /// <param name="_input">value</param>
-        /// <returns>formated string</returns>
-        public string AddZeroes(int _input)
+        /// <returns>formatted string</returns>
+        public static string AddZeroes(int _input)
         {
             if (_input < 10)
-                return ("000" + _input.ToString());
+                return "000" + _input.ToString();
             else if (_input < 100)
-                return ("00" + _input.ToString());
+                return "00" + _input.ToString();
             else if (_input < 1000)
-                return ("0" + _input.ToString());
+                return "0" + _input.ToString();
             else
                 return _input.ToString();
         }
@@ -50,7 +50,7 @@ namespace IO_list_automation_new.General
         /// <param name="maxCol">maximum columns in row</param>
         /// <param name="excel">opened excel file</param>
         /// <returns>string value of cell value</returns>
-        public string ReadExcelCell(int row, int col, int maxCol, IExcelDataReader excel)
+        public static string ReadExcelCell(int row, int col, int maxCol, IExcelDataReader excel)
         {
             string _retunValue = string.Empty;
             if (col >= maxCol || col < 0)
@@ -79,6 +79,5 @@ namespace IO_list_automation_new.General
             }
             return _retunValue;
         }
-
     }
 }

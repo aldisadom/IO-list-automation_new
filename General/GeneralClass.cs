@@ -19,11 +19,6 @@ namespace IO_list_automation_new
 {
     internal abstract class GeneralSignal
     {
-        public GeneralSignal()
-        {
-
-        }
-
         /// <summary>
         /// Parsing data from excel or grid, according to Column to signal element
         /// </summary>
@@ -36,7 +31,7 @@ namespace IO_list_automation_new
         /// </summary>
         /// <param name="parameterName"></param>
         /// <returns>value of parameter</returns>
-        public abstract string GetValueString(string parameterName, bool supressError);
+        public abstract string GetValueString(string parameterName, bool suppressError);
 
         /// <summary>
         /// Checks if signal is valid
@@ -71,7 +66,9 @@ namespace IO_list_automation_new
                     return Grid.GetColumns();
             }
             else
+            {
                 return GeneralGenerateColumnsList();
+            }
         }
 
         /// <summary>
@@ -110,7 +107,7 @@ namespace IO_list_automation_new
 
             for (int _index = 0; _index < _tmpList.Count; _index++)
             {
-                GeneralColumn _column = _tmpList.ElementAt(_index);
+                GeneralColumn _column = _tmpList[_index];
 
                 BaseColumns.Columns.Add(_column);
                 Columns.Columns.Add(_column);

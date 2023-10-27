@@ -8,7 +8,9 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Diagnostics;
+using System.Diagnostics.Eventing.Reader;
 using System.Drawing;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -17,7 +19,9 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Xml.Linq;
 using static IO_list_automation_new.GeneralColumnName;
+using static System.Net.Mime.MediaTypeNames;
 using static System.Net.WebRequestMethods;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
@@ -34,47 +38,96 @@ namespace IO_list_automation_new
             if (Settings.Default.AutoLoad && Settings.Default.AutoLoadFile.Length>0)
             {
                 Debug debug = new Debug();
-
                 debug.ToFile(Resources.FileAutoLoad, DebugLevels.Minimum, DebugMessageType.Info);
 
                 DesignClass design = new DesignClass(Progress, DesignGridView);
                 DataClass data = new DataClass(Progress, DataGridView);
                 ObjectsClass objects = new ObjectsClass(Progress, ObjectsGridView);
-                
+                ModuleClass modules = new ModuleClass(Progress, ModulesGridView);
+
                 design.Grid.LoadFromFile(Settings.Default.AutoLoadFile);
                 data.Grid.LoadFromFile(Settings.Default.AutoLoadFile);
                 objects.Grid.LoadFromFile(Settings.Default.AutoLoadFile);
+                modules.Grid.LoadFromFile(Settings.Default.AutoLoadFile);
+
+                debug.ToFile(Resources.FileAutoLoad + " " +Resources.Finished, DebugLevels.Minimum, DebugMessageType.Info);
             }
+            UpdateUIElement();
         }
 
-        private DataGridView GetCurrentGrid()
+        private void UpdateUIElement()
         {
-            TabIndexs _index = (TabIndexs)tabControl1.SelectedIndex;
-            DataGridView _grid = new DataGridView();
-            switch (_index)
-            {
-                case TabIndexs.Design:
-                    _grid = DesignGridView;
-                    break;
-                case TabIndexs.Data:
-                    _grid = DataGridView;
-                    break;
-                case TabIndexs.Object:
-                    _grid = ObjectsGridView;
-                    break;
-                default:
-                    string text = "GetCurrentGrid";
-                    Debug _debug1 = new Debug();
-                    _debug1.ToFile("Report to programer that " + text + ": " + _grid.Name + " is not created for this element", DebugLevels.None, DebugMessageType.Critical);
-                    throw new InvalidProgramException(text + " is not created for this element");
-            }
-            return _grid;
+            // **********************
+            FileDropDownButton.Text = ResourcesUI.File;
+            FileHelpMenuItem.Text = ResourcesUI.Help;
+            FileAboutMenuItem.Text = ResourcesUI.About;
+            FileExitMenuItem.Text = ResourcesUI.Exit;
+            FileLanguageToolMenuItem.Text = Resources.Language;
+            FileLanguageENMenuItem.Text = ResourcesUI.EN ;
+            FileLanguageLTMenuItem.Text = ResourcesUI.LT ;
+            FileSaveMenuItem.Text = ResourcesUI.Save;
+            FileSaveAllMenuItem.Text = ResourcesUI.SaveAll;
+            FileLoadMenuItem.Text = ResourcesUI.Load;
+            FileLoadAllMenuItem.Text = ResourcesUI.LoadAll ;
+
+            // **********************
+            ProjectDropDownButton.Text = ResourcesUI.Project ;
+            ProjectGetDataFromDesignMenuItem.Text = ResourcesUI.GetDataFromDesign ;
+            ProjectCompareDesignMenuItem.Text = ResourcesUI.CompareWithNewDesign ;
+            ProjectTransferDataMenuItem.Text = ResourcesUI.TransferProjectToData;
+
+            ProjectCPUMenuItem.Text = Resources.CPU;
+            ProjectCPUAddMenuItem.Text = Resources.Add ;
+            ProjectSCADAMenuItem.Text = Resources.SCADA ;
+            ProjectSCADAAddMenuItem.Text = Resources.Add;
+            ProjectLanguageMenuItem.Text = ResourcesUI.IO + " " + Resources.Language ;
+            ProjectLanguageAddMenuItem.Text = Resources.Add;
+
+            // **********************
+            DataDropDownButton.Text = ResourcesUI.Data;
+            DataFindFunctionMenuItem.Text = ResourcesUI.FindFunction;
+            DataKKSCombineMenuItem.Text = ResourcesUI.KKSCombine;
+
+            // **********************
+            ObjectsDropDownButton.Text = ResourcesUI.Objects;
+            ObjectsFindMenuItem.Text = ResourcesUI.ObjectsFindUnique ;
+            ObjectsFindTypeMenuItem.Text = ResourcesUI.ObjectFindType;
+            ObjectTransferToDataMenuItem.Text = ResourcesUI.ObjectsTransferData;
+            ObjectEditTypesMenuItem.Text = ResourcesUI.ObjectsEdit;
+
+            // **********************
+            IODropDownButton.Text = ResourcesUI.IO;
+            IOFindModulesMenuItem.Text = ResourcesUI.FindUniqueModules;
+            IOEditMenuItem.Text = ResourcesUI.IODBEdit;
+
+            // **********************
+            DeclareDropDownButton.Text = ResourcesUI.Declare;
+            DeclareEditMenuItem.Text = ResourcesUI.DeclareDBEdit;
+            DeclareGenerateMenuItem.Text = ResourcesUI.DeclareGenerate;
+
+            // **********************
+            InstanceDropDownButton.Text = ResourcesUI.Instance;
+            InstancesEditMenuItem.Text = ResourcesUI.InstanceDBEdit;
+            InstancesGenerateMenuItem.Text = ResourcesUI.InstanceGenerate;
+
+            // **********************
+            SCADADropDownButton.Text = Resources.SCADA;
+            SCADAEditMenuItem.Text =  ResourcesUI.ScadaEdit;
+
+            // **********************
+            DataTab.Text = ResourcesUI.Data;
+            DesignTab.Text = ResourcesUI.Project;
+            ModuleTab.Text = ResourcesUI.Modules;
+            ObjectTab.Text = ResourcesUI.Objects;
+
+            // **********************
+            FindButton.Text =  ResourcesUI.Find;
         }
 
         /// <summary>
         /// Informs what button was pressed
         /// </summary>
-        /// <param name="buttonName">Button name which was pressed</param>
+        /// <param name="button">button pressed</param>
         private void ButtonPressed(object button)
         {
             Debug _debug = new Debug();
@@ -86,7 +139,7 @@ namespace IO_list_automation_new
         /// <summary>
         /// Informs what button was pressed and function is finished
         /// </summary>
-        /// <param name="buttonName">Button name which was pressed</param>
+        /// <param name="button">button pressed</param>
         private void ButtonFunctionFinished(object button)
         {
             Debug _debug = new Debug();
@@ -98,37 +151,13 @@ namespace IO_list_automation_new
         /// <summary>
         /// Informs that function for this button does not exists
         /// </summary>
-        /// <param name="buttonName">Button name which was pressed</param>
+        /// <param name="button">button pressed</param>
         private void DisplayNoFunction(object button)
         {
             Debug _debug = new Debug();
             ToolStripMenuItem _button = (ToolStripMenuItem)button;
             string _buttonName = _button.Text;
             _debug.ToPopUp($"{Resources.NoFunction}: {_buttonName}", DebugLevels.None, DebugMessageType.Critical);
-        }
-
-        /// <summary>
-        /// General confirmation of action
-        /// </summary>
-        /// <param name="message">Action to be confirmed</param>
-        /// <returns></returns>
-        public DialogResult ShowConfirmWindow(string message)
-        {
-            MessageBoxIcon _icon = MessageBoxIcon.Question;
-            string _title = "Confirmation";
-            MessageBoxButtons _buttons = MessageBoxButtons.YesNoCancel;
-
-            return MessageBox.Show(message, _title, _buttons, _icon);
-        }
-
-        private void MainWindow_KeyDown(object sender, KeyEventArgs e)
-        {
-            KeyDownEvent(sender, e);
-        }
-
-        private void tabControl1_KeyDown(object sender, KeyEventArgs e)
-        {
-            KeyDownEvent(sender, e);
         }
 
         private void MainWindow_FormClosing(object sender, FormClosingEventArgs e)
@@ -144,7 +173,7 @@ namespace IO_list_automation_new
 */
         }
 
-        private void comboboxColumn_SelectedValueChanged(object sender, EventArgs e)
+        private void ComboBoxColumn_SelectedValueChanged(object sender, EventArgs e)
         {
             DropDownClass comboBox = new DropDownClass((System.Windows.Forms.ComboBox)sender);
 
@@ -152,8 +181,8 @@ namespace IO_list_automation_new
             {
                 string _keyword = comboBox.SelectedKeyword();
 
-                TabIndexs _index = (TabIndexs)tabControl1.SelectedIndex;
-                DataGridView _grid = GetCurrentGrid();
+                TabIndex _index = (TabIndex)tabControl1.SelectedIndex;
+                DataGridView _grid = (DataGridView)tabControl1.SelectedTab.Controls[0];
 
                 //if add column
                 if (comboBox.SelectedMod().Contains(Resources.Add))
@@ -170,47 +199,32 @@ namespace IO_list_automation_new
                 //remove column
                 else
                 {
-                    //get collumn name and number of column to remove
-                    for (int _collumnNumber = 0; _collumnNumber < _grid.ColumnCount; _collumnNumber++)
+                    //get column name and number of column to remove
+                    for (int _columnNumber = 0; _columnNumber < _grid.ColumnCount; _columnNumber++)
                     {
-                        if (_grid.Columns[_collumnNumber].Name == _keyword)
+                        if (_grid.Columns[_columnNumber].Name == _keyword)
                         {
-                            _grid.Columns.Remove(_grid.Columns[_collumnNumber]);
+                            _grid.Columns.Remove(_grid.Columns[_columnNumber]);
                             break;
                         }
                     }
                 }
 
-                switch (_index)
-                {
-                    case TabIndexs.Design:
-                        DesignClass design = new DesignClass(Progress, DesignGridView);
-                        break;
-                    case TabIndexs.Data:
-                        DataClass data = new DataClass(Progress, DataGridView);
-                        break;
-                    case TabIndexs.Object:
-                        ObjectsClass objects = new ObjectsClass(Progress, ObjectsGridView);
-                        break;
-                    default:
-                        DisplayNoFunction(sender);
-                        break;
-                }
-                //after add/remove hide combobox
+                //after add/remove hide combo box
                 comboBox.Visible = false;
                 comboBox.SelectedIndex = -1;
             }
         }
 
         /// <summary>
-        /// Function to add column list to dropbox which can be added or removed from grid
+        /// Function to add column list to ComboBox which can be added or removed from grid
         /// </summary>
         /// <param name="e">event arguments</param>
         /// <param name="columnList">column list visible</param>
         /// <param name="baseColumnList">base column list</param>
         private void GridView_Click(EventArgs e,  ColumnList columnList, ColumnList baseColumnList)
         {
-            DropDownClass comboBox = new DropDownClass(comboboxColumn);
+            DropDownClass comboBox = new DropDownClass(comboBoxColumn);
             MouseEventArgs _mouse = (MouseEventArgs)e;
 
             if (_mouse.Button == MouseButtons.Right)
@@ -234,10 +248,10 @@ namespace IO_list_automation_new
                 string _keyword = string.Empty;
                 bool _found = false;
                 //current columns that are not visible can be added
-                foreach (GeneralColumn basecolumn in baseColumnList)
+                foreach (GeneralColumn baseColumn in baseColumnList)
                 {
                     _found = false;
-                    _keyword = basecolumn.Keyword;
+                    _keyword = baseColumn.Keyword;
                     foreach (GeneralColumn _column in columnList)
                     {
                         if (_keyword == _column.Keyword)
@@ -246,10 +260,9 @@ namespace IO_list_automation_new
                             break;
                         }
                     }
-                    // when column list doesn not have keyword that is in base than column can be added
+                    // when column list does not have keyword that is in base than column can be added
                     if (!_found)
                         comboBox.AddItemColumn(Resources.Add + ": ", _keyword);
-
                 }
                 comboBox.ChangeDisplayMember(DropDownElementType.FullName);
                 comboBox.Visible = true;
@@ -276,9 +289,17 @@ namespace IO_list_automation_new
             GridView_Click(e, objects.Columns, objects.BaseColumns);
         }
 
-        private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
+        private void ModulesGridView_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
         {
-            comboboxColumn.Visible = false;
+            ModuleClass modules = new ModuleClass(Progress, ModulesGridView);
+            GridView_Click(e, modules.Columns, modules.BaseColumns);
+        }
+
+        private void TabControl1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+//            DataGridView _grid = (DataGridView)((TabControl)sender).SelectedTab.Controls[0];
+//            _grid.AutoResizeColumns();
+            comboBoxColumn.Visible = false;
         }
 
         /// <summary>
@@ -289,9 +310,9 @@ namespace IO_list_automation_new
         {
             Debug _debug = new Debug();
 
-            IDataObject _dataInclipboard = Clipboard.GetDataObject();
+            IDataObject _dataInClipboard = Clipboard.GetDataObject();
 
-            string _stringInClipboard = _dataInclipboard.GetData(DataFormats.UnicodeText).ToString();
+            string _stringInClipboard = _dataInClipboard.GetData(DataFormats.UnicodeText).ToString();
 
             // no row data
             if (_stringInClipboard == null)
@@ -315,12 +336,12 @@ namespace IO_list_automation_new
 
                     if (_selCol < _selColMin)
                         _selColMin = _selCol;
-
                 }
 
                 int _enableRowCount = _grid.RowCount - _selRowMin;
                 int _enableColumnCount = _grid.ColumnCount - _selColMin;
 
+                _stringInClipboard = _stringInClipboard.Replace("\r", "");
                 string[] _clipboardRows = _stringInClipboard.Split('\n');
 
                 int _rowsInBoard = _clipboardRows.Length;
@@ -345,33 +366,30 @@ namespace IO_list_automation_new
                     else
                     {
                         int _row = 0;
-                        int _col = 0;
 
-                        //when only 1 row is copyed, paste it in all sellected rows
+                        //when only 1 row is copied, paste it in all selected rows
                         if (_rowsInBoard == 1)
                         {
                             Progress.RenameProgressBar(Resources.PasteData + ": " + _grid.Name, _grid.SelectedCells.Count);
                             for (int i = 0; i < _grid.SelectedCells.Count; i++)
                             {
                                 _row = _grid.SelectedCells[i].RowIndex;
-                                for (_col = 0; _col < _clipboardCells.Length; _col++)
+                                for (int _col = 0; _col < _clipboardCells.Length; _col++)
                                     _grid.Rows[_row].Cells[_selColMin + _col].Value = _clipboardCells[_col];
 
                                 Progress.UpdateProgressBar(i);
                             }
                         }
+                        //else paste to required amount
                         else
                         {
                             Progress.RenameProgressBar(Resources.PasteData + ": " + _grid.Name, _rowsInBoard);
                             for (_row = 0; _row < _rowsInBoard; _row++)
                             {
                                 _clipboardCells = _clipboardRows[_row].Split('\t');
-                                for (_col = 0; _col < _clipboardCells.Length - 1; _col++)
-                                {
+                                for (int _col = 0; _col < _clipboardCells.Length; _col++)
                                     _grid.Rows[_selRowMin + _row].Cells[_selColMin + _col].Value = _clipboardCells[_col];
-                                }
-                                _clipboardCells = _clipboardCells[_col].Split('\r');
-                                _grid.Rows[_selRowMin + _row].Cells[_selColMin + _col].Value = _clipboardCells[0];
+
                                 Progress.UpdateProgressBar(_row);
                             }
                         }
@@ -386,12 +404,12 @@ namespace IO_list_automation_new
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void KeyDownEvent(object sender, KeyEventArgs e)
+        private void KeyDown_Event(object sender, KeyEventArgs e)
         {
             // Delete function
             if ((e.KeyCode == Keys.Delete) || (e.KeyCode == Keys.Back))
             {
-                DataGridView _grid = GetCurrentGrid();
+                DataGridView _grid = (DataGridView)((TabControl)sender).SelectedTab.Controls[0];
 
                 if (_grid.SelectedCells.Count > 1)
                 {
@@ -403,7 +421,7 @@ namespace IO_list_automation_new
             // Paste function
             else if ((e.Modifiers == Keys.Control) && (e.KeyCode == Keys.V))
             {
-                DataGridView _grid = GetCurrentGrid();
+                DataGridView _grid = (DataGridView)((TabControl)sender).SelectedTab.Controls[0];
 
                 if (_grid.SelectedCells.Count > 0)
                     Global_paste(_grid);
@@ -412,25 +430,29 @@ namespace IO_list_automation_new
             }
         }
 
-        //File drop down
+        //-------------------------File drop down------------------------------------------
         private void FileSaveMenuItem_Click(object sender, EventArgs e)
         {
             ButtonPressed(sender);
 
-            TabIndexs _index = (TabIndexs)tabControl1.SelectedIndex;
+            TabIndex _index = (TabIndex)tabControl1.SelectedIndex;
             switch (_index)
             {
-                case TabIndexs.Design:
+                case IO_list_automation_new.TabIndex.Design:
                     DesignClass design = new DesignClass(Progress, DesignGridView);
-                    design.Grid.SaveSellect();
+                    design.Grid.SaveSelect();
                     break;
-                case TabIndexs.Data:
+                case IO_list_automation_new.TabIndex.Data:
                     DataClass data = new DataClass(Progress, DataGridView);
-                    data.Grid.SaveSellect();
+                    data.Grid.SaveSelect();
                     break;
-                case TabIndexs.Object:
+                case IO_list_automation_new.TabIndex.Object:
                     ObjectsClass objects = new ObjectsClass(Progress, ObjectsGridView);
-                    objects.Grid.SaveSellect();
+                    objects.Grid.SaveSelect();
+                    break;
+                case IO_list_automation_new.TabIndex.Modules:
+                    ModuleClass modules = new ModuleClass(Progress, ModulesGridView);
+                    modules.Grid.SaveSelect();
                     break;
                 default:
                     DisplayNoFunction(sender);
@@ -451,20 +473,23 @@ namespace IO_list_automation_new
             DesignClass design = new DesignClass(Progress, DesignGridView);
             DataClass data = new DataClass(Progress, DataGridView);
             ObjectsClass objects = new ObjectsClass(Progress, ObjectsGridView);
+            ModuleClass modules = new ModuleClass(Progress, ModulesGridView);
 
-            _saveFile.Filter = "All save files|*" + design.Grid.FileExtension + ";*" + data.Grid.FileExtension + ";*" + objects.Grid.FileExtension;
+            _saveFile.Filter = "All save files|*" + design.Grid.FileExtension + ";*" + data.Grid.FileExtension
+                                                    + ";*" + objects.Grid.FileExtension + ";*" + modules.Grid.FileExtension;
             if (_saveFile.ShowDialog() == DialogResult.OK)
             {
                 design.Grid.SaveToFile(_saveFile.FileName);
                 data.Grid.SaveToFile(_saveFile.FileName);
                 objects.Grid.SaveToFile(_saveFile.FileName);
+                modules.Grid.SaveToFile(_saveFile.FileName);
 
                 Settings.Default.AutoLoadFile = _saveFile.FileName;
                 Settings.Default.Save();
             }
             else
                 debug.ToFile(Resources.FileSellectCanceled, DebugLevels.Minimum, DebugMessageType.Info);
-                    
+
             ButtonFunctionFinished(sender);
         }
 
@@ -472,20 +497,24 @@ namespace IO_list_automation_new
         {
             ButtonPressed(sender);
 
-            TabIndexs _index = (TabIndexs)tabControl1.SelectedIndex;
+            TabIndex _index = (TabIndex)tabControl1.SelectedIndex;
             switch (_index)
             {
-                case TabIndexs.Design:
+                case IO_list_automation_new.TabIndex.Design:
                     DesignClass design = new DesignClass(Progress, DesignGridView);
-                    design.Grid.LoadSellect();
+                    design.Grid.LoadSelect();
                     break;
-                case TabIndexs.Data:
+                case IO_list_automation_new.TabIndex.Data:
                     DataClass data = new DataClass(Progress, DataGridView);
-                    data.Grid.LoadSellect();
+                    data.Grid.LoadSelect();
                     break;
-                case TabIndexs.Object:
+                case IO_list_automation_new.TabIndex.Object:
                     ObjectsClass objects = new ObjectsClass(Progress, ObjectsGridView);
-                    objects.Grid.LoadSellect();
+                    objects.Grid.LoadSelect();
+                    break;
+                case IO_list_automation_new.TabIndex.Modules:
+                    ModuleClass modules = new ModuleClass(Progress, ModulesGridView);
+                    modules.Grid.LoadSelect();
                     break;
                 default:
                     DisplayNoFunction(sender);
@@ -505,18 +534,37 @@ namespace IO_list_automation_new
             DesignClass design = new DesignClass(Progress, DesignGridView);
             DataClass data = new DataClass(Progress, DataGridView);
             ObjectsClass objects = new ObjectsClass(Progress, ObjectsGridView);
+            ModuleClass modules = new ModuleClass(Progress, ModulesGridView);
 
-            _loadFile.Filter = "All save files|*" + design.Grid.FileExtension + ";*" + data.Grid.FileExtension + ";*" + objects.Grid.FileExtension;
+            _loadFile.Filter = "All save files|*" + design.Grid.FileExtension + ";*" + data.Grid.FileExtension
+                                        + ";*" + objects.Grid.FileExtension + ";*" + modules.Grid.FileExtension;
+
             if (_loadFile.ShowDialog() == DialogResult.OK)
             {
                 design.Grid.LoadFromFile(_loadFile.FileName);
                 data.Grid.LoadFromFile(_loadFile.FileName);
                 objects.Grid.LoadFromFile(_loadFile.FileName);
+                modules.Grid.LoadFromFile(_loadFile.FileName);
             }
             else
                 debug.ToFile(Resources.FileSellectCanceled, DebugLevels.Minimum, DebugMessageType.Info);
 
             ButtonFunctionFinished(sender);
+        }
+
+        private void FileLanguage_Click(object sender, EventArgs e)
+        {
+            ToolStripMenuItem _item = (ToolStripMenuItem)sender;
+
+            if (Settings.Default.ApplicationLanguage != _item.Text.ToLower())
+            {
+                Settings.Default.ApplicationLanguage = _item.Text.ToLower();
+                Settings.Default.Save();
+                Thread.CurrentThread.CurrentUICulture = CultureInfo.GetCultureInfo(Settings.Default.ApplicationLanguage);
+
+                UpdateUIElement();
+                this.Update();
+            }
         }
 
         private void FileHelpMenuItem_Click(object sender, EventArgs e)
@@ -531,13 +579,13 @@ namespace IO_list_automation_new
 
         private void FileExitMenuItem_Click(object sender, EventArgs e)
         {
-            DialogResult _result = ShowConfirmWindow(Resources.ConfirmExit);
-            if (_result == DialogResult.OK || _result == DialogResult.Yes)
-                Application.Exit();
+            DialogResult _result = MessageBox.Show(Resources.ConfirmExit, "Exit", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+            if (_result == DialogResult.Yes)
+                System.Windows.Forms.Application.Exit();
         }
 
-//Project drop down
-        private void ProjectDesignMenuItem_Click(object sender, EventArgs e)
+        //-------------------------Project dropdown------------------------------------------
+        private void ProjectGetDataFromDesignMenuItem_Click(object sender, EventArgs e)
         {
             ButtonPressed(sender);
 
@@ -568,22 +616,123 @@ namespace IO_list_automation_new
             ButtonFunctionFinished(sender);
         }
 
-        private void ProjectCPUAddMenuItem_Click(object sender, EventArgs e)
+        /// <summary>
+        /// Add elements to drop downs from DB
+        /// </summary>
+        /// <param name="menuItem">menu item to add dropdown</param>
+        /// <param name="list">list to add to dropdown</param>
+        private void AddMenuItemDropDown(ToolStripMenuItem menuItem, List<string> list)
         {
-            DisplayNoFunction(sender);
+            //clear all items, but leave first one
+            for (int i = menuItem.DropDownItems.Count-1; i > 0; i--)
+                menuItem.DropDownItems.Remove(menuItem.DropDownItems[i]);
+
+            //add items
+            for (int i = 0; i < list.Count; i++)
+                menuItem.DropDownItems.Add(list[i]);
         }
 
-        private void ProjectSCADAAddMenuItem_Click(object sender, EventArgs e)
+        private void ProjectCPUMenuItem_MouseEnter(object sender, EventArgs e)
         {
-            DisplayNoFunction(sender);
+            DBGeneral _DB = new DBGeneral(Progress, Resources.CPU, nameof(FileExtensions.decDB), DBTypeLevel.CPU);
+            List<string> _list = _DB.GetDBFolderList();
+            //add items to dropdown
+            AddMenuItemDropDown((ToolStripMenuItem)sender, _list);
         }
 
-        private void ProjectLanguageAddMenuItem_Click(object sender, EventArgs e)
+        private void ProjectCPUMenuItem_DropDownItemClicked(object sender, ToolStripItemClickedEventArgs e)
         {
-            DisplayNoFunction(sender);
+            if (e.ClickedItem.Text == null) { }
+            else if (e.ClickedItem.Text == Resources.Add)
+            {
+                DBGeneral _DB = new DBGeneral(Progress, Resources.CPU, nameof(FileExtensions.decDB.ToString), DBTypeLevel.CPU);
+                NewName _newName = new NewName(Resources.CreateNew + ": " + Resources.CPU);
+
+                _newName.ShowDialog();
+                if (!string.IsNullOrEmpty(_newName.Output))
+                    _DB.DBFolderCreate(_newName.Output);
+            }
+            else
+            {
+                Settings.Default.SelectedCPU = e.ClickedItem.Text;
+                DBGeneral _DBScada = new DBGeneral(Progress, Resources.CPU, nameof(FileExtensions.decScadaDB), DBTypeLevel.SCADA);
+                List<string> _list = _DBScada.GetDBFolderList();
+
+                //set SCADA for first element
+                if (_list.Count > 0)
+                    Settings.Default.SelectedSCADA = _list[0];
+                else
+                    Settings.Default.SelectedSCADA = "-";
+                Settings.Default.Save();
+            }
         }
 
-//data dropdown
+        private void ProjectSCADAMenuItem_MouseEnter(object sender, EventArgs e)
+        {
+            DBGeneral _DB = new DBGeneral(Progress, Resources.SCADA,nameof(FileExtensions.decScadaDB), DBTypeLevel.SCADA);
+            List<string> _list = _DB.GetDBFolderList();
+            //add items to dropdown
+            AddMenuItemDropDown((ToolStripMenuItem)sender, _list);
+        }
+
+        private void ProjectSCADAMenuItem_DropDownItemClicked(object sender, ToolStripItemClickedEventArgs e)
+        {
+            if (e.ClickedItem.Text == null) { }
+            else if (e.ClickedItem.Text == Resources.Add)
+            {
+                DBGeneral _DB = new DBGeneral(Progress, Resources.SCADA,nameof(FileExtensions.decScadaDB), DBTypeLevel.SCADA);
+                NewName _newName = new NewName(Resources.CreateNew + ": " + Resources.SCADA);
+
+                _newName.ShowDialog();
+                if (!string.IsNullOrEmpty(_newName.Output))
+                    _DB.DBFolderCreate(_newName.Output);
+            }
+            else
+            {
+                Settings.Default.SelectedSCADA = e.ClickedItem.Text;
+                Settings.Default.Save();
+            }
+        }
+
+        private void ProjectLanguageMenuItem_MouseEnter(object sender, EventArgs e)
+        {
+            DBGeneral _DB = new DBGeneral(Progress, ResourcesUI.IO + " " + Resources.Language,nameof(FileExtensions.langFuncDB), DBTypeLevel.Base);
+            List<string> _list = _DB.GetDBFileList();
+            //add items to dropdown
+            AddMenuItemDropDown((ToolStripMenuItem)sender, _list);
+        }
+
+        private void ProjectLanguageMenuItem_DropDownItemClicked(object sender, ToolStripItemClickedEventArgs e)
+        {
+            if (e.ClickedItem.Text == null) { }
+            else if (e.ClickedItem.Text == Resources.Add)
+            {
+                DBGeneral _DB = new DBGeneral(Progress, ResourcesUI.IO + " " + Resources.Language, nameof(FileExtensions.langFuncDB), DBTypeLevel.Base);
+                NewName _newName = new NewName(Resources.CreateNew + ": " + ResourcesUI.IO +" " + Resources.Language);
+
+                _newName.ShowDialog();
+                if (!string.IsNullOrEmpty(_newName.Output))
+                {
+                    DBGeneral _DBType = new DBGeneral(Progress, ResourcesUI.IO + " " + Resources.Language, nameof(FileExtensions.langTypeDB), DBTypeLevel.Base);
+                    _DB.CreateDBFile(_newName.Output);
+                    _DBType.CreateDBFile(_newName.Output);
+                }
+            }
+            else
+            {
+                Settings.Default.IOLanguage = e.ClickedItem.Text;
+                Settings.Default.Save();
+            }
+        }
+
+        private void ProjectDropDownButton_DropDownOpened(object sender, EventArgs e)
+        {
+            ProjectCPUMenuItem.Text = Resources.CPU + ": " + Settings.Default.SelectedCPU;
+            ProjectSCADAMenuItem.Text = Resources.SCADA + ": " + Settings.Default.SelectedSCADA;
+            ProjectLanguageMenuItem.Text = ResourcesUI.IO + " "+ Resources.Language + ": " + Settings.Default.IOLanguage;
+        }
+
+        //-------------------------Data dropdown------------------------------------------
         private void DataKKSCombineMenuItem_Click(object sender, EventArgs e)
         {
             ButtonPressed(sender);
@@ -615,7 +764,7 @@ namespace IO_list_automation_new
             ButtonFunctionFinished(sender);
         }
 
-//objects dropdown
+        //-------------------------Objects dropdown------------------------------------------
         private void ObjectsFindMenuItem_Click(object sender, EventArgs e)
         {
             ButtonPressed(sender);
@@ -644,7 +793,6 @@ namespace IO_list_automation_new
                 DBLanguage _DBLanguage = new DBLanguage(Progress, _grid);
                 if (_DBLanguage.Type.Grid.LoadFromFileToMemory(DeleteMe.LTpath))
                     _DBLanguage.Type.FindAllType(objects);
-
             }
 
             ButtonFunctionFinished(sender);
@@ -665,7 +813,6 @@ namespace IO_list_automation_new
                     data.Grid.PutData();
                 }
             }
-
             ButtonFunctionFinished(sender);
         }
 
@@ -674,19 +821,55 @@ namespace IO_list_automation_new
             DisplayNoFunction(sender);
         }
 
-//IO dropdown
+        //-------------------------IO dropdown------------------------------------------
+        private void IOFindModulesMenuItem_Click(object sender, EventArgs e)
+        {
+            ButtonPressed(sender);
+
+            DataClass data = new DataClass(Progress, DataGridView);
+
+            if (data.Grid.GetData())
+            {
+                ModuleClass modules = new ModuleClass(Progress, ModulesGridView);
+                modules.ExtractFromData(data);
+                modules.Grid.PutData();
+            }
+
+            ButtonFunctionFinished(sender);
+        }
         private void IOEditMenuItem_Click(object sender, EventArgs e)
         {
             DisplayNoFunction(sender);
         }
 
-//declare dropdown
-        private void DeclareEditMenuItem_Click(object sender, EventArgs e)
+        //-------------------------Declare dropdown------------------------------------------
+        private void DeclareGenerateMenuItem_Click(object sender, EventArgs e)
         {
-            DisplayNoFunction(sender);
+            ButtonPressed(sender);
+
+            DesignClass design = new DesignClass(Progress, DesignGridView);
+            DataClass data = new DataClass(Progress, DataGridView);
+            ObjectsClass objects = new ObjectsClass(Progress, ObjectsGridView);
+
+            if (design.Grid.GetData() && data.Grid.GetData() && objects.Grid.GetData())
+            {
+                DBGeneral _DB = new DBGeneral(Progress, ResourcesUI.Declare, nameof(FileExtensions.decDB), DBTypeLevel.CPU);
+                _DB.DecodeAll(data, objects);
+            }
+            ButtonFunctionFinished(sender);
         }
 
-//Instances dropdown
+        private void DeclareEditMenuItem_Click(object sender, EventArgs e)
+        {
+            ButtonPressed(sender);
+
+            DBGeneral _DB = new DBGeneral(Progress, ResourcesUI.Declare, nameof(FileExtensions.decDB), DBTypeLevel.CPU);
+            _DB.EditAll();
+
+            ButtonFunctionFinished(sender);
+        }
+
+        //-------------------------Instances dropdown------------------------------------------
 
         private void InstancesGenerateMenuItem_Click(object sender, EventArgs e)
         {
@@ -698,8 +881,8 @@ namespace IO_list_automation_new
 
             if (design.Grid.GetData() && data.Grid.GetData() && objects.Grid.GetData())
             {
-                DBGeneral Instances = new DBGeneral(Progress, FileExtensions.instDB.ToString(),"");
-                Instances.DecodeAll(data, objects);
+                DBGeneral _DB = new DBGeneral(Progress, ResourcesUI.Instance, nameof(FileExtensions.instDB), DBTypeLevel.CPU);
+                _DB.DecodeAll(data, objects);
             }
             ButtonFunctionFinished(sender);
         }
@@ -708,18 +891,16 @@ namespace IO_list_automation_new
         {
             ButtonPressed(sender);
 
-            DBGeneral Instances = new DBGeneral(Progress, FileExtensions.instDB.ToString(), "");
-            Instances.EditAll();
+            DBGeneral _DB = new DBGeneral(Progress, ResourcesUI.Instance, nameof(FileExtensions.instDB), DBTypeLevel.CPU);
+            _DB.EditAll();
 
             ButtonFunctionFinished(sender);
         }
 
-//SCADA dropdown
+        //-------------------------SCADA dropdown------------------------------------------
         private void SCADAEditMenuItem_Click(object sender, EventArgs e)
         {
             DisplayNoFunction(sender);
         }
-
-
     }
 }
