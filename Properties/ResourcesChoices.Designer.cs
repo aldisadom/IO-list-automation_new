@@ -115,6 +115,15 @@ namespace IO_list_automation_new.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Modules.
+        /// </summary>
+        internal static string Modules {
+            get {
+                return ResourceManager.GetString("Modules", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Object.
         /// </summary>
         internal static string Object {

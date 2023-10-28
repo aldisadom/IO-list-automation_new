@@ -132,7 +132,7 @@
             this.comboBoxColumn.Size = new System.Drawing.Size(101, 21);
             this.comboBoxColumn.TabIndex = 43;
             this.comboBoxColumn.Visible = false;
-            this.comboBoxColumn.SelectedValueChanged += new System.EventHandler(this.comboBoxColumn_SelectedValueChanged);
+            this.comboBoxColumn.SelectedValueChanged += new System.EventHandler(this.ComboBoxColumn_SelectedValueChanged);
             // 
             // DesignInputData
             // 

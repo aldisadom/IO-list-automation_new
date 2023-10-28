@@ -93,8 +93,6 @@
   <ItemGroup>
     <Compile Include="DB\DBChoices.cs" />
     <Compile Include="DB\DBGeneral.cs" />
-    <Compile Include="DB\DBGeneralGrid.cs" />
-    <Compile Include="DB\DBIO.cs" />
     <Compile Include="DB\DBLanguage.cs" />
     <Compile Include="DB\DBCellEdit.cs">
       <SubType>Form</SubType>
@@ -120,6 +118,7 @@
     <Compile Include="DesignInputData.Designer.cs">
       <DependentUpon>DesignInputData.cs</DependentUpon>
     </Compile>
+    <Compile Include="General\GeneralGrid.cs" />
     <Compile Include="Helper functions\DropDownClass.cs" />
     <Compile Include="General\GeneralClass.cs" />
     <Compile Include="General\GeneralFunctions.cs" />
@@ -132,7 +131,6 @@
     </Compile>
     <Compile Include="DesignClass.cs" />
     <Compile Include="General\GeneralColumn.cs" />
-    <Compile Include="General\GeneralGrid.cs" />
     <Compile Include="ModuleClass.cs" />
     <Compile Include="ObjectsClass.cs" />
     <Compile Include="DataClass.cs" />

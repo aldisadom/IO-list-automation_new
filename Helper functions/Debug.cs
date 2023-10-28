@@ -1,32 +1,39 @@
 ﻿using IO_list_automation_new.Properties;
 using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Security.Cryptography;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace IO_list_automation_new
 {
+    internal enum DebugLevels
+    {
+        None = 0,
+        Minimum = 1,
+        Medium = 2,
+        High = 3,
+        Development = 10,
+    }
+
+    internal enum DebugMessageType
+    {
+        Info,
+        Warning,
+        Alarm,
+        Critical,
+    }
+
     internal class Debug
     {
         /// <summary>
         /// Function that returns number as string with additional zeroes
         /// </summary>
         /// <param name="_number">number to be converted to string</param>
-        /// <param name="decimals">minimum string lenght</param>
+        /// <param name="decimals">minimum string length</param>
         /// <returns>number as string with additional zeroes</returns>
         private string NumberToString(int _number, int decimals)
         {
             string _formattedString = _number.ToString();
-            //check size of number if not enought numbers add 0 in front
+            //check size of number if not enough numbers add 0 in front
             for (int i = _formattedString.Length; i < decimals; i++)
                 _formattedString = "0" + _formattedString;
             return _formattedString;
@@ -52,6 +59,7 @@ namespace IO_list_automation_new
         {
             File.Create("_debug.txt").Dispose();
         }
+
         /// <summary>
         /// Write debug message to file
         /// </summary>
@@ -69,9 +77,7 @@ namespace IO_list_automation_new
         /// <param name="icon">debug message icon</param>
         private void PopUp(string message, MessageBoxIcon icon)
         {
-            string _title = string.Empty;
-            MessageBoxButtons _buttons = MessageBoxButtons.OK;
-            MessageBox.Show(message, _title, _buttons, icon); // DialogResult result = MessageBox.Show(message, title, buttons, _icon);
+            MessageBox.Show(message, string.Empty, MessageBoxButtons.OK, icon);
         }
 
         /// <summary>
@@ -82,7 +88,7 @@ namespace IO_list_automation_new
         /// <param name="messageType">debug message type</param>
         public void ToFile(string message, DebugLevels messageLevel, DebugMessageType messageType)
         {
-            //check if current debug level is  
+            //check if current debug level is
             if (Settings.Default.DebugLevel >= (uint)messageLevel)
             {
                 string _messageText = FormatTime() + " - ";
@@ -96,10 +102,12 @@ namespace IO_list_automation_new
                         _messageText += Resources.DebugWarning;
                         _messageText += ": ";
                         break;
+
                     case DebugMessageType.Alarm:
                         _messageText += Resources.DebugAlarm;
                         _messageText += ": ";
                         break;
+
                     case DebugMessageType.Critical:
                         _messageText += Resources.DebugCritical;
                         _messageText += ": ";
@@ -118,7 +126,7 @@ namespace IO_list_automation_new
         /// <param name="messageType">debug message type</param>
         public void ToPopUp(string message, DebugLevels messageLevel, DebugMessageType messageType)
         {
-            //check if current debug level is  
+            //check if current debug level is
             if (Settings.Default.DebugLevel >= (uint)messageLevel)
             {
                 string _messageText = FormatTime() + " - ";
@@ -128,16 +136,19 @@ namespace IO_list_automation_new
                 {
                     case DebugMessageType.Info:
                         break;
+
                     case DebugMessageType.Warning:
                         _icon = MessageBoxIcon.Information;
                         _messageText += Resources.DebugWarning;
                         _messageText += ": ";
                         break;
+
                     case DebugMessageType.Alarm:
                         _icon = MessageBoxIcon.Warning;
                         _messageText += Resources.DebugAlarm;
                         _messageText += ": ";
                         break;
+
                     case DebugMessageType.Critical:
                         _icon = MessageBoxIcon.Error;
                         _messageText += Resources.DebugCritical;
@@ -155,7 +166,7 @@ namespace IO_list_automation_new
         /// Prints current debug level to file
         /// </summary>
         /// <returns>current debug level</returns>
-        public uint CurrentDebugLevel ()
+        public uint CurrentDebugLevel()
         {
             string _currentDebugLevel = ((DebugLevels)Settings.Default.DebugLevel).ToString();
 

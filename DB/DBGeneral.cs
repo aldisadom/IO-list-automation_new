@@ -1,44 +1,34 @@
-﻿using ExcelDataReader;
-using IO_list_automation_new.DB;
+﻿using IO_list_automation_new.DB;
 using IO_list_automation_new.Properties;
-using SharpCompress.Compressors.Xz;
-using SharpCompress.Crypto;
 using SwiftExcel;
 using System;
-using System.CodeDom;
-using System.Collections;
 using System.Collections.Generic;
-using System.Data;
-using System.Data.Common;
-using System.Diagnostics;
-using System.Drawing;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Runtime.InteropServices;
-using System.Runtime.InteropServices.ComTypes;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Xml.Linq;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace IO_list_automation_new
 {
+    internal enum DBTypeLevel
+    {
+        Base,
+        CPU,
+        SCADA,
+    }
+
     internal class DBGeneralSignal
     {
         public List<string> Line { get; private set; }
 
         public string TagType { get; private set; }
         public string MemoryArea { get; private set; }
-        public string Adress { get; private set; }
+        public string Address { get; private set; }
 
         private int Index = 0;
+
         public DBGeneralSignal()
         {
             TagType = string.Empty;
             MemoryArea = string.Empty;
-            Adress = string.Empty;
+            Address = string.Empty;
             Line = new List<string>();
         }
 
@@ -54,62 +44,73 @@ namespace IO_list_automation_new
         /// <summary>
         /// Find IO in data based on function of object KKS
         /// </summary>
-        /// <param name="functionType">function type to find</param>
         /// <param name="data">data</param>
         /// <param name="objectSignal">object</param>
         /// <param name="simulation">simulate data</param>
         /// <returns>IO tag</returns>
-        private string DecodeIO(string functionType, DataClass data, ObjectSignal objectSignal, bool simulation)
+        private string DecodeIO(DataClass data, ObjectSignal objectSignal, bool simulation)
         {
-            if (!simulation)
+            Index++;
+            if (simulation)
+                return "KKS." + Line[Index];
+
+            for (int i = 0; i < data.Signals.Count; i++)
             {
-                for (int i = 0; i < data.Signals.Count; i++)
-                {
-                    if ((objectSignal.KKS == data.Signals[i].KKS) && (data.Signals[i].Function == functionType))
-                        return data.Signals[i].Tag;
-                }
-                return string.Empty;
+                if ((objectSignal.KKS == data.Signals[i].KKS) && (data.Signals[i].Function == Line[Index]))
+                    return data.Signals[i].Tag;
             }
-            else
-                return "KKS." + functionType;
+            return string.Empty;
         }
 
         /// <summary>
         /// Find requested column in data
         /// </summary>
-        /// <param name="columnName">column name in data</param>
         /// <param name="data">data</param>
         /// <param name="objectSignal">object</param>
         /// <param name="simulation">simulate data</param>
         /// <returns>column value</returns>
-        private string DecodeData(string columnName, DataClass data, ObjectSignal objectSignal, bool simulation)
+        private string DecodeData(DataClass data, ObjectSignal objectSignal, bool simulation)
         {
-            if (!simulation)
+            Index++;
+            if (simulation)
+                return "Data." + Line[Index];
+
+            for (int i = 0; i < data.Signals.Count; i++)
             {
-                for (int i = 0; i < data.Signals.Count; i++)
-                {
-                    if (objectSignal.KKS == data.Signals[i].KKS)
-                        return data.Signals[i].GetValueString(columnName, false);
-                }
-                return string.Empty;
+                if (objectSignal.KKS == data.Signals[i].KKS)
+                    return data.Signals[i].GetValueString(Line[Index], false);
             }
-            else
-                return "Data." + columnName;
+            return string.Empty;
         }
 
         /// <summary>
         /// find requested data in objects
         /// </summary>
-        /// <param name="columnName">column name in objects</param>
         /// <param name="objectSignal">object</param>
         /// <param name="simulation">simulate data</param>
         /// <returns>column value</returns>
-        private string DecodeObjects(string columnName, ObjectSignal objectSignal, bool simulation)
+        private string DecodeObjects(ObjectSignal objectSignal, bool simulation)
         {
-            if (!simulation)
-                return objectSignal.GetValueString(columnName, false);
-            else
-                return "Object." + columnName;
+            Index++;
+            if (simulation)
+                return "Object." + Line[Index];
+
+            return objectSignal.GetValueString(Line[Index], false);
+        }
+
+        /// <summary>
+        /// find requested data in objects
+        /// </summary>
+        /// <param name="moduleSignal">object</param>
+        /// <param name="simulation">simulate data</param>
+        /// <returns>column value</returns>
+        private string DecodeModules(ModuleSignal moduleSignal, bool simulation)
+        {
+            Index++;
+            if (simulation)
+                return "Module." + Line[Index];
+
+            return moduleSignal.GetValueString(Line[Index], false);
         }
 
         /// <summary>
@@ -118,6 +119,7 @@ namespace IO_list_automation_new
         /// <param name="tagType">tag type</param>
         private void DecodeTagType(string tagType)
         {
+            Index++;
             TagType = tagType;
         }
 
@@ -125,25 +127,23 @@ namespace IO_list_automation_new
         /// Calculate value
         /// </summary>
         /// <param name="index">index of object</param>
-        /// <param name="decodedLine">line of DB</param>
-        /// <returns>value calculated with offset and multiplyer</returns>
-        private string DecodeIndex(int index,int indexLine, List<string> line)
+        /// <param name="indexLine">index of coded line</param>
+        /// <param name="line">coded line</param>
+        /// <returns>value calculated with offset and multiplier</returns>
+        private string DecodeIndex(int index, int indexLine, List<string> line)
         {
-            int _value = 0;
-            int _returnValue = 0;
+            Index += 3;
 
             MemoryArea = line[indexLine];
-            if (int.TryParse(line[indexLine+1], out _value))
-            {
-                _returnValue = index * _value;
-                if (int.TryParse(line[indexLine + 2], out _value))
-                    _returnValue = _returnValue + _value;
-
-                Adress = _returnValue.ToString();
-                return Adress;
-            }
-            else
+            if (!int.TryParse(line[indexLine + 1], out int _value))
                 return string.Empty;
+
+            int _returnValue = index * _value;
+            if (int.TryParse(line[indexLine + 2], out _value))
+                _returnValue += _value;
+
+            Address = _returnValue.ToString();
+            return Address;
         }
 
         /// <summary>
@@ -153,50 +153,67 @@ namespace IO_list_automation_new
         /// <param name="decodedLine">decoded list</param>
         /// <param name="data">data</param>
         /// <param name="objectSignal">object</param>
+        /// <param name="moduleSignal">module</param>
         /// <param name="simulation">simulate data</param>
-        private void DecodeIf(int index, List<string> decodedLine, DataClass data, ObjectSignal objectSignal, bool simulation)
+        private void DecodeIf(int index, List<string> decodedLine, DataClass data, ObjectSignal objectSignal, ModuleSignal moduleSignal, bool simulation)
         {
             Index++;
             string _text = Line[Index];
-            string _returnPart1 = string.Empty;
-            int _newIndex = 0;
+            string _returnPart1;
+            int _newIndex;
             Debug _debug = new Debug();
-            string text = string.Empty;
+            string text;
 
-            Index++;
-            if (_text == KeywordDBChoices.Data)
-                _returnPart1 = DecodeData(Line[Index], data, objectSignal, simulation);
-            else if (_text == KeywordDBChoices.Object)
-                _returnPart1 = DecodeObjects(Line[Index], objectSignal, simulation);
-            else if (_text == KeywordDBChoices.IO)
-                _returnPart1 = DecodeIO(Line[Index], data, objectSignal, simulation);
-            else
+            switch (_text)
             {
-                text = "DBGeneralSignal.DecodeIf";
-                _debug.ToFile("Report to programmer that there is error in " + text + " " + _text, DebugLevels.None, DebugMessageType.Critical);
-                throw new InvalidProgramException("Error in - " + text + "." + _text);
+                case KeywordDBChoices.Data:
+                    _returnPart1 = DecodeData(data, objectSignal, simulation);
+                    break;
+
+                case KeywordDBChoices.Object:
+                    _returnPart1 = DecodeObjects(objectSignal, simulation);
+                    break;
+
+                case KeywordDBChoices.Modules:
+                    _returnPart1 = DecodeModules(moduleSignal, simulation);
+                    break;
+
+                case KeywordDBChoices.IO:
+                    _returnPart1 = DecodeIO(data, objectSignal, simulation);
+                    break;
+
+                default:
+                    text = "DBGeneralSignal.DecodeIf";
+
+                    _debug.ToFile(text + " " + Resources.ParameterNotFound + ":" + _text, DebugLevels.None, DebugMessageType.Critical);
+                    throw new InvalidProgramException(text + "." + _text + " is not created for this element");
             }
 
-            Index++;
             _text = Line[Index];
-            bool _ifTrue = false;
+            bool _ifTrue;
 
-            if (_text == KeywordDBChoices.IsEmpty)
-                _ifTrue = _returnPart1 == string.Empty;
-            else if (_text == KeywordDBChoices.IsNotEmpty)
-                _ifTrue = _returnPart1 != string.Empty;
-            else
+            switch (_text)
             {
-                text = "DBGeneralSignal.DecodeIf";
-                _debug.ToFile("Report to programmer that there is error in " + text + " " + _text, DebugLevels.None, DebugMessageType.Critical);
-                throw new InvalidProgramException("Error in - " + text + "." + _text);
+                case KeywordDBChoices.IsEmpty:
+                    _ifTrue = string.IsNullOrEmpty(_returnPart1);
+                    break;
+
+                case KeywordDBChoices.IsNotEmpty:
+                    _ifTrue = !string.IsNullOrEmpty(_returnPart1);
+                    break;
+
+                default:
+                    text = "DBGeneralSignal.DecodeIf";
+
+                    _debug.ToFile(text + " " + Resources.ParameterNotFound + ":" + _text, DebugLevels.None, DebugMessageType.Critical);
+                    throw new InvalidProgramException(text + "." + _text + " is not created for this element");
             }
 
             //if = true
             if (_ifTrue)
             {
                 Index++;
-                DecodeCell(index, decodedLine, data, objectSignal, simulation);
+                DecodeCell(index, decodedLine, data, objectSignal, moduleSignal, simulation);
 
                 //peek false statement and update index to skip it
                 _newIndex = DecodePeek(Index);
@@ -209,7 +226,7 @@ namespace IO_list_automation_new
                 _newIndex = DecodePeek(Index) + 1;
 
                 Index = _newIndex;
-                DecodeCell(index, decodedLine, data, objectSignal, simulation);
+                DecodeCell(index, decodedLine, data, objectSignal, moduleSignal, simulation);
             }
         }
 
@@ -223,47 +240,38 @@ namespace IO_list_automation_new
             int _newIndex = inIndex + 1;
             string _text = Line[_newIndex];
 
-            if (_text == KeywordDBChoices.If)
+            switch (_text)
             {
-                //peek for variable
-                _newIndex = DecodePeek(_newIndex);
+                case KeywordDBChoices.If:
+                    //peek for variable
+                    _newIndex = DecodePeek(_newIndex);
+                    //skip operation
+                    _newIndex++;
+                    //peek for true
+                    _newIndex = DecodePeek(_newIndex);
+                    //peek for false
+                    _newIndex = DecodePeek(_newIndex);
+                    return _newIndex;
 
-                //skip operation
-                _newIndex++;
+                case KeywordDBChoices.Tab:
+                    return _newIndex;
 
-                //peek for true
-                _newIndex = DecodePeek(_newIndex);
+                case KeywordDBChoices.Data:
+                case KeywordDBChoices.Object:
+                case KeywordDBChoices.Modules:
+                case KeywordDBChoices.IO:
+                case KeywordDBChoices.Text:
+                case KeywordDBChoices.TagType:
+                    return _newIndex++;
 
-                //peek for false
-                _newIndex = DecodePeek(_newIndex);
+                case KeywordDBChoices.Index:
+                    return _newIndex += 3;
 
-                return _newIndex;
-            }
-            else if (_text == KeywordDBChoices.Tab)
-                return _newIndex;
-            else
-            {
-                if (_text == KeywordDBChoices.Data)
-                    _newIndex++;
-                else if (_text == KeywordDBChoices.Object)
-                    _newIndex++;
-                else if (_text == KeywordDBChoices.IO)
-                    _newIndex++;
-                else if (_text == KeywordDBChoices.Text)
-                    _newIndex++;
-                else if (_text == KeywordDBChoices.TagType)
-                    _newIndex++;
-                else if (_text == KeywordDBChoices.Index)
-                    _newIndex += 3;
-                else
-                {
+                default:
                     Debug _debug = new Debug();
-                    string text = "DBGeneralSignal.DecodePeek.IF";
-                    _debug.ToFile("Report to programmer that there is error in " + text + " " + _text, DebugLevels.None, DebugMessageType.Critical);
-                    throw new InvalidProgramException("Error in - " + text + "." + _text);
-                }
-
-                return _newIndex;
+                    const string text = "DBGeneralSignal.DecodePeek.IF";
+                    _debug.ToFile(text + " " + Resources.ParameterNotFound + ":" + _text, DebugLevels.None, DebugMessageType.Critical);
+                    throw new InvalidProgramException(text + "." + _text + " is not created for this element");
             }
         }
 
@@ -274,67 +282,78 @@ namespace IO_list_automation_new
         /// <param name="decodedLine"></param>
         /// <param name="data">data</param>
         /// <param name="objectSignal">object</param>
+        /// <param name="moduleSignal">module</param>
         /// <param name="simulation">simulate data</param>
-        private void DecodeCell(int index, List<string> decodedLine, DataClass data, ObjectSignal objectSignal, bool simulation)
+        private void DecodeCell(int index, List<string> decodedLine, DataClass data, ObjectSignal objectSignal, ModuleSignal moduleSignal, bool simulation)
         {
             string _text = Line[Index];
 
-            if (_text == KeywordDBChoices.If)
-                DecodeIf(index, decodedLine, data, objectSignal, simulation);
-            else if (_text == KeywordDBChoices.Tab)
-                decodedLine.Add(string.Empty);
-            else
+            switch (_text)
             {
-                Index++;
-                switch (_text)
-                {
-                    case KeywordDBChoices.Data:
-                        decodedLine[decodedLine.Count - 1] += DecodeData(Line[Index], data, objectSignal, simulation);
-                        break;
-                    case KeywordDBChoices.Index:
-                        decodedLine[decodedLine.Count - 1] += DecodeIndex(index, Index, Line);
-                        Index += 2;
-                        break;
-                    case KeywordDBChoices.Object:
-                        decodedLine[decodedLine.Count - 1] += DecodeObjects(Line[Index], objectSignal, simulation);
-                        break;
-                    case KeywordDBChoices.TagType:
-                        DecodeTagType(Line[Index]);
-                        break;
-                    case KeywordDBChoices.Text:
-                        _text = Line[Index];
-                        decodedLine[decodedLine.Count - 1] += _text;
-                        break;
-                    case KeywordDBChoices.IO:
-                        decodedLine[decodedLine.Count - 1] += DecodeIO(Line[Index], data, objectSignal, simulation);
-                        break;
-                    case KeywordDBChoices.None:
-                        break;
-                    default:
-                        Debug _debug = new Debug();
-                        string text = "DBGeneralSignal.DecodeCell";
-                        _debug.ToFile("Report to programmer that there is error in " + text + " " + _text, DebugLevels.None, DebugMessageType.Critical);
-                        throw new InvalidProgramException("Error in - " + text + "." + _text);
-                }
+                case KeywordDBChoices.If:
+                    DecodeIf(index, decodedLine, data, objectSignal, moduleSignal, simulation);
+                    break;
+
+                case KeywordDBChoices.Tab:
+                    decodedLine.Add(string.Empty);
+                    break;
+
+                case KeywordDBChoices.Data:
+                    decodedLine[decodedLine.Count - 1] += DecodeData(data, objectSignal, simulation);
+                    break;
+
+                case KeywordDBChoices.Index:
+                    decodedLine[decodedLine.Count - 1] += DecodeIndex(index + 1, Index, Line);
+                    break;
+
+                case KeywordDBChoices.Object:
+                    decodedLine[decodedLine.Count - 1] += DecodeObjects(objectSignal, simulation);
+                    break;
+
+                case KeywordDBChoices.Modules:
+                    decodedLine[decodedLine.Count - 1] += DecodeModules(moduleSignal, simulation);
+                    break;
+
+                case KeywordDBChoices.TagType:
+                    DecodeTagType(Line[Index]);
+                    break;
+
+                case KeywordDBChoices.Text:
+                    Index++;
+                    _text = Line[Index];
+                    decodedLine[decodedLine.Count - 1] += _text;
+                    break;
+
+                case KeywordDBChoices.IO:
+                    decodedLine[decodedLine.Count - 1] += DecodeIO(data, objectSignal, simulation);
+                    break;
+
+                case KeywordDBChoices.None:
+                    break;
+
+                default:
+                    Debug _debug = new Debug();
+                    const string text = "DBGeneralSignal.DecodeCell";
+                    _debug.ToFile(text + " " + Resources.ParameterNotFound + ":" + _text, DebugLevels.None, DebugMessageType.Critical);
+                    throw new InvalidProgramException(text + "." + _text + " is not created for this element");
             }
         }
 
         /// <summary>
-        /// Decode instance line
+        /// Decode line
         /// </summary>
         /// <param name="data">data</param>
         /// <param name="objectSignal">object</param>
         /// <param name="simulation">simulate data</param>
         /// <returns>decoded text line</returns>
-        public List<string> DecodeLine(int index,DataClass data, ObjectSignal objectSignal, bool simulation)
+        public List<string> DecodeLine(int index, DataClass data, ObjectSignal objectSignal, ModuleSignal moduleSignal, bool simulation)
         {
             Index = 0;
-            List<string> decodedLine = new List<string>();
-            decodedLine.Add(string.Empty);
+            List<string> decodedLine = new List<string>() { string.Empty };
 
-            for (int i=0; i< Line.Count; i++)
+            for (int i = 0; i < Line.Count; i++)
             {
-                DecodeCell(index,decodedLine, data, objectSignal, simulation);
+                DecodeCell(index, decodedLine, data, objectSignal, moduleSignal, simulation);
                 i = Index;
                 Index++;
             }
@@ -347,21 +366,23 @@ namespace IO_list_automation_new
     {
         public string Name { get; }
 
-        public string InstanceType { get; }
+        public string DBType { get; }
 
         public List<DBGeneralSignal> Data;
 
         public ProgressIndication Progress { get; set; }
 
-        public DBGeneralGrid Grid { get; private set; }
+        public GeneralGrid Grid { get; }
+        public GeneralGrid GridResult { get; }
 
-        public DBGeneralType(string name, string filePath, string instanceType, string fileExtension, ProgressIndication progress, DataGridView grid, bool editableGrid)
+        public DBGeneralType(string name, string dbType, string fileExtension, ProgressIndication progress, DataGridView grid)
         {
             Name = name;
-            InstanceType = instanceType;
+            DBType = dbType;
             Data = new List<DBGeneralSignal>();
             Progress = progress;
-            Grid = new DBGeneralGrid(Name, filePath, fileExtension, Progress, grid, editableGrid);
+            Grid = new GeneralGrid(Name, GridTypes.EditableDB, fileExtension, Progress, grid, new ColumnList());
+            GridResult = new GeneralGrid(Name, GridTypes.DB, fileExtension, Progress, new DataGridView(), new ColumnList());
         }
 
         /// <summary>
@@ -369,15 +390,16 @@ namespace IO_list_automation_new
         /// </summary>
         /// <param name="data">data</param>
         /// <param name="objectSignal">object to be decoded</param>
+        /// <param name="moduleSignal">module to be decoded</param>
         /// <returns>decoded text</returns>
-        public List<List<string>> Decode(ref int index,DataClass data, ObjectSignal objectSignal, bool simulation)
+        public List<List<string>> Decode(ref int index, DataClass data, ObjectSignal objectSignal, ModuleSignal moduleSignal, bool simulation)
         {
             //if type mismatch skip
-            if (objectSignal.ObjectType == InstanceType)
+            if (objectSignal.ObjectType == DBType)
             {
                 List<List<string>> _decodedObject = new List<List<string>>();
                 for (int i = 0; i < Data.Count; i++)
-                    _decodedObject.Add(Data[i].DecodeLine(index,data, objectSignal, simulation));
+                    _decodedObject.Add(Data[i].DecodeLine(index, data, objectSignal, moduleSignal, simulation));
 
                 index++;
                 return _decodedObject;
@@ -386,7 +408,7 @@ namespace IO_list_automation_new
         }
 
         /// <summary>
-        /// Convert DBGeneralInstanceSignal to List of List of string
+        /// Convert DBGeneralSignal to List of List of string
         /// </summary>
         /// <returns>converted data</returns>
         public List<List<string>> ConvertDataToList()
@@ -423,24 +445,27 @@ namespace IO_list_automation_new
     internal class DBGeneral
     {
         public List<DBGeneralType> Devices { get; set; }
-        public string FileExtension { get; private set; }
-        private ProgressIndication Progress { get; set; }
+        public string FileExtension { get; }
+        private ProgressIndication Progress { get; }
 
-        private string Directory;
+        private readonly string Directory;
 
-        private string BaseDirectory;
+        private readonly string BaseDirectory;
 
-        private string NameDB;
+        private readonly string NameDB;
 
-        private DBTypeLevel Level;
+        private readonly DBTypeLevel Level;
 
-        public DBGeneral(ProgressIndication progress, string nameDB, string fileExtension, DBTypeLevel level)
+        private bool ModuleBased { get; set; }
+
+        public DBGeneral(ProgressIndication progress, string nameDB, string fileExtension, DBTypeLevel level, bool moduleBased)
         {
             Progress = progress;
             NameDB = nameDB;
             FileExtension = fileExtension;
             Devices = new List<DBGeneralType>();
             Level = level;
+            ModuleBased = moduleBased;
 
             switch (level)
             {
@@ -448,19 +473,22 @@ namespace IO_list_automation_new
                     BaseDirectory = System.IO.Path.GetDirectoryName(System.Windows.Forms.Application.ExecutablePath) + "\\DB";
                     Directory = BaseDirectory;
                     break;
+
                 case DBTypeLevel.CPU:
                     BaseDirectory = System.IO.Path.GetDirectoryName(System.Windows.Forms.Application.ExecutablePath) + "\\DB";
                     Directory = BaseDirectory + "\\" + Settings.Default.SelectedCPU;
                     break;
+
                 case DBTypeLevel.SCADA:
                     BaseDirectory = System.IO.Path.GetDirectoryName(System.Windows.Forms.Application.ExecutablePath) + "\\DB\\" + Settings.Default.SelectedCPU;
                     Directory = BaseDirectory + "\\" + Settings.Default.SelectedSCADA;
                     break;
+
                 default:
                     Debug _debug = new Debug();
-                    string text = "DBGeneral.DBInit";
-                    _debug.ToFile("Report to programmer that there is error in " + text + " " + level.ToString(), DebugLevels.None, DebugMessageType.Critical);
-                    throw new InvalidProgramException("Error in - " + text + "." + level.ToString());
+                    const string text = "DBGeneral.DBGeneral";
+                    _debug.ToFile(text + " " + Resources.ParameterNotFound + ":" + nameof(level), DebugLevels.None, DebugMessageType.Critical);
+                    throw new InvalidProgramException(text + "." + nameof(level) + " is not created for this element");
             }
         }
 
@@ -497,7 +525,7 @@ namespace IO_list_automation_new
         {
             //get files in folder
             string[] _files = System.IO.Directory.GetFiles(Directory, fileName + "." + FileExtension);
-            return _files.Length>0;
+            return _files.Length > 0;
         }
 
         /// <summary>
@@ -523,7 +551,7 @@ namespace IO_list_automation_new
             if (_files.Length > 0)
             {
                 for (int i = 0; i < _files.Length; i++)
-                    _filesList.Add(_files[i].Replace(Directory + "\\", string.Empty).Replace("."+FileExtension, string.Empty));
+                    _filesList.Add(_files[i].Replace(Directory + "\\", string.Empty).Replace("." + FileExtension, string.Empty));
             }
 
             return _filesList;
@@ -551,14 +579,12 @@ namespace IO_list_automation_new
             //check if folder exists
             if (DBFolderExists(folderPath))
                 return true;
-            else
-            {
-                Debug _debug = new Debug();
-                _debug.ToFile(Resources.CreateNew + " " + Level.ToString() + " " + folderName + " " + NameDB, DebugLevels.Development, DebugMessageType.Info);
 
-                System.IO.Directory.CreateDirectory(folderPath);
-                return DBFolderExists(folderName);
-            }
+            Debug _debug = new Debug();
+            _debug.ToFile(Resources.CreateNew + " " + Level.ToString() + " " + folderName + " " + NameDB, DebugLevels.Development, DebugMessageType.Info);
+
+            System.IO.Directory.CreateDirectory(folderPath);
+            return DBFolderExists(folderName);
         }
 
         /// <summary>
@@ -594,13 +620,13 @@ namespace IO_list_automation_new
         private void GetDeviceTypesFromFile()
         {
             Debug debug = new Debug();
-            debug.ToFile("Searching instances configuration from file", DebugLevels.Development, DebugMessageType.Info);
+            debug.ToFile("Searching " + NameDB + " configuration from file", DebugLevels.Development, DebugMessageType.Info);
             Devices.Clear();
 
             List<string> _files = GetDBFileList();
 
-            string _fileName = string.Empty;
-            string _type = string.Empty;
+            string _fileName;
+            string _type;
 
             for (int i = 0; i < _files.Count; i++)
             {
@@ -608,15 +634,15 @@ namespace IO_list_automation_new
                 _type = _files[i];
 
                 //assign dummy grid
-                DataGridView _gridas = new DataGridView();
-                DBGeneralType _instance = new DBGeneralType("Instances", _fileName, _type, FileExtension, Progress, _gridas, false);
-                List<List<string>> _fileData = _instance.Grid.LoadFromFileToMemory();
+                DataGridView _grid = new DataGridView();
+                DBGeneralType _instance = new DBGeneralType(NameDB, _type, FileExtension, Progress, _grid);
+                List<List<string>> _fileData = _instance.Grid.LoadFromFileToMemory(_fileName);
                 _instance.SetData(_fileData);
 
                 Devices.Add(_instance);
             }
 
-            debug.ToFile("Serching instances configuration from file - " + Resources.Finished, DebugLevels.Development, DebugMessageType.Info);
+            debug.ToFile("Searching " + NameDB + " configuration from file - " + Resources.Finished, DebugLevels.Development, DebugMessageType.Info);
         }
 
         /// <summary>
@@ -625,33 +651,23 @@ namespace IO_list_automation_new
         private void GetDeviceTypesFromGrid(TabControl tabControl)
         {
             Debug debug = new Debug();
-            debug.ToFile("Searching instances configuration from grid", DebugLevels.Development, DebugMessageType.Info);
+            debug.ToFile("Searching " + NameDB + " configuration from grid", DebugLevels.Development, DebugMessageType.Info);
             Devices.Clear();
 
-            if (tabControl.TabPages.Count > 0)
+            string _type;
+            for (int i = 0; i < tabControl.TabPages.Count; i++)
             {
-                List<string> _instancesTypes = new List<string>();
+                _type = tabControl.TabPages[i].Name;
 
-                string _fileName = string.Empty;
-                string _type = string.Empty;
+                DataGridView _grid = (DataGridView)tabControl.TabPages[i].Controls[0];
+                DBGeneralType _instance = new DBGeneralType(NameDB, _type, FileExtension, Progress, _grid);
+                List<List<string>> _fileData = _instance.Grid.GetData();
+                _instance.SetData(_fileData);
 
-                for (int i = 0; i < tabControl.TabPages.Count; i++)
-                {
-                    _type = tabControl.TabPages[i].Name;
-                    _fileName = Directory + "\\" + _type + "." + FileExtension;
-
-                    DataGridView _gridas = (DataGridView)tabControl.TabPages[i].Controls[0];
-                    DBGeneralType _instance = new DBGeneralType("Instances", _fileName, _type, FileExtension, Progress, _gridas, false);
-                    List<List<string>> _fileData = _instance.Grid.GetData();
-                    _instance.SetData(_fileData);
-
-                    Devices.Add(_instance);
-                }
+                Devices.Add(_instance);
             }
-            else
-                debug.ToPopUp(Resources.DBNotFound + ": " + Settings.Default.SelectedCPU + " - " + Resources.DeleteMe, DebugLevels.Development, DebugMessageType.Info);
 
-            debug.ToFile("Serching instances configuration from grid - " + Resources.Finished, DebugLevels.Development, DebugMessageType.Info);
+            debug.ToFile("Searching " + NameDB + " configuration from grid - " + Resources.Finished, DebugLevels.Development, DebugMessageType.Info);
         }
 
         /// <summary>
@@ -673,20 +689,21 @@ namespace IO_list_automation_new
         /// </summary>
         /// <param name="data">data signals</param>
         /// <param name="objects">object signals</param>
-        public void DecodeAll(DataClass data, ObjectsClass objects)
+        /// <param name="modules">modules signals</param>
+        public void DecodeAll(DataClass data, ObjectsClass objects, ModuleClass modules)
         {
             if (!CheckDBFiles())
             {
-                DialogResult _result = MessageBox.Show(Resources.CreateNew + " " + Level.ToString() + "?", Resources.CreateNew, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                DialogResult _result = MessageBox.Show(Resources.CreateNew + " " + NameDB + "?", Resources.CreateNew, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                 if (_result != DialogResult.Yes)
                     return;
 
                 NewName _newName = new NewName(Resources.CreateNew + ": " + ResourcesUI.IO + " " + Resources.Language);
                 _newName.ShowDialog();
-                if (_newName.Output != null && _newName.Output != string.Empty)
+                if (!string.IsNullOrEmpty(_newName.Output))
                 {
                     CreateDBFile(_newName.Output);
-                    DecodeAll(data, objects);
+                    DecodeAll(data, objects, modules);
                 }
                 return;
             }
@@ -695,16 +712,17 @@ namespace IO_list_automation_new
             if (Devices.Count < 1)
                 return;
 
-            List<List<string>> _decodedObject = new List<List<string>>();
+            List<List<string>> _decodedObject;
             List<string> _CPUList = new List<string>();
 
             Debug debug = new Debug();
-            debug.ToFile("Generating " + NameDB, DebugLevels.Development, DebugMessageType.Info);
-            Progress.RenameProgressBar(Resources.InstancesGenerate, Devices.Count);
+            string _debugText = "Generating " + NameDB;
+            debug.ToFile(_debugText, DebugLevels.Development, DebugMessageType.Info);
+            Progress.RenameProgressBar(_debugText, Devices.Count);
 
-            DBResultForm _DBResultForm = new DBResultForm(NameDB, false);
+            DBResultForm _DBResultForm = new DBResultForm(NameDB, false, ModuleBased);
 
-            //add first signal elemet CPU to CPU list
+            //add first signal element CPU to CPU list
             _CPUList.Add(objects.Signals[0].CPU);
             bool _found;
 
@@ -722,12 +740,12 @@ namespace IO_list_automation_new
                     }
                 }
                 if (!_found)
-                    _CPUList.Add(data.Signals[_objectIndex].CPU);
+                    _CPUList.Add(objects.Signals[_objectIndex].CPU);
             }
 
-            int [] _indexes = new int [_CPUList.Count];
+            int[] _indexes = new int[_CPUList.Count];
             int _typeCount = 0;
-            //go through all device types                    
+            //go through all device types
             for (int _deviceIndex = 0; _deviceIndex < Devices.Count; _deviceIndex++)
             {
                 List<List<string>> _decodedDevices = new List<List<string>>();
@@ -743,35 +761,36 @@ namespace IO_list_automation_new
                     else
                         _typeCount = 0;
 
+                    ModuleSignal _dummyModule = new ModuleSignal();
                     for (int _objectIndex = 0; _objectIndex < objects.Signals.Count; _objectIndex++)
                     {
                         if (_CPUList[_CPUIndex] != objects.Signals[_objectIndex].CPU)
                             continue;
-                        _decodedObject = Devices[_deviceIndex].Decode(ref _typeCount, data, objects.Signals[_objectIndex], false);
+                        _decodedObject = Devices[_deviceIndex].Decode(ref _typeCount, data, objects.Signals[_objectIndex], _dummyModule, false);
                         CopyDecodedList(_decodedObject, _decodedDevices);
                     }
 
                     //if no devices found clear last line if in multi cpu mode
                     if ((_indexes[_CPUIndex] == _typeCount) && (_CPUList.Count > 1))
-                        _decodedDevices.RemoveAt(_decodedDevices.Count-1);
+                        _decodedDevices.RemoveAt(_decodedDevices.Count - 1);
 
                     //increase index
                     if (!Settings.Default.NewTypeResetIndex)
                         _indexes[_CPUIndex] += _typeCount;
                 }
-                DataGridView _grid = _DBResultForm.AddData(Devices[_deviceIndex].InstanceType);
+                DataGridView _grid = _DBResultForm.AddData(Devices[_deviceIndex].DBType);
 
-                //add grid to form and update grid of device to mach in form
-                Devices[_deviceIndex].Grid.ChangeGrid(_grid);
-                Devices[_deviceIndex].Grid.PutData(_decodedDevices);
+                //add grid to form and update grid of device to match in form
+                Devices[_deviceIndex].GridResult.ChangeGrid(_grid);
+                Devices[_deviceIndex].GridResult.PutData(_decodedDevices);
                 Progress.UpdateProgressBar(_deviceIndex);
             }
 
             Progress.HideProgressBar();
 
-            debug.ToFile("Generating " + NameDB + " - " + Resources.Finished, DebugLevels.Development, DebugMessageType.Info);
+            debug.ToFile(_debugText + " - " + Resources.Finished, DebugLevels.Development, DebugMessageType.Info);
             //put updated data with used column
-            data.Grid.PutData();
+            data.PutDataToGrid();
 
             _DBResultForm.ShowDialog();
         }
@@ -783,16 +802,16 @@ namespace IO_list_automation_new
         {
             if (!CheckDBFiles())
             {
-                DialogResult _result = MessageBox.Show(Resources.CreateNew + " " + Level.ToString() + "?", Resources.CreateNew, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-                if (_result == DialogResult.Yes)
+                DialogResult _result = MessageBox.Show(Resources.CreateNew + " " + NameDB + "?", Resources.CreateNew, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                if (_result != DialogResult.Yes)
+                    return;
+
+                NewName _newName = new NewName(Resources.CreateNew + ": " + ResourcesUI.IO + " " + Resources.Language);
+                _newName.ShowDialog();
+                if (!string.IsNullOrEmpty(_newName.Output))
                 {
-                    NewName _newName = new NewName(Resources.CreateNew + ": " + ResourcesUI.IO + " " + Resources.Language);
-                    _newName.ShowDialog();
-                    if (_newName.Output != null && _newName.Output != string.Empty)
-                    {
-                        CreateDBFile(_newName.Output);
-                        EditAll();
-                    }
+                    CreateDBFile(_newName.Output);
+                    EditAll();
                 }
                 return;
             }
@@ -801,21 +820,22 @@ namespace IO_list_automation_new
             if (Devices.Count < 1)
                 return;
 
-            List<List<string>> _deviceData = new List<List<string>>();
+            List<List<string>> _deviceData;
 
             Debug debug = new Debug();
-            debug.ToFile("Editing " + NameDB, DebugLevels.Development, DebugMessageType.Info);
-            Progress.RenameProgressBar(Resources.InstancesEditGenerate, Devices.Count);
+            string _debugText = "Editing " + NameDB;
+            debug.ToFile(_debugText, DebugLevels.Development, DebugMessageType.Info);
+            Progress.RenameProgressBar(_debugText, Devices.Count);
 
-            DBResultForm _DBResultForm = new DBResultForm(NameDB + " Edit", true);
+            DBResultForm _DBResultForm = new DBResultForm(NameDB + " Edit", true,ModuleBased);
 
             //go through all device types
             for (int _deviceIndex = 0; _deviceIndex < Devices.Count; _deviceIndex++)
             {
                 _deviceData = Devices[_deviceIndex].ConvertDataToList();
-                DataGridView _grid = _DBResultForm.AddData(Devices[_deviceIndex].InstanceType);
+                DataGridView _grid = _DBResultForm.AddData(Devices[_deviceIndex].DBType);
 
-                //add grid to form and update grid of device to mach in form
+                //add grid to form and update grid of device to match in form
                 Devices[_deviceIndex].Grid.ChangeGrid(_grid);
                 Devices[_deviceIndex].Grid.PutData(_deviceData);
 
@@ -823,17 +843,19 @@ namespace IO_list_automation_new
             }
             Progress.HideProgressBar();
 
-            debug.ToFile("Editing " + NameDB + " - " + Resources.Finished, DebugLevels.Development, DebugMessageType.Info);
+            debug.ToFile(_debugText + " - " + Resources.Finished, DebugLevels.Development, DebugMessageType.Info);
 
             _DBResultForm.ShowDialog();
 
             GetDeviceTypesFromGrid(_DBResultForm.DBTabControl);
 
+            string _fileName;
             //go through all device types
             for (int _deviceIndex = 0; _deviceIndex < Devices.Count; _deviceIndex++)
             {
+                _fileName = Directory + "\\" + Devices[_deviceIndex].DBType + "." + FileExtension;
                 Devices[_deviceIndex].Grid.GetData();
-                Devices[_deviceIndex].Grid.SaveToFile();
+                Devices[_deviceIndex].Grid.SaveToFile(_fileName);
             }
         }
     }

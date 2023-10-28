@@ -1,21 +1,12 @@
 ﻿using IO_list_automation_new.Properties;
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Reflection;
-using System.Runtime.Versioning;
-using System.Security.Cryptography;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
-using System.Resources;
 using System.Globalization;
 using System.Threading;
+using System.Windows.Forms;
 
 namespace IO_list_automation_new
 {
-    enum FileExtensions
+    internal enum FileExtensions
     {
         data,
         design,
@@ -28,45 +19,13 @@ namespace IO_list_automation_new
         instScadaDB,
         modDB,
     }
-    enum DBTypeLevel
-    {
-        Base,
-        CPU,
-        SCADA,
-    }
-    enum DebugLevels
-    {
-        None = 0,
-        Minimum = 1,
-        Medium = 2,
-        High = 3,
-        Development = 10,
-    }
-    enum DebugMessageType
-    {
-        Info,
-        Warning,
-        Alarm,
-        Critical,
-    }
-    enum TabIndex
+
+    internal enum TabIndex
     {
         Design = 0,
         Data = 1,
         Object = 2,
-        Modules =3,
-    }
-    enum ComboBoxType
-    {
-        Main,
-        MainNoEmpty,
-        If,
-        IfStatement,
-        Data,
-        Object,
-        Text,
-        TagType,
-        Number,
+        Modules = 3,
     }
 
     public static class KeywordColumn
@@ -118,6 +77,7 @@ namespace IO_list_automation_new
         public const string Tab = "TAB";
         public const string Data = "Data";
         public const string Object = "Object";
+        public const string Modules = "Modules";
         public const string Text = "Text";
         public const string IO = "IO";
         public const string Index = "Index";
@@ -127,20 +87,13 @@ namespace IO_list_automation_new
         public const string IsNotEmpty = "is not empty";
     }
 
-    public static class DeleteMe
-    {
-        public const string LTpath = "C:\\Users\\Aldis\\Desktop\\IO-list-automation_new\\IO-list-automation_new\\bin\\Debug\\DB\\LT";
-        public const string xa800pathVariables = "C:\\Users\\Aldis\\Desktop\\IO-list-automation_new\\IO-list-automation_new\\bin\\Debug\\DB\\800xA\\Declarations";
-    }
-
     internal static class Program
     {
         /// <summary>
         /// The main entry point for the application.
         /// </summary>
         [STAThread]
-
-        static public void Main()
+        public static void Main()
         {
             const string _versionNumber = "0.0.1";
 
@@ -151,12 +104,10 @@ namespace IO_list_automation_new
             Thread.CurrentThread.CurrentUICulture = CultureInfo.GetCultureInfo(Settings.Default.ApplicationLanguage);
 
             _debug.ToFile("--------------------------------------------------------------", DebugLevels.None, DebugMessageType.Info);
-            _debug.ToFile(Resources.SoftwareStart + ": " + _versionNumber , DebugLevels.None, DebugMessageType.Info);
+            _debug.ToFile(Resources.SoftwareStart + ": " + _versionNumber, DebugLevels.None, DebugMessageType.Info);
             _debug.CurrentDebugLevel();
 
             _debug.ToFile("UI language: " + Thread.CurrentThread.CurrentUICulture, DebugLevels.None, DebugMessageType.Info);
-
-            _debug.ToFile(ResourcesColumns.Units, DebugLevels.None, DebugMessageType.Info);
 
             if (Settings.Default.DebugLevel == (uint)DebugLevels.Development)
                 _debug.ToFile(Resources.EarlyReleaseWarning, DebugLevels.None, DebugMessageType.Warning);

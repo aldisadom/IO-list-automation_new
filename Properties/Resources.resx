@@ -279,17 +279,11 @@
   <data name="Variables" xml:space="preserve">
     <value>Variables</value>
   </data>
-  <data name="InstancesEditGenerate" xml:space="preserve">
-    <value>Instances edit generating</value>
-  </data>
-  <data name="InstancesGenerate" xml:space="preserve">
-    <value>Generate device instances</value>
-  </data>
   <data name="False" xml:space="preserve">
     <value>False</value>
   </data>
-  <data name="Multiplyer" xml:space="preserve">
-    <value>Multiplyer</value>
+  <data name="Multiplier" xml:space="preserve">
+    <value>Multiplier</value>
   </data>
   <data name="Offset" xml:space="preserve">
     <value>Offset</value>
@@ -312,13 +306,16 @@
   <data name="CPU" xml:space="preserve">
     <value>CPU</value>
   </data>
-  <data name="DeleteMe" xml:space="preserve">
-    <value>Deleteme</value>
-  </data>
   <data name="Language" xml:space="preserve">
     <value>Language</value>
   </data>
   <data name="SCADA" xml:space="preserve">
     <value>SCADA</value>
+  </data>
+  <data name="DeleteMe" xml:space="preserve">
+    <value>Delete Me</value>
+  </data>
+  <data name="ConvertListToData" xml:space="preserve">
+    <value>Convert list to data</value>
   </data>
 </root>

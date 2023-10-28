@@ -1,22 +1,9 @@
 ﻿using IO_list_automation_new.Properties;
-using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Security.Cryptography;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace IO_list_automation_new
 {
     internal class PropertiesChange
     {
-
         /// <summary>
         /// Change height of program
         /// </summary>

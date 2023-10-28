@@ -1,10 +1,6 @@
 ﻿using ExcelDataReader;
 using IO_list_automation_new.Properties;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace IO_list_automation_new.General
 {
@@ -52,32 +48,24 @@ namespace IO_list_automation_new.General
         /// <returns>string value of cell value</returns>
         public static string ReadExcelCell(int row, int col, int maxCol, IExcelDataReader excel)
         {
-            string _retunValue = string.Empty;
+            Debug debug = new Debug();
             if (col >= maxCol || col < 0)
             {
-                Debug debug = new Debug();
-                debug.ToFile(Resources.DataReadFailBounds + " " + Resources.Column + " " + col + " max(" + maxCol + ")" +
-                                Resources.Row + " " + row, DebugLevels.Minimum, DebugMessageType.Warning);
+                debug.ToFile(Resources.DataReadFailBounds + " " + Resources.Column + " " + col + " max(" + maxCol + ")" + Resources.Row + " " + row, DebugLevels.Minimum, DebugMessageType.Warning);
+                return string.Empty;
             }
-            else
-            {
-                System.Type _type = excel.GetFieldType(col);
-                if (_type == null)
-                    _retunValue = string.Empty;
-                else
-                {
-                    if (_type.Name == "String")
-                        _retunValue = excel.GetString(col);
-                    else if (_type.Name == "Double")
-                        _retunValue = excel.GetDouble(col).ToString();
-                    else
-                    {
-                        Debug debug = new Debug();
-                        debug.ToPopUp(Resources.DataReadFailFormat + ": " + _type.Name, DebugLevels.None, DebugMessageType.Critical);
-                    }
-                }
-            }
-            return _retunValue;
+
+            System.Type _type = excel.GetFieldType(col);
+            if (_type == null)
+                return string.Empty;
+
+            if (_type.Name == "String")
+                return excel.GetString(col);
+            else if (_type.Name == "Double")
+                return excel.GetDouble(col).ToString();
+
+            debug.ToPopUp(Resources.DataReadFailFormat + ": " + _type.Name, DebugLevels.None, DebugMessageType.Critical);
+            return string.Empty;
         }
     }
 }

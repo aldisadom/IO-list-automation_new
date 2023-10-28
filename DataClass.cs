@@ -1,23 +1,8 @@
-﻿using ExcelDataReader;
-using IO_list_automation_new.Forms;
+﻿using IO_list_automation_new.Forms;
 using IO_list_automation_new.Properties;
-using SharpCompress.Common;
-using SharpCompress.Readers.Zip;
-using SwiftExcel;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Data.Common;
-using System.Diagnostics;
-using System.Drawing;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Security.Cryptography;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace IO_list_automation_new
 {
@@ -53,8 +38,12 @@ namespace IO_list_automation_new
         public string Changed { get; private set; }
         public string Terminal { get; private set; }
         public string Tag { get; private set; }
-        public string UniqueKKS { get { return KKS + "_" + CPU; } }
-        public string UniqueModuleName { get { return Cabinet + "_" + ModuleName + "_" + CPU; } }
+
+        public string UniqueKKS
+        { get { return KKS + "_" + CPU; } }
+
+        public string UniqueModuleName
+        { get { return Cabinet + "_" + ModuleName + "_" + CPU; } }
 
         public DataSignal() : base()
         {
@@ -101,90 +90,119 @@ namespace IO_list_automation_new
                 case KeywordColumn.ID:
                     ID = value;
                     break;
+
                 case KeywordColumn.CPU:
                     CPU = value;
                     break;
+
                 case KeywordColumn.KKS:
                     KKS = value;
                     break;
+
                 case KeywordColumn.RangeMin:
                     RangeMin = value;
                     break;
+
                 case KeywordColumn.RangeMax:
                     RangeMax = value;
                     break;
+
                 case KeywordColumn.Units:
                     Units = value;
                     break;
+
                 case KeywordColumn.FalseText:
                     FalseText = value;
                     break;
+
                 case KeywordColumn.TrueText:
                     TrueText = value;
                     break;
+
                 case KeywordColumn.Revision:
                     Revision = value;
                     break;
+
                 case KeywordColumn.Cable:
                     Cable = value;
                     break;
+
                 case KeywordColumn.Cabinet:
                     Cabinet = value;
                     break;
+
                 case KeywordColumn.ModuleName:
                     ModuleName = value;
                     break;
+
                 case KeywordColumn.Pin:
                     Pin = value;
                     break;
+
                 case KeywordColumn.Channel:
                     Channel = value;
                     break;
+
                 case KeywordColumn.IOText:
                     IOText = value;
                     break;
+
                 case KeywordColumn.Page:
                     Page = value;
                     break;
+
                 case KeywordColumn.Changed:
                     Changed = value;
                     break;
+
                 case KeywordColumn.Operative:
                     Operative = value;
                     break;
+
                 case KeywordColumn.KKSPlant:
                     KKSPlant = value;
                     break;
+
                 case KeywordColumn.KKSLocation:
                     KKSLocation = value;
                     break;
+
                 case KeywordColumn.KKSDevice:
                     KKSDevice = value;
                     break;
+
                 case KeywordColumn.KKSFunction:
                     KKSFunction = value;
                     break;
+
                 case KeywordColumn.Used:
                     Used = value;
                     break;
+
                 case KeywordColumn.ObjectType:
                     ObjectType = value;
                     break;
+
                 case KeywordColumn.ObjectName:
                     ObjectName = value;
                     break;
+
                 case KeywordColumn.ObjectSpecifics:
                     ObjectSpecifics = value;
                     break;
+
                 case KeywordColumn.FunctionText:
                     FunctionText = value;
                     break;
+
                 case KeywordColumn.Function:
                     Function = value;
                     break;
+
                 case KeywordColumn.Terminal:
                     Terminal = value;
                     break;
+
                 case KeywordColumn.Tag:
                     Tag = value;
                     break;
@@ -199,108 +217,107 @@ namespace IO_list_automation_new
         /// <returns>value of parameter</returns>
         public override string GetValueString(string parameterName, bool suppressError)
         {
-            string _returnValue = string.Empty;
             switch (parameterName)
             {
                 case KeywordColumn.ID:
-                    _returnValue = ID;
-                    break;
+                    return ID;
+
                 case KeywordColumn.CPU:
-                    _returnValue = CPU;
-                    break;
+                    return CPU;
+
                 case KeywordColumn.KKS:
-                    _returnValue = KKS;
-                    break;
+                    return KKS;
+
                 case KeywordColumn.RangeMin:
-                    _returnValue = RangeMin;
-                    break;
+                    return RangeMin;
+
                 case KeywordColumn.RangeMax:
-                    _returnValue = RangeMax;
-                    break;
+                    return RangeMax;
+
                 case KeywordColumn.Units:
-                    _returnValue = Units;
-                    break;
+                    return Units;
+
                 case KeywordColumn.FalseText:
-                    _returnValue = FalseText;
-                    break;
+                    return FalseText;
+
                 case KeywordColumn.TrueText:
-                    _returnValue = TrueText;
-                    break;
+                    return TrueText;
+
                 case KeywordColumn.Revision:
-                    _returnValue = Revision;
-                    break;
+                    return Revision;
+
                 case KeywordColumn.Cable:
-                    _returnValue = Cable;
-                    break;
+                    return Cable;
+
                 case KeywordColumn.Cabinet:
-                    _returnValue = Cabinet;
-                    break;
+                    return Cabinet;
+
                 case KeywordColumn.ModuleName:
-                    _returnValue = ModuleName;
-                    break;
+                    return ModuleName;
+
                 case KeywordColumn.Pin:
-                    _returnValue = Pin;
-                    break;
+                    return Pin;
+
                 case KeywordColumn.Channel:
-                    _returnValue = Channel;
-                    break;
+                    return Channel;
+
                 case KeywordColumn.IOText:
-                    _returnValue = IOText;
-                    break;
+                    return IOText;
+
                 case KeywordColumn.Page:
-                    _returnValue = Page;
-                    break;
+                    return Page;
+
                 case KeywordColumn.Changed:
-                    _returnValue = Changed;
-                    break;
+                    return Changed;
+
                 case KeywordColumn.Operative:
-                    _returnValue = Operative;
-                    break;
+                    return Operative;
+
                 case KeywordColumn.KKSPlant:
-                    _returnValue = KKSPlant ;
-                    break;
+                    return KKSPlant;
+
                 case KeywordColumn.KKSLocation:
-                    _returnValue = KKSLocation;
-                    break;
+                    return KKSLocation;
+
                 case KeywordColumn.KKSDevice:
-                    _returnValue = KKSDevice;
-                    break;
+                    return KKSDevice;
+
                 case KeywordColumn.KKSFunction:
-                    _returnValue = KKSFunction;
-                    break;
+                    return KKSFunction;
+
                 case KeywordColumn.Used:
-                    _returnValue = Used;
-                    break;
+                    return Used;
+
                 case KeywordColumn.ObjectType:
-                    _returnValue = ObjectType;
-                    break;
+                    return ObjectType;
+
                 case KeywordColumn.ObjectName:
-                    _returnValue = ObjectName;
-                    break;
+                    return ObjectName;
+
                 case KeywordColumn.ObjectSpecifics:
-                    _returnValue = ObjectSpecifics;
-                    break;
+                    return ObjectSpecifics;
+
                 case KeywordColumn.FunctionText:
-                    _returnValue = FunctionText;
-                    break;
+                    return FunctionText;
+
                 case KeywordColumn.Function:
-                    _returnValue = Function;
-                    break;
+                    return Function;
+
                 case KeywordColumn.Terminal:
-                    _returnValue = Terminal;
-                    break;
+                    return Terminal;
+
                 case KeywordColumn.Tag:
-                    _returnValue = Tag;
-                    break;
+                    return Tag;
+
                 default:
-                    if (!suppressError)
-                    {
-                        Debug _debug = new Debug();
-                        _debug.ToPopUp("DataSignals.GetValueString " + Resources.ParameterNotFound + ":" + parameterName, DebugLevels.None, DebugMessageType.Critical);
-                    }
-                    break;
+                    if (suppressError)
+                        return string.Empty;
+
+                    const string text = "DataSignals.GetValueString";
+                    Debug _debug = new Debug();
+                    _debug.ToFile(text + " " + Resources.ParameterNotFound + ":" + parameterName, DebugLevels.None, DebugMessageType.Critical);
+                    throw new InvalidProgramException(text + "." + parameterName + " is not created for this element");
             }
-            return _returnValue;
         }
 
         /// <summary>
@@ -311,6 +328,7 @@ namespace IO_list_automation_new
         {
             return (KKS.Length != 0) || (KKSPlant.Length != 0) || (KKSLocation.Length != 0) || (KKSDevice.Length != 0) || (KKSFunction.Length != 0);
         }
+
         /// <summary>
         /// Checks if design signal is valid
         /// </summary>
@@ -370,7 +388,7 @@ namespace IO_list_automation_new
             for (int i = startIndex; i < text.Length; i++)
             {
                 if (!Char.IsLetter(text[i]))
-                    return i- startIndex;
+                    return i - startIndex;
             }
             return text.Length - startIndex;
         }
@@ -385,11 +403,11 @@ namespace IO_list_automation_new
             if (!string.IsNullOrEmpty(text))
             {
                 int _indexLetter = 0;
-                int _countLetter = 0;
-                int _countDigits = 0;
+                int _countLetter;
+                int _countDigits;
 
                 int _indexSpace1 = -1;
-                int _indexSpace2 = 0;
+                int _indexSpace2;
 
                 //repeat not more than 50 times
                 //find letter, then check if letter count is >= 2 and <=5
@@ -423,14 +441,14 @@ namespace IO_list_automation_new
                             if (_countDigits >= 2)
                             {
                                 if (_indexSpace2 == -1)
-                                    _KKS = text.Substring(_indexSpace1+1);
+                                    _KKS = text.Substring(_indexSpace1 + 1);
                                 else
-                                    _KKS = text.Substring(_indexSpace1+1, _indexSpace2 - _indexSpace1-1);
+                                    _KKS = text.Substring(_indexSpace1 + 1, _indexSpace2 - _indexSpace1 - 1);
 
                                 break;
                             }
                         }
-                        // shift 
+                        // shift
                         _indexLetter += _countLetter;
                     }
                 }
@@ -458,7 +476,7 @@ namespace IO_list_automation_new
              * N - number
              * Part
              *      0 - XXX     (1S , KB1, 2, 28)
-             *      1 - AAANN   (HNA40, HOP20) 
+             *      1 - AAANN   (HNA40, HOP20)
              *      2 - AANNN   (CP001, AN001), based on experience it can failure in design phase, CP01, AN01
              *      3 - AANN    (XQ01, XB02)
              */
@@ -471,11 +489,11 @@ namespace IO_list_automation_new
             if (!string.IsNullOrEmpty(_KKS))
             {
                 int _indexLetter = 0;
-                int _countLetter = 0;
-                int _countDigits = 0;
+                int _countLetter;
+                int _countDigits;
                 string _KKSAfter = string.Empty;
 
-                int _lengthPartKKS = 0;
+                int _lengthPartKKS;
 
                 //try finding part 1
                 for (int i = 0; i < 50; i++)
@@ -501,7 +519,7 @@ namespace IO_list_automation_new
                             break;
                         }
                     }
-                    // shift 
+                    // shift
                     _indexLetter += _countLetter;
                 }
                 // part 1 not found
@@ -536,7 +554,7 @@ namespace IO_list_automation_new
                             break;
                         }
                     }
-                    // shift 
+                    // shift
                     _indexLetter += _countLetter;
                 }
 
@@ -635,11 +653,11 @@ namespace IO_list_automation_new
             SettingsData.Default.Save();
         }
 
-        public DataClass(ProgressIndication progress, DataGridView grid) :base("Data",false, nameof(FileExtensions.data), progress, grid)
+        public DataClass(ProgressIndication progress, DataGridView grid) : base("Data", nameof(FileExtensions.data), progress, grid)
         {
         }
 
-        public DataClass() : base("Data", false, nameof(FileExtensions.data), null, null)
+        public DataClass() : base("Data", nameof(FileExtensions.data), null, null)
         {
         }
 
@@ -647,18 +665,18 @@ namespace IO_list_automation_new
         /// Extract data from design data
         /// </summary>
         /// <param name="design">design data</param>
-        public void ExtractFromDesign (DesignClass design)
+        public void ExtractFromDesign(DesignClass design)
         {
             Debug debug = new Debug();
             debug.ToFile(Resources.ExtractDataFromDesign, DebugLevels.Development, DebugMessageType.Info);
 
-            Progress.RenameProgressBar(Resources.ExtractDataFromDesign, design.Signals.Count );
+            Progress.RenameProgressBar(Resources.ExtractDataFromDesign, design.Signals.Count);
 
             UpdateColumnNumbers(design.BaseColumns.Columns);
 
             Signals.Clear();
             design.Grid.GetData();
-            string _keyword = string.Empty;
+            string _keyword;
             for (int _designNumber = 0; _designNumber < design.Signals.Count; _designNumber++)
             {
                 DataSignal _dataSignal = new DataSignal();
@@ -668,7 +686,7 @@ namespace IO_list_automation_new
                 foreach (GeneralColumn _column in design.Columns)
                 {
                     _keyword = _column.Keyword;
-                    _dataSignal.SetValueFromString(_designSignal.GetValueString(_keyword,true), _keyword);
+                    _dataSignal.SetValueFromString(_designSignal.GetValueString(_keyword, true), _keyword);
                 }
                 _dataSignal.FindKKSInSignal(false);
                 _dataSignal.KKSDecode();

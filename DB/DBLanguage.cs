@@ -1,11 +1,7 @@
 ﻿using IO_list_automation_new.Properties;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Xml.Linq;
 
 namespace IO_list_automation_new
 {
@@ -13,7 +9,7 @@ namespace IO_list_automation_new
     {
         public string DeviceTypeText { get; private set; }
         public string ObjectType { get; private set; }
-        
+
         public DBLanguageTypeSignal() : base()
         {
             DeviceTypeText = string.Empty;
@@ -32,6 +28,7 @@ namespace IO_list_automation_new
                 case KeywordColumn.ObjectType:
                     ObjectType = value;
                     break;
+
                 case KeywordColumn.DeviceTypeText:
                     DeviceTypeText = value;
                     break;
@@ -42,28 +39,27 @@ namespace IO_list_automation_new
         /// Parsing data signal element to string for grid
         /// </summary>
         /// <param name="parameterName">parameter to be read</param>
-        /// <param name="suppressError">suppress alarm message, used only for transfering from one type to another type data classes</param>
+        /// <param name="suppressError">suppress alarm message, used only for transferring from one type to another type data classes</param>
         /// <returns>value of parameter</returns>
         public override string GetValueString(string parameterName, bool suppressError)
         {
-            string _returnValue = string.Empty;
             switch (parameterName)
             {
                 case KeywordColumn.ObjectType:
-                    _returnValue = ObjectType;
-                    break;
+                    return ObjectType;
+
                 case KeywordColumn.DeviceTypeText:
-                    _returnValue = DeviceTypeText;
-                    break;
+                    return DeviceTypeText;
+
                 default:
-                    if (!suppressError)
-                    {
-                        Debug _debug = new Debug();
-                        _debug.ToPopUp("DBLanguageTypeSignal.GetValueString " + Resources.ParameterNotFound + ":" + parameterName, DebugLevels.None, DebugMessageType.Critical);
-                    }
-                    break;
+                    if (suppressError)
+                        return string.Empty;
+
+                    const string text = "DBLanguageTypeSignal.GetValueString";
+                    Debug _debug = new Debug();
+                    _debug.ToFile(text + " " + Resources.ParameterNotFound + ":" + parameterName, DebugLevels.None, DebugMessageType.Critical);
+                    throw new InvalidProgramException(text + "." + parameterName + " is not created for this element");
             }
-            return _returnValue;
         }
 
         /// <summary>
@@ -72,14 +68,12 @@ namespace IO_list_automation_new
         /// <returns>true if minimum signal requirements are met</returns>
         public override bool ValidateSignal()
         {
-            bool _returnValue = true;
-
             if (string.IsNullOrEmpty(ObjectType))
-                _returnValue = false;
+                return false;
             else if (string.IsNullOrEmpty(DeviceTypeText))
-                _returnValue = false;
+                return false;
 
-            return _returnValue;
+            return true;
         }
     }
 
@@ -87,22 +81,21 @@ namespace IO_list_automation_new
     {
         protected override List<GeneralColumn> GeneralGenerateColumnsList()
         {
-            List<GeneralColumn> _columns = new List<GeneralColumn>();
-
-            _columns.Add(new GeneralColumn(KeywordColumn.DeviceTypeText, 0, true));
-            _columns.Add(new GeneralColumn(KeywordColumn.ObjectType, 1, true));
+            List<GeneralColumn> _columns = new List<GeneralColumn>()
+            {
+                new GeneralColumn(KeywordColumn.DeviceTypeText, 0, true),
+                new GeneralColumn(KeywordColumn.ObjectType, 1, true),
+            };
 
             return _columns;
         }
 
         protected override void UpdateSettingsColumnsList()
         {
-
         }
 
-        public DBLanguageType(ProgressIndication progress, DataGridView grid) : base("DBLanguageType",true, FileExtensions.langTypeDB.ToString(), progress, grid)
+        public DBLanguageType(ProgressIndication progress, DataGridView grid) : base("DBLanguageType", nameof(FileExtensions.langTypeDB), progress, grid)
         {
-
         }
 
         /// <summary>
@@ -112,26 +105,18 @@ namespace IO_list_automation_new
         /// <returns>object type</returns>
         private string FindType(string inputText)
         {
-            string _search = string.Empty;
-            string _returnText = string.Empty;
+            string _search;
             string _text = inputText.ToLower();
 
             //go through all type texts
             for (int i = 0; i < Signals.Count; i++)
             {
                 _search = Signals[i].DeviceTypeText.ToLower();
-                if (_search != string.Empty)
-                {
-                    //if input text contains function return its function type 
-                    if (_text.Contains(_search))
-                    {
-                        _returnText = Signals[i].ObjectType;
-                        break;
-                    }
-                }
+                //if input text contains function return its function type
+                if (!string.IsNullOrEmpty(_search) && _text.Contains(_search))
+                    return Signals[i].ObjectType;
             }
-
-            return _returnText;
+            return string.Empty;
         }
 
         /// <summary>
@@ -140,10 +125,16 @@ namespace IO_list_automation_new
         /// <param name="objects">input objects</param>
         public void FindAllType(ObjectsClass objects)
         {
-            string _functionType = string.Empty;
+            string _functionType;
 
             Debug debug = new Debug();
-            debug.ToFile("Finding object type in data", DebugLevels.Development, DebugMessageType.Info);
+            debug.ToFile("Finding object type in objects", DebugLevels.Development, DebugMessageType.Info);
+
+            string _fileName = System.IO.Path.GetDirectoryName(System.Windows.Forms.Application.ExecutablePath) + "\\DB\\" + Settings.Default.IOLanguage;
+
+            //convert data from file to signals
+            if (!ListToSignals(Grid.LoadFromFileToMemory(_fileName), BaseColumns.Columns))
+                return;
 
             Progress.RenameProgressBar(Resources.FindObjectType, objects.Signals.Count);
 
@@ -156,26 +147,26 @@ namespace IO_list_automation_new
             }
             Progress.HideProgressBar();
 
-            objects.Grid.PutData();
-            debug.ToFile("Finding object type in data - finished", DebugLevels.Development, DebugMessageType.Info);
+            objects.PutDataToGrid();
+            debug.ToFile("Finding object type in objects - finished", DebugLevels.Development, DebugMessageType.Info);
         }
     }
 
     internal class DBLanguageFunctionSignal : GeneralSignal
     {
         public string FunctionText1 { get; private set; }
-        public string Funcion1 { get; private set; }
+        public string Function1 { get; private set; }
         public string FunctionText1o2 { get; private set; }
         public string FunctionText2o2 { get; private set; }
-        public string Funcion2 { get; private set; }
+        public string Function2 { get; private set; }
 
         public DBLanguageFunctionSignal() : base()
         {
             FunctionText1 = string.Empty;
-            Funcion1 = string.Empty;
+            Function1 = string.Empty;
             FunctionText1o2 = string.Empty;
             FunctionText2o2 = string.Empty;
-            Funcion2 = string.Empty;
+            Function2 = string.Empty;
         }
 
         /// <summary>
@@ -190,17 +181,21 @@ namespace IO_list_automation_new
                 case KeywordColumn.FunctionText1:
                     FunctionText1 = value;
                     break;
+
                 case KeywordColumn.Function1:
-                    Funcion1 = value;
+                    Function1 = value;
                     break;
+
                 case KeywordColumn.FunctionText1o2:
                     FunctionText1o2 = value;
                     break;
+
                 case KeywordColumn.FunctionText2o2:
                     FunctionText2o2 = value;
                     break;
+
                 case KeywordColumn.Function2:
-                    Funcion2 = value;
+                    Function2 = value;
                     break;
             }
         }
@@ -209,37 +204,36 @@ namespace IO_list_automation_new
         /// Parsing data signal element to string for grid
         /// </summary>
         /// <param name="parameterName">parameter to be read</param>
-        /// <param name="suppressError">suppress alarm message, used only for transfering from one type to another type data classes</param>
+        /// <param name="suppressError">suppress alarm message, used only for transferring from one type to another type data classes</param>
         /// <returns>value of parameter</returns>
         public override string GetValueString(string parameterName, bool suppressError)
         {
-            string _returnValue = string.Empty;
             switch (parameterName)
             {
                 case KeywordColumn.FunctionText1:
-                    _returnValue = FunctionText1;
-                    break;
+                    return FunctionText1;
+
                 case KeywordColumn.Function1:
-                    _returnValue = Funcion1;
-                    break;
+                    return Function1;
+
                 case KeywordColumn.FunctionText1o2:
-                    _returnValue = FunctionText1o2;
-                    break;
+                    return FunctionText1o2;
+
                 case KeywordColumn.FunctionText2o2:
-                    _returnValue = FunctionText2o2;
-                    break;
+                    return FunctionText2o2;
+
                 case KeywordColumn.Function2:
-                    _returnValue = Funcion2;
-                    break;
+                    return Function2;
+
                 default:
-                    if (!suppressError)
-                    {
-                        Debug _debug = new Debug();
-                        _debug.ToPopUp("DBLanguageFunctionSignal.GetValueString " + Resources.ParameterNotFound + ":" + parameterName, DebugLevels.None, DebugMessageType.Critical);
-                    }
-                    break;
+                    if (suppressError)
+                        return string.Empty;
+
+                    const string text = "DBLanguageFunctionSignal.GetValueString";
+                    Debug _debug = new Debug();
+                    _debug.ToFile(text + " " + Resources.ParameterNotFound + ":" + parameterName, DebugLevels.None, DebugMessageType.Critical);
+                    throw new InvalidProgramException(text + "." + parameterName + " is not created for this element");
             }
-            return _returnValue;
         }
 
         /// <summary>
@@ -256,25 +250,24 @@ namespace IO_list_automation_new
     {
         protected override List<GeneralColumn> GeneralGenerateColumnsList()
         {
-            List<GeneralColumn> _columns = new List<GeneralColumn>();
-
-            _columns.Add(new GeneralColumn(KeywordColumn.FunctionText1, 0, true));
-            _columns.Add(new GeneralColumn(KeywordColumn.Function1, 1, true));
-            _columns.Add(new GeneralColumn(KeywordColumn.FunctionText1o2, 2, true));
-            _columns.Add(new GeneralColumn(KeywordColumn.FunctionText2o2, 3, true));
-            _columns.Add(new GeneralColumn(KeywordColumn.Function2, 4, true));
+            List<GeneralColumn> _columns = new List<GeneralColumn>()
+            {
+                new GeneralColumn(KeywordColumn.FunctionText1, 0, false),
+                new GeneralColumn(KeywordColumn.Function1, 1, false),
+                new GeneralColumn(KeywordColumn.FunctionText1o2, 2, false),
+                new GeneralColumn(KeywordColumn.FunctionText2o2, 3, false),
+                new GeneralColumn(KeywordColumn.Function2, 4, false),
+            };
 
             return _columns;
         }
 
         protected override void UpdateSettingsColumnsList()
         {
-
         }
 
-        public DBLanguageFunctionType(ProgressIndication progress, DataGridView grid) : base("DBFunctionLanguage",true, FileExtensions.langFuncDB.ToString(), progress, grid)
+        public DBLanguageFunctionType(ProgressIndication progress, DataGridView grid) : base("DBFunctionLanguage", nameof(FileExtensions.langFuncDB), progress, grid)
         {
-
         }
 
         /// <summary>
@@ -284,57 +277,47 @@ namespace IO_list_automation_new
         /// <returns>function type</returns>
         private string FindFunctionType(string inputText)
         {
-            string _search = string.Empty;
-            string _returnText = string.Empty;
+            string _textToSearch;
             string _text = inputText.ToLower();
 
             //first go through 2part function texts
             //go through all 1o2 function texts
-            for (int i = 0; i < Signals.Count; i++)
+            for (int _signalIndex = 0; _signalIndex < Signals.Count; _signalIndex++)
             {
-                _search = Signals[i].FunctionText1o2.ToLower();
-                if (_search != string.Empty)
+                _textToSearch = Signals[_signalIndex].FunctionText1o2.ToLower();
+                if (string.IsNullOrEmpty(_textToSearch))
+                    continue;
+
+                //if found 1o2 part then search for 2o2 part
+                if (_text.Contains(_textToSearch))
                 {
-                    //if found 1o2 part then search for 2o2 part
-                    if (_text.Contains(_search))
+                    //go through all 2o2 function texts
+                    for (int _signalIndex2 = 0; _signalIndex2 < Signals.Count; _signalIndex2++)
                     {
-                        //go through all 2o2 function texts
-                        for (int j = 0; j < Signals.Count; j++)
-                        {
-                            _search = Signals[j].FunctionText2o2.ToLower();
-                            if (_search != string.Empty)
-                            {
-                                //if input text contains function return its function type 
-                                if (_text.Contains(_search))
-                                {
-                                    _returnText = Signals[j].Funcion2;
-                                    break;
-                                }
-                            }
-                        }
+                        _textToSearch = Signals[_signalIndex2].FunctionText2o2.ToLower();
+                        if (string.IsNullOrEmpty(_textToSearch))
+                            continue;
+
+                        //if input text contains function return its function type
+                        if (_text.Contains(_textToSearch))
+                            return Signals[_signalIndex2].Function2;
                     }
                 }
             }
 
-            //if not found in 2 parts then go throug 1 part function text
-            if (_returnText == string.Empty)
+            //if not found in 2 parts then go through 1 part function text
+            for (int _signalIndex = 0; _signalIndex < Signals.Count; _signalIndex++)
             {
-                //go through all 1 function texts
-                for (int i = 0; i < Signals.Count; i++)
-                {
-                    _search = Signals[i].FunctionText1.ToLower();
-                    if (_search != string.Empty)
-                    {
-                        //if input text contains function return its function type 
-                        if (_text.Contains(_search))
-                        {
-                            _returnText = Signals[i].Funcion1;
-                            break;
-                        }
-                    }
-                }
+                _textToSearch = Signals[_signalIndex].FunctionText1.ToLower();
+                if (string.IsNullOrEmpty(_textToSearch))
+                    continue;
+
+                //if input text contains function return its function type
+                if (_text.Contains(_textToSearch))
+                    return Signals[_signalIndex].Function1;
             }
-            return _returnText;
+
+            return string.Empty;
         }
 
         /// <summary>
@@ -343,10 +326,16 @@ namespace IO_list_automation_new
         /// <param name="data">input data</param>
         public void FindAllFunctionType(DataClass data)
         {
-            string _functionType = string.Empty;
+            string _functionType;
 
             Debug debug = new Debug();
             debug.ToFile("Finding function type in data", DebugLevels.Development, DebugMessageType.Info);
+
+            string _fileName = System.IO.Path.GetDirectoryName(System.Windows.Forms.Application.ExecutablePath) + "\\DB\\" + Settings.Default.IOLanguage;
+
+            //convert data from file to signals
+            if (!ListToSignals(Grid.LoadFromFileToMemory(_fileName), BaseColumns.Columns))
+                return;
 
             Progress.RenameProgressBar(Resources.FindFunction, data.Signals.Count);
 
@@ -360,7 +349,7 @@ namespace IO_list_automation_new
 
             Progress.HideProgressBar();
 
-            data.Grid.PutData();
+            data.PutDataToGrid();
             debug.ToFile("Finding function type in data - " + Resources.Finished, DebugLevels.Development, DebugMessageType.Info);
         }
     }
@@ -372,7 +361,7 @@ namespace IO_list_automation_new
 
         public DBLanguage(ProgressIndication progress, DataGridView grid)
         {
-            FunctionType = new DBLanguageFunctionType(progress,grid);
+            FunctionType = new DBLanguageFunctionType(progress, grid);
             Type = new DBLanguageType(progress, grid);
         }
     }

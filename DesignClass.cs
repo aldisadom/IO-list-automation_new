@@ -2,23 +2,10 @@
 using IO_list_automation_new.Forms;
 using IO_list_automation_new.General;
 using IO_list_automation_new.Properties;
-using SharpCompress.Common;
-using SharpCompress.Readers.Zip;
-using SwiftExcel;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Configuration;
-using System.Data.Common;
-using System.Diagnostics;
-using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Security.Cryptography;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace IO_list_automation_new
 {
@@ -43,8 +30,12 @@ namespace IO_list_automation_new
         public string Changed { get; private set; }
         public string Terminal { get; private set; }
         public string Tag { get; private set; }
-        public string UniqueKKS { get { return KKS + "_" + CPU; } }
-        public string UniqueModuleName { get { return Cabinet + "_" + ModuleName + "_" + CPU; } }
+
+        public string UniqueKKS
+        { get { return KKS + "_" + CPU; } }
+
+        public string UniqueModuleName
+        { get { return Cabinet + "_" + ModuleName + "_" + CPU; } }
 
         public DesignSignal() : base()
         {
@@ -80,57 +71,75 @@ namespace IO_list_automation_new
                 case KeywordColumn.ID:
                     ID = value;
                     break;
+
                 case KeywordColumn.CPU:
                     CPU = value;
                     break;
+
                 case KeywordColumn.KKS:
                     KKS = value;
                     break;
+
                 case KeywordColumn.RangeMin:
                     RangeMin = value;
                     break;
+
                 case KeywordColumn.RangeMax:
                     RangeMax = value;
                     break;
+
                 case KeywordColumn.Units:
                     Units = value;
                     break;
+
                 case KeywordColumn.FalseText:
                     FalseText = value;
                     break;
+
                 case KeywordColumn.TrueText:
                     TrueText = value;
                     break;
+
                 case KeywordColumn.Revision:
                     Revision = value;
                     break;
+
                 case KeywordColumn.Cable:
                     Cable = value;
                     break;
+
                 case KeywordColumn.Cabinet:
                     Cabinet = value;
                     break;
+
                 case KeywordColumn.ModuleName:
                     ModuleName = value;
                     break;
+
                 case KeywordColumn.Pin:
                     Pin = value;
                     break;
+
                 case KeywordColumn.Channel:
                     Channel = value;
                     break;
+
                 case KeywordColumn.IOText:
                     IOText = value;
                     break;
+
                 case KeywordColumn.Page:
                     Page = value;
                     break;
+
                 case KeywordColumn.Changed:
                     Changed = value;
                     break;
+
                 case KeywordColumn.Terminal:
                     Terminal = value;
                     break;
+
                 case KeywordColumn.Tag:
                     Tag = value;
                     break;
@@ -145,75 +154,74 @@ namespace IO_list_automation_new
         /// <returns>value of parameter</returns>
         public override string GetValueString(string parameterName, bool suppressError)
         {
-            string _returnValue = string.Empty;
             switch (parameterName)
             {
                 case KeywordColumn.ID:
-                    _returnValue = ID;
-                    break;
+                    return ID;
+
                 case KeywordColumn.CPU:
-                    _returnValue = CPU;
-                    break;
+                    return CPU;
+
                 case KeywordColumn.KKS:
-                    _returnValue = KKS;
-                    break;
+                    return KKS;
+
                 case KeywordColumn.RangeMin:
-                    _returnValue = RangeMin;
-                    break;
+                    return RangeMin;
+
                 case KeywordColumn.RangeMax:
-                    _returnValue = RangeMax;
-                    break;
+                    return RangeMax;
+
                 case KeywordColumn.Units:
-                    _returnValue = Units;
-                    break;
+                    return Units;
+
                 case KeywordColumn.FalseText:
-                    _returnValue = FalseText;
-                    break;
+                    return FalseText;
+
                 case KeywordColumn.TrueText:
-                    _returnValue = TrueText;
-                    break;
+                    return TrueText;
+
                 case KeywordColumn.Revision:
-                    _returnValue = Revision;
-                    break;
+                    return Revision;
+
                 case KeywordColumn.Cable:
-                    _returnValue = Cable;
-                    break;
+                    return Cable;
+
                 case KeywordColumn.Cabinet:
-                    _returnValue = Cabinet;
-                    break;
+                    return Cabinet;
+
                 case KeywordColumn.ModuleName:
-                    _returnValue = ModuleName;
-                    break;
+                    return ModuleName;
+
                 case KeywordColumn.Pin:
-                    _returnValue = Pin;
-                    break;
+                    return Pin;
+
                 case KeywordColumn.Channel:
-                    _returnValue = Channel;
-                    break;
+                    return Channel;
+
                 case KeywordColumn.IOText:
-                    _returnValue = IOText;
-                    break;
+                    return IOText;
+
                 case KeywordColumn.Page:
-                    _returnValue = Page;
-                    break;
+                    return Page;
+
                 case KeywordColumn.Changed:
-                    _returnValue = Changed;
-                    break;
+                    return Changed;
+
                 case KeywordColumn.Terminal:
-                    _returnValue = Terminal;
-                    break;
+                    return Terminal;
+
                 case KeywordColumn.Tag:
-                    _returnValue = Tag;
-                    break;
+                    return Tag;
+
                 default:
-                    if (!suppressError)
-                    {
-                        Debug _debug = new Debug();
-                        _debug.ToPopUp("DesignSignal.GetValueString " + Resources.ParameterNotFound + ":" + parameterName, DebugLevels.None, DebugMessageType.Critical);
-                    }
-                    break;
+                    if (suppressError)
+                        return string.Empty;
+
+                    const string text = "DesignSignal.GetValueString";
+                    Debug _debug = new Debug();
+                    _debug.ToFile(text + " " + Resources.ParameterNotFound + ":" + parameterName, DebugLevels.None, DebugMessageType.Critical);
+                    throw new InvalidProgramException(text + "." + parameterName + " is not created for this element");
             }
-            return _returnValue;
         }
 
         /// <summary>
@@ -255,43 +263,30 @@ namespace IO_list_automation_new
         /// <returns>has useful data</returns>
         public bool ExtractUseful(bool _checkPin, bool _checkChannel)
         {
-            bool _returnValue = true;
-
             if (_checkPin)
             {
-                if (SettingsDesignInput.Default.PinIsNumber)
-                {
-                    if (!int.TryParse(Pin, out int _value))
-                        _returnValue = false;
-                }
-                else if (SettingsDesignInput.Default.PinHasNumber)
-                {
-                    if (!HasNumber(Pin))
-                        _returnValue = false;
-                }
+                if (SettingsDesignInput.Default.PinIsNumber && !int.TryParse(Pin, out _))
+                    return false;
+                else if (SettingsDesignInput.Default.PinHasNumber && !HasNumber(Pin))
+                    return false;
             }
 
-            if (_checkChannel && _returnValue)
+            if (_checkChannel)
             {
-                if (SettingsDesignInput.Default.ChannelIsNumber)
-                {
-                    if (!int.TryParse(Channel, out int _value))
-                        _returnValue = false;
-                }
-                else if (SettingsDesignInput.Default.ChannelHasNumber)
-                {
-                    if (!HasNumber(Channel))
-                        _returnValue = false;
-                }
+                if (SettingsDesignInput.Default.ChannelIsNumber && !int.TryParse(Channel, out _))
+                    return false;
+                else if (SettingsDesignInput.Default.ChannelHasNumber && !HasNumber(Channel))
+                    return false;
             }
-            return _returnValue;
+
+            return true;
         }
     }
 
     internal class DesignClass : GeneralClass<DesignSignal>
     {
         //columns in excel
-        private ColumnList ExcelColumns { get; set; }
+        private ColumnList ExcelColumns { get; }
 
         protected override List<GeneralColumn> GeneralGenerateColumnsList()
         {
@@ -360,6 +355,7 @@ namespace IO_list_automation_new
 
             ExcelColumns.SetColumns(list, columnsFromZero);
         }
+
         public void InitExcelColumnsList()
         {
             List<GeneralColumn> _excelColumn = new List<GeneralColumn>()
@@ -388,7 +384,7 @@ namespace IO_list_automation_new
             SetExcelColumnList(_excelColumn, false);
         }
 
-        public DesignClass(ProgressIndication progress, DataGridView grid) : base("Design", false, nameof(FileExtensions.design), progress, grid)
+        public DesignClass(ProgressIndication progress, DataGridView grid) : base("Design", nameof(FileExtensions.design), progress, grid)
         {
             ExcelColumns = new ColumnList();
         }
@@ -402,8 +398,11 @@ namespace IO_list_automation_new
             Debug debug = new Debug();
 
             //crate open file dialog to open excel files only
-            OpenFileDialog _importFile = new OpenFileDialog();
-            _importFile.Filter = "Excel Worksheets|*.xls;*.xlsx";
+            OpenFileDialog _importFile = new OpenFileDialog()
+            {
+                Filter = "Excel Worksheets|*.xls;*.xlsx",
+            };
+
             if (_importFile.ShowDialog() == DialogResult.OK)
             {
                 debug.ToFile("Excel file for design is: " + _importFile.FileName, DebugLevels.Development, DebugMessageType.Info);
@@ -415,12 +414,13 @@ namespace IO_list_automation_new
                 Progress.RenameProgressBar(Resources.DesignImport, _rowCount);
 
                 debug.ToFile("Processing input file", DebugLevels.Development, DebugMessageType.Info);
-                int _columnCount = 0;
+
+                int _columnCount;
                 bool _checkPin = SettingsDesignInput.Default.ColumnPin >= 0;
                 bool _checkChannel = SettingsDesignInput.Default.ColumnChannel >= 0;
 
                 _columnCount = _excel.FieldCount;
-                string [,] _inputData = new string[_rowCount, _columnCount+1];
+                string[,] _inputData = new string[_rowCount, _columnCount + 1];
 
                 //read all excel rows
                 for (int _row = 1; _row <= _rowCount; _row++)
@@ -432,7 +432,7 @@ namespace IO_list_automation_new
                     //first column is row number
                     _inputData[_row - 1, 0] = GeneralFunctions.AddZeroes(_row);
                     for (int _column = 0; _column < _columnCount; _column++)
-                        _inputData[_row-1,_column+1] = GeneralFunctions.ReadExcelCell(_row, _column, _columnCount, _excel);
+                        _inputData[_row - 1, _column + 1] = GeneralFunctions.ReadExcelCell(_row, _column, _columnCount, _excel);
 
                     Progress.UpdateProgressBar(_row);
                 }
@@ -445,10 +445,10 @@ namespace IO_list_automation_new
 
                 InitExcelColumnsList();
 
-                int _columnNumber = 0;
                 int _maxColumns = _inputData.GetLength(1);
-                string _cellValue = string.Empty;
-                string _ColumnName = string.Empty;
+                int _columnNumber;
+                string _cellValue;
+                string _ColumnName;
 
                 UpdateColumnNumbers(ExcelColumns.Columns);
 
@@ -465,7 +465,7 @@ namespace IO_list_automation_new
                         _columnNumber = _column.Number;
                         if (_columnNumber != -1 && _columnNumber < _maxColumns)
                         {
-                            _cellValue = _inputData[_row,_columnNumber];
+                            _cellValue = _inputData[_row, _columnNumber];
                             _ColumnName = _column.Keyword;
 
                             _signalNew.SetValueFromString(_cellValue, _ColumnName);
