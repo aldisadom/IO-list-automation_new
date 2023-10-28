@@ -1,22 +1,7 @@
-﻿using SharpCompress.Common;
+﻿using IO_list_automation_new.Properties;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static System.Net.Mime.MediaTypeNames;
-using System.Xml.Linq;
-using System.Xml.Schema;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
-using System.Runtime.Remoting.Channels;
-using System.Runtime.Remoting.Contexts;
-using System.Security.AccessControl;
-using IO_list_automation_new.Properties;
-using System.Data.Common;
-using System.Security.Cryptography;
-using SharpCompress;
 
 namespace IO_list_automation_new
 {
@@ -38,9 +23,9 @@ namespace IO_list_automation_new
 
             if (_returnName == null)
             {
-                const string text = "GetName";
+                const string text = "GeneralColumn.GetColumnOrChoicesName";
                 Debug _debug = new Debug();
-                _debug.ToFile("Report to programmer that " + text + "." + keyword + " is not created for this element", DebugLevels.None, DebugMessageType.Critical);
+                _debug.ToFile(text + " " + Resources.ParameterNotFound + ":" + keyword, DebugLevels.None, DebugMessageType.Critical);
                 throw new InvalidProgramException(text + "." + keyword + " is not created for this element");
             }
             return _returnName;
@@ -55,133 +40,128 @@ namespace IO_list_automation_new
         /// <exception cref="InvalidProgramException"></exception>
         public string GetColumnName(string keyword, bool suppressError)
         {
-            string _returnName = string.Empty;
-
             switch (keyword)
             {
                 case KeywordColumn.ID:
-                    _returnName = ResourcesColumns.ID;
-                    break;
+                    return ResourcesColumns.ID;
+
                 case KeywordColumn.CPU:
-                    _returnName = ResourcesColumns.CPU;
-                    break;
+                    return ResourcesColumns.CPU;
+
                 case KeywordColumn.KKS:
-                    _returnName = ResourcesColumns.KKS;
-                    break;
+                    return ResourcesColumns.KKS;
+
                 case KeywordColumn.RangeMin:
-                    _returnName = ResourcesColumns.RangeMin;
-                    break;
+                    return ResourcesColumns.RangeMin;
+
                 case KeywordColumn.RangeMax:
-                    _returnName = ResourcesColumns.RangeMax;
-                    break;
+                    return ResourcesColumns.RangeMax;
+
                 case KeywordColumn.Units:
-                    _returnName = ResourcesColumns.Units;
-                    break;
+                    return ResourcesColumns.Units;
+
                 case KeywordColumn.FalseText:
-                    _returnName = ResourcesColumns.FalseText;
-                    break;
+                    return ResourcesColumns.FalseText;
+
                 case KeywordColumn.TrueText:
-                    _returnName = ResourcesColumns.TrueText;
-                    break;
+                    return ResourcesColumns.TrueText;
+
                 case KeywordColumn.Revision:
-                    _returnName = ResourcesColumns.Revision;
-                    break;
+                    return ResourcesColumns.Revision;
+
                 case KeywordColumn.Cable:
-                    _returnName = ResourcesColumns.Cable;
-                    break;
+                    return ResourcesColumns.Cable;
+
                 case KeywordColumn.Cabinet:
-                    _returnName = ResourcesColumns.Cabinet;
-                    break;
+                    return ResourcesColumns.Cabinet;
+
                 case KeywordColumn.ModuleName:
-                    _returnName = ResourcesColumns.ModuleName;
-                    break;
+                    return ResourcesColumns.ModuleName;
+
                 case KeywordColumn.Pin:
-                    _returnName = ResourcesColumns.Pin;
-                    break;
+                    return ResourcesColumns.Pin;
+
                 case KeywordColumn.Channel:
-                    _returnName = ResourcesColumns.Channel;
-                    break;
+                    return ResourcesColumns.Channel;
+
                 case KeywordColumn.IOText:
-                    _returnName = ResourcesColumns.IOText;
-                    break;
+                    return ResourcesColumns.IOText;
+
                 case KeywordColumn.Page:
-                    _returnName = ResourcesColumns.Page;
-                    break;
+                    return ResourcesColumns.Page;
+
                 case KeywordColumn.Changed:
-                    _returnName = ResourcesColumns.Changed;
-                    break;
+                    return ResourcesColumns.Changed;
+
                 case KeywordColumn.Operative:
-                    _returnName = ResourcesColumns.Operative;
-                    break;
+                    return ResourcesColumns.Operative;
+
                 case KeywordColumn.KKSPlant:
-                    _returnName = ResourcesColumns.KKSPlant;
-                    break;
+                    return ResourcesColumns.KKSPlant;
+
                 case KeywordColumn.KKSLocation:
-                    _returnName = ResourcesColumns.KKSLocation;
-                    break;
+                    return ResourcesColumns.KKSLocation;
+
                 case KeywordColumn.KKSDevice:
-                    _returnName = ResourcesColumns.KKSDevice;
-                    break;
+                    return ResourcesColumns.KKSDevice;
+
                 case KeywordColumn.KKSFunction:
-                    _returnName = ResourcesColumns.KKSFunction;
-                    break;
+                    return ResourcesColumns.KKSFunction;
+
                 case KeywordColumn.Used:
-                    _returnName = ResourcesColumns.Used;
-                    break;
+                    return ResourcesColumns.Used;
+
                 case KeywordColumn.ObjectType:
-                    _returnName = ResourcesColumns.ObjectType;
-                    break;
+                    return ResourcesColumns.ObjectType;
+
                 case KeywordColumn.ObjectName:
-                    _returnName = ResourcesColumns.ObjectName;
-                    break;
+                    return ResourcesColumns.ObjectName;
+
                 case KeywordColumn.ObjectSpecifics:
-                    _returnName = ResourcesColumns.ObjectSpecifics;
-                    break;
+                    return ResourcesColumns.ObjectSpecifics;
+
                 case KeywordColumn.FunctionText:
-                    _returnName = ResourcesColumns.FunctionText;
-                    break;
+                    return ResourcesColumns.FunctionText;
+
                 case KeywordColumn.Function:
-                    _returnName = ResourcesColumns.Function;
-                    break;
+                    return ResourcesColumns.Function;
+
                 case KeywordColumn.Terminal:
-                    _returnName = ResourcesColumns.Terminal;
-                    break;
+                    return ResourcesColumns.Terminal;
+
                 case KeywordColumn.DeviceTypeText:
-                    _returnName = ResourcesColumns.DeviceTypeText;
-                    break;
+                    return ResourcesColumns.DeviceTypeText;
+
                 case KeywordColumn.FunctionText1:
-                    _returnName = ResourcesColumns.FunctionText1;
-                    break;
+                    return ResourcesColumns.FunctionText1;
+
                 case KeywordColumn.Function1:
-                    _returnName = ResourcesColumns.Function1;
-                    break;
+                    return ResourcesColumns.Function1;
+
                 case KeywordColumn.FunctionText1o2:
-                    _returnName = ResourcesColumns.FunctionText1o2;
-                    break;
+                    return ResourcesColumns.FunctionText1o2;
+
                 case KeywordColumn.FunctionText2o2:
-                    _returnName = ResourcesColumns.FunctionText2o2;
-                    break;
+                    return ResourcesColumns.FunctionText2o2;
+
                 case KeywordColumn.Function2:
-                    _returnName = ResourcesColumns.Function2;
-                    break;
+                    return ResourcesColumns.Function2;
+
                 case KeywordColumn.Tag:
-                    _returnName = ResourcesColumns.Tag;
-                    break;
+                    return ResourcesColumns.Tag;
+
                 case KeywordColumn.ModuleType:
-                    _returnName = ResourcesColumns.ModuleType;
-                    break;
+                    return ResourcesColumns.ModuleType;
+
                 default:
-                    _returnName = string.Empty;
-                    if (!suppressError)
-                    {
-                        const string text = "GetColumnName";
-                        Debug _debug = new Debug();
-                        _debug.ToFile("Report to programmer that " + text + "." + keyword + " is not created for this element", DebugLevels.None, DebugMessageType.Critical);
-                        throw new InvalidProgramException(text + "." + keyword + " is not created for this element");
-                    }
-                    break;
+                    if (suppressError)
+                        return string.Empty;
+
+                    const string text = "GeneralColumn.GetColumnName";
+                    Debug _debug = new Debug();
+                    _debug.ToFile(text + " " + Resources.ParameterNotFound + ":" + keyword, DebugLevels.None, DebugMessageType.Critical);
+                    throw new InvalidProgramException(text + "." + keyword + " is not created for this element");
             }
-            return _returnName;
         }
 
         /// <summary>
@@ -197,38 +177,48 @@ namespace IO_list_automation_new
             {
                 case KeywordDBChoices.None:
                     return string.Empty;
+
                 case KeywordDBChoices.Tab:
                     return ResourcesChoices.Tab;
+
                 case KeywordDBChoices.If:
                     return ResourcesChoices.If;
+
                 case KeywordDBChoices.Text:
                     return ResourcesChoices.Text;
+
                 case KeywordDBChoices.Data:
                     return ResourcesChoices.Data;
+
                 case KeywordDBChoices.Object:
                     return ResourcesChoices.Object;
+
+                case KeywordDBChoices.Modules:
+                    return ResourcesChoices.Modules;
+
                 case KeywordDBChoices.IO:
                     return ResourcesChoices.IO;
+
                 case KeywordDBChoices.TagType:
                     return ResourcesChoices.TagType;
+
                 case KeywordDBChoices.IsEmpty:
                     return ResourcesChoices.IsEmpty;
+
                 case KeywordDBChoices.Index:
                     return ResourcesChoices.Index;
+
                 case KeywordDBChoices.IsNotEmpty:
                     return ResourcesChoices.IsNotEmpty;
+
                 default:
-                    if (!suppressError)
-                    {
-                        const string text = "GetChoicesName";
-                        Debug _debug = new Debug();
-                        _debug.ToFile("Report to programmer that " + text + "." + keyword + " is not created for this element", DebugLevels.None, DebugMessageType.Critical);
-                        throw new InvalidProgramException(text + "." + keyword + " is not created for this element");
-                    }
-                    else
-                    {
+                    if (suppressError)
                         return null;
-                    }
+
+                    const string text = "GeneralColumn.GetChoicesName";
+                    Debug _debug = new Debug();
+                    _debug.ToFile(text + " " + Resources.ParameterNotFound + ":" + keyword, DebugLevels.None, DebugMessageType.Critical);
+                    throw new InvalidProgramException(text + "." + keyword + " is not created for this element");
             }
         }
     }
@@ -236,10 +226,12 @@ namespace IO_list_automation_new
     internal class GeneralColumn
     {
         //column keyword
-        public string Keyword { get; private set; }
+        public string Keyword { get; }
+
         //column number for sorting
-        public int Number { get; private set; }
-        public bool CanHide { get; private set; }
+        public int Number { get; }
+
+        public bool CanHide { get; }
 
         private GeneralColumnName ColumnName = new GeneralColumnName();
 
@@ -249,6 +241,7 @@ namespace IO_list_automation_new
             Number = columnNumber;
             CanHide = canHide;
         }
+
         /// <summary>
         /// Get column name based on software language
         /// </summary>
@@ -256,13 +249,13 @@ namespace IO_list_automation_new
         /// <exception cref="InvalidProgramException"></exception>
         public string GetColumnName()
         {
-            return ColumnName.GetColumnName(Keyword,false);
+            return ColumnName.GetColumnName(Keyword, false);
         }
     }
 
     internal class ColumnList : IEnumerable<GeneralColumn>
     {
-        public List<GeneralColumn> Columns { get; private set; }
+        public List<GeneralColumn> Columns { get; }
 
         /// <summary>
         /// Sort all columns from lowest to highest
@@ -271,9 +264,9 @@ namespace IO_list_automation_new
         /// <returns>sorted list</returns>
         public void SortColumnsList(bool columnsFromZero)
         {
-            string _keyword = string.Empty;
-            int _columnNumber = 0;
-            bool _canHide = false;
+            string _keyword;
+            int _columnNumber;
+            bool _canHide;
 
             List<GeneralColumn> _tmpList = new List<GeneralColumn>();
             for (int _index = 0; _index < Columns.Count; _index++)
@@ -291,7 +284,7 @@ namespace IO_list_automation_new
 
             //set 0 index in list to minimum value
             int _minIndex = 0;
-            int _minValue = int.MaxValue;
+            int _minValue;
             int _columnIndex = 0;
             int _count = _tmpList.Count;
 
@@ -299,7 +292,7 @@ namespace IO_list_automation_new
             for (int _index = 0; _index < _count; _index++)
             {
                 _minValue = int.MaxValue;
-                for (int i = 0; i < _tmpList.Count(); i++)
+                for (int i = 0; i < _tmpList.Count; i++)
                 {
                     if (_tmpList[i].Number < _minValue)
                     {

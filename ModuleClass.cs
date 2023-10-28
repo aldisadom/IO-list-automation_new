@@ -1,9 +1,6 @@
 ﻿using IO_list_automation_new.Properties;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace IO_list_automation_new
@@ -15,7 +12,9 @@ namespace IO_list_automation_new
         public string ModuleName { get; private set; }
         public string ModuleType { get; private set; }
         public string Cabinet { get; private set; }
-        public string UniqueModuleName { get { return Cabinet + "_" + ModuleName + "_"+ CPU; } }
+
+        public string UniqueModuleName
+        { get { return Cabinet + "_" + ModuleName + "_" + CPU; } }
 
         public ModuleSignal() : base()
         {
@@ -38,15 +37,19 @@ namespace IO_list_automation_new
                 case KeywordColumn.ID:
                     ID = value;
                     break;
+
                 case KeywordColumn.CPU:
                     CPU = value;
                     break;
+
                 case KeywordColumn.ModuleName:
                     ModuleName = value;
                     break;
+
                 case KeywordColumn.ModuleType:
                     ModuleType = value;
                     break;
+
                 case KeywordColumn.Cabinet:
                     Cabinet = value;
                     break;
@@ -61,33 +64,32 @@ namespace IO_list_automation_new
         /// <returns>value of parameter</returns>
         public override string GetValueString(string parameterName, bool suppressError)
         {
-            string _returnValue = string.Empty;
             switch (parameterName)
             {
                 case KeywordColumn.ID:
-                    _returnValue = ID;
-                    break;
+                    return ID;
+
                 case KeywordColumn.CPU:
-                    _returnValue = CPU;
-                    break;
+                    return CPU;
+
                 case KeywordColumn.ModuleName:
-                    _returnValue = ModuleName;
-                    break;
+                    return ModuleName;
+
                 case KeywordColumn.ModuleType:
-                    _returnValue = ModuleType;
-                    break;
+                    return ModuleType;
+
                 case KeywordColumn.Cabinet:
-                    _returnValue = Cabinet;
-                    break;
+                    return Cabinet;
+
                 default:
-                    if (!suppressError)
-                    {
-                        Debug _debug = new Debug();
-                        _debug.ToPopUp("ModuleSignal.GetValueString " + Resources.ParameterNotFound + ":" + parameterName, DebugLevels.None, DebugMessageType.Critical);
-                    }
-                    break;
+                    if (suppressError)
+                        return string.Empty;
+
+                    const string text = "ModuleSignal.GetValueString";
+                    Debug _debug = new Debug();
+                    _debug.ToFile(text + " " + Resources.ParameterNotFound + ":" + parameterName, DebugLevels.None, DebugMessageType.Critical);
+                    throw new InvalidProgramException(text + "." + parameterName + " is not created for this element");
             }
-            return _returnValue;
         }
 
         /// <summary>
@@ -129,11 +131,11 @@ namespace IO_list_automation_new
             SettingsObject.Default.Save();
         }
 
-        public ModuleClass(ProgressIndication progress, DataGridView grid) : base("Module", false, nameof(FileExtensions.modDB), progress, grid)
-        {}
+        public ModuleClass(ProgressIndication progress, DataGridView grid) : base("Module", nameof(FileExtensions.modDB), progress, grid)
+        { }
 
-        public ModuleClass() : base("Module", false, nameof(FileExtensions.modDB), null, null)
-        {}
+        public ModuleClass() : base("Module", nameof(FileExtensions.modDB), null, null)
+        { }
 
         /// <summary>
         /// Get unique data signals
@@ -148,7 +150,7 @@ namespace IO_list_automation_new
 
             UpdateColumnNumbers(data.BaseColumns.Columns);
             Signals.Clear();
-            string _keyword = string.Empty;
+            string _keyword;
             for (int _dataNumber = 0; _dataNumber < data.Signals.Count; _dataNumber++)
             {
                 DataSignal _dataSignal = data.Signals[_dataNumber];

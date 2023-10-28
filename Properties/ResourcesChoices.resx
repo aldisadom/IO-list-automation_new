@@ -147,4 +147,7 @@
   <data name="TagType" xml:space="preserve">
     <value>Tag type</value>
   </data>
+  <data name="Modules" xml:space="preserve">
+    <value>Modules</value>
+  </data>
 </root>

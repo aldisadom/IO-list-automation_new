@@ -1,25 +1,7 @@
-﻿using ExcelDataReader;
-using IO_list_automation_new.Forms;
-using IO_list_automation_new.Properties;
-using SharpCompress.Common;
-using SharpCompress.Readers.Zip;
-using SwiftExcel;
+﻿using IO_list_automation_new.Properties;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data.Common;
-using System.Diagnostics;
-using System.Drawing;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Security.Cryptography;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Xml.Linq;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace IO_list_automation_new
 {
@@ -31,7 +13,9 @@ namespace IO_list_automation_new
         public string KKS { get; private set; }
         public string ObjectType { get; private set; }
         public string ObjectName { get; private set; }
-        public string UniqueKKS { get {return KKS + "_" + CPU; } }
+
+        public string UniqueKKS
+        { get { return KKS + "_" + CPU; } }
 
         public ObjectSignal() : base()
         {
@@ -54,18 +38,23 @@ namespace IO_list_automation_new
                 case KeywordColumn.ID:
                     ID = value;
                     break;
+
                 case KeywordColumn.CPU:
                     CPU = value;
                     break;
+
                 case KeywordColumn.KKS:
                     KKS = value;
                     break;
+
                 case KeywordColumn.Operative:
                     Operative = value;
                     break;
+
                 case KeywordColumn.ObjectType:
                     ObjectType = value;
                     break;
+
                 case KeywordColumn.ObjectName:
                     ObjectName = value;
                     break;
@@ -80,36 +69,35 @@ namespace IO_list_automation_new
         /// <returns>value of parameter</returns>
         public override string GetValueString(string parameterName, bool suppressError)
         {
-            string _returnValue = string.Empty;
             switch (parameterName)
             {
                 case KeywordColumn.ID:
-                    _returnValue = ID;
-                    break;
+                    return ID;
+
                 case KeywordColumn.CPU:
-                    _returnValue = CPU;
-                    break;
+                    return CPU;
+
                 case KeywordColumn.KKS:
-                    _returnValue = KKS;
-                    break;
+                    return KKS;
+
                 case KeywordColumn.Operative:
-                    _returnValue = Operative;
-                    break;
+                    return Operative;
+
                 case KeywordColumn.ObjectType:
-                    _returnValue = ObjectType;
-                    break;
+                    return ObjectType;
+
                 case KeywordColumn.ObjectName:
-                    _returnValue = ObjectName;
-                    break;
+                    return ObjectName;
+
                 default:
-                    if (!suppressError)
-                    {
-                        Debug _debug = new Debug();
-                        _debug.ToPopUp("ObjectsSignal.GetValueString " + Resources.ParameterNotFound + ":" + parameterName, DebugLevels.None, DebugMessageType.Critical);
-                    }
-                    break;
+                    if (suppressError)
+                        return string.Empty;
+
+                    const string text = "ObjectsSignal.GetValueString";
+                    Debug _debug = new Debug();
+                    _debug.ToFile(text + " " + Resources.ParameterNotFound + ":" + parameterName, DebugLevels.None, DebugMessageType.Critical);
+                    throw new InvalidProgramException(text + "." + parameterName + " is not created for this element");
             }
-            return _returnValue;
         }
 
         /// <summary>
@@ -158,11 +146,11 @@ namespace IO_list_automation_new
             SettingsObject.Default.Save();
         }
 
-        public ObjectsClass(ProgressIndication progress, DataGridView grid) : base("Object",false, nameof(FileExtensions.objects), progress, grid)
-        {}
+        public ObjectsClass(ProgressIndication progress, DataGridView grid) : base("Object", nameof(FileExtensions.objects), progress, grid)
+        { }
 
-        public ObjectsClass() : base("Object", false, nameof(FileExtensions.objects), null, null)
-        {}
+        public ObjectsClass() : base("Object", nameof(FileExtensions.objects), null, null)
+        { }
 
         /// <summary>
         /// Get unique data signals
@@ -177,12 +165,12 @@ namespace IO_list_automation_new
 
             UpdateColumnNumbers(data.BaseColumns.Columns);
             Signals.Clear();
-            string _keyword = string.Empty;
+            string _keyword;
             for (int _dataNumber = 0; _dataNumber < data.Signals.Count; _dataNumber++)
             {
                 DataSignal _dataSignal = data.Signals[_dataNumber];
 
-                if (_dataSignal.HasKKS())
+                if (!_dataSignal.HasKKS())
                     continue;
 
                 ObjectSignal _objectSignal = new ObjectSignal();
@@ -230,8 +218,8 @@ namespace IO_list_automation_new
 
             Progress.RenameProgressBar(Resources.ObjectTransferToData, data.Signals.Count);
 
-            string _UniqueName = string.Empty;
-            string _keyword = string.Empty;
+            string _UniqueName;
+            string _keyword;
             for (int _dataNumber = 0; _dataNumber < data.Signals.Count; _dataNumber++)
             {
                 DataSignal _dataSignal = data.Signals[_dataNumber];

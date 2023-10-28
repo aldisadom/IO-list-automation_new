@@ -1,26 +1,16 @@
 ﻿using IO_list_automation_new.Forms;
-using IO_list_automation_new.General;
 using IO_list_automation_new.Properties;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Data.Common;
-using System.Diagnostics;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Xml.Linq;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace IO_list_automation_new.DB
 {
     public partial class DBResultForm : Form
     {
-        private bool Editable {  get; set; }
-
+        private bool Editable { get; set; }
+        private bool ModuleBased { get; set; }
         private void ResultForm_Shown(object sender, EventArgs e)
         {
             UpdateResult();
@@ -47,7 +37,6 @@ namespace IO_list_automation_new.DB
                 for (int i = 0; i < DBTabControl.TabPages.Count; i++)
                     PageEditComboBox.Items.Add(Resources.Remove + ": " + DBTabControl.TabPages[i].Name);
 
-
                 PageEditComboBox.Visible = true;
                 PageEditComboBox.Location = PointToClient(Cursor.Position);
                 PageEditComboBox.BringToFront();
@@ -63,13 +52,18 @@ namespace IO_list_automation_new.DB
             {
                 NewName _newName = new NewName(Resources.Add + " " + Resources.DeleteMe);
                 _newName.ShowDialog();
+                if (string.IsNullOrEmpty(_newName.Output))
+                    return;
+
                 DataGridView _grid = AddData(_newName.Output);
 
                 _grid.Columns.Add("0", "0");
                 _grid.Rows.Add();
             }
             else if (_text != string.Empty)
-                DBTabControl.TabPages.RemoveByKey(_text.Replace(Resources.Remove + ": ",string.Empty));
+            {
+                DBTabControl.TabPages.RemoveByKey(_text.Replace(Resources.Remove + ": ", string.Empty));
+            }
         }
 
         private void DataGridView_RowHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
@@ -102,12 +96,14 @@ namespace IO_list_automation_new.DB
             List<string> _line = new List<string>();
 
             for (int i = 0; i < _grid.ColumnCount; i++)
+            {
                 if (_grid.Rows[_row].Cells[i].Value == null)
                     _line.Add(string.Empty);
                 else
                     _line.Add(_grid.Rows[_row].Cells[i].Value.ToString());
+            }
 
-            DBCellEdit _DBCellEdit = new DBCellEdit(_line);
+            DBCellEdit _DBCellEdit = new DBCellEdit(_line, ModuleBased);
             _DBCellEdit.ShowDialog();
             _line = _DBCellEdit.OutputData;
 
@@ -120,12 +116,13 @@ namespace IO_list_automation_new.DB
                 {
                     for (int i = _grid.ColumnCount; i < _line.Count; i++)
                     {
-                        DataGridViewColumn _columnGridView = new DataGridViewColumn();
-                        _columnGridView.CellTemplate = _cell;
-                        _columnGridView.SortMode = DataGridViewColumnSortMode.NotSortable;
-                        _columnGridView.Name = i.ToString();
-                        _columnGridView.HeaderText = i.ToString();
-
+                        DataGridViewColumn _columnGridView = new DataGridViewColumn()
+                        {
+                            CellTemplate = _cell,
+                            SortMode = DataGridViewColumnSortMode.NotSortable,
+                            Name = i.ToString(),
+                            HeaderText = i.ToString(),
+                        };
                         _grid.Columns.Insert(i, _columnGridView);
                     }
                 }
@@ -145,7 +142,7 @@ namespace IO_list_automation_new.DB
         {
             DataGridView _grid = (DataGridView)DBTabControl.SelectedTab.Controls[0];
 
-            //add after sellected row
+            //add after selected row
             if (CellEditComboBox.SelectedItem.ToString() == Resources.Add)
             {
                 _grid.Rows.Insert((int)CellEditComboBox.Tag + 1, 1);
@@ -153,14 +150,16 @@ namespace IO_list_automation_new.DB
                     _grid.Rows[(int)CellEditComboBox.Tag + 1].Cells[i].Value = string.Empty;
             }
             else if (CellEditComboBox.SelectedItem.ToString() == Resources.Remove)
+            {
                 _grid.Rows.RemoveAt((int)CellEditComboBox.Tag);
+            }
 
             DBTabControl.SelectedTab.Controls.Remove(this.CellEditComboBox);
             CellEditComboBox.Visible = false;
             UpdateResult();
         }
 
-        public DataGridView AddData( string tabName)
+        public DataGridView AddData(string tabName)
         {
             DataGridView dataGridView1 = new DataGridView();
             TabPage tabPage1 = new TabPage();
@@ -180,12 +179,12 @@ namespace IO_list_automation_new.DB
 
             if (Editable)
             {
-                dataGridView1.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(DataGridView_CellClick);
-                dataGridView1.RowHeaderMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(DataGridView_RowHeaderMouseClick);
+                dataGridView1.CellClick += DataGridView_CellClick;
+                dataGridView1.RowHeaderMouseClick += DataGridView_RowHeaderMouseClick;
             }
-            // 
+            //
             // tabPage1
-            // 
+            //
             tabPage1.Controls.Add(dataGridView1);
             tabPage1.Location = new Point(4, 22);
             tabPage1.Name = tabName;
@@ -194,11 +193,11 @@ namespace IO_list_automation_new.DB
             tabPage1.Text = tabName;
             tabPage1.UseVisualStyleBackColor = true;
             tabPage1.Dock = System.Windows.Forms.DockStyle.Fill;
-            // 
+            //
             // ResultForm
-            // 
-//            Controls.Add(tabControl1);
-//            ((ISupportInitialize)(dataGridView1)).EndInit();
+            //
+            //            Controls.Add(tabControl1);
+            //            ((ISupportInitialize)(dataGridView1)).EndInit();
 
             DBTabControl.Controls.Add(tabPage1);
 
@@ -207,11 +206,12 @@ namespace IO_list_automation_new.DB
             return dataGridView1;
         }
 
-        public DBResultForm(string name, bool editable)
+        public DBResultForm(string name, bool editable, bool moduleBased)
         {
             InitializeComponent();
             this.Text = name;
             Editable = editable;
+            ModuleBased = moduleBased;
 
             if (!editable)
                 tableLayoutPanel1.ColumnStyles[1].Width = 0;
@@ -248,23 +248,24 @@ namespace IO_list_automation_new.DB
 
                     //decode current line
                     _instance.SetValue(_line);
-                    List<string> _decodedline = _instance.DecodeLine(0,null, null, true);
+                    List<string> _decodedLine = _instance.DecodeLine(0, null, null, null, true);
 
-                    string[] _row = new string[_decodedline.Count];
-                    for (int j = 0; j < _decodedline.Count; j++)
-                        _row[j] = _decodedline[j];
+                    string[] _row = new string[_decodedLine.Count];
+                    for (int j = 0; j < _decodedLine.Count; j++)
+                        _row[j] = _decodedLine[j];
 
                     //add result columns if needed
-                    if (ResultDataGridView.ColumnCount < _decodedline.Count)
+                    if (ResultDataGridView.ColumnCount < _decodedLine.Count)
                     {
-                        for (int j = ResultDataGridView.ColumnCount; j < _decodedline.Count; j++)
+                        for (int j = ResultDataGridView.ColumnCount; j < _decodedLine.Count; j++)
                         {
-                            DataGridViewColumn _columnGridView = new DataGridViewColumn();
-                            _columnGridView.CellTemplate = _cell;
-                            _columnGridView.SortMode = DataGridViewColumnSortMode.NotSortable;
-                            _columnGridView.Name = j.ToString();
-                            _columnGridView.HeaderText = j.ToString();
-
+                            DataGridViewColumn _columnGridView = new DataGridViewColumn()
+                            {
+                                CellTemplate = _cell,
+                                SortMode = DataGridViewColumnSortMode.NotSortable,
+                                Name = j.ToString(),
+                                HeaderText = j.ToString(),
+                            };
                             ResultDataGridView.Columns.Insert(j, _columnGridView);
                         }
                     }

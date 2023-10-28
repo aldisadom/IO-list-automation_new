@@ -1,24 +1,20 @@
 ﻿using IO_list_automation_new.Properties;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace IO_list_automation_new
 {
     internal class ProgressIndication
     {
-        private ProgressBar Bar { get; set; }
+        private ProgressBar Bar { get; }
 
-        private Label BarLabel { get; set; }
+        private Label BarLabel { get; }
 
         private int PreviousValue;
 
         private int Deadband;
 
-        private int SuppressLevel { get { return (int)Bar.Tag; } set { Bar.Tag = value; } }
+        private int SuppressLevel
+        { get { return (int)Bar.Tag; } set { Bar.Tag = value; } }
 
         public ProgressIndication(ProgressBar bar, Label barLabel)
         {

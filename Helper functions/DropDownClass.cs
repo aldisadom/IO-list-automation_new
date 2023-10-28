@@ -1,18 +1,24 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using static System.Windows.Forms.AxHost;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.Menu;
 
 namespace IO_list_automation_new.General
 {
-    enum DropDownElementType
+    internal enum ComboBoxType
+    {
+        Main,
+        MainNoEmpty,
+        If,
+        IfStatement,
+        Data,
+        Object,
+        Module,
+        Text,
+        TagType,
+        Number,
+    }
+
+    internal enum DropDownElementType
     {
         Mod,
         Keyword,
@@ -57,36 +63,54 @@ namespace IO_list_automation_new.General
                 return (ComboBoxTag)Element.Tag;
             }
         }
+
         public string Name
         {
             get { return Element.Name; }
         }
+
         public bool Visible
         {
             set { Element.Visible = value; }
-            get {return Element.Visible;}
+            get { return Element.Visible; }
         }
+
         public int SelectedIndex
         {
             set { Element.SelectedIndex = value; }
             get { return Element.SelectedIndex; }
         }
+
         public Point Location
         {
             set { Element.Location = value; }
             get { return Element.Location; }
-        }        
+        }
 
-        public EventHandler OpenEvent {set { Element.DropDown += value; } }
-        public KeyPressEventHandler KeyPressEvent { set { Element.KeyPress += value; } }
-        public EventHandler IndexChangedEvent { set { Element.SelectedIndexChanged += value; } }
-        public EventHandler OpenEventRemove { set { Element.DropDown -= value; } }
-        public KeyPressEventHandler KeyPressEventRemove { set { Element.KeyPress -= value; } }
-        public EventHandler IndexChangedEventRemove { set { Element.SelectedIndexChanged -= value; } }
+        public EventHandler OpenEvent
+        { set { Element.DropDown += value; } }
+
+        public KeyPressEventHandler KeyPressEvent
+        { set { Element.KeyPress += value; } }
+
+        public EventHandler IndexChangedEvent
+        { set { Element.SelectedIndexChanged += value; } }
+
+        public EventHandler OpenEventRemove
+        { set { Element.DropDown -= value; } }
+
+        public KeyPressEventHandler KeyPressEventRemove
+        { set { Element.KeyPress -= value; } }
+
+        public EventHandler IndexChangedEventRemove
+        { set { Element.SelectedIndexChanged -= value; } }
 
         private GeneralColumnName ColumnNames = new GeneralColumnName();
 
-        public System.Windows.Forms.ComboBox Element {get;private set; }
+        public System.Windows.Forms.ComboBox Element { get; }
+
+        public bool ChangeLayout
+        { get { return Tag.Type != ComboBoxType.Text && Tag.Type != ComboBoxType.Data && Tag.Type != ComboBoxType.Object && Tag.Type != ComboBoxType.Module; } }
 
         public DropDownClass(System.Windows.Forms.ComboBox element)
         {
@@ -95,11 +119,13 @@ namespace IO_list_automation_new.General
 
         public DropDownClass(string name)
         {
-            Element = new System.Windows.Forms.ComboBox();
-            Element.FormattingEnabled = true;
-            Element.Size = new System.Drawing.Size(120, 21);
-            Element.Location = new System.Drawing.Point(20, 20);
-            Element.Name = name;
+            Element = new System.Windows.Forms.ComboBox()
+            {
+                FormattingEnabled = true,
+                Size = new System.Drawing.Size(120, 21),
+                Location = new System.Drawing.Point(20, 20),
+                Name = name,
+            };
         }
 
         /// <summary>
@@ -112,7 +138,7 @@ namespace IO_list_automation_new.General
 
         public void Editable(bool editable)
         {
-            if(editable)
+            if (editable)
             {
                 Element.DropDownStyle = ComboBoxStyle.DropDown;
             }
@@ -124,7 +150,7 @@ namespace IO_list_automation_new.General
 
         public void SetTag(ComboBoxType type, string previousValue)
         {
-            Element.Tag = new ComboBoxTag(type,previousValue);
+            Element.Tag = new ComboBoxTag(type, previousValue);
         }
 
         /// <summary>
@@ -140,7 +166,7 @@ namespace IO_list_automation_new.General
         /// Get selected item Name
         /// </summary>
         /// <returns>Name of selected element</returns>
-        public string SelectedName ()
+        public string SelectedName()
         {
             var _item = Element.SelectedItem;
             if (_item != null)
@@ -183,14 +209,14 @@ namespace IO_list_automation_new.General
         /// <param name="text">name of item</param>
         public void AddItemText(string text)
         {
-            DropDownElement _element = new DropDownElement(string.Empty, text,text);
+            DropDownElement _element = new DropDownElement(string.Empty, text, text);
             Element.Items.Add(_element);
         }
 
         /// <summary>
         /// Add dropdown element from all available keywords
         /// </summary>
-        /// <param name="mod">Name modificator</param>
+        /// <param name="mod">Name modification</param>
         /// <param name="keyword">keyword of item</param>
         public void AddItemFull(string mod, string keyword)
         {
@@ -202,7 +228,7 @@ namespace IO_list_automation_new.General
         /// <summary>
         /// Add dropdown elements from column
         /// </summary>
-        /// <param name="mod">Name modificator</param>
+        /// <param name="mod">Name modification</param>
         /// <param name="keyword">keyword of item</param>
         public void AddItemColumn(string mod, string keyword)
         {
@@ -212,9 +238,9 @@ namespace IO_list_automation_new.General
         }
 
         /// <summary>
-        /// Check if element is visible and slectedIndex is correct
+        /// Check if element is visible and selectedIndex is correct
         /// </summary>
-        /// <returns>Visible and value sellected</returns>
+        /// <returns>Visible and value selected</returns>
         public bool ValidCheck()
         {
             return Element.Visible && Element.SelectedIndex >= 0;

@@ -1,13 +1,5 @@
 ﻿using IO_list_automation_new.Properties;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace IO_list_automation_new.Forms
@@ -61,6 +53,7 @@ namespace IO_list_automation_new.Forms
 
             SettingsData.Default.Save();
         }
+
         /// <summary>
         /// Update input data and combine based on form data
         /// </summary>
@@ -97,36 +90,39 @@ namespace IO_list_automation_new.Forms
         }
 
         /// <summary>
-        /// Kombines KKS all 4 parts (selectable) and add additional text
+        /// Combines KKS all 4 parts (selectable) and add additional text
         /// </summary>
         private string Combine()
         {
             string _returnValue = string.Empty;
+            string _KKSPlant = KKSPlant;
+            string _KKSLocation = KKSLocation;
+            string _KKSDevice = KKSDevice;
+            string _KKSFunction = KKSFunction;
 
             if (!KKSPartCheck1.Checked)
-                KKSPlant = string.Empty;
+                _KKSPlant = string.Empty;
             if (!KKSPartCheck2.Checked)
-                KKSLocation = string.Empty;
+                _KKSLocation = string.Empty;
             if (!KKSPartCheck3.Checked)
-                KKSDevice = string.Empty;
+                _KKSDevice = string.Empty;
             if (!KKSPartCheck4.Checked)
-                KKSFunction = string.Empty;
-
+                _KKSFunction = string.Empty;
 
             _returnValue += KKSBox01.Text;
-            _returnValue += KKSPlant;
-            if (KKSPlant.Length != 0 && (KKSLocation.Length != 0 || KKSDevice.Length != 0 || KKSFunction.Length != 0))
+            _returnValue += _KKSPlant;
+            if (_KKSPlant.Length != 0 && (_KKSLocation.Length != 0 || _KKSDevice.Length != 0 || _KKSFunction.Length != 0))
                 _returnValue += KKSBox12.Text;
 
-            _returnValue += KKSLocation;
-            if (KKSLocation.Length != 0 && ( KKSDevice.Length != 0 || KKSFunction.Length != 0))
+            _returnValue += _KKSLocation;
+            if (_KKSLocation.Length != 0 && (_KKSDevice.Length != 0 || _KKSFunction.Length != 0))
                 _returnValue += KKSBox23.Text;
 
-            _returnValue += KKSDevice;
-            if (KKSDevice.Length != 0 && (KKSFunction.Length != 0))
+            _returnValue += _KKSDevice;
+            if (_KKSDevice.Length != 0 && (_KKSFunction.Length != 0))
                 _returnValue += KKSBox34.Text;
 
-            _returnValue += KKSFunction;
+            _returnValue += _KKSFunction;
             _returnValue += KKSBox45.Text;
 
             KKSOut.Text = _returnValue;

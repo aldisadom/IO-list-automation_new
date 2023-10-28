@@ -151,6 +151,15 @@ namespace IO_list_automation_new.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Convert list to data.
+        /// </summary>
+        internal static string ConvertListToData {
+            get {
+                return ResourceManager.GetString("ConvertListToData", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to CPU.
         /// </summary>
         internal static string CPU {
@@ -250,7 +259,7 @@ namespace IO_list_automation_new.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Deleteme.
+        ///   Looks up a localized string similar to Delete Me.
         /// </summary>
         internal static string DeleteMe {
             get {
@@ -367,24 +376,6 @@ namespace IO_list_automation_new.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Instances edit generating.
-        /// </summary>
-        internal static string InstancesEditGenerate {
-            get {
-                return ResourceManager.GetString("InstancesEditGenerate", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Generate device instances.
-        /// </summary>
-        internal static string InstancesGenerate {
-            get {
-                return ResourceManager.GetString("InstancesGenerate", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to KKS from 4 parts are combined.
         /// </summary>
         internal static string KKSCombine {
@@ -430,11 +421,11 @@ namespace IO_list_automation_new.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Multiplyer.
+        ///   Looks up a localized string similar to Multiplier.
         /// </summary>
-        internal static string Multiplyer {
+        internal static string Multiplier {
             get {
-                return ResourceManager.GetString("Multiplyer", resourceCulture);
+                return ResourceManager.GetString("Multiplier", resourceCulture);
             }
         }
         
