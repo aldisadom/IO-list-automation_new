@@ -77,20 +77,20 @@ namespace IO_list_automation_new.Forms
         {
             System.Windows.Forms.ComboBox comboBox = (System.Windows.Forms.ComboBox)sender;
 
-            if (comboBox.SelectedIndex >= 0 && comboBox.Visible)
-            {
-                string _columnName = comboBox.SelectedItem.ToString();
+            if (comboBox.SelectedIndex < 0 || !comboBox.Visible)
+                return;
 
-                if (_columnName == "---")
-                    InputDataGridView.Columns[ColumnIndex].HeaderText = ("Col " + ColumnIndex.ToString());
-                else
-                    InputDataGridView.Columns[ColumnIndex].HeaderText = _columnName;
+            string _columnName = comboBox.SelectedItem.ToString();
 
-                GetColumns();
-                //after hide comboBox
-                comboBoxColumn.Visible = false;
-                comboBoxColumn.SelectedIndex = -1;
-            }
+            if (_columnName == "---")
+                InputDataGridView.Columns[ColumnIndex].HeaderText = ("Col " + ColumnIndex.ToString());
+            else
+                InputDataGridView.Columns[ColumnIndex].HeaderText = _columnName;
+
+            GetColumns();
+            //after hide comboBox
+            comboBoxColumn.Visible = false;
+            comboBoxColumn.SelectedIndex = -1;
         }
 
         private List<string> GetAvailableColumns()
@@ -270,12 +270,12 @@ namespace IO_list_automation_new.Forms
                 InputDataGridView.Columns[i].HeaderText = "Col " + i.ToString();
                 foreach (GeneralColumn _column in ExcelColumns)
                 {
-                    if (_column.Number == i)
-                    {
-                        InputDataGridView.Columns[i].Name = _column.Keyword;
-                        InputDataGridView.Columns[i].HeaderText = _column.GetColumnName();
-                        break;
-                    }
+                    if (_column.Number != i)
+                        continue;
+
+                    InputDataGridView.Columns[i].Name = _column.Keyword;
+                    InputDataGridView.Columns[i].HeaderText = _column.GetColumnName();
+                    break;
                 }
             }
         }

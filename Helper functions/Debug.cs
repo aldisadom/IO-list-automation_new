@@ -88,34 +88,34 @@ namespace IO_list_automation_new
         /// <param name="messageType">debug message type</param>
         public void ToFile(string message, DebugLevels messageLevel, DebugMessageType messageType)
         {
-            //check if current debug level is
-            if (Settings.Default.DebugLevel >= (uint)messageLevel)
+            //check if current debug level is as message level
+            if (Settings.Default.DebugLevel < (uint)messageLevel)
+                return;
+
+            string _messageText = FormatTime() + " - ";
+
+            switch (messageType)
             {
-                string _messageText = FormatTime() + " - ";
+                case DebugMessageType.Info:
+                    break;
 
-                switch (messageType)
-                {
-                    case DebugMessageType.Info:
-                        break;
+                case DebugMessageType.Warning:
+                    _messageText += Resources.DebugWarning;
+                    _messageText += ": ";
+                    break;
 
-                    case DebugMessageType.Warning:
-                        _messageText += Resources.DebugWarning;
-                        _messageText += ": ";
-                        break;
+                case DebugMessageType.Alarm:
+                    _messageText += Resources.DebugAlarm;
+                    _messageText += ": ";
+                    break;
 
-                    case DebugMessageType.Alarm:
-                        _messageText += Resources.DebugAlarm;
-                        _messageText += ": ";
-                        break;
-
-                    case DebugMessageType.Critical:
-                        _messageText += Resources.DebugCritical;
-                        _messageText += ": ";
-                        break;
-                }
-                _messageText += message;
-                WriteToFile(_messageText);
+                case DebugMessageType.Critical:
+                    _messageText += Resources.DebugCritical;
+                    _messageText += ": ";
+                    break;
             }
+            _messageText += message;
+            WriteToFile(_messageText);
         }
 
         /// <summary>
@@ -127,39 +127,38 @@ namespace IO_list_automation_new
         public void ToPopUp(string message, DebugLevels messageLevel, DebugMessageType messageType)
         {
             //check if current debug level is
-            if (Settings.Default.DebugLevel >= (uint)messageLevel)
+            if (Settings.Default.DebugLevel < (uint)messageLevel)
+                return;
+
+            string _messageText = FormatTime() + " - ";
+            MessageBoxIcon _icon = MessageBoxIcon.Information;
+
+            switch (messageType)
             {
-                string _messageText = FormatTime() + " - ";
-                MessageBoxIcon _icon = MessageBoxIcon.Information;
+                case DebugMessageType.Info:
+                    break;
 
-                switch (messageType)
-                {
-                    case DebugMessageType.Info:
-                        break;
+                case DebugMessageType.Warning:
+                    _icon = MessageBoxIcon.Information;
+                    _messageText += Resources.DebugWarning;
+                    _messageText += ": ";
+                    break;
 
-                    case DebugMessageType.Warning:
-                        _icon = MessageBoxIcon.Information;
-                        _messageText += Resources.DebugWarning;
-                        _messageText += ": ";
-                        break;
+                case DebugMessageType.Alarm:
+                    _icon = MessageBoxIcon.Warning;
+                    _messageText += Resources.DebugAlarm;
+                    _messageText += ": ";
+                    break;
 
-                    case DebugMessageType.Alarm:
-                        _icon = MessageBoxIcon.Warning;
-                        _messageText += Resources.DebugAlarm;
-                        _messageText += ": ";
-                        break;
-
-                    case DebugMessageType.Critical:
-                        _icon = MessageBoxIcon.Error;
-                        _messageText += Resources.DebugCritical;
-                        _messageText += ": ";
-                        break;
-                }
-
-                _messageText += message;
-                WriteToFile(_messageText);
-                PopUp(message, _icon);
+                case DebugMessageType.Critical:
+                    _icon = MessageBoxIcon.Error;
+                    _messageText += Resources.DebugCritical;
+                    _messageText += ": ";
+                    break;
             }
+            _messageText += message;
+            WriteToFile(_messageText);
+            PopUp(message, _icon);
         }
 
         /// <summary>

@@ -398,62 +398,58 @@ namespace IO_list_automation_new
         /// </summary>
         private string FindKKSInText(string text)
         {
-            string _KKS = string.Empty;
+            if (string.IsNullOrEmpty(text))
+                return string.Empty;
 
-            if (!string.IsNullOrEmpty(text))
+            int _indexLetter = 0;
+            int _countLetter;
+            int _countDigits;
+
+            int _indexSpace1 = -1;
+            int _indexSpace2;
+
+            //repeat not more than 50 times
+            //find letter, then check if letter count is >= 2 and <=5
+            //then check if number count is >=2
+            //assume that from space to end its KKS
+            for (int i = 0; i < 50; i++)
             {
-                int _indexLetter = 0;
-                int _countLetter;
-                int _countDigits;
+                _indexLetter = LetterIndex(text, _indexLetter);
+                _indexSpace2 = text.IndexOf(" ", _indexSpace1 + 1);
 
-                int _indexSpace1 = -1;
-                int _indexSpace2;
-
-                //repeat not more than 50 times
-                //find letter, then check if letter count is >= 2 and <=5
-                //then check if number count is >=2
-                //assume that from space to end its KKS
-                for (int i = 0; i < 50; i++)
+                //KKS indication can be further in word, not first occurrence
+                if (_indexLetter > _indexSpace2)
                 {
-                    _indexLetter = LetterIndex(text, _indexLetter);
-                    _indexSpace2 = text.IndexOf(" ", _indexSpace1 + 1);
+                    _indexSpace1 = text.IndexOf(" ", _indexSpace1 + 1);
+                    _indexLetter = _indexSpace1;
 
-                    //KKS indication can be further in word, not first occurrence
-                    if (_indexLetter > _indexSpace2)
+                    if (_indexSpace1 == -1)
+                        return string.Empty;
+                }
+                else
+                {
+                    //no letter found
+                    if (_indexLetter < 0)
+                        return string.Empty;
+
+                    _countLetter = CountConsecutiveLetters(text, _indexLetter);
+                    if (_countLetter >= 2 && _countLetter <= 5)
                     {
-                        _indexSpace1 = text.IndexOf(" ", _indexSpace1 + 1);
-                        _indexLetter = _indexSpace1;
-
-                        if (_indexSpace1 == -1)
-                            break;
-                    }
-                    else
-                    {
-                        //no letter found
-                        if (_indexLetter < 0)
-                            break;
-
-                        _countLetter = CountConsecutiveLetters(text, _indexLetter);
-                        if (_countLetter >= 2 && _countLetter <= 5)
+                        _countDigits = CountConsecutiveNumbers(text, _indexLetter + _countLetter);
+                        //Probably KKS
+                        if (_countDigits >= 2)
                         {
-                            _countDigits = CountConsecutiveNumbers(text, _indexLetter + _countLetter);
-                            //Probably KKS
-                            if (_countDigits >= 2)
-                            {
-                                if (_indexSpace2 == -1)
-                                    _KKS = text.Substring(_indexSpace1 + 1);
-                                else
-                                    _KKS = text.Substring(_indexSpace1 + 1, _indexSpace2 - _indexSpace1 - 1);
-
-                                break;
-                            }
+                            if (_indexSpace2 == -1)
+                                return text.Substring(_indexSpace1 + 1);
+                            else
+                                return text.Substring(_indexSpace1 + 1, _indexSpace2 - _indexSpace1 - 1);
                         }
-                        // shift
-                        _indexLetter += _countLetter;
                     }
+                    // shift
+                    _indexLetter += _countLetter;
                 }
             }
-            return _KKS;
+            return string.Empty;
         }
 
         /// <summary>
@@ -470,6 +466,9 @@ namespace IO_list_automation_new
         /// </summary>
         public void KKSDecode()
         {
+            if (string.IsNullOrEmpty(KKS))
+                return;
+
             /*
              * X - number or letter
              * A - letter
@@ -486,91 +485,88 @@ namespace IO_list_automation_new
             KKSLocation = string.Empty;
             KKSPlant = string.Empty;
 
-            if (!string.IsNullOrEmpty(_KKS))
+            int _indexLetter = 0;
+            int _countLetter;
+            int _countDigits;
+            string _KKSAfter = string.Empty;
+
+            int _lengthPartKKS;
+
+            //try finding part 1
+            for (int i = 0; i < 50; i++)
             {
-                int _indexLetter = 0;
-                int _countLetter;
-                int _countDigits;
-                string _KKSAfter = string.Empty;
+                _indexLetter = LetterIndex(_KKS, _indexLetter);
+                //no letter found
+                if (_indexLetter < 0)
+                    break;
 
-                int _lengthPartKKS;
-
-                //try finding part 1
-                for (int i = 0; i < 50; i++)
+                _countLetter = CountConsecutiveLetters(_KKS, _indexLetter);
+                if (_countLetter == 3)
                 {
-                    _indexLetter = LetterIndex(_KKS, _indexLetter);
-                    //no letter found
-                    if (_indexLetter < 0)
-                        break;
-
-                    _countLetter = CountConsecutiveLetters(_KKS, _indexLetter);
-                    if (_countLetter == 3)
+                    _countDigits = CountConsecutiveNumbers(_KKS, _indexLetter + _countLetter);
+                    if (_countDigits == 2)
                     {
-                        _countDigits = CountConsecutiveNumbers(_KKS, _indexLetter + _countLetter);
-                        if (_countDigits == 2)
-                        {
-                            _lengthPartKKS = _countLetter + _countDigits;
-                            KKSLocation = _KKS.Substring(_indexLetter, _lengthPartKKS);
+                        _lengthPartKKS = _countLetter + _countDigits;
+                        KKSLocation = _KKS.Substring(_indexLetter, _lengthPartKKS);
 
-                            if (_KKS.Length > (_indexLetter + _lengthPartKKS))
-                                _KKSAfter = _KKS.Substring(_indexLetter + _lengthPartKKS);
+                        if (_KKS.Length > (_indexLetter + _lengthPartKKS))
+                            _KKSAfter = _KKS.Substring(_indexLetter + _lengthPartKKS);
 
-                            //found then break;
-                            break;
-                        }
-                    }
-                    // shift
-                    _indexLetter += _countLetter;
-                }
-                // part 1 not found
-                if (string.IsNullOrEmpty(KKSLocation))
-                    _KKSAfter = _KKS;
-
-                _indexLetter = 0;
-                //try find part 2
-                for (int i = 0; i < 50; i++)
-                {
-                    _indexLetter = LetterIndex(_KKSAfter, _indexLetter);
-
-                    //no letter found
-                    if (_indexLetter < 0)
+                        //found then break;
                         break;
-
-                    _countLetter = CountConsecutiveLetters(_KKSAfter, _indexLetter);
-                    if (_countLetter == 2)
-                    {
-                        _countDigits = CountConsecutiveNumbers(_KKSAfter, _indexLetter + _countLetter);
-                        //in account to design failure
-                        if (_countDigits == 2 || _countDigits == 3)
-                        {
-                            _lengthPartKKS = _countLetter + _countDigits;
-                            KKSDevice = _KKSAfter.Substring(_indexLetter, _lengthPartKKS);
-
-                            //what is left is part 3
-                            if (_KKSAfter.Length > (_indexLetter + _lengthPartKKS))
-                                KKSFunction = _KKSAfter.Substring(_indexLetter + _lengthPartKKS);
-
-                            //found then break;
-                            break;
-                        }
                     }
-                    // shift
-                    _indexLetter += _countLetter;
                 }
+                // shift
+                _indexLetter += _countLetter;
+            }
+            // part 1 not found
+            if (string.IsNullOrEmpty(KKSLocation))
+                _KKSAfter = _KKS;
 
-                _KKS = KKSLocation + KKSDevice + KKSFunction;
+            _indexLetter = 0;
+            //try find part 2
+            for (int i = 0; i < 50; i++)
+            {
+                _indexLetter = LetterIndex(_KKSAfter, _indexLetter);
 
-                //what is left is part 0
-                if (string.IsNullOrEmpty(_KKS))
+                //no letter found
+                if (_indexLetter < 0)
+                    break;
+
+                _countLetter = CountConsecutiveLetters(_KKSAfter, _indexLetter);
+                if (_countLetter == 2)
                 {
-                    KKSPlant = KKS;
+                    _countDigits = CountConsecutiveNumbers(_KKSAfter, _indexLetter + _countLetter);
+                    //in account to design failure
+                    if (_countDigits == 2 || _countDigits == 3)
+                    {
+                        _lengthPartKKS = _countLetter + _countDigits;
+                        KKSDevice = _KKSAfter.Substring(_indexLetter, _lengthPartKKS);
+
+                        //what is left is part 3
+                        if (_KKSAfter.Length > (_indexLetter + _lengthPartKKS))
+                            KKSFunction = _KKSAfter.Substring(_indexLetter + _lengthPartKKS);
+
+                        //found then break;
+                        break;
+                    }
                 }
-                else
-                {
-                    int _index = KKS.IndexOf(_KKS);
-                    if (_index > 0)
-                        KKSPlant = KKS.Substring(0, _index);
-                }
+                // shift
+                _indexLetter += _countLetter;
+            }
+
+            _KKS = KKSLocation + KKSDevice + KKSFunction;
+
+            //what is left is part 0
+            if (string.IsNullOrEmpty(_KKS))
+            {
+                KKSPlant = KKS;
+            }
+            else
+            {
+                int _index = KKS.IndexOf(_KKS);
+                if (_index > 0)
+                    KKSPlant = KKS.Substring(0, _index);
             }
         }
     }

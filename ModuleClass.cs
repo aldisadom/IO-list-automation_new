@@ -155,20 +155,20 @@ namespace IO_list_automation_new
             {
                 DataSignal _dataSignal = data.Signals[_dataNumber];
 
-                if (_dataSignal.ModuleName != string.Empty)
+                if (string.IsNullOrEmpty(_dataSignal.ModuleName))
+                    continue;
+
+                ModuleSignal _objectSignal = new ModuleSignal();
+
+                // go through all column in objects and send data to objects
+                foreach (GeneralColumn _column in Columns)
                 {
-                    ModuleSignal _objectSignal = new ModuleSignal();
-
-                    // go through all column in objects and send data to objects
-                    foreach (GeneralColumn _column in Columns)
-                    {
-                        _keyword = _column.Keyword;
-                        _objectSignal.SetValueFromString(_dataSignal.GetValueString(_keyword, true), _keyword);
-                    }
-
-                    if (_objectSignal.ValidateSignal())
-                        Signals.Add(_objectSignal);
+                    _keyword = _column.Keyword;
+                    _objectSignal.SetValueFromString(_dataSignal.GetValueString(_keyword, true), _keyword);
                 }
+
+                if (_objectSignal.ValidateSignal())
+                    Signals.Add(_objectSignal);
 
                 Progress.UpdateProgressBar(_dataNumber);
             }

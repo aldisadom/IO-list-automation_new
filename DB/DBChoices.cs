@@ -26,68 +26,81 @@ namespace IO_list_automation_new.DB
 
         public DBChoices()
         {
-            ChoicesMainObjects = new List<string>();
-            ChoicesMainObjectsNoEmpty = new List<string>();
-            ChoicesIfObjects = new List<string>();
-
-            ChoicesMainModules = new List<string>();
-            ChoicesMainModulesNoEmpty = new List<string>();
-            ChoicesIfModules = new List<string>();
-
-            ChoicesIfStatement = new List<string>();
-            DataColumns = new List<string>();
-            ObjectColumns = new List<string>();
-            ModuleColumns = new List<string>();
-
             //only for objects
-            ChoicesMainObjects.Add(KeywordDBChoices.None);
-            ChoicesMainObjects.Add(KeywordDBChoices.If);
-            ChoicesMainObjects.Add(KeywordDBChoices.Tab);
-            ChoicesMainObjects.Add(KeywordDBChoices.Text);
-            ChoicesMainObjects.Add(KeywordDBChoices.Index);
-            ChoicesMainObjects.Add(KeywordDBChoices.Object);
-            ChoicesMainObjects.Add(KeywordDBChoices.Data);
-            ChoicesMainObjects.Add(KeywordDBChoices.IO);
-            ChoicesMainObjects.Add(KeywordDBChoices.TagType);
-
+            ChoicesMainObjects = new List<string>()
+            {
+                KeywordDBChoices.None,
+                KeywordDBChoices.If,
+                KeywordDBChoices.Tab,
+                KeywordDBChoices.Text,
+                KeywordDBChoices.Index,
+                KeywordDBChoices.Object,
+                KeywordDBChoices.Data,
+                KeywordDBChoices.IOTag,
+                KeywordDBChoices.IOChannel,
+                KeywordDBChoices.VariableType,
+            };
             ChoicesMainObjectsNoEmpty = GeneralFunctions.ListCopy(ChoicesMainObjects);
             ChoicesMainObjectsNoEmpty.RemoveAt(0);
 
-            ChoicesIfObjects.Add(KeywordDBChoices.Object);
-            ChoicesIfObjects.Add(KeywordDBChoices.Data);
-            ChoicesIfObjects.Add(KeywordDBChoices.IO);
+            ChoicesIfObjects = new List<string>()
+            {
+                KeywordDBChoices.Object,
+                KeywordDBChoices.Data,
+                KeywordDBChoices.IOTag,
+                KeywordDBChoices.IOChannel,
+            };
 
             //only for modules
-            ChoicesMainModules.Add(KeywordDBChoices.None);
-            ChoicesMainModules.Add(KeywordDBChoices.If);
-            ChoicesMainModules.Add(KeywordDBChoices.Tab);
-            ChoicesMainModules.Add(KeywordDBChoices.Text);
-            ChoicesMainModules.Add(KeywordDBChoices.Index);
-            ChoicesMainModules.Add(KeywordDBChoices.Modules);
-            ChoicesMainModules.Add(KeywordDBChoices.Data);
-            ChoicesMainModules.Add(KeywordDBChoices.IO);
-
+            ChoicesMainModules = new List<string>()
+            {
+                KeywordDBChoices.None,
+                KeywordDBChoices.If,
+                KeywordDBChoices.Tab,
+                KeywordDBChoices.Text,
+                KeywordDBChoices.Index,
+                KeywordDBChoices.Modules,
+                KeywordDBChoices.Data,
+                KeywordDBChoices.IOTag,
+                KeywordDBChoices.IOChannel,
+                KeywordDBChoices.VariableType,
+            };
             ChoicesMainModulesNoEmpty = GeneralFunctions.ListCopy(ChoicesMainModules);
             ChoicesMainModulesNoEmpty.RemoveAt(0);
 
-            ChoicesIfModules.Add(KeywordDBChoices.Data);
-            ChoicesIfModules.Add(KeywordDBChoices.Modules);
-            ChoicesIfModules.Add(KeywordDBChoices.IO);
+            ChoicesIfModules = new List<string>()
+            {
+                KeywordDBChoices.Modules,
+                KeywordDBChoices.Data,
+                KeywordDBChoices.IOTag,
+                KeywordDBChoices.IOChannel,
+            };
 
             //for all
-            ChoicesIfStatement.Add(KeywordDBChoices.IsEmpty);
-            ChoicesIfStatement.Add(KeywordDBChoices.IsNotEmpty);
+            ChoicesIfStatement = new List<string>()
+            {
+                KeywordDBChoices.IsEmpty,
+                KeywordDBChoices.IsNotEmpty,
+                KeywordDBChoices.Equal,
+                KeywordDBChoices.nEqual,
+                KeywordDBChoices.GreaterEqual,
+                KeywordDBChoices.Greater,
+                KeywordDBChoices.Less,
+                KeywordDBChoices.LessEqual,
+            };
 
             DataClass Data = new DataClass();
-            ObjectsClass Objects = new ObjectsClass();
-            ModuleClass Modules = new ModuleClass();
-
+            DataColumns = new List<string>();
             foreach (GeneralColumn _column in Data.BaseColumns.Columns)
                 DataColumns.Add(_column.Keyword);
 
+            ObjectsClass Objects = new ObjectsClass();
+            ObjectColumns = new List<string>();
             foreach (GeneralColumn _column in Objects.BaseColumns.Columns)
                 ObjectColumns.Add(_column.Keyword);
 
+            ModuleClass Modules = new ModuleClass();
+            ModuleColumns = new List<string>();
             foreach (GeneralColumn _column in Modules.BaseColumns.Columns)
                 ModuleColumns.Add(_column.Keyword);
         }

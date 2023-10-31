@@ -93,6 +93,7 @@
   <ItemGroup>
     <Compile Include="DB\DBChoices.cs" />
     <Compile Include="DB\DBGeneral.cs" />
+    <Compile Include="DB\DBGeneralSignal.cs" />
     <Compile Include="DB\DBLanguage.cs" />
     <Compile Include="DB\DBCellEdit.cs">
       <SubType>Form</SubType>

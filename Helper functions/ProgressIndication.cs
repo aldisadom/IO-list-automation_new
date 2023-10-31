@@ -27,18 +27,18 @@ namespace IO_list_automation_new
         private void ShowProgressBar(int max)
         {
             SuppressLevel++;
-            if (SuppressLevel <= 1)
-            {
-                BarLabel.Visible = true;
-                Bar.Visible = true;
-                Bar.Value = 0;
-                PreviousValue = 0;
+            if (SuppressLevel > 1)
+                return;
 
-                // progress bar update every 5%
-                Deadband = max / 20;
+            BarLabel.Visible = true;
+            Bar.Visible = true;
+            Bar.Value = 0;
+            PreviousValue = 0;
 
-                Bar.Maximum = max;
-            }
+            // progress bar update every 5%
+            Deadband = max / 20;
+
+            Bar.Maximum = max;
         }
 
         /// <summary>
@@ -58,23 +58,23 @@ namespace IO_list_automation_new
         /// <param name="value">new value of progress bar</param>
         public void UpdateProgressBar(int value)
         {
-            if (SuppressLevel <= 1)
+            if (SuppressLevel > 1)
+                return;
+
+            //value in range of bar element
+            if ((value < 0) || (value > Bar.Maximum))
             {
-                if ((value >= 0) && (value <= Bar.Maximum))
-                {
-                    if (value - PreviousValue >= Deadband)
-                    {
-                        PreviousValue = value;
-                        Bar.Value = value;
-                        Bar.Update();
-                    }
-                }
-                else
-                {
-                    Debug _debug = new Debug();
-                    _debug.ToFile(Resources.ProgressBarOutRange + " " + value.ToString() + " Max: " + Bar.Maximum, DebugLevels.None, DebugMessageType.Warning);
-                }
+                Debug _debug = new Debug();
+                _debug.ToFile(Resources.ProgressBarOutRange + " " + value.ToString() + " Max: " + Bar.Maximum, DebugLevels.None, DebugMessageType.Warning);
             }
+
+            //value change is greater than deadband
+            if (value - PreviousValue < Deadband)
+                return;
+
+            PreviousValue = value;
+            Bar.Value = value;
+            Bar.Update();
         }
 
         /// <summary>

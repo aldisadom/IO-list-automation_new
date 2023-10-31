@@ -123,8 +123,8 @@
   <data name="If" xml:space="preserve">
     <value>IF</value>
   </data>
-  <data name="IO" xml:space="preserve">
-    <value>IO</value>
+  <data name="IOTag" xml:space="preserve">
+    <value>IO Tag</value>
   </data>
   <data name="IsEmpty" xml:space="preserve">
     <value>Is empty</value>
@@ -144,10 +144,31 @@
   <data name="Index" xml:space="preserve">
     <value>Index</value>
   </data>
-  <data name="TagType" xml:space="preserve">
-    <value>Tag type</value>
+  <data name="VariableType" xml:space="preserve">
+    <value>Variable type</value>
   </data>
   <data name="Modules" xml:space="preserve">
     <value>Modules</value>
+  </data>
+  <data name="IOChannel" xml:space="preserve">
+    <value>IO channel</value>
+  </data>
+  <data name="Equal" xml:space="preserve">
+    <value>=</value>
+  </data>
+  <data name="Greater" xml:space="preserve">
+    <value>&gt;</value>
+  </data>
+  <data name="GreaterEqual" xml:space="preserve">
+    <value>&gt;=</value>
+  </data>
+  <data name="Less" xml:space="preserve">
+    <value>&lt;</value>
+  </data>
+  <data name="LessEqual" xml:space="preserve">
+    <value>&lt;=</value>
+  </data>
+  <data name="nEqual" xml:space="preserve">
+    <value>!=</value>
   </data>
 </root>

@@ -70,6 +70,33 @@ namespace IO_list_automation_new.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to =.
+        /// </summary>
+        internal static string Equal {
+            get {
+                return ResourceManager.GetString("Equal", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &gt;.
+        /// </summary>
+        internal static string Greater {
+            get {
+                return ResourceManager.GetString("Greater", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &gt;=.
+        /// </summary>
+        internal static string GreaterEqual {
+            get {
+                return ResourceManager.GetString("GreaterEqual", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to IF.
         /// </summary>
         internal static string If {
@@ -88,11 +115,20 @@ namespace IO_list_automation_new.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to IO.
+        ///   Looks up a localized string similar to IO channel.
         /// </summary>
-        internal static string IO {
+        internal static string IOChannel {
             get {
-                return ResourceManager.GetString("IO", resourceCulture);
+                return ResourceManager.GetString("IOChannel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to IO Tag.
+        /// </summary>
+        internal static string IOTag {
+            get {
+                return ResourceManager.GetString("IOTag", resourceCulture);
             }
         }
         
@@ -115,11 +151,38 @@ namespace IO_list_automation_new.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to &lt;.
+        /// </summary>
+        internal static string Less {
+            get {
+                return ResourceManager.GetString("Less", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &lt;=.
+        /// </summary>
+        internal static string LessEqual {
+            get {
+                return ResourceManager.GetString("LessEqual", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Modules.
         /// </summary>
         internal static string Modules {
             get {
                 return ResourceManager.GetString("Modules", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to !=.
+        /// </summary>
+        internal static string nEqual {
+            get {
+                return ResourceManager.GetString("nEqual", resourceCulture);
             }
         }
         
@@ -142,20 +205,20 @@ namespace IO_list_automation_new.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Tag type.
-        /// </summary>
-        internal static string TagType {
-            get {
-                return ResourceManager.GetString("TagType", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Text.
         /// </summary>
         internal static string Text {
             get {
                 return ResourceManager.GetString("Text", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Variable type.
+        /// </summary>
+        internal static string VariableType {
+            get {
+                return ResourceManager.GetString("VariableType", resourceCulture);
             }
         }
     }

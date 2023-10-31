@@ -160,41 +160,41 @@ namespace IO_list_automation_new
         {
             DropDownClass comboBox = new DropDownClass((System.Windows.Forms.ComboBox)sender);
 
-            if (comboBox.ValidCheck())
+            if (!comboBox.ValidCheck())
+                return;
+
+            string _keyword = comboBox.SelectedKeyword();
+            DataGridView _grid = (DataGridView)tabControl1.SelectedTab.Controls[0];
+
+            //if add column
+            if (comboBox.SelectedMod().Contains(Resources.Add))
             {
-                string _keyword = comboBox.SelectedKeyword();
-                DataGridView _grid = (DataGridView)tabControl1.SelectedTab.Controls[0];
+                DataGridViewColumn _columnGridView = new DataGridViewColumn();
 
-                //if add column
-                if (comboBox.SelectedMod().Contains(Resources.Add))
+                DataGridViewTextBoxCell _cell = new DataGridViewTextBoxCell();
+                _columnGridView.CellTemplate = _cell;
+                _columnGridView.Name = _keyword;
+                _columnGridView.HeaderText = comboBox.SelectedName();
+                _columnGridView.SortMode = DataGridViewColumnSortMode.Automatic;
+                _grid.Columns.Insert(_grid.ColumnCount, _columnGridView);
+            }
+            //remove column
+            else
+            {
+                //get column name and number of column to remove
+                for (int _columnNumber = 0; _columnNumber < _grid.ColumnCount; _columnNumber++)
                 {
-                    DataGridViewColumn _columnGridView = new DataGridViewColumn();
-
-                    DataGridViewTextBoxCell _cell = new DataGridViewTextBoxCell();
-                    _columnGridView.CellTemplate = _cell;
-                    _columnGridView.Name = _keyword;
-                    _columnGridView.HeaderText = comboBox.SelectedName();
-                    _columnGridView.SortMode = DataGridViewColumnSortMode.Automatic;
-                    _grid.Columns.Insert(_grid.ColumnCount, _columnGridView);
-                }
-                //remove column
-                else
-                {
-                    //get column name and number of column to remove
-                    for (int _columnNumber = 0; _columnNumber < _grid.ColumnCount; _columnNumber++)
+                    if (_grid.Columns[_columnNumber].Name == _keyword)
                     {
-                        if (_grid.Columns[_columnNumber].Name == _keyword)
-                        {
-                            _grid.Columns.Remove(_grid.Columns[_columnNumber]);
-                            break;
-                        }
+                        _grid.Columns.Remove(_grid.Columns[_columnNumber]);
+                        break;
                     }
                 }
-
-                //after add/remove hide combo box
-                comboBox.Visible = false;
-                comboBox.SelectedIndex = -1;
             }
+
+            //after add/remove hide combo box
+            comboBox.Visible = false;
+            comboBox.SelectedIndex = -1;
         }
 
         /// <summary>
@@ -383,6 +383,8 @@ namespace IO_list_automation_new
                 }
             }
             Progress.HideProgressBar();
+
+            this.Update();
         }
 
         /// <summary>
@@ -409,10 +411,10 @@ namespace IO_list_automation_new
             {
                 DataGridView _grid = (DataGridView)((TabControl)sender).SelectedTab.Controls[0];
 
-                if (_grid.SelectedCells.Count > 0)
-                    Global_paste(_grid);
+                if (_grid.SelectedCells.Count == 0)
+                    return;
 
-                this.Update();
+                Global_paste(_grid);
             }
         }
 
@@ -549,15 +551,15 @@ namespace IO_list_automation_new
         {
             ToolStripMenuItem _item = (ToolStripMenuItem)sender;
 
-            if (Settings.Default.ApplicationLanguage != _item.Text.ToLower())
-            {
-                Settings.Default.ApplicationLanguage = _item.Text.ToLower();
-                Settings.Default.Save();
-                Thread.CurrentThread.CurrentUICulture = CultureInfo.GetCultureInfo(Settings.Default.ApplicationLanguage);
+            if (Settings.Default.ApplicationLanguage == _item.Text.ToLower())
+                return;
 
-                UpdateUIElement();
-                this.Update();
-            }
+            Settings.Default.ApplicationLanguage = _item.Text.ToLower();
+            Settings.Default.Save();
+            Thread.CurrentThread.CurrentUICulture = CultureInfo.GetCultureInfo(Settings.Default.ApplicationLanguage);
+
+            UpdateUIElement();
+            this.Update();
         }
 
         private void FileHelpMenuItem_Click(object sender, EventArgs e)
@@ -672,15 +674,19 @@ namespace IO_list_automation_new
 
         private void ProjectSCADAMenuItem_DropDownItemClicked(object sender, ToolStripItemClickedEventArgs e)
         {
-            if (e.ClickedItem.Text == null) { }
-            else if (e.ClickedItem.Text == Resources.Add)
+            if (e.ClickedItem.Text == null)
+                return;
+
+            if (e.ClickedItem.Text == Resources.Add)
             {
                 DBGeneral _DB = new DBGeneral(Progress, Resources.SCADA, nameof(FileExtensions.decScadaDB), DBTypeLevel.SCADA, false);
                 NewName _newName = new NewName(Resources.CreateNew + ": " + Resources.SCADA);
 
                 _newName.ShowDialog();
-                if (!string.IsNullOrEmpty(_newName.Output))
-                    _DB.DBFolderCreate(_newName.Output);
+                if (string.IsNullOrEmpty(_newName.Output))
+                    return;
+
+                _DB.DBFolderCreate(_newName.Output);
             }
             else
             {
@@ -699,19 +705,21 @@ namespace IO_list_automation_new
 
         private void ProjectLanguageMenuItem_DropDownItemClicked(object sender, ToolStripItemClickedEventArgs e)
         {
-            if (e.ClickedItem.Text == null) { }
-            else if (e.ClickedItem.Text == Resources.Add)
+            if (e.ClickedItem.Text == null)
+                return;
+
+            if (e.ClickedItem.Text == Resources.Add)
             {
                 DBGeneral _DB = new DBGeneral(Progress, ResourcesUI.IO + " " + Resources.Language, nameof(FileExtensions.langFuncDB), DBTypeLevel.Base, false);
                 NewName _newName = new NewName(Resources.CreateNew + ": " + ResourcesUI.IO + " " + Resources.Language);
 
                 _newName.ShowDialog();
-                if (!string.IsNullOrEmpty(_newName.Output))
-                {
-                    DBGeneral _DBType = new DBGeneral(Progress, ResourcesUI.IO + " " + Resources.Language, nameof(FileExtensions.langTypeDB), DBTypeLevel.Base, false);
-                    _DB.CreateDBFile(_newName.Output);
-                    _DBType.CreateDBFile(_newName.Output);
-                }
+                if (string.IsNullOrEmpty(_newName.Output))
+                    return;
+
+                DBGeneral _DBType = new DBGeneral(Progress, ResourcesUI.IO + " " + Resources.Language, nameof(FileExtensions.langTypeDB), DBTypeLevel.Base, false);
+                _DB.CreateDBFile(_newName.Output);
+                _DBType.CreateDBFile(_newName.Output);
             }
             else
             {
@@ -798,14 +806,12 @@ namespace IO_list_automation_new
             DataClass data = new DataClass(Progress, DataGridView);
             ObjectsClass objects = new ObjectsClass(Progress, ObjectsGridView);
 
-            if (data.GetDataFromGrid())
+            if (data.GetDataFromGrid() && objects.GetDataFromGrid())
             {
-                if (objects.GetDataFromGrid())
-                {
-                    objects.SendToData(data);
-                    data.PutDataToGrid();
-                }
+                objects.SendToData(data);
+                data.PutDataToGrid();
             }
+
             ButtonFunctionFinished(sender);
         }
 
@@ -858,7 +864,7 @@ namespace IO_list_automation_new
         {
             ButtonPressed(sender);
 
-            DBGeneral _DB = new DBGeneral(Progress, ResourcesUI.Declare, nameof(FileExtensions.decDB), DBTypeLevel.CPU,false);
+            DBGeneral _DB = new DBGeneral(Progress, ResourcesUI.Declare, nameof(FileExtensions.decDB), DBTypeLevel.CPU, false);
             _DB.EditAll();
 
             ButtonFunctionFinished(sender);
@@ -886,7 +892,7 @@ namespace IO_list_automation_new
         {
             ButtonPressed(sender);
 
-            DBGeneral _DB = new DBGeneral(Progress, ResourcesUI.Instance, nameof(FileExtensions.instDB), DBTypeLevel.CPU,false);
+            DBGeneral _DB = new DBGeneral(Progress, ResourcesUI.Instance, nameof(FileExtensions.instDB), DBTypeLevel.CPU, false);
             _DB.EditAll();
 
             ButtonFunctionFinished(sender);

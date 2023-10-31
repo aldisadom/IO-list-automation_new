@@ -58,10 +58,7 @@ namespace IO_list_automation_new.General
     {
         public ComboBoxTag Tag
         {
-            get
-            {
-                return (ComboBoxTag)Element.Tag;
-            }
+            get { return (ComboBoxTag)Element.Tag; }
         }
 
         public string Name
@@ -138,14 +135,7 @@ namespace IO_list_automation_new.General
 
         public void Editable(bool editable)
         {
-            if (editable)
-            {
-                Element.DropDownStyle = ComboBoxStyle.DropDown;
-            }
-            else
-            {
-                Element.DropDownStyle = ComboBoxStyle.DropDownList;
-            }
+            Element.DropDownStyle = editable ? ComboBoxStyle.DropDown : ComboBoxStyle.DropDownList;
         }
 
         public void SetTag(ComboBoxType type, string previousValue)

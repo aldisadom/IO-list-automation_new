@@ -228,36 +228,6 @@
   <data name="Tag" xml:space="preserve">
     <value>Tag name</value>
   </data>
-  <data name="ChoiceData" xml:space="preserve">
-    <value>Data</value>
-  </data>
-  <data name="ChoiceIf" xml:space="preserve">
-    <value>IF</value>
-  </data>
-  <data name="ChoiceIO" xml:space="preserve">
-    <value>IO</value>
-  </data>
-  <data name="ChoiceIsEmpty" xml:space="preserve">
-    <value>Is empty</value>
-  </data>
-  <data name="ChoiceIsNotEmpty" xml:space="preserve">
-    <value>Is not empty</value>
-  </data>
-  <data name="ChoiceObject" xml:space="preserve">
-    <value>Object</value>
-  </data>
-  <data name="ChoiceTab" xml:space="preserve">
-    <value>TAB</value>
-  </data>
-  <data name="ChoiceText" xml:space="preserve">
-    <value>Text</value>
-  </data>
-  <data name="ChoiceIndex" xml:space="preserve">
-    <value>Index</value>
-  </data>
-  <data name="ChoiceTagType" xml:space="preserve">
-    <value>Tag type</value>
-  </data>
   <data name="ModuleType" xml:space="preserve">
     <value>Module Type</value>
   </data>

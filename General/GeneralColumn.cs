@@ -21,14 +21,13 @@ namespace IO_list_automation_new
         {
             string _returnName = GetChoicesName(keyword, true) ?? GetColumnName(keyword, true);
 
-            if (_returnName == null)
-            {
-                const string text = "GeneralColumn.GetColumnOrChoicesName";
-                Debug _debug = new Debug();
-                _debug.ToFile(text + " " + Resources.ParameterNotFound + ":" + keyword, DebugLevels.None, DebugMessageType.Critical);
-                throw new InvalidProgramException(text + "." + keyword + " is not created for this element");
-            }
-            return _returnName;
+            if (_returnName != null)
+                return _returnName;
+
+            const string text = "GeneralColumn.GetColumnOrChoicesName";
+            Debug _debug = new Debug();
+            _debug.ToFile(text + " " + Resources.ParameterNotFound + ":" + keyword, DebugLevels.None, DebugMessageType.Critical);
+            throw new InvalidProgramException(text + "." + keyword + " is not created for this element");
         }
 
         /// <summary>
@@ -196,20 +195,41 @@ namespace IO_list_automation_new
                 case KeywordDBChoices.Modules:
                     return ResourcesChoices.Modules;
 
-                case KeywordDBChoices.IO:
-                    return ResourcesChoices.IO;
+                case KeywordDBChoices.IOTag:
+                    return ResourcesChoices.IOTag;
 
-                case KeywordDBChoices.TagType:
-                    return ResourcesChoices.TagType;
+                case KeywordDBChoices.IOChannel:
+                    return ResourcesChoices.IOChannel;
 
-                case KeywordDBChoices.IsEmpty:
-                    return ResourcesChoices.IsEmpty;
+                case KeywordDBChoices.VariableType:
+                    return ResourcesChoices.VariableType;
 
                 case KeywordDBChoices.Index:
                     return ResourcesChoices.Index;
 
+                case KeywordDBChoices.IsEmpty:
+                    return ResourcesChoices.IsEmpty;
+
                 case KeywordDBChoices.IsNotEmpty:
                     return ResourcesChoices.IsNotEmpty;
+
+                case KeywordDBChoices.Equal:
+                    return ResourcesChoices.Equal;
+
+                case KeywordDBChoices.nEqual:
+                    return ResourcesChoices.nEqual;
+
+                case KeywordDBChoices.GreaterEqual:
+                    return ResourcesChoices.GreaterEqual;
+
+                case KeywordDBChoices.Greater:
+                    return ResourcesChoices.Greater;
+
+                case KeywordDBChoices.LessEqual:
+                    return ResourcesChoices.LessEqual;
+
+                case KeywordDBChoices.Less:
+                    return ResourcesChoices.Less;
 
                 default:
                     if (suppressError)
