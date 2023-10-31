@@ -30,112 +30,129 @@ namespace IO_list_automation_new.Forms
             string _currentValue = _box.SelectedKeyword();
 
             //ComboBox type is of type that need to change layout
-            if (_box.ChangeLayout)
+            if (!_box.ChangeLayout)
+                return;
+
+            //dropdown value changed
+            if (_box.Tag.PreviousValue == _currentValue)
+                return;
+
+            List<string> _list = SortElements();
+            OutputData.Clear();
+
+            //before element
+            int _index = 0;
+            for (int i = 0; i < _list.Count; i++)
             {
-                //dropdown value changed
-                if (_box.Tag.PreviousValue != _currentValue)
+                if (_list[i] == _box.Name)
                 {
-                    List<string> _list = SortElements();
-                    OutputData.Clear();
-
-                    //before element
-                    int _index = 0;
-                    for (int i = 0; i < _list.Count; i++)
-                    {
-                        if (_list[i] == _box.Name)
-                        {
-                            _index = i;
-                            break;
-                        }
-                        //extracting keyword to list
-                        OutputData.Add(GetDropDownSelectedKeyword(_list[i]));
-                    }
-                    //delete elements
-                    DeleteOldElements(_index, _list, _box.Tag.PreviousValue);
-
-                    //add new
-                    switch (_currentValue)
-                    {
-                        case KeywordDBChoices.If:
-                            //if
-                            OutputData.Add(KeywordDBChoices.If);
-                            //object
-                            OutputData.Add(KeywordDBChoices.Data);
-                            OutputData.Add(Choices.DataColumns[0]);
-                            //statement
-                            OutputData.Add(Choices.ChoicesIfStatement[0]);
-                            //true object
-                            OutputData.Add(KeywordDBChoices.Text);
-                            OutputData.Add("edit");
-                            //false object
-                            OutputData.Add(KeywordDBChoices.Text);
-                            OutputData.Add("edit");
-
-                            break;
-
-                        case KeywordDBChoices.Index:
-                            OutputData.Add(KeywordDBChoices.Index);
-                            //index memory area
-                            OutputData.Add(string.Empty);
-                            //index multiplier
-                            OutputData.Add("1");
-                            //index offset
-                            OutputData.Add("0");
-                            break;
-
-                        case KeywordDBChoices.Tab:
-                            OutputData.Add(KeywordDBChoices.Tab);
-                            break;
-
-                        case KeywordDBChoices.None:
-
-                            break;
-
-                        case KeywordDBChoices.Text:
-                            OutputData.Add(KeywordDBChoices.Text);
-                            OutputData.Add("edit");
-                            break;
-
-                        case KeywordDBChoices.Data:
-                            OutputData.Add(KeywordDBChoices.Data);
-                            OutputData.Add(Choices.DataColumns[0]);
-                            break;
-
-                        case KeywordDBChoices.Object:
-                            OutputData.Add(KeywordDBChoices.Object);
-                            OutputData.Add(Choices.ObjectColumns[0]);
-                            break;
-
-                        case KeywordDBChoices.Modules:
-                            OutputData.Add(KeywordDBChoices.Modules);
-                            OutputData.Add(Choices.ModuleColumns[0]);
-                            break;
-
-                        case KeywordDBChoices.IO:
-                            OutputData.Add(KeywordDBChoices.IO);
-                            OutputData.Add("ON");
-                            break;
-
-                        case KeywordDBChoices.TagType:
-                            OutputData.Add(KeywordDBChoices.TagType);
-                            OutputData.Add("Status");
-                            break;
-
-                        default:
-                            Debug _debug = new Debug();
-                            const string text = "DBCellEdit.ComboBoxValueChangedEvent";
-                            _debug.ToFile(text + " " + Resources.ParameterNotFound + ":" + _currentValue, DebugLevels.None, DebugMessageType.Critical);
-                            throw new InvalidProgramException(text + "." + _currentValue + " is not created for this element");
-                    }
-
-                    //add after
-                    for (int i = _index; i < _list.Count; i++)
-                        OutputData.Add(GetDropDownSelectedKeyword(_list[i]));
-
-                    DeleteAllItem();
-                    DecodeElementsAll(OutputData);
+                    _index = i;
+                    break;
                 }
+                //extracting keyword to list
+                OutputData.Add(GetDropDownSelectedKeyword(_list[i]));
             }
+            //delete elements
+            DeleteOldElements(_index, _list, _box.Tag.PreviousValue);
+
+            //add new
+            switch (_currentValue)
+            {
+                case KeywordDBChoices.If:
+                    //if
+                    OutputData.Add(KeywordDBChoices.If);
+                    //object
+                    OutputData.Add(KeywordDBChoices.Data);
+                    OutputData.Add(Choices.DataColumns[0]);
+                    //statement
+                    OutputData.Add(Choices.ChoicesIfStatement[0]);
+                    //true object
+                    OutputData.Add(KeywordDBChoices.Text);
+                    OutputData.Add("edit");
+                    //false object
+                    OutputData.Add(KeywordDBChoices.Text);
+                    OutputData.Add("edit");
+
+                    break;
+
+                case KeywordDBChoices.Index:
+                    OutputData.Add(KeywordDBChoices.Index);
+                    //index memory area
+                    OutputData.Add(string.Empty);
+                    //index multiplier
+                    OutputData.Add("1");
+                    //index offset
+                    OutputData.Add("0");
+                    break;
+
+                case KeywordDBChoices.Tab:
+                    OutputData.Add(KeywordDBChoices.Tab);
+                    break;
+
+                case KeywordDBChoices.None:
+
+                    break;
+
+                case KeywordDBChoices.Text:
+                    OutputData.Add(KeywordDBChoices.Text);
+                    OutputData.Add("edit");
+                    break;
+
+                case KeywordDBChoices.Data:
+                    OutputData.Add(KeywordDBChoices.Data);
+                    OutputData.Add(Choices.DataColumns[0]);
+                    break;
+
+                case KeywordDBChoices.Object:
+                    OutputData.Add(KeywordDBChoices.Object);
+                    OutputData.Add(Choices.ObjectColumns[0]);
+                    break;
+
+                case KeywordDBChoices.Modules:
+                    OutputData.Add(KeywordDBChoices.Modules);
+                    OutputData.Add(Choices.ModuleColumns[0]);
+                    break;
+
+                case KeywordDBChoices.IOTag:
+                case KeywordDBChoices.IOChannel:
+                    OutputData.Add(_currentValue);
+                    OutputData.Add(ModuleBased ? "0" : "ON");
+                    break;
+
+                case KeywordDBChoices.VariableType:
+                    OutputData.Add(KeywordDBChoices.VariableType);
+                    OutputData.Add("Status");
+                    break;
+
+                case KeywordDBChoices.Equal:
+                case KeywordDBChoices.nEqual:
+                case KeywordDBChoices.GreaterEqual:
+                case KeywordDBChoices.Greater:
+                case KeywordDBChoices.Less:
+                case KeywordDBChoices.LessEqual:
+                    OutputData.Add(_currentValue);
+                    OutputData.Add(KeywordDBChoices.Text);
+                    OutputData.Add("edit");
+                    break;
+
+                case KeywordDBChoices.IsEmpty:
+                case KeywordDBChoices.IsNotEmpty:
+                    OutputData.Add(_currentValue);
+                    break;
+
+                default:
+                    Debug _debug = new Debug();
+                    const string text = "DBCellEdit.ComboBoxValueChangedEvent";
+                    _debug.ToFile(text + " " + Resources.ParameterNotFound + ":" + _currentValue, DebugLevels.None, DebugMessageType.Critical);
+                    throw new InvalidProgramException(text + "." + _currentValue + " is not created for this element");
+            }
+
+            //add after
+            for (int i = _index; i < _list.Count; i++)
+                OutputData.Add(GetDropDownSelectedKeyword(_list[i]));
+
+            DeleteAllItem();
+            DecodeElementsAll(OutputData);
         }
 
         /// <summary>
@@ -246,8 +263,18 @@ namespace IO_list_automation_new.Forms
                     list.RemoveAt(startIndex);
                     //remove variable
                     DeleteOldElements(startIndex, list, GetDropDownSelectedKeyword(list[startIndex]));
-                    //remove statement
-                    list.RemoveAt(startIndex);
+                    //remove statement                    
+                    switch (list[startIndex])
+                    {
+                        case KeywordDBChoices.IsEmpty:
+                        case KeywordDBChoices.IsNotEmpty:
+                            list.RemoveAt(startIndex);
+                            break;
+                        default:
+                            list.RemoveAt(startIndex);
+                            DeleteOldElements(startIndex, list, GetDropDownSelectedKeyword(list[startIndex]));
+                            break;
+                    }
                     //remove true variable
                     DeleteOldElements(startIndex, list, GetDropDownSelectedKeyword(list[startIndex]));
                     //remove false variable
@@ -263,19 +290,32 @@ namespace IO_list_automation_new.Forms
                     break;
 
                 //remove 2 element
-                case KeywordDBChoices.TagType:
+                case KeywordDBChoices.VariableType:
                 case KeywordDBChoices.Text:
                 case KeywordDBChoices.Data:
                 case KeywordDBChoices.Object:
-                case KeywordDBChoices.IO:
+                case KeywordDBChoices.IOTag:
+                case KeywordDBChoices.IOChannel:
                 case KeywordDBChoices.Modules:
                     list.RemoveAt(startIndex);
                     list.RemoveAt(startIndex);
                     break;
 
+                case KeywordDBChoices.Equal:
+                case KeywordDBChoices.nEqual:
+                case KeywordDBChoices.GreaterEqual:
+                case KeywordDBChoices.Greater:
+                case KeywordDBChoices.Less:
+                case KeywordDBChoices.LessEqual:
+                    list.RemoveAt(startIndex);
+                    DeleteOldElements(startIndex, list, GetDropDownSelectedKeyword(list[startIndex]));
+                    break;
+
                 //remove 1 element
                 case KeywordDBChoices.Tab:
                 case KeywordDBChoices.None:
+                case KeywordDBChoices.IsEmpty:
+                case KeywordDBChoices.IsNotEmpty:
                     list.RemoveAt(startIndex);
                     break;
 
@@ -372,32 +412,23 @@ namespace IO_list_automation_new.Forms
             List<string> _choicesMain;
             List<string> _choicesIf;
             ComboBoxType _typeMain;
+            ComboBoxType _typeIO;
             string text;
             Debug _debug = new Debug();
 
             if (emptySelectionAvailable)
             {
-                if (ModuleBased)
-                    _choicesMain = Choices.ChoicesMainModules;
-                else
-                    _choicesMain = Choices.ChoicesMainObjects;
-
+                _choicesMain = ModuleBased ? Choices.ChoicesMainModules : Choices.ChoicesMainObjects;
                 _typeMain = ComboBoxType.Main;
             }
             else
             {
-                if (ModuleBased)
-                    _choicesMain = Choices.ChoicesMainModulesNoEmpty;
-                else
-                    _choicesMain = Choices.ChoicesMainObjectsNoEmpty;
-
+                _choicesMain = ModuleBased ? Choices.ChoicesMainModulesNoEmpty : Choices.ChoicesMainObjectsNoEmpty;
                 _typeMain = ComboBoxType.MainNoEmpty;
             }
 
-            if (ModuleBased)
-                _choicesIf = Choices.ChoicesIfModules;
-            else
-                _choicesIf = Choices.ChoicesIfObjects;
+            _choicesIf = ModuleBased ? Choices.ChoicesIfModules : Choices.ChoicesIfObjects;
+            _typeIO = ModuleBased ? ComboBoxType.Number : ComboBoxType.Text;
 
             switch (inputData[_index])
             {
@@ -434,14 +465,21 @@ namespace IO_list_automation_new.Forms
                     row++;
                     break;
 
-                case KeywordDBChoices.IO:
+                case KeywordDBChoices.IOTag:
                     AddElement(column, row, inputData[_index], labelText, _choicesMain, _typeMain);
                     _index++;
-                    AddElement(column + 1, row, inputData[_index], null, null, ComboBoxType.Text);
+                    AddElement(column + 1, row, inputData[_index], null, null, _typeIO);
                     row++;
                     break;
 
-                case KeywordDBChoices.TagType:
+                case KeywordDBChoices.IOChannel:
+                    AddElement(column, row, inputData[_index], labelText, _choicesMain, _typeMain);
+                    _index++;
+                    AddElement(column + 1, row, inputData[_index], null, null, _typeIO);
+                    row++;
+                    break;
+
+                case KeywordDBChoices.VariableType:
                     AddElement(column, row, inputData[_index], labelText, _choicesMain, _typeMain);
                     _index++;
                     AddElement(column + 1, row, inputData[_index], null, null, ComboBoxType.Text);
@@ -487,10 +525,16 @@ namespace IO_list_automation_new.Forms
                             AddElement(column + 1, row, inputData[_index], null, Choices.ModuleColumns, ComboBoxType.Module);
                             break;
 
-                        case KeywordDBChoices.IO:
+                        case KeywordDBChoices.IOTag:
                             AddElement(column, row, inputData[_index], null, _choicesIf, ComboBoxType.If);
                             _index++;
-                            AddElement(column + 1, row, inputData[_index], null, null, ComboBoxType.Text);
+                            AddElement(column + 1, row, inputData[_index], null, null, _typeIO);
+                            break;
+
+                        case KeywordDBChoices.IOChannel:
+                            AddElement(column, row, inputData[_index], null, _choicesIf, ComboBoxType.If);
+                            _index++;
+                            AddElement(column + 1, row, inputData[_index], null, null, _typeIO);
                             break;
 
                         default:
@@ -498,11 +542,24 @@ namespace IO_list_automation_new.Forms
                             _debug.ToFile(text + " " + Resources.ParameterNotFound + ":" + inputData[_index], DebugLevels.None, DebugMessageType.Critical);
                             throw new InvalidProgramException(text + "." + inputData[_index] + " is not created for this element");
                     }
-                    column++;
-                    row++;
+                    column+=2;
                     _index++;
+
                     //if statement
                     AddElement(column, row, inputData[_index], Resources.Statement, Choices.ChoicesIfStatement, ComboBoxType.IfStatement);
+                    switch (inputData[_index])
+                    {
+                        case KeywordDBChoices.IsEmpty:
+                        case KeywordDBChoices.IsNotEmpty:
+                            row++;
+                            break;
+                        default:
+                            column++;
+                            _index++;
+                            _index = DecodeElement(inputData, _index, "", ref column, ref row, false);
+                            column--;
+                            break;
+                    }
 
                     column++;
                     _index++;
@@ -513,7 +570,7 @@ namespace IO_list_automation_new.Forms
                     //false statement
                     _index = DecodeElement(inputData, _index, Resources.False, ref column, ref row, false);
 
-                    column -= 3;
+                    column -= 4;
                     break;
 
                 case KeywordDBChoices.None:

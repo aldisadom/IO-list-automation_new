@@ -392,7 +392,7 @@ namespace IO_list_automation_new
         /// <summary>
         /// Get data from excel file and get relevant signals
         /// </summary>
-        /// <returns>successful data read</returns>
+        /// <returns>data is not empty</returns>
         public bool GetDataFromImportFile()
         {
             Debug debug = new Debug();
@@ -403,94 +403,93 @@ namespace IO_list_automation_new
                 Filter = "Excel Worksheets|*.xls;*.xlsx",
             };
 
-            if (_importFile.ShowDialog() == DialogResult.OK)
-            {
-                debug.ToFile("Excel file for design is: " + _importFile.FileName, DebugLevels.Development, DebugMessageType.Info);
-                //open excel file
-                FileStream stream = File.Open(_importFile.FileName, FileMode.Open, FileAccess.Read);
-                IExcelDataReader _excel = ExcelReaderFactory.CreateReader(stream);
-
-                int _rowCount = _excel.RowCount;
-                Progress.RenameProgressBar(Resources.DesignImport, _rowCount);
-
-                debug.ToFile("Processing input file", DebugLevels.Development, DebugMessageType.Info);
-
-                int _columnCount;
-                bool _checkPin = SettingsDesignInput.Default.ColumnPin >= 0;
-                bool _checkChannel = SettingsDesignInput.Default.ColumnChannel >= 0;
-
-                _columnCount = _excel.FieldCount;
-                string[,] _inputData = new string[_rowCount, _columnCount + 1];
-
-                //read all excel rows
-                for (int _row = 1; _row <= _rowCount; _row++)
-                {
-                    // if nothing to read exit
-                    if (!_excel.Read())
-                        break;
-
-                    //first column is row number
-                    _inputData[_row - 1, 0] = GeneralFunctions.AddZeroes(_row);
-                    for (int _column = 0; _column < _columnCount; _column++)
-                        _inputData[_row - 1, _column + 1] = GeneralFunctions.ReadExcelCell(_row, _column, _columnCount, _excel);
-
-                    Progress.UpdateProgressBar(_row);
-                }
-                debug.ToFile("Processing input file - " + Resources.Finished, DebugLevels.Development, DebugMessageType.Info);
-                Progress.HideProgressBar();
-                _excel.Close();
-
-                DesignInputData _designInputData = new DesignInputData(_inputData);
-                _designInputData.ShowDialog();
-
-                InitExcelColumnsList();
-
-                int _maxColumns = _inputData.GetLength(1);
-                int _columnNumber;
-                string _cellValue;
-                string _ColumnName;
-
-                UpdateColumnNumbers(ExcelColumns.Columns);
-
-                _rowCount = _inputData.GetLength(0);
-                Progress.RenameProgressBar(Resources.DesignImport, _rowCount);
-                debug.ToFile("Extracting data from input file", DebugLevels.Development, DebugMessageType.Info);
-
-                for (int _row = SettingsDesignInput.Default.RowOffset; _row < _rowCount; _row++)
-                {
-                    //create signal and add corresponding Columns to each signal element
-                    DesignSignal _signalNew = new DesignSignal();
-                    foreach (GeneralColumn _column in ExcelColumns)
-                    {
-                        _columnNumber = _column.Number;
-                        if (_columnNumber != -1 && _columnNumber < _maxColumns)
-                        {
-                            _cellValue = _inputData[_row, _columnNumber];
-                            _ColumnName = _column.Keyword;
-
-                            _signalNew.SetValueFromString(_cellValue, _ColumnName);
-                        }
-                    }
-
-                    // if signal is valid add to list
-                    if (_signalNew.ValidateSignal())
-                    {
-                        // if signal has useful data add to list
-                        if (_signalNew.ExtractUseful(_checkPin, _checkChannel))
-                            Signals.Add(_signalNew);
-                    }
-                    Progress.UpdateProgressBar(_row);
-                }
-
-                debug.ToFile("Extracting data from input file - " + Resources.Finished, DebugLevels.Development, DebugMessageType.Info);
-                Progress.HideProgressBar();
-            }
-            else
+            if (_importFile.ShowDialog() != DialogResult.OK)
             {
                 debug.ToFile(Resources.FileSellectCanceled, DebugLevels.Minimum, DebugMessageType.Info);
                 return false;
             }
-            return true;
+
+            debug.ToFile("Excel file for design is: " + _importFile.FileName, DebugLevels.Development, DebugMessageType.Info);
+            //open excel file
+            FileStream stream = File.Open(_importFile.FileName, FileMode.Open, FileAccess.Read);
+            IExcelDataReader _excel = ExcelReaderFactory.CreateReader(stream);
+
+            int _rowCount = _excel.RowCount;
+            Progress.RenameProgressBar(Resources.DesignImport, _rowCount);
+
+            debug.ToFile("Processing input file", DebugLevels.Development, DebugMessageType.Info);
+
+            int _columnCount;
+            bool _checkPin = SettingsDesignInput.Default.ColumnPin >= 0;
+            bool _checkChannel = SettingsDesignInput.Default.ColumnChannel >= 0;
+
+            _columnCount = _excel.FieldCount;
+            string[,] _inputData = new string[_rowCount, _columnCount + 1];
+
+            //read all excel rows
+            for (int _row = 1; _row <= _rowCount; _row++)
+            {
+                // if nothing to read exit
+                if (!_excel.Read())
+                    break;
+
+                //first column is row number
+                _inputData[_row - 1, 0] = GeneralFunctions.AddZeroes(_row);
+                for (int _column = 0; _column < _columnCount; _column++)
+                    _inputData[_row - 1, _column + 1] = GeneralFunctions.ReadExcelCell(_row, _column, _columnCount, _excel);
+
+                Progress.UpdateProgressBar(_row);
+            }
+            debug.ToFile("Processing input file - " + Resources.Finished, DebugLevels.Development, DebugMessageType.Info);
+            Progress.HideProgressBar();
+            _excel.Close();
+
+            DesignInputData _designInputData = new DesignInputData(_inputData);
+            _designInputData.ShowDialog();
+
+            InitExcelColumnsList();
+
+            int _maxColumns = _inputData.GetLength(1);
+            int _columnNumber;
+            string _cellValue;
+            string _ColumnName;
+
+            UpdateColumnNumbers(ExcelColumns.Columns);
+
+            _rowCount = _inputData.GetLength(0);
+            Progress.RenameProgressBar(Resources.DesignImport, _rowCount);
+            debug.ToFile("Extracting data from input file", DebugLevels.Development, DebugMessageType.Info);
+
+            for (int _row = SettingsDesignInput.Default.RowOffset; _row < _rowCount; _row++)
+            {
+                //create signal and add corresponding Columns to each signal element
+                DesignSignal _signalNew = new DesignSignal();
+                foreach (GeneralColumn _column in ExcelColumns)
+                {
+                    _columnNumber = _column.Number;
+                    if (_columnNumber != -1 && _columnNumber < _maxColumns)
+                    {
+                        _cellValue = _inputData[_row, _columnNumber];
+                        _ColumnName = _column.Keyword;
+
+                        _signalNew.SetValueFromString(_cellValue, _ColumnName);
+                    }
+                }
+
+                // if signal is valid add to list
+                if (_signalNew.ValidateSignal())
+                {
+                    // if signal has useful data add to list
+                    if (_signalNew.ExtractUseful(_checkPin, _checkChannel))
+                        Signals.Add(_signalNew);
+                }
+                Progress.UpdateProgressBar(_row);
+            }
+
+            debug.ToFile("Extracting data from input file - " + Resources.Finished, DebugLevels.Development, DebugMessageType.Info);
+            Progress.HideProgressBar();
+
+            return Signals.Count > 0;
         }
     }
 }

@@ -11,6 +11,7 @@ namespace IO_list_automation_new.DB
     {
         private bool Editable { get; set; }
         private bool ModuleBased { get; set; }
+
         private void ResultForm_Shown(object sender, EventArgs e)
         {
             UpdateResult();
@@ -28,19 +29,19 @@ namespace IO_list_automation_new.DB
             PageEditComboBox.Visible = false;
             CellEditComboBox.Visible = false;
 
-            if (e.Button == MouseButtons.Right)
-            {
-                PageEditComboBox.Items.Clear();
-                PageEditComboBox.Items.Add(string.Empty);
-                PageEditComboBox.Items.Add(Resources.Add);
+            if (e.Button != MouseButtons.Right)
+                return;
 
-                for (int i = 0; i < DBTabControl.TabPages.Count; i++)
-                    PageEditComboBox.Items.Add(Resources.Remove + ": " + DBTabControl.TabPages[i].Name);
+            PageEditComboBox.Items.Clear();
+            PageEditComboBox.Items.Add(string.Empty);
+            PageEditComboBox.Items.Add(Resources.Add);
 
-                PageEditComboBox.Visible = true;
-                PageEditComboBox.Location = PointToClient(Cursor.Position);
-                PageEditComboBox.BringToFront();
-            }
+            for (int i = 0; i < DBTabControl.TabPages.Count; i++)
+                PageEditComboBox.Items.Add(Resources.Remove + ": " + DBTabControl.TabPages[i].Name);
+
+            PageEditComboBox.Visible = true;
+            PageEditComboBox.Location = PointToClient(Cursor.Position);
+            PageEditComboBox.BringToFront();
         }
 
         private void PageEditComboBox_SelectedIndexChanged(object sender, EventArgs e)
@@ -71,19 +72,19 @@ namespace IO_list_automation_new.DB
             PageEditComboBox.Visible = false;
             CellEditComboBox.Visible = false;
 
-            if (e.Button == MouseButtons.Right)
-            {
-                CellEditComboBox.Items.Clear();
-                CellEditComboBox.Items.Add(string.Empty);
-                CellEditComboBox.Items.Add(Resources.Add);
-                CellEditComboBox.Items.Add(Resources.Remove);
+            if (e.Button != MouseButtons.Right)
+                return;
 
-                CellEditComboBox.Tag = e.RowIndex;
+            CellEditComboBox.Items.Clear();
+            CellEditComboBox.Items.Add(string.Empty);
+            CellEditComboBox.Items.Add(Resources.Add);
+            CellEditComboBox.Items.Add(Resources.Remove);
 
-                CellEditComboBox.Visible = true;
-                CellEditComboBox.Location = PointToClient(Cursor.Position);
-                CellEditComboBox.BringToFront();
-            }
+            CellEditComboBox.Tag = e.RowIndex;
+
+            CellEditComboBox.Visible = true;
+            CellEditComboBox.Location = PointToClient(Cursor.Position);
+            CellEditComboBox.BringToFront();
         }
 
         private void DataGridView_CellClick(object sender, EventArgs e)
@@ -219,63 +220,63 @@ namespace IO_list_automation_new.DB
 
         private void UpdateResult()
         {
-            if (Editable)
+            if (!Editable)
+                return;
+
+            DBGeneralSignal _instance = new DBGeneralSignal(true);
+
+            //clear result grid
+            ResultDataGridView.Rows.Clear();
+            ResultDataGridView.Columns.Clear();
+            DataGridViewTextBoxCell _cell = new DataGridViewTextBoxCell();
+
+            //get current grid
+            int _index = DBTabControl.SelectedIndex;
+            TabPage _page = DBTabControl.TabPages[_index];
+            DataGridView _grid = (DataGridView)_page.Controls[0];
+
+            //go through all rows
+            for (int i = 0; i < _grid.RowCount; i++)
             {
-                DBGeneralSignal _instance = new DBGeneralSignal();
-
-                //clear result grid
-                ResultDataGridView.Rows.Clear();
-                ResultDataGridView.Columns.Clear();
-                DataGridViewTextBoxCell _cell = new DataGridViewTextBoxCell();
-
-                //get current grid
-                int _index = DBTabControl.SelectedIndex;
-                TabPage _page = DBTabControl.TabPages[_index];
-                DataGridView _grid = (DataGridView)_page.Controls[0];
-
-                //go through all rows
-                for (int i = 0; i < _grid.RowCount; i++)
+                //read grid data of configuration
+                List<string> _line = new List<string>();
+                for (int j = 0; j < _grid.ColumnCount; j++)
                 {
-                    //read grid data of configuration
-                    List<string> _line = new List<string>();
-                    for (int j = 0; j < _grid.ColumnCount; j++)
-                    {
-                        if (_grid.Rows[i].Cells[j].Value == null)
-                            _line.Add(string.Empty);
-                        else
-                            _line.Add(_grid.Rows[i].Cells[j].Value.ToString());
-                    }
-
-                    //decode current line
-                    _instance.SetValue(_line);
-                    List<string> _decodedLine = _instance.DecodeLine(0, null, null, null, true);
-
-                    string[] _row = new string[_decodedLine.Count];
-                    for (int j = 0; j < _decodedLine.Count; j++)
-                        _row[j] = _decodedLine[j];
-
-                    //add result columns if needed
-                    if (ResultDataGridView.ColumnCount < _decodedLine.Count)
-                    {
-                        for (int j = ResultDataGridView.ColumnCount; j < _decodedLine.Count; j++)
-                        {
-                            DataGridViewColumn _columnGridView = new DataGridViewColumn()
-                            {
-                                CellTemplate = _cell,
-                                SortMode = DataGridViewColumnSortMode.NotSortable,
-                                Name = j.ToString(),
-                                HeaderText = j.ToString(),
-                            };
-                            ResultDataGridView.Columns.Insert(j, _columnGridView);
-                        }
-                    }
-
-                    //put result to grid
-                    ResultDataGridView.Rows.Add();
-                    ResultDataGridView.Rows[i].SetValues(_row);
+                    if (_grid.Rows[i].Cells[j].Value == null)
+                        _line.Add(string.Empty);
+                    else
+                        _line.Add(_grid.Rows[i].Cells[j].Value.ToString());
                 }
-                ResultDataGridView.AutoResizeColumns();
+
+                //decode current line
+                _instance.SetValue(_line);
+                List<string> _decodedLine = _instance.DecodeLine(0, null, null, null);
+
+                string[] _row = new string[_decodedLine.Count];
+                for (int j = 0; j < _decodedLine.Count; j++)
+                    _row[j] = _decodedLine[j];
+
+                //add result columns if needed
+                if (ResultDataGridView.ColumnCount < _decodedLine.Count)
+                {
+                    for (int j = ResultDataGridView.ColumnCount; j < _decodedLine.Count; j++)
+                    {
+                        DataGridViewColumn _columnGridView = new DataGridViewColumn()
+                        {
+                            CellTemplate = _cell,
+                            SortMode = DataGridViewColumnSortMode.NotSortable,
+                            Name = j.ToString(),
+                            HeaderText = j.ToString(),
+                        };
+                        ResultDataGridView.Columns.Insert(j, _columnGridView);
+                    }
+                }
+
+                //put result to grid
+                ResultDataGridView.Rows.Add();
+                ResultDataGridView.Rows[i].SetValues(_row);
             }
+            ResultDataGridView.AutoResizeColumns();
         }
     }
 }

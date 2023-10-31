@@ -289,19 +289,19 @@ namespace IO_list_automation_new
                     continue;
 
                 //if found 1o2 part then search for 2o2 part
-                if (_text.Contains(_textToSearch))
-                {
-                    //go through all 2o2 function texts
-                    for (int _signalIndex2 = 0; _signalIndex2 < Signals.Count; _signalIndex2++)
-                    {
-                        _textToSearch = Signals[_signalIndex2].FunctionText2o2.ToLower();
-                        if (string.IsNullOrEmpty(_textToSearch))
-                            continue;
+                if (!_text.Contains(_textToSearch))
+                    continue;
 
-                        //if input text contains function return its function type
-                        if (_text.Contains(_textToSearch))
-                            return Signals[_signalIndex2].Function2;
-                    }
+                //go through all 2o2 function texts
+                for (int _signalIndex2 = 0; _signalIndex2 < Signals.Count; _signalIndex2++)
+                {
+                    _textToSearch = Signals[_signalIndex2].FunctionText2o2.ToLower();
+                    if (string.IsNullOrEmpty(_textToSearch))
+                        continue;
+
+                    //if input text contains function return its function type
+                    if (_text.Contains(_textToSearch))
+                        return Signals[_signalIndex2].Function2;
                 }
             }
 

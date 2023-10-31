@@ -294,59 +294,59 @@ namespace IO_list_automation_new
         public void SaveToFile(string fileName)
         {
             List<List<string>> _data = GetData();
-            if (_data != null)
+            if (_data == null)
+                return;
+
+            string _fileName = System.IO.Path.ChangeExtension(fileName, null) + "." + FileExtension;
+
+            Debug debug = new Debug();
+            debug.ToFile(Resources.SaveDataToFile + ": " + _fileName, DebugLevels.Development, DebugMessageType.Info);
+
+            Progress.RenameProgressBar(Resources.SaveDataToFile + ": " + _fileName, _data.Count);
+
+            ExcelWriter _excel = new ExcelWriter(_fileName);
+            int _rowOffset = 1;
+            int _ColumnNumber;
+
+            switch (GridType)
             {
-                string _fileName = System.IO.Path.ChangeExtension(fileName, null) + "." + FileExtension;
+                //first line in excel is column keywords
+                case GridTypes.Data:
+                    foreach (GeneralColumn _column in Columns)
+                    {
+                        _ColumnNumber = _column.Number;
+                        if (_ColumnNumber >= 0)
+                            _excel.Write(_column.Keyword, _ColumnNumber + 1, _rowOffset);
+                    }
+                    _rowOffset++;
+                    break;
+                //if DB, do not add columns
+                case GridTypes.DB:
+                case GridTypes.EditableDB:
+                    break;
 
-                Debug debug = new Debug();
-                debug.ToFile(Resources.SaveDataToFile + ": " + _fileName, DebugLevels.Development, DebugMessageType.Info);
-
-                Progress.RenameProgressBar(Resources.SaveDataToFile + ": " + _fileName, _data.Count);
-
-                ExcelWriter _excel = new ExcelWriter(_fileName);
-                int _rowOffset = 1;
-                int _ColumnNumber;
-
-                switch (GridType)
-                {
-                    //first line in excel is column keywords
-                    case GridTypes.Data:
-                        foreach (GeneralColumn _column in Columns)
-                        {
-                            _ColumnNumber = _column.Number;
-                            if (_ColumnNumber >= 0)
-                                _excel.Write(_column.Keyword, _ColumnNumber + 1, _rowOffset);
-                        }
-                        _rowOffset++;
-                        break;
-                    //if DB, do not add columns
-                    case GridTypes.DB:
-                    case GridTypes.EditableDB:
-                        break;
-
-                    default:
-                        const string text = "GeneralGrid.LoadFromFileToMemory";
-                        Debug _debug = new Debug();
-                        _debug.ToFile(text + " " + Resources.ParameterNotFound + ":" + nameof(GridType), DebugLevels.None, DebugMessageType.Critical);
-                        throw new InvalidProgramException(text + "." + nameof(GridType) + " is not created for this element");
-                }
-
-                //write data to file
-                for (int _row = 0; _row < _data.Count; _row++)
-                {
-                    for (int _column = 0; _column < _data[_row].Count; _column++)
-                        _excel.Write(_data[_row][_column], _column + 1, _row + _rowOffset);
-
-                    Progress.UpdateProgressBar(_row);
-                }
-
-                _excel.Save();
-                _excel.Dispose();
-
-                Progress.HideProgressBar();
-
-                debug.ToFile(Resources.SaveDataToFile + ": " + _fileName + " - " + Resources.Finished, DebugLevels.Development, DebugMessageType.Info);
+                default:
+                    const string text = "GeneralGrid.LoadFromFileToMemory";
+                    Debug _debug = new Debug();
+                    _debug.ToFile(text + " " + Resources.ParameterNotFound + ":" + nameof(GridType), DebugLevels.None, DebugMessageType.Critical);
+                    throw new InvalidProgramException(text + "." + nameof(GridType) + " is not created for this element");
             }
+
+            //write data to file
+            for (int _row = 0; _row < _data.Count; _row++)
+            {
+                for (int _column = 0; _column < _data[_row].Count; _column++)
+                    _excel.Write(_data[_row][_column], _column + 1, _row + _rowOffset);
+
+                Progress.UpdateProgressBar(_row);
+            }
+
+            _excel.Save();
+            _excel.Dispose();
+
+            Progress.HideProgressBar();
+
+            debug.ToFile(Resources.SaveDataToFile + ": " + _fileName + " - " + Resources.Finished, DebugLevels.Development, DebugMessageType.Info);
         }
 
         /// <summary>
@@ -400,31 +400,66 @@ namespace IO_list_automation_new
             List<GeneralColumn> _newColumns = new List<GeneralColumn>();
             Progress.RenameProgressBar(Resources.LoadDataFromFile + ": " + _fileName, _rowCount);
 
-            for (int i = 0; i < _excel.ResultsCount; i++)
+            //get columns names
+            switch (GridType)
             {
+                //read column keywords in line 1
+                case GridTypes.Data:
+                    _excel.Read();
+                    for (int _columnNumber = 0; _columnNumber < _excel.FieldCount; _columnNumber++)
+                    {
+                        _cellValue = GeneralFunctions.ReadExcelCell(1,_columnNumber, _excel.FieldCount, _excel);
+                        if (string.IsNullOrEmpty(_cellValue))
+                            break;
+
+                        _newColumns.Add(new GeneralColumn(_cellValue, _columnNumber, false));
+                    }
+                    Columns.SetColumns(_newColumns, false);
+                    _rowOffset++;
+                    break;
+                //if DB, then columns not in excel then write 0 1 2 3 ...
+                case GridTypes.DB:
+                case GridTypes.EditableDB:
+                    for (int _columnNumber = 0; _columnNumber < _excel.FieldCount; _columnNumber++)
+                        _newColumns.Add(new GeneralColumn(_columnNumber.ToString(), _columnNumber, false));
+
+                    Columns.SetColumns(_newColumns, false);
+                    break;
+
+                default:
+                    const string text = "GeneralGrid.LoadFromFileToMemory";
+                    Debug _debug = new Debug();
+                    _debug.ToFile(text + " " + Resources.ParameterNotFound + ":" + nameof(GridType), DebugLevels.None, DebugMessageType.Critical);
+                    throw new InvalidProgramException(text + "." + nameof(GridType) + " is not created for this element");
+            }
+
+            //read all excel rows
+            for (int _row = _rowOffset; _row <= _rowCount; _row++)
+            {
+                // if nothing to read exit
+                if (!_excel.Read())
+                    break;
+
+                _columnCount = _excel.FieldCount;
+
+                List<string> _line = new List<string>();
+
+                for (int _column = 0; _column < _columnCount; _column++)
+                    _line.Add(GeneralFunctions.ReadExcelCell(_row, _column, _columnCount, _excel));
+
+                Progress.UpdateProgressBar(_row);
+
                 switch (GridType)
                 {
-                    //read column keywords in line 1
+                    //only if Data type then check if all line element are empty
                     case GridTypes.Data:
-                        _excel.Read();
-                        for (int _columnNumber = 0; _columnNumber < _excel.FieldCount; _columnNumber++)
-                        {
-                            _cellValue = GeneralFunctions.ReadExcelCell(i, _columnNumber, _excel.FieldCount, _excel);
-                            if (string.IsNullOrEmpty(_cellValue))
-                                break;
-
-                            _newColumns.Add(new GeneralColumn(_cellValue, _columnNumber, false));
-                        }
-                        Columns.SetColumns(_newColumns, false);
-                        _rowOffset++;
+                        if (!_line.TrueForAll(e => e.Equals(string.Empty)))
+                            _data.Add(_line);
                         break;
-                    //if DB, then columns not in excel then write 0 1 2 3 ...
+
                     case GridTypes.DB:
                     case GridTypes.EditableDB:
-                        for (int _columnNumber = 0; _columnNumber < _excel.FieldCount; _columnNumber++)
-                            _newColumns.Add(new GeneralColumn(_columnNumber.ToString(), _columnNumber, false));
-
-                        Columns.SetColumns(_newColumns, false);
+                        _data.Add(_line);
                         break;
 
                     default:
@@ -433,46 +468,6 @@ namespace IO_list_automation_new
                         _debug.ToFile(text + " " + Resources.ParameterNotFound + ":" + nameof(GridType), DebugLevels.None, DebugMessageType.Critical);
                         throw new InvalidProgramException(text + "." + nameof(GridType) + " is not created for this element");
                 }
-
-                //read all excel rows
-                for (int _row = _rowOffset; _row <= _rowCount; _row++)
-                {
-                    // if nothing to read exit
-                    if (!_excel.Read())
-                        break;
-
-                    _columnCount = _excel.FieldCount;
-
-                    List<string> _line = new List<string>();
-
-                    for (int _column = 0; _column < _columnCount; _column++)
-                        _line.Add(GeneralFunctions.ReadExcelCell(_row, _column, _columnCount, _excel));
-
-                    Progress.UpdateProgressBar(_row);
-
-                    switch (GridType)
-                    {
-                        //only if Data type then check if all line element are empty
-                        case GridTypes.Data:
-                            if (!_line.TrueForAll(e => e.Equals(string.Empty)))
-                                _data.Add(_line);
-                            break;
-
-                        case GridTypes.DB:
-                        case GridTypes.EditableDB:
-                            _data.Add(_line);
-                            break;
-
-                        default:
-                            const string text = "GeneralGrid.LoadFromFileToMemory";
-                            Debug _debug = new Debug();
-                            _debug.ToFile(text + " " + Resources.ParameterNotFound + ":" + nameof(GridType), DebugLevels.None, DebugMessageType.Critical);
-                            throw new InvalidProgramException(text + "." + nameof(GridType) + " is not created for this element");
-                    }
-                }
-
-                if (!_excel.NextResult())
-                    break;
             }
             _excel.Close();
 

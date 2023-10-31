@@ -79,12 +79,19 @@ namespace IO_list_automation_new
         public const string Object = "Object";
         public const string Modules = "Modules";
         public const string Text = "Text";
-        public const string IO = "IO";
+        public const string IOTag = "IOTag";
+        public const string IOChannel = "IOChannel";
         public const string Index = "Index";
-        public const string TagType = "TagType";
+        public const string VariableType = "VariableType";
 
-        public const string IsEmpty = "is empty";
-        public const string IsNotEmpty = "is not empty";
+        public const string IsEmpty = "IsEmpty";
+        public const string IsNotEmpty = "IsNotEmpty";
+        public const string Equal = "=";
+        public const string nEqual = "!=";
+        public const string GreaterEqual = ">=";
+        public const string Greater = ">";
+        public const string LessEqual = "<=";
+        public const string Less = "<";
     }
 
     internal static class Program

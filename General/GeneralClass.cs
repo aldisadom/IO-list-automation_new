@@ -48,17 +48,13 @@ namespace IO_list_automation_new
 
         private List<GeneralColumn> GenerateColumnsList(bool getFromGrid)
         {
-            if (getFromGrid)
-            {
-                if (Grid.IsEmpty())
-                    return GeneralGenerateColumnsList();
-                else
-                    return Grid.GetColumns();
-            }
-            else
-            {
+            if (!getFromGrid)
                 return GeneralGenerateColumnsList();
-            }
+
+            if (Grid.IsEmpty())
+                return GeneralGenerateColumnsList();
+            else
+                return Grid.GetColumns();
         }
 
         /// <summary>
@@ -80,13 +76,13 @@ namespace IO_list_automation_new
 
                 foreach (GeneralColumn _newColumn in newList)
                 {
-                    if (_newColumn.Keyword == _keyword)
-                    {
-                        //if in new list column is used and in current list column is not used, add column to end
-                        if (_columnNumber == -1 && _newColumn.Number != -1)
-                            _columnNumber = 100;
-                        break;
-                    }
+                    if (_newColumn.Keyword != _keyword)
+                        continue;
+
+                    //if in new list column is used and in current list column is not used, add column to end
+                    if (_columnNumber == -1 && _newColumn.Number != -1)
+                        _columnNumber = 100;
+                    break;
                 }
                 GeneralColumn _column = new GeneralColumn(_keyword, _columnNumber, _canHide);
                 _tmpList.Add(_column);
