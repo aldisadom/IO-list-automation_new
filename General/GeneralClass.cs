@@ -239,5 +239,34 @@ namespace IO_list_automation_new
 
             return _validData;
         }
+
+        public List<string> GetCPUList()
+        {
+            bool _found;
+            List<string> _CPUList = new List<string>();
+
+            if (Signals.Count == 0)
+                return _CPUList;
+
+            //add first signal element CPU to CPU list
+            _CPUList.Add(Signals[0].GetValueString(KeywordColumn.CPU, false));
+
+            //find CPU list
+            for (int _signalIndex = 0; _signalIndex < Signals.Count; _signalIndex++)
+            {
+                _found = false;
+                for (int _CPUIndex = 0; _CPUIndex < _CPUList.Count; _CPUIndex++)
+                {
+                    if (_CPUList[_CPUIndex] == Signals[_signalIndex].GetValueString(KeywordColumn.CPU, false))
+                    {
+                        _found = true;
+                        break;
+                    }
+                }
+                if (!_found)
+                    _CPUList.Add(Signals[_signalIndex].GetValueString(KeywordColumn.CPU, false));
+            }
+            return _CPUList;
+        }
     }
 }

@@ -1,6 +1,9 @@
-﻿using IO_list_automation_new.Properties;
+﻿using IO_list_automation_new.Forms;
+using IO_list_automation_new.General;
+using IO_list_automation_new.Properties;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,7 +14,6 @@ namespace IO_list_automation_new.DB
     {
         public List<string> Line { get; private set; }
 
-        public string TagType { get; private set; }
         public string MemoryArea { get; private set; }
         public string Address { get; private set; }
 
@@ -19,11 +21,10 @@ namespace IO_list_automation_new.DB
 
         private string Value = "";
 
-        private bool Simulation = false;
+        private readonly bool Simulation = false;
 
         public DBGeneralSignal(bool simulation)
         {
-            TagType = string.Empty;
             MemoryArea = string.Empty;
             Address = string.Empty;
             Line = new List<string>();
@@ -32,7 +33,6 @@ namespace IO_list_automation_new.DB
 
         public DBGeneralSignal()
         {
-            TagType = string.Empty;
             MemoryArea = string.Empty;
             Address = string.Empty;
             Line = new List<string>();
@@ -56,13 +56,13 @@ namespace IO_list_automation_new.DB
         /// <returns>IO tag</returns>
         private string DecodeIOTag(DataClass data, ObjectSignal objectSignal, ModuleSignal moduleSignal)
         {
-            Index+=2;
+            Index +=2;
             if (Simulation)
             {
                 Value = "KKS." + Line[Index - 1];
                 return Value;
             }
-
+            //objects based
             if (moduleSignal == null)
             {
                 for (int i = 0; i < data.Signals.Count; i++)
@@ -74,17 +74,70 @@ namespace IO_list_automation_new.DB
                     }
                 }
             }
+            //module based
             else
             {
+                int _channel;
                 for (int i = 0; i < data.Signals.Count; i++)
                 {
-                    if ((moduleSignal.ModuleName == data.Signals[i].ModuleName) && (data.Signals[i].Channel == Line[Index - 1]))
+                    if (!int.TryParse(data.Signals[i].Channel, out _channel))
+                        continue;
+
+                    if ((moduleSignal.ModuleName == data.Signals[i].ModuleName) && (_channel == int.Parse(Line[Index - 1])))
                     {
                         Value = data.Signals[i].Tag;
                         return Value;
                     }
                 }
             }
+            Value = string.Empty;
+            return Value;
+        }
+
+        /// <summary>
+        /// Find IO Pin in data based on channel number of module
+        /// </summary>
+        /// <param name="data">data</param>
+        /// <param name="objectSignal">object</param>
+        /// <param name="moduleSignal">object</param>
+        /// <returns>IO Pin</returns>
+        private string DecodeIOPin(DataClass data, ObjectSignal objectSignal, ModuleSignal moduleSignal)
+        {
+            Index += 2;
+            if (Simulation)
+            {
+                Value = "KKS.Pin_" + Line[Index - 1];
+                return Value;
+            }
+            //objects based
+            if (moduleSignal == null)
+            {
+                for (int i = 0; i < data.Signals.Count; i++)
+                {
+                    if ((objectSignal.KKS == data.Signals[i].KKS) && (data.Signals[i].Function == Line[Index - 1]))
+                    {
+                        Value = data.Signals[i].Pin;
+                        return Value;
+                    }
+                }
+            }
+            //module based
+            else
+            {
+                int _channel;
+                for (int i = 0; i < data.Signals.Count; i++)
+                {
+                    if (!int.TryParse(data.Signals[i].Channel, out _channel))
+                        continue;
+
+                    if ((moduleSignal.ModuleName == data.Signals[i].ModuleName) && (_channel == int.Parse(Line[Index - 1])))
+                    {
+                        Value = data.Signals[i].Pin;
+                        return Value;
+                    }
+                }
+            }
+
             Value = string.Empty;
             return Value;
         }
@@ -104,7 +157,7 @@ namespace IO_list_automation_new.DB
                 Value = "KKS.Channel_" + Line[Index - 1];
                 return Value;
             }
-
+            //objects based
             if (moduleSignal == null)
             {
                 for (int i = 0; i < data.Signals.Count; i++)
@@ -116,13 +169,66 @@ namespace IO_list_automation_new.DB
                     }
                 }
             }
+            //module based
             else
+            {
+                int _channel;
+                for (int i = 0; i < data.Signals.Count; i++)
+                {
+                    if (!int.TryParse(data.Signals[i].Channel, out _channel))
+                        continue;
+
+                    if ((moduleSignal.ModuleName == data.Signals[i].ModuleName) && (_channel == int.Parse(Line[Index - 1])))
+                    {
+                        Value = data.Signals[i].Channel;
+                        return Value;
+                    }
+                }
+            }
+
+            Value = string.Empty;
+            return Value;
+        }
+
+        /// <summary>
+        /// Find IO text in data based on channel number of module
+        /// </summary>
+        /// <param name="data">data</param>
+        /// <param name="objectSignal">object</param>
+        /// <param name="moduleSignal">object</param>
+        /// <returns>IO channel</returns>
+        private string DecodeIOText(DataClass data, ObjectSignal objectSignal, ModuleSignal moduleSignal)
+        {
+            Index += 2;
+            if (Simulation)
+            {
+                Value = "KKS." + Line[Index - 1];
+                return Value;
+            }
+            //objects based
+            if (moduleSignal == null)
             {
                 for (int i = 0; i < data.Signals.Count; i++)
                 {
-                    if ((moduleSignal.ModuleName == data.Signals[i].ModuleName) && (data.Signals[i].Channel == Line[Index - 1]))
+                    if ((objectSignal.KKS == data.Signals[i].KKS) && (data.Signals[i].Function == Line[Index - 1]))
                     {
-                        Value = data.Signals[i].Channel;
+                        Value = data.Signals[i].IOText;
+                        return Value;
+                    }
+                }
+            }
+            //module based
+            else
+            {
+                int _channel;
+                for (int i = 0; i < data.Signals.Count; i++)
+                {
+                    if (!int.TryParse(data.Signals[i].Channel, out _channel))
+                        continue;
+
+                    if ((moduleSignal.ModuleName == data.Signals[i].ModuleName) && (_channel == int.Parse(Line[Index - 1])))
+                    {
+                        Value = data.Signals[i].IOText;
                         return Value;
                     }
                 }
@@ -138,7 +244,7 @@ namespace IO_list_automation_new.DB
         /// <param name="data">data</param>
         /// <param name="objectSignal">object</param>
         /// <returns>column value</returns>
-        private string DecodeData(DataClass data, ObjectSignal objectSignal)
+        private string DecodeData(DataClass data, ObjectSignal objectSignal, ModuleSignal moduleSignal)
         {
             Index+=2;
             if (Simulation)
@@ -147,14 +253,29 @@ namespace IO_list_automation_new.DB
                 return Value;
             }
 
-            for (int i = 0; i < data.Signals.Count; i++)
+            if (moduleSignal == null)
             {
-                if (objectSignal.KKS == data.Signals[i].KKS)
+                for (int i = 0; i < data.Signals.Count; i++)
                 {
-                    Value = data.Signals[i].GetValueString(Line[Index-1], false);
-                    return Value;
+                    if (objectSignal.KKS == data.Signals[i].KKS)
+                    {
+                        Value = data.Signals[i].GetValueString(Line[Index - 1], false);
+                        return Value;
+                    }
                 }
             }
+            else
+            {
+                for (int i = 0; i < data.Signals.Count; i++)
+                {
+                    if (moduleSignal.ModuleName == data.Signals[i].ModuleName)
+                    {
+                        Value = data.Signals[i].GetValueString(Line[Index - 1], false);
+                        return Value;
+                    }
+                }
+            }
+
             Value = string.Empty;
             return Value;
         }
@@ -194,16 +315,6 @@ namespace IO_list_automation_new.DB
 
             Value = moduleSignal.GetValueString(Line[Index - 1], false);
             return Value;
-        }
-
-        /// <summary>
-        /// Set Tag of this line
-        /// </summary>
-        /// <param name="tagType">tag type</param>
-        private void DecodeTagType(string tagType)
-        {
-            Index+=2;
-            TagType = tagType;
         }
 
         /// <summary>
@@ -259,19 +370,20 @@ namespace IO_list_automation_new.DB
         /// <param name="data">data</param>
         /// <param name="objectSignal">object</param>
         /// <param name="moduleSignal">module</param>
-        private void DecodeIf(int index, List<string> decodedLine, DataClass data, ObjectSignal objectSignal, ModuleSignal moduleSignal)
+        /// <param name="decodeReadOnly">do not put decoded cell to decode line</param>
+        private List<string> DecodeIf(int index, List<string> decodedLine, DataClass data, ObjectSignal objectSignal, ModuleSignal moduleSignal, bool decodeReadOnly)
         {
             Index++;
             string _text = Line[Index];
             string _returnPart1;
             int _newIndex;
             Debug _debug = new Debug();
-            string text;
+            string _debugText;
 
             switch (_text)
             {
                 case KeywordDBChoices.Data:
-                    _returnPart1 = DecodeData(data, objectSignal);
+                    _returnPart1 = DecodeData(data, objectSignal, moduleSignal);
                     break;
 
                 case KeywordDBChoices.Object:
@@ -290,11 +402,19 @@ namespace IO_list_automation_new.DB
                     _returnPart1 = DecodeIOChannel(data, objectSignal, moduleSignal);
                     break;
 
-                default:
-                    text = "DBGeneralSignal.DecodeIf";
+                case KeywordDBChoices.IOPin:
+                    _returnPart1 = DecodeIOPin(data, objectSignal, moduleSignal);
+                    break;
 
-                    _debug.ToFile(text + " " + Resources.ParameterNotFound + ":" + _text, DebugLevels.None, DebugMessageType.Critical);
-                    throw new InvalidProgramException(text + "." + _text + " is not created for this element");
+                case KeywordDBChoices.IOText:
+                    _returnPart1 = DecodeIOText(data, objectSignal, moduleSignal);
+                    break;
+
+                default:
+                    _debugText = "DBGeneralSignal.DecodeIf";
+
+                    _debug.ToFile(_debugText + " " + Resources.ParameterNotFound + ":" + _text, DebugLevels.None, DebugMessageType.Critical);
+                    throw new InvalidProgramException(_debugText + "." + _text + " is not created for this element");
             }
 
             _text = Line[Index];
@@ -314,8 +434,10 @@ namespace IO_list_automation_new.DB
                 default:
                     string _value = Value;
                     float _value1, _value2;
-                    //decode padaro kad iraso i linija reik padaryt kad nerasytu
-                    DecodeCell(Index, decodedLine, data, objectSignal, moduleSignal);
+
+                    // then it is variable
+                    DecodeCell(Index, decodedLine, data, objectSignal, moduleSignal,true);
+                    //then search for operation sign
                     switch (_text)
                     {
                         case KeywordDBChoices.Equal:
@@ -355,17 +477,19 @@ namespace IO_list_automation_new.DB
                             break;
 
                         default:
-                            text = "DBGeneralSignal.DecodeIf";
+                            _debugText = "DBGeneralSignal.DecodeIf";
 
-                            _debug.ToFile(text + " " + Resources.ParameterNotFound + ":" + _text, DebugLevels.None, DebugMessageType.Critical);
-                            throw new InvalidProgramException(text + "." + _text + " is not created for this element");
+                            _debug.ToFile(_debugText + " " + Resources.ParameterNotFound + ":" + _text, DebugLevels.None, DebugMessageType.Critical);
+                            throw new InvalidProgramException(_debugText + "." + _text + " is not created for this element");
                     }
                     break;
             }
+
+            List<string> _cellText;
             //if = true
             if (_ifTrue)
             {
-                DecodeCell(index, decodedLine, data, objectSignal, moduleSignal);
+                _cellText = DecodeCell(index, decodedLine, data, objectSignal, moduleSignal, decodeReadOnly);
 
                 //peek false statement and update index to skip it
                 _newIndex = DecodePeek(Index);
@@ -378,8 +502,31 @@ namespace IO_list_automation_new.DB
                 _newIndex = DecodePeek(Index);
 
                 Index = _newIndex;
-                DecodeCell(index, decodedLine, data, objectSignal, moduleSignal);
+                _cellText = DecodeCell(index, decodedLine, data, objectSignal, moduleSignal, decodeReadOnly);
             }
+
+            return _cellText;
+        }
+
+        /// <summary>
+        /// decoding multiline
+        /// </summary>
+        /// <param name="index">index of object</param>
+        /// <param name="decodedLine">decoded list</param>
+        /// <param name="data">data</param>
+        /// <param name="objectSignal">object</param>
+        /// <param name="moduleSignal">module</param>
+        private List<string> DecodeMultiline(int index, List<string> decodedLine, DataClass data, ObjectSignal objectSignal, ModuleSignal moduleSignal)
+        {
+            Index++;
+            List<string> _cellText = new List<string>() { string.Empty};
+            List<string> cellText = new List<string>();
+
+            while (Line[Index] != KeywordDBChoices.MultiLineEnd)
+            {
+                TransferCellTextToDecoded(DecodeCell(index, decodedLine, data, objectSignal, moduleSignal, false), _cellText);
+            }
+            return _cellText;
         }
 
         /// <summary>
@@ -391,14 +538,37 @@ namespace IO_list_automation_new.DB
         {
             int _newIndex = inIndex;
             string _text = Line[_newIndex];
+            Debug _debug = new Debug();
+            string _debugText;
 
             switch (_text)
             {
                 case KeywordDBChoices.If:
                     //peek for variable
                     _newIndex = DecodePeek(_newIndex);
-                    //skip operation
+                    //peek operation
                     _newIndex++;
+                    switch (Line[_newIndex])
+                    {
+                        case KeywordDBChoices.IsEmpty:
+                        case KeywordDBChoices.IsNotEmpty:
+                            break;
+
+                        case KeywordDBChoices.Equal:
+                        case KeywordDBChoices.nEqual:
+                        case KeywordDBChoices.GreaterEqual:
+                        case KeywordDBChoices.Greater:
+                        case KeywordDBChoices.LessEqual:
+                        case KeywordDBChoices.Less:
+                            _newIndex = DecodePeek(_newIndex);
+                            break;
+
+                        default:
+                            _debugText = "DBGeneralSignal.DecodePeek.Operation";
+
+                            _debug.ToFile(_debugText + " " + Resources.ParameterNotFound + ":" + _text, DebugLevels.None, DebugMessageType.Critical);
+                            throw new InvalidProgramException(_debugText + "." + _text + " is not created for this element");
+                    }
                     //peek for true
                     _newIndex = DecodePeek(_newIndex);
                     //peek for false
@@ -412,20 +582,45 @@ namespace IO_list_automation_new.DB
                 case KeywordDBChoices.Object:
                 case KeywordDBChoices.Modules:
                 case KeywordDBChoices.IOTag:
+                case KeywordDBChoices.IOPin:
                 case KeywordDBChoices.IOChannel:
+                case KeywordDBChoices.IOText:
                 case KeywordDBChoices.Text:
-                case KeywordDBChoices.VariableType:
                     return _newIndex+=2;
 
                 case KeywordDBChoices.Index:
                     return _newIndex += 4;
 
+                case KeywordDBChoices.MultiLine:
+                    int _layer = 1;
+                    _newIndex++;
+                    while (_layer>0)
+                    {
+                        if (Line[_newIndex] == KeywordDBChoices.MultiLine)
+                            _layer++;
+                        else if (Line[_newIndex] == KeywordDBChoices.MultiLineEnd)
+                            _layer--;
+
+                        _newIndex++;
+                    }
+                    return _newIndex;
                 default:
-                    Debug _debug = new Debug();
-                    const string text = "DBGeneralSignal.DecodePeek.IF";
-                    _debug.ToFile(text + " " + Resources.ParameterNotFound + ":" + _text, DebugLevels.None, DebugMessageType.Critical);
-                    throw new InvalidProgramException(text + "." + _text + " is not created for this element");
+                    _debugText = "DBGeneralSignal.DecodePeek.IF";
+                    _debug.ToFile(_debugText + " " + Resources.ParameterNotFound + ":" + _text, DebugLevels.None, DebugMessageType.Critical);
+                    throw new InvalidProgramException(_debugText + "." + _text + " is not created for this element");
             }
+        }
+
+        /// <summary>
+        /// Transfer one list elements to another, first element is replacing last
+        /// </summary>
+        /// <param name="cellText"></param>
+        /// <param name="decodedLine"></param>
+        private void TransferCellTextToDecoded(List<string> cellText, List<string> decodedLine)
+        {
+            decodedLine[decodedLine.Count - 1] = cellText[0];
+            for (int i = 1; i < cellText.Count; i++)
+                decodedLine.Add(cellText[i]);
         }
 
         /// <summary>
@@ -436,62 +631,78 @@ namespace IO_list_automation_new.DB
         /// <param name="data">data</param>
         /// <param name="objectSignal">object</param>
         /// <param name="moduleSignal">module</param>
-        private void DecodeCell(int index, List<string> decodedLine, DataClass data, ObjectSignal objectSignal, ModuleSignal moduleSignal)
+        /// <param name="decodeReadOnly">do not put decoded cell to decode line</param>
+        private List<string> DecodeCell(int index, List<string> decodedLine, DataClass data, ObjectSignal objectSignal, ModuleSignal moduleSignal, bool decodeReadOnly)
         {
             string _text = Line[Index];
+            List<string> _cellText = new List<string>() { decodedLine.Last() };
 
             switch (_text)
             {
                 case KeywordDBChoices.If:
-                    DecodeIf(index, decodedLine, data, objectSignal, moduleSignal);
+                    TransferCellTextToDecoded(DecodeIf(index, decodedLine, data, objectSignal, moduleSignal, decodeReadOnly), _cellText);
                     break;
 
                 case KeywordDBChoices.Tab:
-                    decodedLine.Add(string.Empty);
+                    Index++;
+                    _cellText.Add(string.Empty);
                     break;
 
                 case KeywordDBChoices.Data:
-                    decodedLine[decodedLine.Count - 1] += DecodeData(data, objectSignal);
+                    _cellText[_cellText.Count - 1] += DecodeData(data, objectSignal, moduleSignal);
                     break;
 
                 case KeywordDBChoices.Index:
-                    decodedLine[decodedLine.Count - 1] += DecodeIndex(index,Line);
+                    _cellText[_cellText.Count - 1] += DecodeIndex(index,Line);
                     break;
 
                 case KeywordDBChoices.Object:
-                    decodedLine[decodedLine.Count - 1] += DecodeObjects(objectSignal);
+                    _cellText[_cellText.Count - 1] += DecodeObjects(objectSignal);
                     break;
 
                 case KeywordDBChoices.Modules:
-                    decodedLine[decodedLine.Count - 1] += DecodeModules(moduleSignal);
-                    break;
-
-                case KeywordDBChoices.VariableType:
-                    DecodeTagType(Line[Index]);
+                    _cellText[_cellText.Count - 1] += DecodeModules(moduleSignal);
                     break;
 
                 case KeywordDBChoices.Text:
-                    decodedLine[decodedLine.Count - 1] += DecodeText();
+                    _cellText[_cellText.Count - 1] += DecodeText();
+                    break;
+
+                case KeywordDBChoices.IOPin:
+                    _cellText[_cellText.Count - 1] += DecodeIOPin(data, objectSignal, moduleSignal);
                     break;
 
                 case KeywordDBChoices.IOTag:
-                    decodedLine[decodedLine.Count - 1] += DecodeIOTag(data, objectSignal, moduleSignal);
+                    _cellText[_cellText.Count - 1] += DecodeIOTag(data, objectSignal, moduleSignal);
                     break;
 
                 case KeywordDBChoices.IOChannel:
-                    decodedLine[decodedLine.Count - 1] += DecodeIOChannel(data, objectSignal, moduleSignal);
+                    _cellText[_cellText.Count - 1] += DecodeIOChannel(data, objectSignal, moduleSignal);
                     break;
 
+                case KeywordDBChoices.IOText:
+                    _cellText[_cellText.Count - 1] += DecodeIOText(data, objectSignal, moduleSignal);
+                    break;
+
+                case KeywordDBChoices.MultiLine:
+                    _cellText = DecodeMultiline(index, decodedLine, data, objectSignal, moduleSignal);
+                    break;
+
+                case KeywordDBChoices.MultiLineEnd:
                 case KeywordDBChoices.None:
                     DecodeNone();
                     break;
 
                 default:
                     Debug _debug = new Debug();
-                    const string text = "DBGeneralSignal.DecodeCell";
-                    _debug.ToFile(text + " " + Resources.ParameterNotFound + ":" + _text, DebugLevels.None, DebugMessageType.Critical);
-                    throw new InvalidProgramException(text + "." + _text + " is not created for this element");
+                    const string _debugText = "DBGeneralSignal.DecodeCell";
+                    _debug.ToFile(_debugText + " " + Resources.ParameterNotFound + ":" + _text, DebugLevels.None, DebugMessageType.Critical);
+                    throw new InvalidProgramException(_debugText + "." + _text + " is not created for this element");
             }
+            if (!decodeReadOnly)
+                TransferCellTextToDecoded(_cellText, decodedLine);
+
+            return _cellText;
         }
 
         /// <summary>
@@ -505,9 +716,19 @@ namespace IO_list_automation_new.DB
             Index = 0;
             List<string> decodedLine = new List<string>() { string.Empty };
 
+            int _count = 0;
             while (Index < Line.Count)
-                DecodeCell(index, decodedLine, data, objectSignal, moduleSignal);
-
+            {
+                _count++;
+                DecodeCell(index, decodedLine, data, objectSignal, moduleSignal, false);
+                if (_count > 1000)
+                {
+                    Debug _debug = new Debug();
+                    const string _debugText = "DecodeElementsAll";
+                    _debug.ToFile(_debugText + ": infinite loop", DebugLevels.None, DebugMessageType.Critical);
+                    throw new InvalidProgramException(_debugText + ": infinite loop");
+                }
+            }
             return decodedLine;
         }
     }

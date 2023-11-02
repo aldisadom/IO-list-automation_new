@@ -39,54 +39,55 @@ namespace IO_list_automation_new
             this.ProgressLabel = new System.Windows.Forms.Label();
             this.ProgressBars = new System.Windows.Forms.ProgressBar();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
-            this.FileDropDownButton = new System.Windows.Forms.ToolStripDropDownButton();
-            this.FileSaveMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.FileSaveAllMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.FileLoadMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.FileLoadAllMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.File_DropDown = new System.Windows.Forms.ToolStripDropDownButton();
+            this.File_Save = new System.Windows.Forms.ToolStripMenuItem();
+            this.File_SaveAll = new System.Windows.Forms.ToolStripMenuItem();
+            this.File_Load = new System.Windows.Forms.ToolStripMenuItem();
+            this.File_LoadAll = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-            this.FileLanguageToolMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.FileLanguageENMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.FileLanguageLTMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.FileHelpMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.FileAboutMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.File_Language = new System.Windows.Forms.ToolStripMenuItem();
+            this.File_Language_EN = new System.Windows.Forms.ToolStripMenuItem();
+            this.File_Language_LT = new System.Windows.Forms.ToolStripMenuItem();
+            this.File_Help = new System.Windows.Forms.ToolStripMenuItem();
+            this.File_About = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
-            this.FileExitMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.ProjectDropDownButton = new System.Windows.Forms.ToolStripDropDownButton();
-            this.ProjectGetDataFromDesignMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.ProjectCompareDesignMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.ProjectTransferDataMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.File_Exit = new System.Windows.Forms.ToolStripMenuItem();
+            this.Project_DropDown = new System.Windows.Forms.ToolStripDropDownButton();
+            this.Project_GetDataFromDesign = new System.Windows.Forms.ToolStripMenuItem();
+            this.Project_CompareDesign = new System.Windows.Forms.ToolStripMenuItem();
+            this.Project_TransferData = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
-            this.ProjectCPUMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.ProjectCPUAddMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.ProjectSCADAMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.ProjectSCADAAddMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.ProjectLanguageMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.ProjectLanguageAddMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.DataDropDownButton = new System.Windows.Forms.ToolStripDropDownButton();
+            this.Project_CPU = new System.Windows.Forms.ToolStripMenuItem();
+            this.Project_CPU_Add = new System.Windows.Forms.ToolStripMenuItem();
+            this.Project_SCADA = new System.Windows.Forms.ToolStripMenuItem();
+            this.Project_SCADA_Add = new System.Windows.Forms.ToolStripMenuItem();
+            this.Project_Language = new System.Windows.Forms.ToolStripMenuItem();
+            this.Project_Language_Add = new System.Windows.Forms.ToolStripMenuItem();
+            this.Data_DropDown = new System.Windows.Forms.ToolStripDropDownButton();
             this.DataFindFunctionMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.DataKKSCombineMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.ObjectsDropDownButton = new System.Windows.Forms.ToolStripDropDownButton();
-            this.ObjectsFindMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.Data_KKSCombine = new System.Windows.Forms.ToolStripMenuItem();
+            this.Objects_DropDown = new System.Windows.Forms.ToolStripDropDownButton();
+            this.Objects_Find = new System.Windows.Forms.ToolStripMenuItem();
             this.ObjectsFindTypeMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.ObjectTransferToDataMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.Object_TransferToData = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator7 = new System.Windows.Forms.ToolStripSeparator();
-            this.ObjectEditTypesMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.IODropDownButton = new System.Windows.Forms.ToolStripDropDownButton();
-            this.IOFindModulesMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.Object_EditTypes = new System.Windows.Forms.ToolStripMenuItem();
+            this.IO_DropDown = new System.Windows.Forms.ToolStripDropDownButton();
+            this.IO_FindModules = new System.Windows.Forms.ToolStripMenuItem();
+            this.IO_Generate = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator8 = new System.Windows.Forms.ToolStripSeparator();
-            this.IOEditMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.DeclareDropDownButton = new System.Windows.Forms.ToolStripDropDownButton();
-            this.DeclareGenerateMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.IO_Edit = new System.Windows.Forms.ToolStripMenuItem();
+            this.Declare_DropDown = new System.Windows.Forms.ToolStripDropDownButton();
+            this.Declare_Generate = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
-            this.DeclareEditMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.InstanceDropDownButton = new System.Windows.Forms.ToolStripDropDownButton();
-            this.InstancesGenerateMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.Declare_Edit = new System.Windows.Forms.ToolStripMenuItem();
+            this.Instance_DropDown = new System.Windows.Forms.ToolStripDropDownButton();
+            this.Instances_Generate = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
-            this.InstancesEditMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.SCADADropDownButton = new System.Windows.Forms.ToolStripDropDownButton();
+            this.Instances_Edit = new System.Windows.Forms.ToolStripMenuItem();
+            this.SCADA_DropDown = new System.Windows.Forms.ToolStripDropDownButton();
             this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
-            this.SCADAEditMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.SCADA_Edit = new System.Windows.Forms.ToolStripMenuItem();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.DesignTab = new System.Windows.Forms.TabPage();
             this.DesignGridView = new System.Windows.Forms.DataGridView();
@@ -99,6 +100,7 @@ namespace IO_list_automation_new
             this.FindTextBox = new System.Windows.Forms.TextBox();
             this.FindButton = new System.Windows.Forms.Button();
             this.comboBoxColumn = new System.Windows.Forms.ComboBox();
+            this.SCADA_Generate = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStrip1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.DesignTab.SuspendLayout();
@@ -140,228 +142,228 @@ namespace IO_list_automation_new
             // toolStrip1
             // 
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.FileDropDownButton,
-            this.ProjectDropDownButton,
-            this.DataDropDownButton,
-            this.ObjectsDropDownButton,
-            this.IODropDownButton,
-            this.DeclareDropDownButton,
-            this.InstanceDropDownButton,
-            this.SCADADropDownButton});
+            this.File_DropDown,
+            this.Project_DropDown,
+            this.Data_DropDown,
+            this.Objects_DropDown,
+            this.IO_DropDown,
+            this.Declare_DropDown,
+            this.Instance_DropDown,
+            this.SCADA_DropDown});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.Size = new System.Drawing.Size(1284, 25);
             this.toolStrip1.TabIndex = 7;
             this.toolStrip1.Text = "toolStrip1";
             // 
-            // FileDropDownButton
+            // File_DropDown
             // 
-            this.FileDropDownButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.FileDropDownButton.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.FileSaveMenuItem,
-            this.FileSaveAllMenuItem,
-            this.FileLoadMenuItem,
-            this.FileLoadAllMenuItem,
+            this.File_DropDown.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.File_DropDown.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.File_Save,
+            this.File_SaveAll,
+            this.File_Load,
+            this.File_LoadAll,
             this.toolStripSeparator1,
-            this.FileLanguageToolMenuItem,
-            this.FileHelpMenuItem,
-            this.FileAboutMenuItem,
+            this.File_Language,
+            this.File_Help,
+            this.File_About,
             this.toolStripSeparator2,
-            this.FileExitMenuItem});
-            this.FileDropDownButton.Image = ((System.Drawing.Image)(resources.GetObject("FileDropDownButton.Image")));
-            this.FileDropDownButton.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.FileDropDownButton.Name = "FileDropDownButton";
-            this.FileDropDownButton.Size = new System.Drawing.Size(38, 22);
-            this.FileDropDownButton.Text = "File";
+            this.File_Exit});
+            this.File_DropDown.Image = ((System.Drawing.Image)(resources.GetObject("File_DropDown.Image")));
+            this.File_DropDown.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.File_DropDown.Name = "File_DropDown";
+            this.File_DropDown.Size = new System.Drawing.Size(38, 22);
+            this.File_DropDown.Text = "File";
             // 
-            // FileSaveMenuItem
+            // File_Save
             // 
-            this.FileSaveMenuItem.Name = "FileSaveMenuItem";
-            this.FileSaveMenuItem.Size = new System.Drawing.Size(126, 22);
-            this.FileSaveMenuItem.Text = "Save";
-            this.FileSaveMenuItem.Click += new System.EventHandler(this.FileSaveMenuItem_Click);
+            this.File_Save.Name = "File_Save";
+            this.File_Save.Size = new System.Drawing.Size(126, 22);
+            this.File_Save.Text = "Save";
+            this.File_Save.Click += new System.EventHandler(this.File_Save_Click);
             // 
-            // FileSaveAllMenuItem
+            // File_SaveAll
             // 
-            this.FileSaveAllMenuItem.Name = "FileSaveAllMenuItem";
-            this.FileSaveAllMenuItem.Size = new System.Drawing.Size(126, 22);
-            this.FileSaveAllMenuItem.Text = "Save all";
-            this.FileSaveAllMenuItem.Click += new System.EventHandler(this.FileSaveAllMenuItem_Click);
+            this.File_SaveAll.Name = "File_SaveAll";
+            this.File_SaveAll.Size = new System.Drawing.Size(126, 22);
+            this.File_SaveAll.Text = "Save all";
+            this.File_SaveAll.Click += new System.EventHandler(this.File_SaveAll_Click);
             // 
-            // FileLoadMenuItem
+            // File_Load
             // 
-            this.FileLoadMenuItem.Name = "FileLoadMenuItem";
-            this.FileLoadMenuItem.Size = new System.Drawing.Size(126, 22);
-            this.FileLoadMenuItem.Text = "Load";
-            this.FileLoadMenuItem.Click += new System.EventHandler(this.FileLoadMenuItem_Click);
+            this.File_Load.Name = "File_Load";
+            this.File_Load.Size = new System.Drawing.Size(126, 22);
+            this.File_Load.Text = "Load";
+            this.File_Load.Click += new System.EventHandler(this.File_Load_Click);
             // 
-            // FileLoadAllMenuItem
+            // File_LoadAll
             // 
-            this.FileLoadAllMenuItem.Name = "FileLoadAllMenuItem";
-            this.FileLoadAllMenuItem.Size = new System.Drawing.Size(126, 22);
-            this.FileLoadAllMenuItem.Text = "Load all";
-            this.FileLoadAllMenuItem.Click += new System.EventHandler(this.FileLoadAllMenuItem_Click);
+            this.File_LoadAll.Name = "File_LoadAll";
+            this.File_LoadAll.Size = new System.Drawing.Size(126, 22);
+            this.File_LoadAll.Text = "Load all";
+            this.File_LoadAll.Click += new System.EventHandler(this.File_LoadAll_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
             this.toolStripSeparator1.Size = new System.Drawing.Size(123, 6);
             // 
-            // FileLanguageToolMenuItem
+            // File_Language
             // 
-            this.FileLanguageToolMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.FileLanguageENMenuItem,
-            this.FileLanguageLTMenuItem});
-            this.FileLanguageToolMenuItem.Name = "FileLanguageToolMenuItem";
-            this.FileLanguageToolMenuItem.Size = new System.Drawing.Size(126, 22);
-            this.FileLanguageToolMenuItem.Text = "Language";
+            this.File_Language.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.File_Language_EN,
+            this.File_Language_LT});
+            this.File_Language.Name = "File_Language";
+            this.File_Language.Size = new System.Drawing.Size(126, 22);
+            this.File_Language.Text = "Language";
             // 
-            // FileLanguageENMenuItem
+            // File_Language_EN
             // 
-            this.FileLanguageENMenuItem.Name = "FileLanguageENMenuItem";
-            this.FileLanguageENMenuItem.Size = new System.Drawing.Size(89, 22);
-            this.FileLanguageENMenuItem.Text = "EN";
-            this.FileLanguageENMenuItem.Click += new System.EventHandler(this.FileLanguage_Click);
+            this.File_Language_EN.Name = "File_Language_EN";
+            this.File_Language_EN.Size = new System.Drawing.Size(89, 22);
+            this.File_Language_EN.Text = "EN";
+            this.File_Language_EN.Click += new System.EventHandler(this.FileLanguage_Click);
             // 
-            // FileLanguageLTMenuItem
+            // File_Language_LT
             // 
-            this.FileLanguageLTMenuItem.Name = "FileLanguageLTMenuItem";
-            this.FileLanguageLTMenuItem.Size = new System.Drawing.Size(89, 22);
-            this.FileLanguageLTMenuItem.Text = "LT";
-            this.FileLanguageLTMenuItem.Click += new System.EventHandler(this.FileLanguage_Click);
+            this.File_Language_LT.Name = "File_Language_LT";
+            this.File_Language_LT.Size = new System.Drawing.Size(89, 22);
+            this.File_Language_LT.Text = "LT";
+            this.File_Language_LT.Click += new System.EventHandler(this.FileLanguage_Click);
             // 
-            // FileHelpMenuItem
+            // File_Help
             // 
-            this.FileHelpMenuItem.Name = "FileHelpMenuItem";
-            this.FileHelpMenuItem.Size = new System.Drawing.Size(126, 22);
-            this.FileHelpMenuItem.Text = "Help";
-            this.FileHelpMenuItem.Click += new System.EventHandler(this.FileHelpMenuItem_Click);
+            this.File_Help.Name = "File_Help";
+            this.File_Help.Size = new System.Drawing.Size(126, 22);
+            this.File_Help.Text = "Help";
+            this.File_Help.Click += new System.EventHandler(this.File_Help_Click);
             // 
-            // FileAboutMenuItem
+            // File_About
             // 
-            this.FileAboutMenuItem.Name = "FileAboutMenuItem";
-            this.FileAboutMenuItem.Size = new System.Drawing.Size(126, 22);
-            this.FileAboutMenuItem.Text = "About";
-            this.FileAboutMenuItem.Click += new System.EventHandler(this.FileAboutMenuItem_Click);
+            this.File_About.Name = "File_About";
+            this.File_About.Size = new System.Drawing.Size(126, 22);
+            this.File_About.Text = "About";
+            this.File_About.Click += new System.EventHandler(this.File_About_Click);
             // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
             this.toolStripSeparator2.Size = new System.Drawing.Size(123, 6);
             // 
-            // FileExitMenuItem
+            // File_Exit
             // 
-            this.FileExitMenuItem.Name = "FileExitMenuItem";
-            this.FileExitMenuItem.Size = new System.Drawing.Size(126, 22);
-            this.FileExitMenuItem.Text = "Exit";
-            this.FileExitMenuItem.Click += new System.EventHandler(this.FileExitMenuItem_Click);
+            this.File_Exit.Name = "File_Exit";
+            this.File_Exit.Size = new System.Drawing.Size(126, 22);
+            this.File_Exit.Text = "Exit";
+            this.File_Exit.Click += new System.EventHandler(this.File_Exit_Click);
             // 
-            // ProjectDropDownButton
+            // Project_DropDown
             // 
-            this.ProjectDropDownButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.ProjectDropDownButton.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.ProjectGetDataFromDesignMenuItem,
-            this.ProjectCompareDesignMenuItem,
-            this.ProjectTransferDataMenuItem,
+            this.Project_DropDown.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.Project_DropDown.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.Project_GetDataFromDesign,
+            this.Project_CompareDesign,
+            this.Project_TransferData,
             this.toolStripSeparator3,
-            this.ProjectCPUMenuItem,
-            this.ProjectSCADAMenuItem,
-            this.ProjectLanguageMenuItem});
-            this.ProjectDropDownButton.Image = ((System.Drawing.Image)(resources.GetObject("ProjectDropDownButton.Image")));
-            this.ProjectDropDownButton.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.ProjectDropDownButton.Name = "ProjectDropDownButton";
-            this.ProjectDropDownButton.Size = new System.Drawing.Size(57, 22);
-            this.ProjectDropDownButton.Text = "Project";
-            this.ProjectDropDownButton.DropDownOpened += new System.EventHandler(this.ProjectDropDownButton_DropDownOpened);
+            this.Project_CPU,
+            this.Project_SCADA,
+            this.Project_Language});
+            this.Project_DropDown.Image = ((System.Drawing.Image)(resources.GetObject("Project_DropDown.Image")));
+            this.Project_DropDown.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.Project_DropDown.Name = "Project_DropDown";
+            this.Project_DropDown.Size = new System.Drawing.Size(57, 22);
+            this.Project_DropDown.Text = "Project";
+            this.Project_DropDown.DropDownOpened += new System.EventHandler(this.Project_DropDown_DropDownOpened);
             // 
-            // ProjectGetDataFromDesignMenuItem
+            // Project_GetDataFromDesign
             // 
-            this.ProjectGetDataFromDesignMenuItem.Name = "ProjectGetDataFromDesignMenuItem";
-            this.ProjectGetDataFromDesignMenuItem.Size = new System.Drawing.Size(212, 22);
-            this.ProjectGetDataFromDesignMenuItem.Text = "Get Data From Design";
-            this.ProjectGetDataFromDesignMenuItem.Click += new System.EventHandler(this.ProjectGetDataFromDesignMenuItem_Click);
+            this.Project_GetDataFromDesign.Name = "Project_GetDataFromDesign";
+            this.Project_GetDataFromDesign.Size = new System.Drawing.Size(212, 22);
+            this.Project_GetDataFromDesign.Text = "Get Data From Design";
+            this.Project_GetDataFromDesign.Click += new System.EventHandler(this.Project_GetDataFromDesign_Click);
             // 
-            // ProjectCompareDesignMenuItem
+            // Project_CompareDesign
             // 
-            this.ProjectCompareDesignMenuItem.Name = "ProjectCompareDesignMenuItem";
-            this.ProjectCompareDesignMenuItem.Size = new System.Drawing.Size(212, 22);
-            this.ProjectCompareDesignMenuItem.Text = "Compare with new design";
-            this.ProjectCompareDesignMenuItem.Click += new System.EventHandler(this.ProjectCompareDesignMenuItem_Click);
+            this.Project_CompareDesign.Name = "Project_CompareDesign";
+            this.Project_CompareDesign.Size = new System.Drawing.Size(212, 22);
+            this.Project_CompareDesign.Text = "Compare with new design";
+            this.Project_CompareDesign.Click += new System.EventHandler(this.Project_CompareDesign_Click);
             // 
-            // ProjectTransferDataMenuItem
+            // Project_TransferData
             // 
-            this.ProjectTransferDataMenuItem.Name = "ProjectTransferDataMenuItem";
-            this.ProjectTransferDataMenuItem.Size = new System.Drawing.Size(212, 22);
-            this.ProjectTransferDataMenuItem.Text = "Transfer design to data";
-            this.ProjectTransferDataMenuItem.Click += new System.EventHandler(this.ProjectTransferDataMenuItem_Click);
+            this.Project_TransferData.Name = "Project_TransferData";
+            this.Project_TransferData.Size = new System.Drawing.Size(212, 22);
+            this.Project_TransferData.Text = "Transfer design to data";
+            this.Project_TransferData.Click += new System.EventHandler(this.Project_TransferData_Click);
             // 
             // toolStripSeparator3
             // 
             this.toolStripSeparator3.Name = "toolStripSeparator3";
             this.toolStripSeparator3.Size = new System.Drawing.Size(209, 6);
             // 
-            // ProjectCPUMenuItem
+            // Project_CPU
             // 
-            this.ProjectCPUMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.ProjectCPUAddMenuItem});
-            this.ProjectCPUMenuItem.Name = "ProjectCPUMenuItem";
-            this.ProjectCPUMenuItem.Size = new System.Drawing.Size(212, 22);
-            this.ProjectCPUMenuItem.Text = "CPU";
-            this.ProjectCPUMenuItem.DropDownItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.ProjectCPUMenuItem_DropDownItemClicked);
-            this.ProjectCPUMenuItem.MouseEnter += new System.EventHandler(this.ProjectCPUMenuItem_MouseEnter);
+            this.Project_CPU.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.Project_CPU_Add});
+            this.Project_CPU.Name = "Project_CPU";
+            this.Project_CPU.Size = new System.Drawing.Size(212, 22);
+            this.Project_CPU.Text = "CPU";
+            this.Project_CPU.DropDownItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.Project_CPU_DropDownItemClicked);
+            this.Project_CPU.MouseEnter += new System.EventHandler(this.Project_CPU_MouseEnter);
             // 
-            // ProjectCPUAddMenuItem
+            // Project_CPU_Add
             // 
-            this.ProjectCPUAddMenuItem.Name = "ProjectCPUAddMenuItem";
-            this.ProjectCPUAddMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.ProjectCPUAddMenuItem.Tag = "Add";
-            this.ProjectCPUAddMenuItem.Text = "Add";
+            this.Project_CPU_Add.Name = "Project_CPU_Add";
+            this.Project_CPU_Add.Size = new System.Drawing.Size(96, 22);
+            this.Project_CPU_Add.Tag = "Add";
+            this.Project_CPU_Add.Text = "Add";
             // 
-            // ProjectSCADAMenuItem
+            // Project_SCADA
             // 
-            this.ProjectSCADAMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.ProjectSCADAAddMenuItem});
-            this.ProjectSCADAMenuItem.Name = "ProjectSCADAMenuItem";
-            this.ProjectSCADAMenuItem.Size = new System.Drawing.Size(212, 22);
-            this.ProjectSCADAMenuItem.Text = "SCADA";
-            this.ProjectSCADAMenuItem.DropDownItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.ProjectSCADAMenuItem_DropDownItemClicked);
-            this.ProjectSCADAMenuItem.MouseEnter += new System.EventHandler(this.ProjectSCADAMenuItem_MouseEnter);
+            this.Project_SCADA.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.Project_SCADA_Add});
+            this.Project_SCADA.Name = "Project_SCADA";
+            this.Project_SCADA.Size = new System.Drawing.Size(212, 22);
+            this.Project_SCADA.Text = "SCADA";
+            this.Project_SCADA.DropDownItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.Project_SCADA_DropDownItemClicked);
+            this.Project_SCADA.MouseEnter += new System.EventHandler(this.Project_SCADA_MouseEnter);
             // 
-            // ProjectSCADAAddMenuItem
+            // Project_SCADA_Add
             // 
-            this.ProjectSCADAAddMenuItem.Name = "ProjectSCADAAddMenuItem";
-            this.ProjectSCADAAddMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.ProjectSCADAAddMenuItem.Tag = "Add";
-            this.ProjectSCADAAddMenuItem.Text = "Add";
+            this.Project_SCADA_Add.Name = "Project_SCADA_Add";
+            this.Project_SCADA_Add.Size = new System.Drawing.Size(96, 22);
+            this.Project_SCADA_Add.Tag = "Add";
+            this.Project_SCADA_Add.Text = "Add";
             // 
-            // ProjectLanguageMenuItem
+            // Project_Language
             // 
-            this.ProjectLanguageMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.ProjectLanguageAddMenuItem});
-            this.ProjectLanguageMenuItem.Name = "ProjectLanguageMenuItem";
-            this.ProjectLanguageMenuItem.Size = new System.Drawing.Size(212, 22);
-            this.ProjectLanguageMenuItem.Text = "Language";
-            this.ProjectLanguageMenuItem.DropDownItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.ProjectLanguageMenuItem_DropDownItemClicked);
-            this.ProjectLanguageMenuItem.MouseEnter += new System.EventHandler(this.ProjectLanguageMenuItem_MouseEnter);
+            this.Project_Language.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.Project_Language_Add});
+            this.Project_Language.Name = "Project_Language";
+            this.Project_Language.Size = new System.Drawing.Size(212, 22);
+            this.Project_Language.Text = "Language";
+            this.Project_Language.DropDownItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.Project_Language_DropDownItemClicked);
+            this.Project_Language.MouseEnter += new System.EventHandler(this.Project_Language_MouseEnter);
             // 
-            // ProjectLanguageAddMenuItem
+            // Project_Language_Add
             // 
-            this.ProjectLanguageAddMenuItem.Name = "ProjectLanguageAddMenuItem";
-            this.ProjectLanguageAddMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.ProjectLanguageAddMenuItem.Tag = "Add";
-            this.ProjectLanguageAddMenuItem.Text = "Add";
+            this.Project_Language_Add.Name = "Project_Language_Add";
+            this.Project_Language_Add.Size = new System.Drawing.Size(96, 22);
+            this.Project_Language_Add.Tag = "Add";
+            this.Project_Language_Add.Text = "Add";
             // 
-            // DataDropDownButton
+            // Data_DropDown
             // 
-            this.DataDropDownButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.DataDropDownButton.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.Data_DropDown.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.Data_DropDown.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.DataFindFunctionMenuItem,
-            this.DataKKSCombineMenuItem});
-            this.DataDropDownButton.Image = ((System.Drawing.Image)(resources.GetObject("DataDropDownButton.Image")));
-            this.DataDropDownButton.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.DataDropDownButton.Name = "DataDropDownButton";
-            this.DataDropDownButton.Size = new System.Drawing.Size(44, 22);
-            this.DataDropDownButton.Text = "Data";
+            this.Data_KKSCombine});
+            this.Data_DropDown.Image = ((System.Drawing.Image)(resources.GetObject("Data_DropDown.Image")));
+            this.Data_DropDown.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.Data_DropDown.Name = "Data_DropDown";
+            this.Data_DropDown.Size = new System.Drawing.Size(44, 22);
+            this.Data_DropDown.Text = "Data";
             // 
             // DataFindFunctionMenuItem
             // 
@@ -370,34 +372,34 @@ namespace IO_list_automation_new
             this.DataFindFunctionMenuItem.Text = "Find function";
             this.DataFindFunctionMenuItem.Click += new System.EventHandler(this.DataFindFunctionMenuItem_Click);
             // 
-            // DataKKSCombineMenuItem
+            // Data_KKSCombine
             // 
-            this.DataKKSCombineMenuItem.Name = "DataKKSCombineMenuItem";
-            this.DataKKSCombineMenuItem.Size = new System.Drawing.Size(146, 22);
-            this.DataKKSCombineMenuItem.Text = "KKS Combine";
-            this.DataKKSCombineMenuItem.Click += new System.EventHandler(this.DataKKSCombineMenuItem_Click);
+            this.Data_KKSCombine.Name = "Data_KKSCombine";
+            this.Data_KKSCombine.Size = new System.Drawing.Size(146, 22);
+            this.Data_KKSCombine.Text = "KKS Combine";
+            this.Data_KKSCombine.Click += new System.EventHandler(this.Data_KKSCombine_Click);
             // 
-            // ObjectsDropDownButton
+            // Objects_DropDown
             // 
-            this.ObjectsDropDownButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.ObjectsDropDownButton.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.ObjectsFindMenuItem,
+            this.Objects_DropDown.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.Objects_DropDown.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.Objects_Find,
             this.ObjectsFindTypeMenuItem,
-            this.ObjectTransferToDataMenuItem,
+            this.Object_TransferToData,
             this.toolStripSeparator7,
-            this.ObjectEditTypesMenuItem});
-            this.ObjectsDropDownButton.Image = ((System.Drawing.Image)(resources.GetObject("ObjectsDropDownButton.Image")));
-            this.ObjectsDropDownButton.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.ObjectsDropDownButton.Name = "ObjectsDropDownButton";
-            this.ObjectsDropDownButton.Size = new System.Drawing.Size(60, 22);
-            this.ObjectsDropDownButton.Text = "Objects";
+            this.Object_EditTypes});
+            this.Objects_DropDown.Image = ((System.Drawing.Image)(resources.GetObject("Objects_DropDown.Image")));
+            this.Objects_DropDown.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.Objects_DropDown.Name = "Objects_DropDown";
+            this.Objects_DropDown.Size = new System.Drawing.Size(60, 22);
+            this.Objects_DropDown.Text = "Objects";
             // 
-            // ObjectsFindMenuItem
+            // Objects_Find
             // 
-            this.ObjectsFindMenuItem.Name = "ObjectsFindMenuItem";
-            this.ObjectsFindMenuItem.Size = new System.Drawing.Size(164, 22);
-            this.ObjectsFindMenuItem.Text = "Find Uniques";
-            this.ObjectsFindMenuItem.Click += new System.EventHandler(this.ObjectsFindMenuItem_Click);
+            this.Objects_Find.Name = "Objects_Find";
+            this.Objects_Find.Size = new System.Drawing.Size(164, 22);
+            this.Objects_Find.Text = "Find Unique";
+            this.Objects_Find.Click += new System.EventHandler(this.Objects_Find_Click);
             // 
             // ObjectsFindTypeMenuItem
             // 
@@ -406,144 +408,153 @@ namespace IO_list_automation_new
             this.ObjectsFindTypeMenuItem.Text = "Find object types";
             this.ObjectsFindTypeMenuItem.Click += new System.EventHandler(this.ObjectsFindTypeMenuItem_Click);
             // 
-            // ObjectTransferToDataMenuItem
+            // Object_TransferToData
             // 
-            this.ObjectTransferToDataMenuItem.Name = "ObjectTransferToDataMenuItem";
-            this.ObjectTransferToDataMenuItem.Size = new System.Drawing.Size(164, 22);
-            this.ObjectTransferToDataMenuItem.Text = "Transfer to data";
-            this.ObjectTransferToDataMenuItem.Click += new System.EventHandler(this.ObjectTransferToDataMenuItem_Click);
+            this.Object_TransferToData.Name = "Object_TransferToData";
+            this.Object_TransferToData.Size = new System.Drawing.Size(164, 22);
+            this.Object_TransferToData.Text = "Transfer to data";
+            this.Object_TransferToData.Click += new System.EventHandler(this.Object_TransferToData_Click);
             // 
             // toolStripSeparator7
             // 
             this.toolStripSeparator7.Name = "toolStripSeparator7";
             this.toolStripSeparator7.Size = new System.Drawing.Size(161, 6);
             // 
-            // ObjectEditTypesMenuItem
+            // Object_EditTypes
             // 
-            this.ObjectEditTypesMenuItem.Name = "ObjectEditTypesMenuItem";
-            this.ObjectEditTypesMenuItem.Size = new System.Drawing.Size(164, 22);
-            this.ObjectEditTypesMenuItem.Text = "Edit object types";
-            this.ObjectEditTypesMenuItem.Click += new System.EventHandler(this.ObjectEditTypesMenuItem_Click);
+            this.Object_EditTypes.Name = "Object_EditTypes";
+            this.Object_EditTypes.Size = new System.Drawing.Size(164, 22);
+            this.Object_EditTypes.Text = "Edit object types";
+            this.Object_EditTypes.Click += new System.EventHandler(this.Object_EditTypes_Click);
             // 
-            // IODropDownButton
+            // IO_DropDown
             // 
-            this.IODropDownButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.IODropDownButton.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.IOFindModulesMenuItem,
+            this.IO_DropDown.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.IO_DropDown.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.IO_FindModules,
+            this.IO_Generate,
             this.toolStripSeparator8,
-            this.IOEditMenuItem});
-            this.IODropDownButton.Image = ((System.Drawing.Image)(resources.GetObject("IODropDownButton.Image")));
-            this.IODropDownButton.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.IODropDownButton.Name = "IODropDownButton";
-            this.IODropDownButton.Size = new System.Drawing.Size(32, 22);
-            this.IODropDownButton.Text = "IO";
+            this.IO_Edit});
+            this.IO_DropDown.Image = ((System.Drawing.Image)(resources.GetObject("IO_DropDown.Image")));
+            this.IO_DropDown.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.IO_DropDown.Name = "IO_DropDown";
+            this.IO_DropDown.Size = new System.Drawing.Size(32, 22);
+            this.IO_DropDown.Text = "IO";
             // 
-            // IOFindModulesMenuItem
+            // IO_FindModules
             // 
-            this.IOFindModulesMenuItem.Name = "IOFindModulesMenuItem";
-            this.IOFindModulesMenuItem.Size = new System.Drawing.Size(146, 22);
-            this.IOFindModulesMenuItem.Text = "Find Modules";
-            this.IOFindModulesMenuItem.Click += new System.EventHandler(this.IOFindModulesMenuItem_Click);
+            this.IO_FindModules.Name = "IO_FindModules";
+            this.IO_FindModules.Size = new System.Drawing.Size(146, 22);
+            this.IO_FindModules.Text = "Find Modules";
+            this.IO_FindModules.Click += new System.EventHandler(this.IO_FindModules_Click);
+            // 
+            // IO_Generate
+            // 
+            this.IO_Generate.Name = "IO_Generate";
+            this.IO_Generate.Size = new System.Drawing.Size(146, 22);
+            this.IO_Generate.Text = "Generate";
+            this.IO_Generate.Click += new System.EventHandler(this.IO_Generate_Click);
             // 
             // toolStripSeparator8
             // 
             this.toolStripSeparator8.Name = "toolStripSeparator8";
             this.toolStripSeparator8.Size = new System.Drawing.Size(143, 6);
             // 
-            // IOEditMenuItem
+            // IO_Edit
             // 
-            this.IOEditMenuItem.Name = "IOEditMenuItem";
-            this.IOEditMenuItem.Size = new System.Drawing.Size(146, 22);
-            this.IOEditMenuItem.Text = "Edit IO";
-            this.IOEditMenuItem.Click += new System.EventHandler(this.IOEditMenuItem_Click);
+            this.IO_Edit.Name = "IO_Edit";
+            this.IO_Edit.Size = new System.Drawing.Size(146, 22);
+            this.IO_Edit.Text = "Edit IO";
+            this.IO_Edit.Click += new System.EventHandler(this.IO_Edit_Click);
             // 
-            // DeclareDropDownButton
+            // Declare_DropDown
             // 
-            this.DeclareDropDownButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.DeclareDropDownButton.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.DeclareGenerateMenuItem,
+            this.Declare_DropDown.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.Declare_DropDown.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.Declare_Generate,
             this.toolStripSeparator6,
-            this.DeclareEditMenuItem});
-            this.DeclareDropDownButton.Image = ((System.Drawing.Image)(resources.GetObject("DeclareDropDownButton.Image")));
-            this.DeclareDropDownButton.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.DeclareDropDownButton.Name = "DeclareDropDownButton";
-            this.DeclareDropDownButton.Size = new System.Drawing.Size(59, 22);
-            this.DeclareDropDownButton.Text = "Declare";
+            this.Declare_Edit});
+            this.Declare_DropDown.Image = ((System.Drawing.Image)(resources.GetObject("Declare_DropDown.Image")));
+            this.Declare_DropDown.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.Declare_DropDown.Name = "Declare_DropDown";
+            this.Declare_DropDown.Size = new System.Drawing.Size(59, 22);
+            this.Declare_DropDown.Text = "Declare";
             // 
-            // DeclareGenerateMenuItem
+            // Declare_Generate
             // 
-            this.DeclareGenerateMenuItem.Name = "DeclareGenerateMenuItem";
-            this.DeclareGenerateMenuItem.Size = new System.Drawing.Size(135, 22);
-            this.DeclareGenerateMenuItem.Text = "Generate";
-            this.DeclareGenerateMenuItem.Click += new System.EventHandler(this.DeclareGenerateMenuItem_Click);
+            this.Declare_Generate.Name = "Declare_Generate";
+            this.Declare_Generate.Size = new System.Drawing.Size(135, 22);
+            this.Declare_Generate.Text = "Generate";
+            this.Declare_Generate.Click += new System.EventHandler(this.Declare_Generate_Click);
             // 
             // toolStripSeparator6
             // 
             this.toolStripSeparator6.Name = "toolStripSeparator6";
             this.toolStripSeparator6.Size = new System.Drawing.Size(132, 6);
             // 
-            // DeclareEditMenuItem
+            // Declare_Edit
             // 
-            this.DeclareEditMenuItem.Name = "DeclareEditMenuItem";
-            this.DeclareEditMenuItem.Size = new System.Drawing.Size(135, 22);
-            this.DeclareEditMenuItem.Text = "Edit declare";
-            this.DeclareEditMenuItem.Click += new System.EventHandler(this.DeclareEditMenuItem_Click);
+            this.Declare_Edit.Name = "Declare_Edit";
+            this.Declare_Edit.Size = new System.Drawing.Size(135, 22);
+            this.Declare_Edit.Text = "Edit declare";
+            this.Declare_Edit.Click += new System.EventHandler(this.Declare_Edit_Click);
             // 
-            // InstanceDropDownButton
+            // Instance_DropDown
             // 
-            this.InstanceDropDownButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.InstanceDropDownButton.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.InstancesGenerateMenuItem,
+            this.Instance_DropDown.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.Instance_DropDown.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.Instances_Generate,
             this.toolStripSeparator4,
-            this.InstancesEditMenuItem});
-            this.InstanceDropDownButton.Image = ((System.Drawing.Image)(resources.GetObject("InstanceDropDownButton.Image")));
-            this.InstanceDropDownButton.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.InstanceDropDownButton.Name = "InstanceDropDownButton";
-            this.InstanceDropDownButton.Size = new System.Drawing.Size(64, 22);
-            this.InstanceDropDownButton.Text = "Instance";
+            this.Instances_Edit});
+            this.Instance_DropDown.Image = ((System.Drawing.Image)(resources.GetObject("Instance_DropDown.Image")));
+            this.Instance_DropDown.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.Instance_DropDown.Name = "Instance_DropDown";
+            this.Instance_DropDown.Size = new System.Drawing.Size(64, 22);
+            this.Instance_DropDown.Text = "Instance";
             // 
-            // InstancesGenerateMenuItem
+            // Instances_Generate
             // 
-            this.InstancesGenerateMenuItem.Name = "InstancesGenerateMenuItem";
-            this.InstancesGenerateMenuItem.Size = new System.Drawing.Size(146, 22);
-            this.InstancesGenerateMenuItem.Text = "Generate";
-            this.InstancesGenerateMenuItem.Click += new System.EventHandler(this.InstancesGenerateMenuItem_Click);
+            this.Instances_Generate.Name = "Instances_Generate";
+            this.Instances_Generate.Size = new System.Drawing.Size(180, 22);
+            this.Instances_Generate.Text = "Generate";
+            this.Instances_Generate.Click += new System.EventHandler(this.Instances_Generate_Click);
             // 
             // toolStripSeparator4
             // 
             this.toolStripSeparator4.Name = "toolStripSeparator4";
-            this.toolStripSeparator4.Size = new System.Drawing.Size(143, 6);
+            this.toolStripSeparator4.Size = new System.Drawing.Size(177, 6);
             // 
-            // InstancesEditMenuItem
+            // Instances_Edit
             // 
-            this.InstancesEditMenuItem.Name = "InstancesEditMenuItem";
-            this.InstancesEditMenuItem.Size = new System.Drawing.Size(146, 22);
-            this.InstancesEditMenuItem.Text = "Edit instances";
-            this.InstancesEditMenuItem.Click += new System.EventHandler(this.InstancesEditMenuItem_Click);
+            this.Instances_Edit.Name = "Instances_Edit";
+            this.Instances_Edit.Size = new System.Drawing.Size(180, 22);
+            this.Instances_Edit.Text = "Edit instances";
+            this.Instances_Edit.Click += new System.EventHandler(this.Instances_Edit_Click);
             // 
-            // SCADADropDownButton
+            // SCADA_DropDown
             // 
-            this.SCADADropDownButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.SCADADropDownButton.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.SCADA_DropDown.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.SCADA_DropDown.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.SCADA_Generate,
             this.toolStripSeparator5,
-            this.SCADAEditMenuItem});
-            this.SCADADropDownButton.Image = ((System.Drawing.Image)(resources.GetObject("SCADADropDownButton.Image")));
-            this.SCADADropDownButton.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.SCADADropDownButton.Name = "SCADADropDownButton";
-            this.SCADADropDownButton.Size = new System.Drawing.Size(58, 22);
-            this.SCADADropDownButton.Text = "SCADA";
+            this.SCADA_Edit});
+            this.SCADA_DropDown.Image = ((System.Drawing.Image)(resources.GetObject("SCADA_DropDown.Image")));
+            this.SCADA_DropDown.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.SCADA_DropDown.Name = "SCADA_DropDown";
+            this.SCADA_DropDown.Size = new System.Drawing.Size(58, 22);
+            this.SCADA_DropDown.Text = "SCADA";
             // 
             // toolStripSeparator5
             // 
             this.toolStripSeparator5.Name = "toolStripSeparator5";
-            this.toolStripSeparator5.Size = new System.Drawing.Size(132, 6);
+            this.toolStripSeparator5.Size = new System.Drawing.Size(177, 6);
             // 
-            // SCADAEditMenuItem
+            // SCADA_Edit
             // 
-            this.SCADAEditMenuItem.Name = "SCADAEditMenuItem";
-            this.SCADAEditMenuItem.Size = new System.Drawing.Size(135, 22);
-            this.SCADAEditMenuItem.Text = "Edit SCADA";
-            this.SCADAEditMenuItem.Click += new System.EventHandler(this.SCADAEditMenuItem_Click);
+            this.SCADA_Edit.Name = "SCADA_Edit";
+            this.SCADA_Edit.Size = new System.Drawing.Size(180, 22);
+            this.SCADA_Edit.Text = "Edit SCADA";
+            this.SCADA_Edit.Click += new System.EventHandler(this.SCADA_Edit_Click);
             // 
             // tabControl1
             // 
@@ -676,6 +687,13 @@ namespace IO_list_automation_new
             this.comboBoxColumn.Visible = false;
             this.comboBoxColumn.SelectedValueChanged += new System.EventHandler(this.ComboBoxColumn_SelectedValueChanged);
             // 
+            // SCADA_Generate
+            // 
+            this.SCADA_Generate.Name = "SCADA_Generate";
+            this.SCADA_Generate.Size = new System.Drawing.Size(180, 22);
+            this.SCADA_Generate.Text = "Generate";
+            this.SCADA_Generate.Click += new System.EventHandler(this.SCADAGenerateMenuItem_Click);
+            // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -713,23 +731,23 @@ namespace IO_list_automation_new
         private System.Windows.Forms.Label ProgressLabel;
         private System.Windows.Forms.ProgressBar ProgressBars;
         private System.Windows.Forms.ToolStrip toolStrip1;
-        private System.Windows.Forms.ToolStripDropDownButton FileDropDownButton;
-        private System.Windows.Forms.ToolStripMenuItem FileSaveMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem FileSaveAllMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem FileLoadMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem FileLoadAllMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem FileHelpMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem FileAboutMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem FileExitMenuItem;
-        private System.Windows.Forms.ToolStripDropDownButton ProjectDropDownButton;
-        private System.Windows.Forms.ToolStripDropDownButton DataDropDownButton;
-        private System.Windows.Forms.ToolStripDropDownButton ObjectsDropDownButton;
-        private System.Windows.Forms.ToolStripDropDownButton DeclareDropDownButton;
-        private System.Windows.Forms.ToolStripDropDownButton InstanceDropDownButton;
-        private System.Windows.Forms.ToolStripDropDownButton SCADADropDownButton;
-        private System.Windows.Forms.ToolStripMenuItem ProjectGetDataFromDesignMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem ProjectCompareDesignMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem ProjectTransferDataMenuItem;
+        private System.Windows.Forms.ToolStripDropDownButton File_DropDown;
+        private System.Windows.Forms.ToolStripMenuItem File_Save;
+        private System.Windows.Forms.ToolStripMenuItem File_SaveAll;
+        private System.Windows.Forms.ToolStripMenuItem File_Load;
+        private System.Windows.Forms.ToolStripMenuItem File_LoadAll;
+        private System.Windows.Forms.ToolStripMenuItem File_Help;
+        private System.Windows.Forms.ToolStripMenuItem File_About;
+        private System.Windows.Forms.ToolStripMenuItem File_Exit;
+        private System.Windows.Forms.ToolStripDropDownButton Project_DropDown;
+        private System.Windows.Forms.ToolStripDropDownButton Data_DropDown;
+        private System.Windows.Forms.ToolStripDropDownButton Objects_DropDown;
+        private System.Windows.Forms.ToolStripDropDownButton Declare_DropDown;
+        private System.Windows.Forms.ToolStripDropDownButton Instance_DropDown;
+        private System.Windows.Forms.ToolStripDropDownButton SCADA_DropDown;
+        private System.Windows.Forms.ToolStripMenuItem Project_GetDataFromDesign;
+        private System.Windows.Forms.ToolStripMenuItem Project_CompareDesign;
+        private System.Windows.Forms.ToolStripMenuItem Project_TransferData;
         private System.Windows.Forms.ToolStripMenuItem DataFindFunctionMenuItem;
         private System.Windows.Forms.TabControl tabControl1;
         private System.Windows.Forms.TabPage DesignTab;
@@ -740,39 +758,41 @@ namespace IO_list_automation_new
         private System.Windows.Forms.DataGridView DesignGridView;
         private DataGridView DataGridView;
         private DataGridView ObjectsGridView;
-        private ToolStripMenuItem DataKKSCombineMenuItem;
+        private ToolStripMenuItem Data_KKSCombine;
         private ComboBox comboBoxColumn;
-        private ToolStripMenuItem ObjectsFindMenuItem;
-        private ToolStripMenuItem ObjectTransferToDataMenuItem;
+        private ToolStripMenuItem Objects_Find;
+        private ToolStripMenuItem Object_TransferToData;
         private ToolStripSeparator toolStripSeparator1;
         private ToolStripSeparator toolStripSeparator2;
         private ToolStripSeparator toolStripSeparator3;
-        private ToolStripMenuItem ProjectCPUMenuItem;
-        private ToolStripMenuItem ProjectSCADAMenuItem;
-        private ToolStripMenuItem ProjectLanguageMenuItem;
-        private ToolStripMenuItem FileLanguageToolMenuItem;
-        private ToolStripMenuItem FileLanguageENMenuItem;
-        private ToolStripMenuItem FileLanguageLTMenuItem;
-        private ToolStripMenuItem ProjectCPUAddMenuItem;
-        private ToolStripMenuItem ProjectSCADAAddMenuItem;
-        private ToolStripMenuItem ProjectLanguageAddMenuItem;
+        private ToolStripMenuItem Project_CPU;
+        private ToolStripMenuItem Project_SCADA;
+        private ToolStripMenuItem Project_Language;
+        private ToolStripMenuItem File_Language;
+        private ToolStripMenuItem File_Language_EN;
+        private ToolStripMenuItem File_Language_LT;
+        private ToolStripMenuItem Project_CPU_Add;
+        private ToolStripMenuItem Project_SCADA_Add;
+        private ToolStripMenuItem Project_Language_Add;
         private ToolStripSeparator toolStripSeparator7;
-        private ToolStripMenuItem ObjectEditTypesMenuItem;
+        private ToolStripMenuItem Object_EditTypes;
         private ToolStripSeparator toolStripSeparator6;
-        private ToolStripMenuItem DeclareEditMenuItem;
+        private ToolStripMenuItem Declare_Edit;
         private ToolStripSeparator toolStripSeparator4;
-        private ToolStripMenuItem InstancesEditMenuItem;
+        private ToolStripMenuItem Instances_Edit;
         private ToolStripSeparator toolStripSeparator5;
-        private ToolStripMenuItem SCADAEditMenuItem;
-        private ToolStripDropDownButton IODropDownButton;
+        private ToolStripMenuItem SCADA_Edit;
+        private ToolStripDropDownButton IO_DropDown;
         private ToolStripSeparator toolStripSeparator8;
-        private ToolStripMenuItem IOEditMenuItem;
+        private ToolStripMenuItem IO_Edit;
         private ToolStripMenuItem ObjectsFindTypeMenuItem;
-        private ToolStripMenuItem InstancesGenerateMenuItem;
-        private ToolStripMenuItem DeclareGenerateMenuItem;
+        private ToolStripMenuItem Instances_Generate;
+        private ToolStripMenuItem Declare_Generate;
         private TabPage ModuleTab;
         private DataGridView ModulesGridView;
-        private ToolStripMenuItem IOFindModulesMenuItem;
+        private ToolStripMenuItem IO_FindModules;
+        private ToolStripMenuItem IO_Generate;
+        private ToolStripMenuItem SCADA_Generate;
     }
 }
 

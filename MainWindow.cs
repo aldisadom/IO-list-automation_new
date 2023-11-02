@@ -41,61 +41,62 @@ namespace IO_list_automation_new
         private void UpdateUIElement()
         {
             // **********************
-            FileDropDownButton.Text = ResourcesUI.File;
-            FileHelpMenuItem.Text = ResourcesUI.Help;
-            FileAboutMenuItem.Text = ResourcesUI.About;
-            FileExitMenuItem.Text = ResourcesUI.Exit;
-            FileLanguageToolMenuItem.Text = Resources.Language;
-            FileLanguageENMenuItem.Text = ResourcesUI.EN;
-            FileLanguageLTMenuItem.Text = ResourcesUI.LT;
-            FileSaveMenuItem.Text = ResourcesUI.Save;
-            FileSaveAllMenuItem.Text = ResourcesUI.SaveAll;
-            FileLoadMenuItem.Text = ResourcesUI.Load;
-            FileLoadAllMenuItem.Text = ResourcesUI.LoadAll;
+            File_DropDown.Text = ResourcesUI.File;
+            File_Help.Text = ResourcesUI.Help;
+            File_About.Text = ResourcesUI.About;
+            File_Exit.Text = ResourcesUI.Exit;
+            File_Language.Text = Resources.Language;
+            File_Language_EN.Text = ResourcesUI.EN;
+            File_Language_LT.Text = ResourcesUI.LT;
+            File_Save.Text = ResourcesUI.Save;
+            File_SaveAll.Text = ResourcesUI.SaveAll;
+            File_Load.Text = ResourcesUI.Load;
+            File_LoadAll.Text = ResourcesUI.LoadAll;
 
             // **********************
-            ProjectDropDownButton.Text = ResourcesUI.Project;
-            ProjectGetDataFromDesignMenuItem.Text = ResourcesUI.GetDataFromDesign;
-            ProjectCompareDesignMenuItem.Text = ResourcesUI.CompareWithNewDesign;
-            ProjectTransferDataMenuItem.Text = ResourcesUI.TransferProjectToData;
+            Project_DropDown.Text = ResourcesUI.Project;
+            Project_GetDataFromDesign.Text = ResourcesUI.GetDataFromDesign;
+            Project_CompareDesign.Text = ResourcesUI.CompareWithNewDesign;
+            Project_TransferData.Text = ResourcesUI.TransferProjectToData;
 
-            ProjectCPUMenuItem.Text = Resources.CPU;
-            ProjectCPUAddMenuItem.Text = Resources.Add;
-            ProjectSCADAMenuItem.Text = Resources.SCADA;
-            ProjectSCADAAddMenuItem.Text = Resources.Add;
-            ProjectLanguageMenuItem.Text = ResourcesUI.IO + " " + Resources.Language;
-            ProjectLanguageAddMenuItem.Text = Resources.Add;
+            Project_CPU.Text = Resources.CPU;
+            Project_CPU_Add.Text = Resources.Add;
+            Project_SCADA.Text = Resources.SCADA;
+            Project_SCADA_Add.Text = Resources.Add;
+            Project_Language.Text = ResourcesUI.IO + " " + Resources.Language;
+            Project_Language_Add.Text = Resources.Add;
 
             // **********************
-            DataDropDownButton.Text = ResourcesUI.Data;
+            Data_DropDown.Text = ResourcesUI.Data;
             DataFindFunctionMenuItem.Text = ResourcesUI.FindFunction;
-            DataKKSCombineMenuItem.Text = ResourcesUI.KKSCombine;
+            Data_KKSCombine.Text = ResourcesUI.KKSCombine;
 
             // **********************
-            ObjectsDropDownButton.Text = ResourcesUI.Objects;
-            ObjectsFindMenuItem.Text = ResourcesUI.ObjectsFindUnique;
+            Objects_DropDown.Text = ResourcesUI.Objects;
+            Objects_Find.Text = ResourcesUI.ObjectsFindUnique;
             ObjectsFindTypeMenuItem.Text = ResourcesUI.ObjectFindType;
-            ObjectTransferToDataMenuItem.Text = ResourcesUI.ObjectsTransferData;
-            ObjectEditTypesMenuItem.Text = ResourcesUI.ObjectsEdit;
+            Object_TransferToData.Text = ResourcesUI.ObjectsTransferData;
+            Object_EditTypes.Text = ResourcesUI.ObjectsEdit;
 
             // **********************
-            IODropDownButton.Text = ResourcesUI.IO;
-            IOFindModulesMenuItem.Text = ResourcesUI.FindUniqueModules;
-            IOEditMenuItem.Text = ResourcesUI.IODBEdit;
+            IO_DropDown.Text = ResourcesUI.IO;
+            IO_FindModules.Text = ResourcesUI.FindUniqueModules;
+            IO_Generate.Text = ResourcesUI.IOGenerate;
+            IO_Edit.Text = ResourcesUI.IODBEdit;
 
             // **********************
-            DeclareDropDownButton.Text = ResourcesUI.Declare;
-            DeclareEditMenuItem.Text = ResourcesUI.DeclareDBEdit;
-            DeclareGenerateMenuItem.Text = ResourcesUI.DeclareGenerate;
+            Declare_DropDown.Text = ResourcesUI.Declare;
+            Declare_Edit.Text = ResourcesUI.DeclareDBEdit;
+            Declare_Generate.Text = ResourcesUI.DeclareGenerate;
 
             // **********************
-            InstanceDropDownButton.Text = ResourcesUI.Instance;
-            InstancesEditMenuItem.Text = ResourcesUI.InstanceDBEdit;
-            InstancesGenerateMenuItem.Text = ResourcesUI.InstanceGenerate;
+            Instance_DropDown.Text = ResourcesUI.Instance;
+            Instances_Edit.Text = ResourcesUI.InstanceDBEdit;
+            Instances_Generate.Text = ResourcesUI.InstanceGenerate;
 
             // **********************
-            SCADADropDownButton.Text = Resources.SCADA;
-            SCADAEditMenuItem.Text = ResourcesUI.ScadaEdit;
+            SCADA_DropDown.Text = Resources.SCADA;
+            SCADA_Edit.Text = ResourcesUI.ScadaEdit;
 
             // **********************
             DataTab.Text = ResourcesUI.Data;
@@ -399,11 +400,8 @@ namespace IO_list_automation_new
             {
                 DataGridView _grid = (DataGridView)((TabControl)sender).SelectedTab.Controls[0];
 
-                if (_grid.SelectedCells.Count > 1)
-                {
-                    for (int i = 0; i < (_grid.SelectedCells.Count); i++)
-                        _grid.SelectedCells[i].Value = "";
-                }
+                for (int i = 0; i < (_grid.SelectedCells.Count); i++)
+                    _grid.SelectedCells[i].Value = "";
                 this.Update();
             }
             // Paste function
@@ -419,7 +417,7 @@ namespace IO_list_automation_new
         }
 
         //-------------------------File drop down------------------------------------------
-        private void FileSaveMenuItem_Click(object sender, EventArgs e)
+        private void File_Save_Click(object sender, EventArgs e)
         {
             ButtonPressed(sender);
 
@@ -453,7 +451,7 @@ namespace IO_list_automation_new
             ButtonFunctionFinished(sender);
         }
 
-        private void FileSaveAllMenuItem_Click(object sender, EventArgs e)
+        private void File_SaveAll_Click(object sender, EventArgs e)
         {
             ButtonPressed(sender);
 
@@ -485,7 +483,7 @@ namespace IO_list_automation_new
             ButtonFunctionFinished(sender);
         }
 
-        private void FileLoadMenuItem_Click(object sender, EventArgs e)
+        private void File_Load_Click(object sender, EventArgs e)
         {
             ButtonPressed(sender);
 
@@ -518,7 +516,7 @@ namespace IO_list_automation_new
             ButtonFunctionFinished(sender);
         }
 
-        private void FileLoadAllMenuItem_Click(object sender, EventArgs e)
+        private void File_LoadAll_Click(object sender, EventArgs e)
         {
             ButtonPressed(sender);
 
@@ -562,17 +560,17 @@ namespace IO_list_automation_new
             this.Update();
         }
 
-        private void FileHelpMenuItem_Click(object sender, EventArgs e)
+        private void File_Help_Click(object sender, EventArgs e)
         {
             DisplayNoFunction(sender);
         }
 
-        private void FileAboutMenuItem_Click(object sender, EventArgs e)
+        private void File_About_Click(object sender, EventArgs e)
         {
             DisplayNoFunction(sender);
         }
 
-        private void FileExitMenuItem_Click(object sender, EventArgs e)
+        private void File_Exit_Click(object sender, EventArgs e)
         {
             DialogResult _result = MessageBox.Show(Resources.ConfirmExit, "Exit", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
             if (_result == DialogResult.Yes)
@@ -580,7 +578,7 @@ namespace IO_list_automation_new
         }
 
         //-------------------------Project dropdown------------------------------------------
-        private void ProjectGetDataFromDesignMenuItem_Click(object sender, EventArgs e)
+        private void Project_GetDataFromDesign_Click(object sender, EventArgs e)
         {
             ButtonPressed(sender);
 
@@ -591,12 +589,12 @@ namespace IO_list_automation_new
             ButtonFunctionFinished(sender);
         }
 
-        private void ProjectCompareDesignMenuItem_Click(object sender, EventArgs e)
+        private void Project_CompareDesign_Click(object sender, EventArgs e)
         {
             DisplayNoFunction(sender);
         }
 
-        private void ProjectTransferDataMenuItem_Click(object sender, EventArgs e)
+        private void Project_TransferData_Click(object sender, EventArgs e)
         {
             ButtonPressed(sender);
 
@@ -627,7 +625,7 @@ namespace IO_list_automation_new
                 menuItem.DropDownItems.Add(list[i]);
         }
 
-        private void ProjectCPUMenuItem_MouseEnter(object sender, EventArgs e)
+        private void Project_CPU_MouseEnter(object sender, EventArgs e)
         {
             DBGeneral _DB = new DBGeneral(Progress, Resources.CPU, nameof(FileExtensions.decDB), DBTypeLevel.CPU, false);
             List<string> _list = _DB.GetDBFolderList();
@@ -635,7 +633,7 @@ namespace IO_list_automation_new
             AddMenuItemDropDown((ToolStripMenuItem)sender, _list);
         }
 
-        private void ProjectCPUMenuItem_DropDownItemClicked(object sender, ToolStripItemClickedEventArgs e)
+        private void Project_CPU_DropDownItemClicked(object sender, ToolStripItemClickedEventArgs e)
         {
             if (e.ClickedItem.Text == null)
                 return;
@@ -664,7 +662,7 @@ namespace IO_list_automation_new
             }
         }
 
-        private void ProjectSCADAMenuItem_MouseEnter(object sender, EventArgs e)
+        private void Project_SCADA_MouseEnter(object sender, EventArgs e)
         {
             DBGeneral _DB = new DBGeneral(Progress, Resources.SCADA, nameof(FileExtensions.decScadaDB), DBTypeLevel.SCADA, false);
             List<string> _list = _DB.GetDBFolderList();
@@ -672,7 +670,7 @@ namespace IO_list_automation_new
             AddMenuItemDropDown((ToolStripMenuItem)sender, _list);
         }
 
-        private void ProjectSCADAMenuItem_DropDownItemClicked(object sender, ToolStripItemClickedEventArgs e)
+        private void Project_SCADA_DropDownItemClicked(object sender, ToolStripItemClickedEventArgs e)
         {
             if (e.ClickedItem.Text == null)
                 return;
@@ -695,7 +693,7 @@ namespace IO_list_automation_new
             }
         }
 
-        private void ProjectLanguageMenuItem_MouseEnter(object sender, EventArgs e)
+        private void Project_Language_MouseEnter(object sender, EventArgs e)
         {
             DBGeneral _DB = new DBGeneral(Progress, ResourcesUI.IO + " " + Resources.Language, nameof(FileExtensions.langFuncDB), DBTypeLevel.Base, false);
             List<string> _list = _DB.GetDBFileList();
@@ -703,7 +701,7 @@ namespace IO_list_automation_new
             AddMenuItemDropDown((ToolStripMenuItem)sender, _list);
         }
 
-        private void ProjectLanguageMenuItem_DropDownItemClicked(object sender, ToolStripItemClickedEventArgs e)
+        private void Project_Language_DropDownItemClicked(object sender, ToolStripItemClickedEventArgs e)
         {
             if (e.ClickedItem.Text == null)
                 return;
@@ -728,15 +726,15 @@ namespace IO_list_automation_new
             }
         }
 
-        private void ProjectDropDownButton_DropDownOpened(object sender, EventArgs e)
+        private void Project_DropDown_DropDownOpened(object sender, EventArgs e)
         {
-            ProjectCPUMenuItem.Text = Resources.CPU + ": " + Settings.Default.SelectedCPU;
-            ProjectSCADAMenuItem.Text = Resources.SCADA + ": " + Settings.Default.SelectedSCADA;
-            ProjectLanguageMenuItem.Text = ResourcesUI.IO + " " + Resources.Language + ": " + Settings.Default.IOLanguage;
+            Project_CPU.Text = Resources.CPU + ": " + Settings.Default.SelectedCPU;
+            Project_SCADA.Text = Resources.SCADA + ": " + Settings.Default.SelectedSCADA;
+            Project_Language.Text = ResourcesUI.IO + " " + Resources.Language + ": " + Settings.Default.IOLanguage;
         }
 
         //-------------------------Data dropdown------------------------------------------
-        private void DataKKSCombineMenuItem_Click(object sender, EventArgs e)
+        private void Data_KKSCombine_Click(object sender, EventArgs e)
         {
             ButtonPressed(sender);
 
@@ -767,7 +765,7 @@ namespace IO_list_automation_new
         }
 
         //-------------------------Objects dropdown------------------------------------------
-        private void ObjectsFindMenuItem_Click(object sender, EventArgs e)
+        private void Objects_Find_Click(object sender, EventArgs e)
         {
             ButtonPressed(sender);
 
@@ -799,7 +797,7 @@ namespace IO_list_automation_new
             ButtonFunctionFinished(sender);
         }
 
-        private void ObjectTransferToDataMenuItem_Click(object sender, EventArgs e)
+        private void Object_TransferToData_Click(object sender, EventArgs e)
         {
             ButtonPressed(sender);
 
@@ -815,13 +813,13 @@ namespace IO_list_automation_new
             ButtonFunctionFinished(sender);
         }
 
-        private void ObjectEditTypesMenuItem_Click(object sender, EventArgs e)
+        private void Object_EditTypes_Click(object sender, EventArgs e)
         {
             DisplayNoFunction(sender);
         }
 
         //-------------------------IO dropdown------------------------------------------
-        private void IOFindModulesMenuItem_Click(object sender, EventArgs e)
+        private void IO_FindModules_Click(object sender, EventArgs e)
         {
             ButtonPressed(sender);
 
@@ -837,22 +835,41 @@ namespace IO_list_automation_new
             ButtonFunctionFinished(sender);
         }
 
-        private void IOEditMenuItem_Click(object sender, EventArgs e)
-        {
-            DBGeneral _DB = new DBGeneral(Progress, ResourcesUI.Modules, nameof(FileExtensions.modDB), DBTypeLevel.CPU, true);
-            _DB.EditAll();
-        }
-
-        //-------------------------Declare dropdown------------------------------------------
-        private void DeclareGenerateMenuItem_Click(object sender, EventArgs e)
+        private void IO_Generate_Click(object sender, EventArgs e)
         {
             ButtonPressed(sender);
 
-            DesignClass design = new DesignClass(Progress, DesignGridView);
+            DataClass data = new DataClass(Progress, DataGridView);
+            ObjectsClass objects = new ObjectsClass(Progress, ObjectsGridView);
+            ModuleClass modules = new ModuleClass(Progress, ModulesGridView);
+
+            if (data.GetDataFromGrid() && objects.GetDataFromGrid() && modules.GetDataFromGrid())
+            {
+                DBGeneral _DB = new DBGeneral(Progress, ResourcesUI.Modules, nameof(FileExtensions.modDB), DBTypeLevel.CPU, true);
+                _DB.DecodeAll(data, objects, modules);
+            }
+            ButtonFunctionFinished(sender);
+        }
+
+        private void IO_Edit_Click(object sender, EventArgs e)
+        {
+            ButtonPressed(sender);
+
+            DBGeneral _DB = new DBGeneral(Progress, ResourcesUI.Modules, nameof(FileExtensions.modDB), DBTypeLevel.CPU, true);
+            _DB.EditAll();
+
+            ButtonFunctionFinished(sender);
+        }
+
+        //-------------------------Declare dropdown------------------------------------------
+        private void Declare_Generate_Click(object sender, EventArgs e)
+        {
+            ButtonPressed(sender);
+
             DataClass data = new DataClass(Progress, DataGridView);
             ObjectsClass objects = new ObjectsClass(Progress, ObjectsGridView);
 
-            if (design.GetDataFromGrid() && data.GetDataFromGrid() && objects.GetDataFromGrid())
+            if (data.GetDataFromGrid() && objects.GetDataFromGrid())
             {
                 DBGeneral _DB = new DBGeneral(Progress, ResourcesUI.Declare, nameof(FileExtensions.decDB), DBTypeLevel.CPU, false);
                 _DB.DecodeAll(data, objects, null);
@@ -860,7 +877,7 @@ namespace IO_list_automation_new
             ButtonFunctionFinished(sender);
         }
 
-        private void DeclareEditMenuItem_Click(object sender, EventArgs e)
+        private void Declare_Edit_Click(object sender, EventArgs e)
         {
             ButtonPressed(sender);
 
@@ -872,15 +889,18 @@ namespace IO_list_automation_new
 
         //-------------------------Instances dropdown------------------------------------------
 
-        private void InstancesGenerateMenuItem_Click(object sender, EventArgs e)
+        private void Instances_Generate_Click(object sender, EventArgs e)
         {
             ButtonPressed(sender);
 
-            DesignClass design = new DesignClass(Progress, DesignGridView);
             DataClass data = new DataClass(Progress, DataGridView);
             ObjectsClass objects = new ObjectsClass(Progress, ObjectsGridView);
 
-            if (design.GetDataFromGrid() && data.GetDataFromGrid() && objects.GetDataFromGrid())
+            //clear all used columns
+            for (int _objectIndex = 0; _objectIndex < objects.Signals.Count; _objectIndex++)
+                objects.Signals[_objectIndex].SetValueFromString(string.Empty, KeywordColumn.Used);
+
+            if (data.GetDataFromGrid() && objects.GetDataFromGrid())
             {
                 DBGeneral _DB = new DBGeneral(Progress, ResourcesUI.Instance, nameof(FileExtensions.instDB), DBTypeLevel.CPU, false);
                 _DB.DecodeAll(data, objects, null);
@@ -888,7 +908,7 @@ namespace IO_list_automation_new
             ButtonFunctionFinished(sender);
         }
 
-        private void InstancesEditMenuItem_Click(object sender, EventArgs e)
+        private void Instances_Edit_Click(object sender, EventArgs e)
         {
             ButtonPressed(sender);
 
@@ -899,9 +919,31 @@ namespace IO_list_automation_new
         }
 
         //-------------------------SCADA dropdown------------------------------------------
-        private void SCADAEditMenuItem_Click(object sender, EventArgs e)
+
+        private void SCADAGenerateMenuItem_Click(object sender, EventArgs e)
         {
-            DisplayNoFunction(sender);
+            ButtonPressed(sender);
+
+            DataClass data = new DataClass(Progress, DataGridView);
+            ObjectsClass objects = new ObjectsClass(Progress, ObjectsGridView);
+            ModuleClass modules = new ModuleClass(Progress, ModulesGridView);
+
+            if (modules.GetDataFromGrid() && data.GetDataFromGrid() && objects.GetDataFromGrid())
+            {
+                DBGeneral _DB = new DBGeneral(Progress, Resources.SCADA, nameof(FileExtensions.instScadaDB), DBTypeLevel.SCADA,true);
+                _DB.DecodeAll(data, objects, modules);
+            }
+            ButtonFunctionFinished(sender);
+        }
+
+        private void SCADA_Edit_Click(object sender, EventArgs e)
+        {
+            ButtonPressed(sender);
+
+            DBGeneral _DB = new DBGeneral(Progress, Resources.SCADA, nameof(FileExtensions.instScadaDB), DBTypeLevel.SCADA, true);
+            _DB.EditAll();
+
+            ButtonFunctionFinished(sender);
         }
     }
 }

@@ -318,4 +318,16 @@
   <data name="ConvertListToData" xml:space="preserve">
     <value>Convert list to data</value>
   </data>
+  <data name="AddBefore" xml:space="preserve">
+    <value>Add before</value>
+  </data>
+  <data name="Copy" xml:space="preserve">
+    <value>Copy</value>
+  </data>
+  <data name="CopyToEnd" xml:space="preserve">
+    <value>Copy to end</value>
+  </data>
+  <data name="CopyEnd" xml:space="preserve">
+    <value>Copy to end</value>
+  </data>
 </root>

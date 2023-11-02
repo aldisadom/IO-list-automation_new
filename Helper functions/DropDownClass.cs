@@ -7,14 +7,11 @@ namespace IO_list_automation_new.General
     internal enum ComboBoxType
     {
         Main,
-        MainNoEmpty,
-        If,
-        IfStatement,
+        IfCondition,
         Data,
         Object,
         Module,
         Text,
-        TagType,
         Number,
     }
 

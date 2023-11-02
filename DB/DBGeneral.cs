@@ -3,6 +3,7 @@ using IO_list_automation_new.Properties;
 using SwiftExcel;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace IO_list_automation_new
@@ -12,85 +13,6 @@ namespace IO_list_automation_new
         Base,
         CPU,
         SCADA,
-    }
-
-    internal class DBGeneralType
-    {
-        public string Name { get; }
-
-        public string DBType { get; }
-
-        public List<DBGeneralSignal> Data;
-
-        public ProgressIndication Progress { get; set; }
-
-        public GeneralGrid Grid { get; }
-        public GeneralGrid GridResult { get; }
-
-        public DBGeneralType(string name, string dbType, string fileExtension, ProgressIndication progress, DataGridView grid)
-        {
-            Name = name;
-            DBType = dbType;
-            Data = new List<DBGeneralSignal>();
-            Progress = progress;
-            Grid = new GeneralGrid(Name, GridTypes.EditableDB, fileExtension, Progress, grid, new ColumnList());
-            GridResult = new GeneralGrid(Name, GridTypes.DB, fileExtension, Progress, new DataGridView(), new ColumnList());
-        }
-
-        /// <summary>
-        /// Decode one object of this type
-        /// </summary>
-        /// <param name="data">data</param>
-        /// <param name="objectSignal">object to be decoded</param>
-        /// <param name="moduleSignal">module to be decoded</param>
-        /// <returns>decoded text</returns>
-        public List<List<string>> Decode(ref int index, DataClass data, ObjectSignal objectSignal, ModuleSignal moduleSignal)
-        {
-            //if type mismatch skip
-            if (objectSignal.ObjectType != DBType)
-                return null;
-
-            List<List<string>> _decodedObject = new List<List<string>>();
-            for (int i = 0; i < Data.Count; i++)
-                _decodedObject.Add(Data[i].DecodeLine(index, data, objectSignal, moduleSignal));
-
-            index++;
-            return _decodedObject;
-        }
-
-        /// <summary>
-        /// Convert DBGeneralSignal to List of List of string
-        /// </summary>
-        /// <returns>converted data</returns>
-        public List<List<string>> ConvertDataToList()
-        {
-            List<List<string>> _allData = new List<List<string>>();
-            //det all data from all lines of one type
-            for (int j = 0; j < Data.Count; j++)
-                _allData.Add(Data[j].Line);
-
-            return _allData;
-        }
-
-        /// <summary>
-        /// Set data from list of list string
-        /// </summary>
-        /// <param name="inputData">list string</param>
-        public void SetData(List<List<string>> inputData)
-        {
-            Data.Clear();
-
-            if (inputData == null)
-                return;
-
-            for (int j = 0; j < inputData.Count; j++)
-            {
-                DBGeneralSignal _signal = new DBGeneralSignal();
-
-                _signal.SetValue(inputData[j]);
-                Data.Add(_signal);
-            }
-        }
     }
 
     internal class DBGeneral
@@ -137,9 +59,9 @@ namespace IO_list_automation_new
 
                 default:
                     Debug _debug = new Debug();
-                    const string text = "DBGeneral.DBGeneral";
-                    _debug.ToFile(text + " " + Resources.ParameterNotFound + ":" + nameof(level), DebugLevels.None, DebugMessageType.Critical);
-                    throw new InvalidProgramException(text + "." + nameof(level) + " is not created for this element");
+                    const string _debugText = "DBGeneral.DBGeneral";
+                    _debug.ToFile(_debugText + " " + Resources.ParameterNotFound + ":" + nameof(level), DebugLevels.None, DebugMessageType.Critical);
+                    throw new InvalidProgramException(_debugText + "." + nameof(level) + " is not created for this element");
             }
         }
 
@@ -278,15 +200,17 @@ namespace IO_list_automation_new
 
             string _fileName;
             string _type;
+            string _fullType;
 
             for (int i = 0; i < _files.Count; i++)
             {
                 _fileName = Directory + "\\" + _files[i] + "." + FileExtension;
-                _type = _files[i];
+                _type = _files[i].Split('(')[0];
+                _fullType = _files[i];
 
                 //assign dummy grid
                 DataGridView _grid = new DataGridView();
-                DBGeneralType _instance = new DBGeneralType(NameDB, _type, FileExtension, Progress, _grid);
+                DBGeneralType _instance = new DBGeneralType(NameDB, _fullType, _type, FileExtension, Progress, _grid);
                 List<List<string>> _fileData = _instance.Grid.LoadFromFileToMemory(_fileName);
                 _instance.SetData(_fileData);
 
@@ -306,12 +230,14 @@ namespace IO_list_automation_new
             Devices.Clear();
 
             string _type;
+            string _fullType;
             for (int i = 0; i < tabControl.TabPages.Count; i++)
             {
                 _type = tabControl.TabPages[i].Name;
+                _fullType = tabControl.TabPages[i].Text;
 
                 DataGridView _grid = (DataGridView)tabControl.TabPages[i].Controls[0];
-                DBGeneralType _instance = new DBGeneralType(NameDB, _type, FileExtension, Progress, _grid);
+                DBGeneralType _instance = new DBGeneralType(NameDB, _fullType, _type, FileExtension, Progress, _grid);
                 List<List<string>> _fileData = _instance.Grid.GetData();
                 _instance.SetData(_fileData);
 
@@ -364,7 +290,6 @@ namespace IO_list_automation_new
                 return;
 
             List<List<string>> _decodedObject;
-            List<string> _CPUList = new List<string>();
 
             Debug debug = new Debug();
             string _debugText = "Generating " + NameDB;
@@ -372,29 +297,8 @@ namespace IO_list_automation_new
             Progress.RenameProgressBar(_debugText, Devices.Count);
 
             DBResultForm _DBResultForm = new DBResultForm(NameDB, false, ModuleBased);
+            List<string> _CPUList = ModuleBased ? modules.GetCPUList() : objects.GetCPUList();
 
-            //add first signal element CPU to CPU list
-            _CPUList.Add(objects.Signals[0].CPU);
-            bool _found;
-
-            //clear all used columns and find CPU list
-            for (int _objectIndex = 0; _objectIndex < objects.Signals.Count; _objectIndex++)
-            {
-                _found = false;
-                objects.Signals[_objectIndex].SetValueFromString(string.Empty, KeywordColumn.Used);
-                for (int _CPUIndex = 0; _CPUIndex < _CPUList.Count; _CPUIndex++)
-                {
-                    if (_CPUList[_CPUIndex] == objects.Signals[_objectIndex].CPU)
-                    {
-                        _found = true;
-                        break;
-                    }
-                }
-                if (!_found)
-                    _CPUList.Add(objects.Signals[_objectIndex].CPU);
-            }
-
-            int[] _indexes = new int[_CPUList.Count];
             int _typeCount = 0;
             //go through all device types
             for (int _deviceIndex = 0; _deviceIndex < Devices.Count; _deviceIndex++)
@@ -406,32 +310,38 @@ namespace IO_list_automation_new
                     if (_CPUList.Count > 1)
                         _decodedDevices.Add(new List<string> { "----------------------------" + _CPUList[_CPUIndex] + "----------------------------" });
 
-                    //restore index
-                    _typeCount = Settings.Default.NewTypeResetIndex ? 0 : _typeCount = _indexes[_CPUIndex];
-
-                    ModuleSignal _dummyModule = new ModuleSignal();
-                    for (int _objectIndex = 0; _objectIndex < objects.Signals.Count; _objectIndex++)
+                    _typeCount = 0;
+                    if (!ModuleBased)
                     {
-                        if (_CPUList[_CPUIndex] != objects.Signals[_objectIndex].CPU)
-                            continue;
-                        _decodedObject = Devices[_deviceIndex].Decode(ref _typeCount, data, objects.Signals[_objectIndex], _dummyModule);
-                        CopyDecodedList(_decodedObject, _decodedDevices);
+                        for (int _objectIndex = 0; _objectIndex < objects.Signals.Count; _objectIndex++)
+                        {
+                            if (_CPUList[_CPUIndex] != objects.Signals[_objectIndex].CPU)
+                                continue;
+                            _decodedObject = Devices[_deviceIndex].Decode(ref _typeCount, data, objects.Signals[_objectIndex], null);
+                            CopyDecodedList(_decodedObject, _decodedDevices);
+                        }
+                    }
+                    else
+                    {
+                        for (int _moduleIndex = 0; _moduleIndex < modules.Signals.Count; _moduleIndex++)
+                        {
+                            if (_CPUList[_CPUIndex] != modules.Signals[_moduleIndex].CPU)
+                                continue;
+                            _decodedObject = Devices[_deviceIndex].Decode(ref _typeCount, data, null, modules.Signals[_moduleIndex]);
+                            CopyDecodedList(_decodedObject, _decodedDevices);
+                        }
                     }
 
                     //if no devices found clear last line if in multi cpu mode
                     if (_CPUList.Count > 1)
                     {
-                        if (_indexes[_CPUIndex] == _typeCount)
+                        if (_typeCount == 0)
                             _decodedDevices.RemoveAt(_decodedDevices.Count - 1);
                         else
                             _decodedDevices.Add(new List<string> { string.Empty });
                     }
-
-                    //increase index
-                    if (!Settings.Default.NewTypeResetIndex)
-                        _indexes[_CPUIndex] += _typeCount;
                 }
-                DataGridView _grid = _DBResultForm.AddData(Devices[_deviceIndex].DBType);
+                DataGridView _grid = _DBResultForm.AddData(Devices[_deviceIndex].FullDBType,Devices[_deviceIndex].DBType);
 
                 //add grid to form and update grid of device to match in form
                 Devices[_deviceIndex].GridResult.ChangeGrid(_grid);
@@ -486,7 +396,7 @@ namespace IO_list_automation_new
             for (int _deviceIndex = 0; _deviceIndex < Devices.Count; _deviceIndex++)
             {
                 _deviceData = Devices[_deviceIndex].ConvertDataToList();
-                DataGridView _grid = _DBResultForm.AddData(Devices[_deviceIndex].DBType);
+                DataGridView _grid = _DBResultForm.AddData(Devices[_deviceIndex].FullDBType,Devices[_deviceIndex].DBType);
 
                 //add grid to form and update grid of device to match in form
                 Devices[_deviceIndex].Grid.ChangeGrid(_grid);
@@ -506,7 +416,7 @@ namespace IO_list_automation_new
             //go through all device types
             for (int _deviceIndex = 0; _deviceIndex < Devices.Count; _deviceIndex++)
             {
-                _fileName = Directory + "\\" + Devices[_deviceIndex].DBType + "." + FileExtension;
+                _fileName = Directory + "\\" + Devices[_deviceIndex].FullDBType + "." + FileExtension;
                 Devices[_deviceIndex].Grid.GetData();
                 Devices[_deviceIndex].Grid.SaveToFile(_fileName);
             }

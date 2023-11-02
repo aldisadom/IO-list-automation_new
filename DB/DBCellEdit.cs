@@ -1,20 +1,40 @@
 ﻿using IO_list_automation_new.DB;
 using IO_list_automation_new.General;
 using IO_list_automation_new.Properties;
+using SharpCompress.Common;
 using System;
 using System.Collections.Generic;
+using System.Data.Common;
+using System.Diagnostics;
+using System.Linq;
+using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
 namespace IO_list_automation_new.Forms
 {
+    internal enum RestrainLevel
+    {
+        None,
+        IfCondition,
+        IfStatement,
+        NoEdit,
+    }
+
     public partial class DBCellEdit : Form
     {
         public List<string> OutputData { get; }
 
-        private DBChoices Choices = new DBChoices();
+        private readonly DBChoices Choices = new DBChoices();
 
-        private const int StartX = 20;
-        private const int StartY = 30;
+        private const int StartX = 10;
+        private const int StartY = 10;
+        private const int _offsetX = 135;
+        private const int _offsetY = 45;
+
+        private int Index;
+        private int PositionColumn;
+        private int PositionRow;
+        private int ComboBoxIndex = 1;
 
         private bool ModuleBased { get; set; }
 
@@ -38,7 +58,13 @@ namespace IO_list_automation_new.Forms
                 return;
 
             List<string> _list = SortElements();
+            List<string> _prvList = OutputData.ToList();
             OutputData.Clear();
+
+            List<string> _listElementKeywords = new List<string>();
+            for (int i = 0; i < _list.Count; i++)
+                //extracting keyword to list
+                _listElementKeywords.Add(GetDropDownSelectedKeyword(_list[i]));
 
             //before element
             int _index = 0;
@@ -53,7 +79,8 @@ namespace IO_list_automation_new.Forms
                 OutputData.Add(GetDropDownSelectedKeyword(_list[i]));
             }
             //delete elements
-            DeleteOldElements(_index, _list, _box.Tag.PreviousValue);
+            if (_currentValue != KeywordDBChoices.Insert)
+                DeleteOldElements(_index, _list, _box.Tag.PreviousValue);
 
             //add new
             switch (_currentValue)
@@ -65,7 +92,7 @@ namespace IO_list_automation_new.Forms
                     OutputData.Add(KeywordDBChoices.Data);
                     OutputData.Add(Choices.DataColumns[0]);
                     //statement
-                    OutputData.Add(Choices.ChoicesIfStatement[0]);
+                    OutputData.Add(Choices.ChoicesIfConditions[0]);
                     //true object
                     OutputData.Add(KeywordDBChoices.Text);
                     OutputData.Add("edit");
@@ -93,6 +120,7 @@ namespace IO_list_automation_new.Forms
 
                     break;
 
+                case KeywordDBChoices.Insert:
                 case KeywordDBChoices.Text:
                     OutputData.Add(KeywordDBChoices.Text);
                     OutputData.Add("edit");
@@ -115,13 +143,10 @@ namespace IO_list_automation_new.Forms
 
                 case KeywordDBChoices.IOTag:
                 case KeywordDBChoices.IOChannel:
+                case KeywordDBChoices.IOPin:
+                case KeywordDBChoices.IOText:
                     OutputData.Add(_currentValue);
                     OutputData.Add(ModuleBased ? "0" : "ON");
-                    break;
-
-                case KeywordDBChoices.VariableType:
-                    OutputData.Add(KeywordDBChoices.VariableType);
-                    OutputData.Add("Status");
                     break;
 
                 case KeywordDBChoices.Equal:
@@ -139,15 +164,27 @@ namespace IO_list_automation_new.Forms
                 case KeywordDBChoices.IsNotEmpty:
                     OutputData.Add(_currentValue);
                     break;
+                case KeywordDBChoices.MultiLine:
+                    OutputData.Add(KeywordDBChoices.MultiLine);
+                    OutputData.Add(KeywordDBChoices.Text);
+                    OutputData.Add("edit");
+                    OutputData.Add(KeywordDBChoices.MultiLineEnd);
+                    break;
 
                 default:
                     Debug _debug = new Debug();
-                    const string text = "DBCellEdit.ComboBoxValueChangedEvent";
-                    _debug.ToFile(text + " " + Resources.ParameterNotFound + ":" + _currentValue, DebugLevels.None, DebugMessageType.Critical);
-                    throw new InvalidProgramException(text + "." + _currentValue + " is not created for this element");
+                    const string _debugText = "DBCellEdit.ComboBoxValueChangedEvent";
+                    _debug.ToFile(_debugText + " " + Resources.ParameterNotFound + ":" + _currentValue, DebugLevels.None, DebugMessageType.Critical);
+                    throw new InvalidProgramException(_debugText + "." + _currentValue + " is not created for this element");
             }
 
             //add after
+            if (_currentValue == KeywordDBChoices.Insert)
+            {
+                OutputData.Add(_box.Tag.PreviousValue);
+                _index++;
+            }
+
             for (int i = _index; i < _list.Count; i++)
                 OutputData.Add(GetDropDownSelectedKeyword(_list[i]));
 
@@ -264,7 +301,7 @@ namespace IO_list_automation_new.Forms
                     //remove variable
                     DeleteOldElements(startIndex, list, GetDropDownSelectedKeyword(list[startIndex]));
                     //remove statement                    
-                    switch (list[startIndex])
+                    switch (GetDropDownSelectedKeyword(list[startIndex]))
                     {
                         case KeywordDBChoices.IsEmpty:
                         case KeywordDBChoices.IsNotEmpty:
@@ -290,11 +327,12 @@ namespace IO_list_automation_new.Forms
                     break;
 
                 //remove 2 element
-                case KeywordDBChoices.VariableType:
                 case KeywordDBChoices.Text:
                 case KeywordDBChoices.Data:
                 case KeywordDBChoices.Object:
                 case KeywordDBChoices.IOTag:
+                case KeywordDBChoices.IOText:
+                case KeywordDBChoices.IOPin:
                 case KeywordDBChoices.IOChannel:
                 case KeywordDBChoices.Modules:
                     list.RemoveAt(startIndex);
@@ -319,26 +357,86 @@ namespace IO_list_automation_new.Forms
                     list.RemoveAt(startIndex);
                     break;
 
+                case KeywordDBChoices.MultiLine:
+                    int _layer = 1;
+                    list.RemoveAt(startIndex);
+                    while (_layer > 0)
+                    {
+                        if (GetDropDownSelectedKeyword(list[startIndex]) == KeywordDBChoices.MultiLine)
+                            _layer++;
+                        else if (GetDropDownSelectedKeyword(list[startIndex]) == KeywordDBChoices.MultiLineEnd)
+                            _layer--;
+                        list.RemoveAt(startIndex);
+                    }
+                    break;
+
                 default:
                     Debug _debug = new Debug();
-                    const string text = "DBCellEdit.DeleteOldElements";
-                    _debug.ToFile(text + " " + Resources.ParameterNotFound + ":" + cellValue, DebugLevels.None, DebugMessageType.Critical);
-                    throw new InvalidProgramException(text + "." + cellValue + " is not created for this element");
+                    const string _debugText = "DBCellEdit.DeleteOldElements";
+                    _debug.ToFile(_debugText + " " + Resources.ParameterNotFound + ":" + cellValue, DebugLevels.None, DebugMessageType.Critical);
+                    throw new InvalidProgramException(_debugText + "." + cellValue + " is not created for this element");
             }
         }
 
         /// <summary>
         /// Add elements to form
         /// </summary>
-        /// <param name="x">x location</param>
-        /// <param name="y">y location </param>
-        /// <param name="selectedText">selected text of comboBox</param>
+        /// <param name="row">y location </param>
+        /// <param name="column">x location</param>
+        /// <param name="comboBoxKeyword">ComboBox name keyword</param>
         /// <param name="labelText">Text of label</param>
-        /// <param name="selectList">ComboBox selection list</param>
-        private void AddElement(int x, int y, string selectedText, string labelText, List<string> selectList, ComboBoxType elementType)
+        /// <param name="restrainLevel">restrains level</param>
+        private void AddElement(int row, int column, string comboBoxKeyword, string labelText, RestrainLevel restrainLevel, ComboBoxType elementType)
         {
-            const int _offsetX = 150;
-            const int _offsetY = 50;
+            List<string> _selectList = new List<string>();
+
+            Debug _debug = new Debug();
+            string _debugText;
+
+            switch (elementType)
+            {
+                case ComboBoxType.Main:
+                    switch (restrainLevel)
+                    {
+                        case RestrainLevel.None:
+                            _selectList = ModuleBased ? Choices.ChoicesModulesMain : Choices.ChoicesObjectsMain;
+                            break;
+                        case RestrainLevel.IfCondition:
+                            _selectList = ModuleBased ? Choices.ChoicesModulesIfCondition : Choices.ChoicesObjectsIfCondition;
+                            break;
+                        case RestrainLevel.IfStatement:
+                            _selectList = ModuleBased ? Choices.ChoicesModulesIfStatement : Choices.ChoicesObjectsIfStatement;
+                            break;
+                        case RestrainLevel.NoEdit:
+                            _selectList = null;
+                            break;
+                        default:
+                            _debugText = "DBCellEdit.AddElement.Main";
+                            _debug.ToFile(_debugText + " " + Resources.ParameterNotFound + ":" + restrainLevel, DebugLevels.None, DebugMessageType.Critical);
+                            throw new InvalidProgramException(_debugText + "." + restrainLevel + " is not created for this element");
+                    }
+                    break;
+                case ComboBoxType.IfCondition:
+                    _selectList = Choices.ChoicesIfConditions;
+                    break;
+                case ComboBoxType.Data:
+                    _selectList = Choices.DataColumns;
+                    break;
+                case ComboBoxType.Object:
+                    _selectList = Choices.ObjectColumns;
+                    break;
+                case ComboBoxType.Module:
+                    _selectList = Choices.ModuleColumns;
+                    break;
+                case ComboBoxType.Text:
+                case ComboBoxType.Number:
+                    _selectList = null;
+                    break;
+                default:
+                    _debugText = "DBCellEdit.AddElement.Main";
+                    _debug.ToFile(_debugText + " " + Resources.ParameterNotFound + ":" + restrainLevel, DebugLevels.None, DebugMessageType.Critical);
+                    throw new InvalidProgramException(_debugText + "." + restrainLevel + " is not created for this element");
+            }
 
             //
             // label1
@@ -349,8 +447,8 @@ namespace IO_list_automation_new.Forms
                 {
                     AutoSize = true,
                     Font = new System.Drawing.Font("Microsoft Sans Serif", 10F),
-                    Location = new System.Drawing.Point((x * _offsetX) + StartX, (y * _offsetY) + StartY),
-                    Name = "Row" + GeneralFunctions.AddZeroes(y) + "Col" + GeneralFunctions.AddZeroes(x) + ":Label",
+                    Location = new System.Drawing.Point((column * _offsetX) + StartX, (row * _offsetY) + StartY),
+                    Name = "Element:" + GeneralFunctions.AddZeroes(ComboBoxIndex)+":Label",
                     Size = new System.Drawing.Size(46, 17),
                     Text = labelText,
                 };
@@ -360,25 +458,28 @@ namespace IO_list_automation_new.Forms
             // comboBox1
             //
 
-            DropDownClass DropDowns = new DropDownClass("Row" + GeneralFunctions.AddZeroes(y) + "Col" + GeneralFunctions.AddZeroes(x) + ":Dropdown");
-            DropDowns.SetTag(elementType, selectedText);
+            DropDownClass DropDowns = new DropDownClass("Element:" + GeneralFunctions.AddZeroes(ComboBoxIndex) + ":Dropdown");
+            DropDowns.SetTag(elementType, comboBoxKeyword);
             DropDowns.ChangeDisplayMember(DropDownElementType.Name);
-            DropDowns.Location = new System.Drawing.Point((x * _offsetX) + StartX, (y * _offsetY) + StartY + 20);
+            DropDowns.Location = new System.Drawing.Point((column * _offsetX) + StartX, (row * _offsetY) + StartY + 20);
 
-            if (selectList == null)
+            if (_selectList == null)
             {
-                DropDowns.Editable(true);
+                if (restrainLevel == RestrainLevel.NoEdit)
+                    DropDowns.Editable(false);
+                else
+                    DropDowns.Editable(true);
 
-                DropDowns.AddItemText(selectedText);
+                DropDowns.AddItemText(comboBoxKeyword);
                 DropDowns.SelectedIndex = 0;
             }
             else
             {
                 DropDowns.Editable(false);
-                for (int i = 0; i < selectList.Count; i++)
+                for (int i = 0; i < _selectList.Count; i++)
                 {
-                    DropDowns.AddItemFull(string.Empty, selectList[i]);
-                    if (selectedText == selectList[i])
+                    DropDowns.AddItemFull(string.Empty, _selectList[i]);
+                    if (comboBoxKeyword == _selectList[i])
                         DropDowns.SelectedIndex = i;
                 }
             }
@@ -394,194 +495,267 @@ namespace IO_list_automation_new.Forms
             //change index event
             DropDowns.IndexChangedEvent = ComboBox_ValueChangedEvent;
 
+            ComboBoxIndex++;
+            Index++;
             this.Controls.Add(DropDowns.Element);
+        }
+
+        /// <summary>
+        /// Decode IO Pin element and put to form
+        /// </summary>
+        /// <param name="inputData">Input data list to decode</param>
+        /// <param name="labelText">label text</param>
+        /// <param name="restrainLevel">restrains level</param>
+        private void DecodeIO(List<string> inputData, string labelText, RestrainLevel restrainLevel)
+        {
+            AddElement(PositionRow ,PositionColumn, inputData[Index], labelText, restrainLevel, ComboBoxType.Main);
+            AddElement(PositionRow, PositionColumn+1, inputData[Index], null, restrainLevel, ModuleBased ? ComboBoxType.Number : ComboBoxType.Text);
+            PositionRow++;
+        }
+
+        /// <summary>
+        /// Decode data element and put to form
+        /// </summary>
+        /// <param name="inputData">Input data list to decode</param>
+        /// <param name="labelText">label text</param>
+        /// <param name="restrainLevel">restrains level</param>
+        private void DecodeData(List<string> inputData, string labelText, RestrainLevel restrainLevel)
+        {
+            AddElement(PositionRow, PositionColumn, inputData[Index], labelText, restrainLevel, ComboBoxType.Main);
+            AddElement(PositionRow, PositionColumn + 1, inputData[Index], null, restrainLevel, ComboBoxType.Data);
+            PositionRow++;
+        }
+
+        /// <summary>
+        /// Decode object element and put to form
+        /// </summary>
+        /// <param name="inputData">Input data list to decode</param>
+        /// <param name="labelText">label text</param>
+        /// <param name="restrainLevel">restrains level</param>
+        private void DecodeObject(List<string> inputData, string labelText, RestrainLevel restrainLevel)
+        {
+            AddElement(PositionRow, PositionColumn, inputData[Index], labelText, restrainLevel, ComboBoxType.Main);
+            AddElement(PositionRow, PositionColumn + 1, inputData[Index], null, restrainLevel, ComboBoxType.Object);
+            PositionRow++;
+        }
+
+        /// <summary>
+        /// Decode tab element and put to form
+        /// </summary>
+        /// <param name="inputData">Input data list to decode</param>
+        /// <param name="labelText">label text</param>
+        /// <param name="restrainLevel">restrains level</param>
+        private void DecodeTab(List<string> inputData,string labelText, RestrainLevel restrainLevel)
+        {
+            AddElement(PositionRow, PositionColumn, inputData[Index], labelText, restrainLevel, ComboBoxType.Main);
+            PositionRow++;
+        }
+
+        /// <summary>
+        /// Decode module element and put to form
+        /// </summary>
+        /// <param name="inputData">Input data list to decode</param>
+        /// <param name="labelText">label text</param>
+        /// <param name="restrainLevel">restrains level</param>
+        private void DecodeModule(List<string> inputData, string labelText, RestrainLevel restrainLevel)
+        {
+            AddElement(PositionRow, PositionColumn, inputData[Index], labelText, restrainLevel, ComboBoxType.Main);
+            AddElement(PositionRow, PositionColumn + 1, inputData[Index], null, restrainLevel, ComboBoxType.Module);
+            PositionRow++;
+        }
+
+        /// <summary>
+        /// Decode text element and put to form
+        /// </summary>
+        /// <param name="inputData">Input data list to decode</param>
+        /// <param name="labelText">label text</param>
+        /// <param name="restrainLevel">restrains level</param>
+        private void DecodeText(List<string> inputData, string labelText, RestrainLevel restrainLevel)
+        {
+            AddElement(PositionRow, PositionColumn, inputData[Index], labelText, restrainLevel, ComboBoxType.Main);
+            AddElement(PositionRow, PositionColumn + 1, inputData[Index], null, restrainLevel, ComboBoxType.Text);
+            PositionRow++;
+        }
+
+        /// <summary>
+        /// Decode None element and put to form
+        /// </summary>
+        private void DecodeNone()
+        {
+            Index++;
+        }
+
+        /// <summary>
+        /// Decode index element and put to form
+        /// </summary>
+        /// <param name="inputData">Input data list to decode</param>
+        /// <param name="labelText">label text</param>
+        /// <param name="restrainLevel">restrains level</param>
+        private void DecodeIndex(List<string> inputData, string labelText, RestrainLevel restrainLevel)
+        {
+            AddElement(PositionRow, PositionColumn, inputData[Index], labelText, restrainLevel, ComboBoxType.Main);
+            AddElement(PositionRow, PositionColumn + 1, inputData[Index], Resources.MemoryArea, RestrainLevel.None, ComboBoxType.Text);
+            AddElement(PositionRow, PositionColumn + 2, inputData[Index], Resources.Multiplier, RestrainLevel.None, ComboBoxType.Number);
+            AddElement(PositionRow, PositionColumn + 3, inputData[Index], Resources.Offset, RestrainLevel.None, ComboBoxType.Number);
+            PositionRow++;
+        }
+
+        /// <summary>
+        /// Decode multiline element and put to form
+        /// </summary>
+        /// <param name="inputData">Input data list to decode</param>
+        /// <param name="labelText">label text</param>
+        /// <param name="restrainLevel">restrains level</param>
+        private void DecodeMultiline(List<string> inputData, string labelText, RestrainLevel restrainLevel)
+        {
+            AddElement(PositionRow, PositionColumn, inputData[Index], labelText, restrainLevel, ComboBoxType.Main);
+
+            PositionColumn++;
+            PositionRow++;
+            while (inputData[Index] != KeywordDBChoices.MultiLineEnd)
+                DecodeElement(inputData, "", RestrainLevel.None);
+
+            PositionColumn--;
+            AddElement(PositionRow, PositionColumn, inputData[Index], null, RestrainLevel.NoEdit, ComboBoxType.Text);
+            PositionRow++;
+        }
+
+        private void DecodeIf(List<string> inputData, string labelText, RestrainLevel restrainLevel)
+        {
+            Debug _debug = new Debug();
+            string _debugText;
+
+            AddElement(PositionRow, PositionColumn, inputData[Index], labelText, restrainLevel, ComboBoxType.Main);
+            PositionColumn++;
+            //condition
+            switch (inputData[Index])
+            {
+              case KeywordDBChoices.Object:
+                    DecodeObject(inputData, null, RestrainLevel.IfCondition);
+                    break;
+
+                case KeywordDBChoices.Data:
+                    DecodeData(inputData, null, RestrainLevel.IfCondition);
+                    break;
+
+                case KeywordDBChoices.Modules:
+                    DecodeModule(inputData, null, RestrainLevel.IfCondition);
+                    break;
+
+                case KeywordDBChoices.IOText:
+                case KeywordDBChoices.IOTag:
+                case KeywordDBChoices.IOPin:
+                case KeywordDBChoices.IOChannel:
+                    DecodeIO(inputData, null, RestrainLevel.IfCondition);
+                    break;
+
+                default:
+                    _debugText = "DCCellEdit.DecodeIf.Condition";
+
+                    _debug.ToFile(_debugText + " " + Resources.ParameterNotFound + ":" + inputData[Index], DebugLevels.None, DebugMessageType.Critical);
+                    throw new InvalidProgramException(_debugText + "." + inputData[Index] + " is not created for this element");
+            }
+            //go back 1 row to have if in one line
+            PositionRow--;
+            PositionColumn+=2;
+            int _removeColumnCount;
+
+            switch (inputData[Index])
+            {
+                case KeywordDBChoices.IsEmpty:
+                case KeywordDBChoices.IsNotEmpty:
+                    AddElement(PositionRow, PositionColumn, inputData[Index], Resources.Statement, RestrainLevel.IfStatement, ComboBoxType.IfCondition);
+                    PositionRow++;
+                    _removeColumnCount = 3;
+                    break;
+
+                case KeywordDBChoices.Equal:
+                case KeywordDBChoices.nEqual:
+                case KeywordDBChoices.GreaterEqual:
+                case KeywordDBChoices.Greater:
+                case KeywordDBChoices.LessEqual:
+                case KeywordDBChoices.Less:
+                    AddElement(PositionRow, PositionColumn, inputData[Index], Resources.Statement, RestrainLevel.IfStatement, ComboBoxType.IfCondition);
+                    PositionColumn++;
+                    // then it is variable
+                    DecodeElement(inputData, null, RestrainLevel.IfStatement);
+                    _removeColumnCount = 4;
+                    break;
+
+                default:
+                    _debugText = "DCCellEdit.DecodeIf.Statement";
+
+                    _debug.ToFile(_debugText + " " + Resources.ParameterNotFound + ":" + inputData[Index], DebugLevels.None, DebugMessageType.Critical);
+                    throw new InvalidProgramException(_debugText + "." + inputData[Index] + " is not created for this element");
+            }
+            //if = true
+            DecodeElement(inputData, Resources.True, RestrainLevel.IfStatement);
+            //if = false
+            DecodeElement(inputData, Resources.False, RestrainLevel.IfStatement);
+            PositionColumn -= _removeColumnCount;
         }
 
         /// <summary>
         /// Decode one element
         /// </summary>
         /// <param name="inputData">all element list</param>
-        /// <param name="index">index of current element</param>
         /// <param name="labelText">label text of element</param>
-        /// <param name="column">column index of element</param>
-        /// <param name="row">row index of element</param>
-        /// <returns>new index</returns>
-        public int DecodeElement(List<string> inputData, int index, string labelText, ref int column, ref int row, bool emptySelectionAvailable)
+        /// <param name="restrainLevel">choices are main not if statement</param>
+        private void DecodeElement(List<string> inputData, string labelText, RestrainLevel restrainLevel)
         {
-            int _index = index;
-            List<string> _choicesMain;
-            List<string> _choicesIf;
-            ComboBoxType _typeMain;
-            ComboBoxType _typeIO;
-            string text;
+            string _debugText;
             Debug _debug = new Debug();
 
-            if (emptySelectionAvailable)
-            {
-                _choicesMain = ModuleBased ? Choices.ChoicesMainModules : Choices.ChoicesMainObjects;
-                _typeMain = ComboBoxType.Main;
-            }
-            else
-            {
-                _choicesMain = ModuleBased ? Choices.ChoicesMainModulesNoEmpty : Choices.ChoicesMainObjectsNoEmpty;
-                _typeMain = ComboBoxType.MainNoEmpty;
-            }
-
-            _choicesIf = ModuleBased ? Choices.ChoicesIfModules : Choices.ChoicesIfObjects;
-            _typeIO = ModuleBased ? ComboBoxType.Number : ComboBoxType.Text;
-
-            switch (inputData[_index])
+            switch (inputData[Index])
             {
                 case KeywordDBChoices.Tab:
-                    AddElement(column, row, inputData[_index], labelText, _choicesMain, _typeMain);
-                    row++;
+                    DecodeTab(inputData, labelText, restrainLevel);
                     break;
 
                 case KeywordDBChoices.Text:
-                    AddElement(column, row, inputData[_index], labelText, _choicesMain, _typeMain);
-                    _index++;
-                    AddElement(column + 1, row, inputData[_index], null, null, ComboBoxType.Text);
-                    row++;
+                    DecodeText(inputData, labelText, restrainLevel);
                     break;
 
                 case KeywordDBChoices.Object:
-                    AddElement(column, row, inputData[_index], labelText, _choicesMain, _typeMain);
-                    _index++;
-                    AddElement(column + 1, row, inputData[_index], null, Choices.ObjectColumns, ComboBoxType.Object);
-                    row++;
+                    DecodeObject(inputData, labelText, restrainLevel);
                     break;
 
                 case KeywordDBChoices.Data:
-                    AddElement(column, row, inputData[_index], labelText, _choicesMain, _typeMain);
-                    _index++;
-                    AddElement(column + 1, row, inputData[_index], null, Choices.DataColumns, ComboBoxType.Data);
-                    row++;
+                    DecodeData(inputData, labelText, restrainLevel);
                     break;
 
                 case KeywordDBChoices.Modules:
-                    AddElement(column, row, inputData[_index], labelText, _choicesMain, _typeMain);
-                    _index++;
-                    AddElement(column + 1, row, inputData[_index], null, Choices.ModuleColumns, ComboBoxType.Module);
-                    row++;
+                    DecodeModule(inputData, labelText, restrainLevel);
                     break;
 
                 case KeywordDBChoices.IOTag:
-                    AddElement(column, row, inputData[_index], labelText, _choicesMain, _typeMain);
-                    _index++;
-                    AddElement(column + 1, row, inputData[_index], null, null, _typeIO);
-                    row++;
-                    break;
-
+                case KeywordDBChoices.IOPin:
                 case KeywordDBChoices.IOChannel:
-                    AddElement(column, row, inputData[_index], labelText, _choicesMain, _typeMain);
-                    _index++;
-                    AddElement(column + 1, row, inputData[_index], null, null, _typeIO);
-                    row++;
-                    break;
-
-                case KeywordDBChoices.VariableType:
-                    AddElement(column, row, inputData[_index], labelText, _choicesMain, _typeMain);
-                    _index++;
-                    AddElement(column + 1, row, inputData[_index], null, null, ComboBoxType.Text);
-                    row++;
+                case KeywordDBChoices.IOText:
+                    DecodeIO(inputData, labelText, restrainLevel);
                     break;
 
                 case KeywordDBChoices.Index:
-                    AddElement(column, row, inputData[_index], labelText, _choicesMain, _typeMain);
-                    _index++;
-                    //memory area
-                    AddElement(column + 1, row, inputData[_index], Resources.MemoryArea, null, ComboBoxType.Text);
-                    _index++;
-                    //multiplier
-                    AddElement(column + 2, row, inputData[_index], Resources.Multiplier, null, ComboBoxType.Number);
-                    _index++;
-                    //offset
-                    AddElement(column + 3, row, inputData[_index], Resources.Offset, null, ComboBoxType.Number);
-                    row++;
+                    DecodeIndex(inputData, labelText, restrainLevel);
                     break;
 
                 case KeywordDBChoices.If:
-                    AddElement(column, row, inputData[_index], labelText, _choicesMain, _typeMain);
-                    _index++;
-                    column++;
-                    // variable
-                    switch (inputData[_index])
-                    {
-                        case KeywordDBChoices.Object:
-                            AddElement(column, row, inputData[_index], null, _choicesIf, ComboBoxType.If);
-                            _index++;
-                            AddElement(column + 1, row, inputData[_index], null, Choices.ObjectColumns, ComboBoxType.Object);
-                            break;
-
-                        case KeywordDBChoices.Data:
-                            AddElement(column, row, inputData[_index], null, _choicesIf, ComboBoxType.If);
-                            _index++;
-                            AddElement(column + 1, row, inputData[_index], null, Choices.DataColumns, ComboBoxType.Data);
-                            break;
-
-                        case KeywordDBChoices.Modules:
-                            AddElement(column, row, inputData[_index], null, _choicesIf, ComboBoxType.If);
-                            _index++;
-                            AddElement(column + 1, row, inputData[_index], null, Choices.ModuleColumns, ComboBoxType.Module);
-                            break;
-
-                        case KeywordDBChoices.IOTag:
-                            AddElement(column, row, inputData[_index], null, _choicesIf, ComboBoxType.If);
-                            _index++;
-                            AddElement(column + 1, row, inputData[_index], null, null, _typeIO);
-                            break;
-
-                        case KeywordDBChoices.IOChannel:
-                            AddElement(column, row, inputData[_index], null, _choicesIf, ComboBoxType.If);
-                            _index++;
-                            AddElement(column + 1, row, inputData[_index], null, null, _typeIO);
-                            break;
-
-                        default:
-                            text = "DBCellEdit.Decode.IF";
-                            _debug.ToFile(text + " " + Resources.ParameterNotFound + ":" + inputData[_index], DebugLevels.None, DebugMessageType.Critical);
-                            throw new InvalidProgramException(text + "." + inputData[_index] + " is not created for this element");
-                    }
-                    column+=2;
-                    _index++;
-
-                    //if statement
-                    AddElement(column, row, inputData[_index], Resources.Statement, Choices.ChoicesIfStatement, ComboBoxType.IfStatement);
-                    switch (inputData[_index])
-                    {
-                        case KeywordDBChoices.IsEmpty:
-                        case KeywordDBChoices.IsNotEmpty:
-                            row++;
-                            break;
-                        default:
-                            column++;
-                            _index++;
-                            _index = DecodeElement(inputData, _index, "", ref column, ref row, false);
-                            column--;
-                            break;
-                    }
-
-                    column++;
-                    _index++;
-                    //true statement
-                    _index = DecodeElement(inputData, _index, Resources.True, ref column, ref row, false);
-
-                    _index++;
-                    //false statement
-                    _index = DecodeElement(inputData, _index, Resources.False, ref column, ref row, false);
-
-                    column -= 4;
+                    DecodeIf(inputData, labelText, restrainLevel);
                     break;
 
                 case KeywordDBChoices.None:
+                    DecodeNone();
+                    break;
+
+                case KeywordDBChoices.MultiLine:
+                    DecodeMultiline(inputData, labelText, restrainLevel);
                     break;
 
                 default:
-                    text = "DBCellEdit.Decode";
-                    _debug.ToFile(text + " " + Resources.ParameterNotFound + ":" + inputData[_index], DebugLevels.None, DebugMessageType.Critical);
-                    throw new InvalidProgramException(text + "." + inputData[_index] + " is not created for this element");
+                    _debugText = "DBCellEdit.Decode";
+                    _debug.ToFile(_debugText + " " + Resources.ParameterNotFound + ":" + inputData[Index], DebugLevels.None, DebugMessageType.Critical);
+                    throw new InvalidProgramException(_debugText + "." + inputData[Index] + " is not created for this element");
             }
-            return _index;
         }
 
         /// <summary>
@@ -591,12 +765,33 @@ namespace IO_list_automation_new.Forms
         public void DecodeElementsAll(List<string> inputData)
         {
             this.SuspendLayout();
-            int x = 0;
-            int y = 0;
-            for (int i = 0; i < inputData.Count; i++)
-                i = DecodeElement(inputData, i, null, ref x, ref y, true);
+            PositionColumn = 0;
+            PositionRow = 0;
+            Index = 0;
 
-            AddElement(x, y, KeywordDBChoices.None, null, Choices.ChoicesMainObjects, ComboBoxType.Main);
+            int _count = 0;
+            while (Index < inputData.Count)
+            {
+                _count++;
+                DecodeElement(inputData, null, RestrainLevel.None);
+                if (_count > 1000)
+                {
+                    Debug _debug = new Debug();
+                    const string _debugText = "DecodeElementsAll";
+                    _debug.ToFile(_debugText + ": infinite loop", DebugLevels.None, DebugMessageType.Critical);
+                    throw new InvalidProgramException(_debugText + ": infinite loop");
+                }
+            }
+
+            Index = 0;
+            if (ModuleBased)
+                AddElement(PositionRow, PositionColumn, "" , null, RestrainLevel.None, ComboBoxType.Main);
+            else
+                AddElement(PositionRow, PositionColumn, "", null, RestrainLevel.None, ComboBoxType.Main);
+
+            int x = 800;
+            int y = Math.Max (PositionRow * _offsetY + 100,400);
+            this.Size = new System.Drawing.Size(x, y);
 
             this.ResumeLayout();
             this.Refresh();

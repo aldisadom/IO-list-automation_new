@@ -3,6 +3,7 @@ using IO_list_automation_new.Properties;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace IO_list_automation_new.DB
@@ -35,6 +36,7 @@ namespace IO_list_automation_new.DB
             PageEditComboBox.Items.Clear();
             PageEditComboBox.Items.Add(string.Empty);
             PageEditComboBox.Items.Add(Resources.Add);
+            PageEditComboBox.Items.Add(Resources.Copy);
 
             for (int i = 0; i < DBTabControl.TabPages.Count; i++)
                 PageEditComboBox.Items.Add(Resources.Remove + ": " + DBTabControl.TabPages[i].Name);
@@ -51,19 +53,35 @@ namespace IO_list_automation_new.DB
 
             if (_text == Resources.Add)
             {
-                NewName _newName = new NewName(Resources.Add + " " + Resources.DeleteMe);
+                NewName _newName = new NewName(Resources.CreateNew + " " + this.Text);
                 _newName.ShowDialog();
                 if (string.IsNullOrEmpty(_newName.Output))
                     return;
 
-                DataGridView _grid = AddData(_newName.Output);
+                DataGridView _grid = AddData(_newName.Output, _newName.Output);
 
                 _grid.Columns.Add("0", "0");
                 _grid.Rows.Add();
             }
-            else if (_text != string.Empty)
+            else if (_text == Resources.Remove)
             {
                 DBTabControl.TabPages.RemoveByKey(_text.Replace(Resources.Remove + ": ", string.Empty));
+            }
+            else if (_text == Resources.Copy)
+            {
+                NewName _newName = new NewName(Resources.CreateNew + " " + this.Text);
+                _newName.ShowDialog();
+                if (string.IsNullOrEmpty(_newName.Output))
+                    return;
+
+                DataGridView _gridCopyFrom = (DataGridView)DBTabControl.SelectedTab.Controls[0];
+                DataGridView _grid = AddData(_newName.Output, _newName.Output);
+
+                for (int i = 0; i < _gridCopyFrom.ColumnCount; i++)
+                    _grid.Columns.Add(i.ToString(), i.ToString());
+
+                for (int i = 0; i < _gridCopyFrom.RowCount; i++)
+                    _grid.Rows.Add(_gridCopyFrom.Rows[i].Cells.Cast<DataGridViewCell>().Select(c => c.Value).ToArray());
             }
         }
 
@@ -78,6 +96,9 @@ namespace IO_list_automation_new.DB
             CellEditComboBox.Items.Clear();
             CellEditComboBox.Items.Add(string.Empty);
             CellEditComboBox.Items.Add(Resources.Add);
+            CellEditComboBox.Items.Add(Resources.AddBefore);
+            CellEditComboBox.Items.Add(Resources.Copy);
+            CellEditComboBox.Items.Add(Resources.CopyEnd);
             CellEditComboBox.Items.Add(Resources.Remove);
 
             CellEditComboBox.Tag = e.RowIndex;
@@ -150,6 +171,24 @@ namespace IO_list_automation_new.DB
                 for (int i = 0; i < _grid.ColumnCount; i++)
                     _grid.Rows[(int)CellEditComboBox.Tag + 1].Cells[i].Value = string.Empty;
             }
+            else if (CellEditComboBox.SelectedItem.ToString() == Resources.AddBefore)
+            {
+                _grid.Rows.Insert((int)CellEditComboBox.Tag, 1);
+                for (int i = 0; i < _grid.ColumnCount; i++)
+                    _grid.Rows[(int)CellEditComboBox.Tag].Cells[i].Value = string.Empty;
+            }
+            else if (CellEditComboBox.SelectedItem.ToString() == Resources.Copy)
+            {
+                _grid.Rows.Insert((int)CellEditComboBox.Tag + 1, 1);
+                for (int i = 0; i < _grid.ColumnCount; i++)
+                    _grid.Rows[(int)CellEditComboBox.Tag + 1].Cells[i].Value = _grid.Rows[(int)CellEditComboBox.Tag].Cells[i].Value;
+            }
+            else if (CellEditComboBox.SelectedItem.ToString() == Resources.CopyEnd)
+            {
+                _grid.Rows.Add();
+                for (int i = 0; i < _grid.ColumnCount; i++)
+                    _grid.Rows[_grid.RowCount-1].Cells[i].Value = _grid.Rows[(int)CellEditComboBox.Tag].Cells[i].Value;
+            }
             else if (CellEditComboBox.SelectedItem.ToString() == Resources.Remove)
             {
                 _grid.Rows.RemoveAt((int)CellEditComboBox.Tag);
@@ -160,7 +199,7 @@ namespace IO_list_automation_new.DB
             UpdateResult();
         }
 
-        public DataGridView AddData(string tabName)
+        public DataGridView AddData(string fullName,string tabName)
         {
             DataGridView dataGridView1 = new DataGridView();
             TabPage tabPage1 = new TabPage();
@@ -191,7 +230,7 @@ namespace IO_list_automation_new.DB
             tabPage1.Name = tabName;
             tabPage1.Padding = new Padding(3);
             tabPage1.Size = new Size(178, 153);
-            tabPage1.Text = tabName;
+            tabPage1.Text = fullName;
             tabPage1.UseVisualStyleBackColor = true;
             tabPage1.Dock = System.Windows.Forms.DockStyle.Fill;
             //

@@ -232,6 +232,15 @@ namespace IO_list_automation_new.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to IO generate.
+        /// </summary>
+        internal static string IOGenerate {
+            get {
+                return ResourceManager.GetString("IOGenerate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to KKS combine.
         /// </summary>
         internal static string KKSCombine {
