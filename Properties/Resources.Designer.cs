@@ -70,6 +70,15 @@ namespace IO_list_automation_new.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Add before.
+        /// </summary>
+        internal static string AddBefore {
+            get {
+                return ResourceManager.GetString("AddBefore", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Button was pressed.
         /// </summary>
         internal static string ButtonPressed {
@@ -156,6 +165,33 @@ namespace IO_list_automation_new.Properties {
         internal static string ConvertListToData {
             get {
                 return ResourceManager.GetString("ConvertListToData", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Copy.
+        /// </summary>
+        internal static string Copy {
+            get {
+                return ResourceManager.GetString("Copy", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Copy to end.
+        /// </summary>
+        internal static string CopyEnd {
+            get {
+                return ResourceManager.GetString("CopyEnd", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Copy to end.
+        /// </summary>
+        internal static string CopyToEnd {
+            get {
+                return ResourceManager.GetString("CopyToEnd", resourceCulture);
             }
         }
         

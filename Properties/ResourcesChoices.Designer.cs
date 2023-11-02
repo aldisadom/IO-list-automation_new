@@ -115,6 +115,15 @@ namespace IO_list_automation_new.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Insert.
+        /// </summary>
+        internal static string Insert {
+            get {
+                return ResourceManager.GetString("Insert", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to IO channel.
         /// </summary>
         internal static string IOChannel {
@@ -124,11 +133,29 @@ namespace IO_list_automation_new.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to IO Pin.
+        /// </summary>
+        internal static string IOPin {
+            get {
+                return ResourceManager.GetString("IOPin", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to IO Tag.
         /// </summary>
         internal static string IOTag {
             get {
                 return ResourceManager.GetString("IOTag", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to IO Text.
+        /// </summary>
+        internal static string IOText {
+            get {
+                return ResourceManager.GetString("IOText", resourceCulture);
             }
         }
         
@@ -178,6 +205,24 @@ namespace IO_list_automation_new.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Multi line.
+        /// </summary>
+        internal static string MultiLine {
+            get {
+                return ResourceManager.GetString("MultiLine", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Multi line end.
+        /// </summary>
+        internal static string MultiLineEnd {
+            get {
+                return ResourceManager.GetString("MultiLineEnd", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to !=.
         /// </summary>
         internal static string nEqual {
@@ -210,15 +255,6 @@ namespace IO_list_automation_new.Properties {
         internal static string Text {
             get {
                 return ResourceManager.GetString("Text", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Variable type.
-        /// </summary>
-        internal static string VariableType {
-            get {
-                return ResourceManager.GetString("VariableType", resourceCulture);
             }
         }
     }

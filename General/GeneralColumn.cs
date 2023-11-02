@@ -24,10 +24,10 @@ namespace IO_list_automation_new
             if (_returnName != null)
                 return _returnName;
 
-            const string text = "GeneralColumn.GetColumnOrChoicesName";
+            const string _debugText = "GeneralColumn.GetColumnOrChoicesName";
             Debug _debug = new Debug();
-            _debug.ToFile(text + " " + Resources.ParameterNotFound + ":" + keyword, DebugLevels.None, DebugMessageType.Critical);
-            throw new InvalidProgramException(text + "." + keyword + " is not created for this element");
+            _debug.ToFile(_debugText + " " + Resources.ParameterNotFound + ":" + keyword, DebugLevels.None, DebugMessageType.Critical);
+            throw new InvalidProgramException(_debugText + "." + keyword + " is not created for this element");
         }
 
         /// <summary>
@@ -156,10 +156,10 @@ namespace IO_list_automation_new
                     if (suppressError)
                         return string.Empty;
 
-                    const string text = "GeneralColumn.GetColumnName";
+                    const string _debugText = "GeneralColumn.GetColumnName";
                     Debug _debug = new Debug();
-                    _debug.ToFile(text + " " + Resources.ParameterNotFound + ":" + keyword, DebugLevels.None, DebugMessageType.Critical);
-                    throw new InvalidProgramException(text + "." + keyword + " is not created for this element");
+                    _debug.ToFile(_debugText + " " + Resources.ParameterNotFound + ":" + keyword, DebugLevels.None, DebugMessageType.Critical);
+                    throw new InvalidProgramException(_debugText + "." + keyword + " is not created for this element");
             }
         }
 
@@ -198,14 +198,23 @@ namespace IO_list_automation_new
                 case KeywordDBChoices.IOTag:
                     return ResourcesChoices.IOTag;
 
+                case KeywordDBChoices.IOPin:
+                    return ResourcesChoices.IOPin;
+
+                case KeywordDBChoices.IOText:
+                    return ResourcesChoices.IOText;
+
                 case KeywordDBChoices.IOChannel:
                     return ResourcesChoices.IOChannel;
 
-                case KeywordDBChoices.VariableType:
-                    return ResourcesChoices.VariableType;
-
                 case KeywordDBChoices.Index:
                     return ResourcesChoices.Index;
+
+                case KeywordDBChoices.Insert:
+                    return ResourcesChoices.Insert;
+
+                case KeywordDBChoices.MultiLine:
+                    return ResourcesChoices.MultiLine;
 
                 case KeywordDBChoices.IsEmpty:
                     return ResourcesChoices.IsEmpty;
@@ -235,10 +244,10 @@ namespace IO_list_automation_new
                     if (suppressError)
                         return null;
 
-                    const string text = "GeneralColumn.GetChoicesName";
+                    const string _debugText = "GeneralColumn.GetChoicesName";
                     Debug _debug = new Debug();
-                    _debug.ToFile(text + " " + Resources.ParameterNotFound + ":" + keyword, DebugLevels.None, DebugMessageType.Critical);
-                    throw new InvalidProgramException(text + "." + keyword + " is not created for this element");
+                    _debug.ToFile(_debugText + " " + Resources.ParameterNotFound + ":" + keyword, DebugLevels.None, DebugMessageType.Critical);
+                    throw new InvalidProgramException(_debugText + "." + keyword + " is not created for this element");
             }
         }
     }

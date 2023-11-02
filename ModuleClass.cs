@@ -85,10 +85,10 @@ namespace IO_list_automation_new
                     if (suppressError)
                         return string.Empty;
 
-                    const string text = "ModuleSignal.GetValueString";
+                    const string _debugText = "ModuleSignal.GetValueString";
                     Debug _debug = new Debug();
-                    _debug.ToFile(text + " " + Resources.ParameterNotFound + ":" + parameterName, DebugLevels.None, DebugMessageType.Critical);
-                    throw new InvalidProgramException(text + "." + parameterName + " is not created for this element");
+                    _debug.ToFile(_debugText + " " + Resources.ParameterNotFound + ":" + parameterName, DebugLevels.None, DebugMessageType.Critical);
+                    throw new InvalidProgramException(_debugText + "." + parameterName + " is not created for this element");
             }
         }
 

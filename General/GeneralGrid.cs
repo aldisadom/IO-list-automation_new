@@ -103,10 +103,10 @@ namespace IO_list_automation_new
                         break;
 
                     default:
-                        const string text = "GeneralGrid.AddColumns";
+                        const string _debugText = "GeneralGrid.AddColumns";
                         Debug _debug = new Debug();
-                        _debug.ToFile(text + " " + Resources.ParameterNotFound + ":" + nameof(GridType), DebugLevels.None, DebugMessageType.Critical);
-                        throw new InvalidProgramException(text + "." + nameof(GridType) + " is not created for this element");
+                        _debug.ToFile(_debugText + " " + Resources.ParameterNotFound + ":" + nameof(GridType), DebugLevels.None, DebugMessageType.Critical);
+                        throw new InvalidProgramException(_debugText + "." + nameof(GridType) + " is not created for this element");
                 }
                 Grid.Columns.Insert(_column.Number, _columnGridView);
             }
@@ -171,10 +171,10 @@ namespace IO_list_automation_new
                     break;
 
                 default:
-                    const string text = "GeneralGrid.PutData";
+                    const string _debugText = "GeneralGrid.PutData";
                     Debug _debug = new Debug();
-                    _debug.ToFile(text + " " + Resources.ParameterNotFound + ":" + nameof(GridType), DebugLevels.None, DebugMessageType.Critical);
-                    throw new InvalidProgramException(text + "." + nameof(GridType) + " is not created for this element");
+                    _debug.ToFile(_debugText + " " + Resources.ParameterNotFound + ":" + nameof(GridType), DebugLevels.None, DebugMessageType.Critical);
+                    throw new InvalidProgramException(_debugText + "." + nameof(GridType) + " is not created for this element");
             }
 
             Debug debug = new Debug();
@@ -326,10 +326,10 @@ namespace IO_list_automation_new
                     break;
 
                 default:
-                    const string text = "GeneralGrid.LoadFromFileToMemory";
+                    const string _debugText = "GeneralGrid.LoadFromFileToMemory";
                     Debug _debug = new Debug();
-                    _debug.ToFile(text + " " + Resources.ParameterNotFound + ":" + nameof(GridType), DebugLevels.None, DebugMessageType.Critical);
-                    throw new InvalidProgramException(text + "." + nameof(GridType) + " is not created for this element");
+                    _debug.ToFile(_debugText + " " + Resources.ParameterNotFound + ":" + nameof(GridType), DebugLevels.None, DebugMessageType.Critical);
+                    throw new InvalidProgramException(_debugText + "." + nameof(GridType) + " is not created for this element");
             }
 
             //write data to file
@@ -427,10 +427,10 @@ namespace IO_list_automation_new
                     break;
 
                 default:
-                    const string text = "GeneralGrid.LoadFromFileToMemory";
+                    const string _debugText = "GeneralGrid.LoadFromFileToMemory";
                     Debug _debug = new Debug();
-                    _debug.ToFile(text + " " + Resources.ParameterNotFound + ":" + nameof(GridType), DebugLevels.None, DebugMessageType.Critical);
-                    throw new InvalidProgramException(text + "." + nameof(GridType) + " is not created for this element");
+                    _debug.ToFile(_debugText + " " + Resources.ParameterNotFound + ":" + nameof(GridType), DebugLevels.None, DebugMessageType.Critical);
+                    throw new InvalidProgramException(_debugText + "." + nameof(GridType) + " is not created for this element");
             }
 
             //read all excel rows
@@ -463,10 +463,10 @@ namespace IO_list_automation_new
                         break;
 
                     default:
-                        const string text = "GeneralGrid.LoadFromFileToMemory";
+                        const string _debugText = "GeneralGrid.LoadFromFileToMemory";
                         Debug _debug = new Debug();
-                        _debug.ToFile(text + " " + Resources.ParameterNotFound + ":" + nameof(GridType), DebugLevels.None, DebugMessageType.Critical);
-                        throw new InvalidProgramException(text + "." + nameof(GridType) + " is not created for this element");
+                        _debug.ToFile(_debugText + " " + Resources.ParameterNotFound + ":" + nameof(GridType), DebugLevels.None, DebugMessageType.Critical);
+                        throw new InvalidProgramException(_debugText + "." + nameof(GridType) + " is not created for this element");
                 }
             }
             _excel.Close();

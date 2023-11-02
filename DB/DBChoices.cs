@@ -6,19 +6,18 @@ namespace IO_list_automation_new.DB
     internal class DBChoices
     {
         //only for objects
-        public List<string> ChoicesMainObjects { get; }
-
-        public List<string> ChoicesMainObjectsNoEmpty { get; }
-        public List<string> ChoicesIfObjects { get; }
+        public List<string> ChoicesObjectsMain { get; }
+        public List<string> ChoicesObjectsIfStatement { get; }
+        public List<string> ChoicesObjectsIfCondition { get; }
 
         //only for modules
-        public List<string> ChoicesMainModules { get; }
+        public List<string> ChoicesModulesMain { get; }
 
-        public List<string> ChoicesMainModulesNoEmpty { get; }
-        public List<string> ChoicesIfModules { get; }
+        public List<string> ChoicesModulesIfStatement { get; }
+        public List<string> ChoicesModulesIfCondition { get; }
 
         //for all
-        public List<string> ChoicesIfStatement { get; }
+        public List<string> ChoicesIfConditions { get; }
 
         public List<string> DataColumns { get; }
         public List<string> ObjectColumns { get; }
@@ -27,9 +26,10 @@ namespace IO_list_automation_new.DB
         public DBChoices()
         {
             //only for objects
-            ChoicesMainObjects = new List<string>()
+            ChoicesObjectsMain = new List<string>()
             {
                 KeywordDBChoices.None,
+                KeywordDBChoices.Insert,
                 KeywordDBChoices.If,
                 KeywordDBChoices.Tab,
                 KeywordDBChoices.Text,
@@ -38,23 +38,29 @@ namespace IO_list_automation_new.DB
                 KeywordDBChoices.Data,
                 KeywordDBChoices.IOTag,
                 KeywordDBChoices.IOChannel,
-                KeywordDBChoices.VariableType,
+                KeywordDBChoices.IOPin,
+                KeywordDBChoices.IOText,
             };
-            ChoicesMainObjectsNoEmpty = GeneralFunctions.ListCopy(ChoicesMainObjects);
-            ChoicesMainObjectsNoEmpty.RemoveAt(0);
+            ChoicesObjectsIfStatement = GeneralFunctions.ListCopy(ChoicesObjectsMain);
+            ChoicesObjectsIfStatement.Remove(KeywordDBChoices.None);
+            ChoicesObjectsIfStatement.Remove(KeywordDBChoices.Insert);
+            ChoicesObjectsIfStatement.Add(KeywordDBChoices.MultiLine);
 
-            ChoicesIfObjects = new List<string>()
+            ChoicesObjectsIfCondition = new List<string>()
             {
                 KeywordDBChoices.Object,
                 KeywordDBChoices.Data,
                 KeywordDBChoices.IOTag,
                 KeywordDBChoices.IOChannel,
+                KeywordDBChoices.IOPin,
+                KeywordDBChoices.IOText,
             };
 
             //only for modules
-            ChoicesMainModules = new List<string>()
+            ChoicesModulesMain = new List<string>()
             {
                 KeywordDBChoices.None,
+                KeywordDBChoices.Insert,
                 KeywordDBChoices.If,
                 KeywordDBChoices.Tab,
                 KeywordDBChoices.Text,
@@ -63,24 +69,29 @@ namespace IO_list_automation_new.DB
                 KeywordDBChoices.Data,
                 KeywordDBChoices.IOTag,
                 KeywordDBChoices.IOChannel,
-                KeywordDBChoices.VariableType,
+                KeywordDBChoices.IOPin,
+                KeywordDBChoices.IOText,
             };
-            ChoicesMainModulesNoEmpty = GeneralFunctions.ListCopy(ChoicesMainModules);
-            ChoicesMainModulesNoEmpty.RemoveAt(0);
+            ChoicesModulesIfStatement = GeneralFunctions.ListCopy(ChoicesModulesMain);
+            ChoicesModulesIfStatement.Remove(KeywordDBChoices.None);
+            ChoicesModulesIfStatement.Remove(KeywordDBChoices.Insert);
+            ChoicesModulesIfStatement.Add(KeywordDBChoices.MultiLine);
 
-            ChoicesIfModules = new List<string>()
+            ChoicesModulesIfCondition = new List<string>()
             {
                 KeywordDBChoices.Modules,
                 KeywordDBChoices.Data,
                 KeywordDBChoices.IOTag,
                 KeywordDBChoices.IOChannel,
+                KeywordDBChoices.IOPin,
+                KeywordDBChoices.IOText,
             };
 
             //for all
-            ChoicesIfStatement = new List<string>()
+            ChoicesIfConditions = new List<string>()
             {
-                KeywordDBChoices.IsEmpty,
                 KeywordDBChoices.IsNotEmpty,
+                KeywordDBChoices.IsEmpty,
                 KeywordDBChoices.Equal,
                 KeywordDBChoices.nEqual,
                 KeywordDBChoices.GreaterEqual,

@@ -66,6 +66,7 @@ namespace IO_list_automation_new
             {
                 Debug _debug = new Debug();
                 _debug.ToFile(Resources.ProgressBarOutRange + " " + value.ToString() + " Max: " + Bar.Maximum, DebugLevels.None, DebugMessageType.Warning);
+                return;
             }
 
             //value change is greater than deadband

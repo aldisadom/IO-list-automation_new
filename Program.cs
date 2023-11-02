@@ -81,8 +81,11 @@ namespace IO_list_automation_new
         public const string Text = "Text";
         public const string IOTag = "IOTag";
         public const string IOChannel = "IOChannel";
+        public const string IOPin = "IOPin";
+        public const string IOText = "IOText";
         public const string Index = "Index";
-        public const string VariableType = "VariableType";
+        public const string MultiLine = "MultiLine";
+        public const string MultiLineEnd = "MultiLineEnd";
 
         public const string IsEmpty = "IsEmpty";
         public const string IsNotEmpty = "IsNotEmpty";
@@ -92,6 +95,7 @@ namespace IO_list_automation_new
         public const string Greater = ">";
         public const string LessEqual = "<=";
         public const string Less = "<";
+        public const string Insert = "Insert";
     }
 
     internal static class Program
