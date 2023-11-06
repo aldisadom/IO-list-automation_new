@@ -30,12 +30,15 @@ namespace IO_list_automation_new.General
         public string Keyword { get; }
         public string FullName { get; }
 
-        public DropDownElement(string mod, string keyword, string name)
+        public DropDownElement(string mod, string separator, string keyword, string name)
         {
             Mod = mod;
             Keyword = keyword;
             Name = name;
-            FullName = Mod + Name;
+            if (!string.IsNullOrEmpty(Mod) && !string.IsNullOrEmpty(Name))
+                FullName = Mod + separator + Name;
+            else
+                FullName = Mod + Name;
         }
     }
 
@@ -53,6 +56,8 @@ namespace IO_list_automation_new.General
 
     internal class DropDownClass
     {
+        private string Separator = ": ";
+
         public ComboBoxTag Tag
         {
             get { return (ComboBoxTag)Element.Tag; }
@@ -84,17 +89,17 @@ namespace IO_list_automation_new.General
         public EventHandler OpenEvent
         { set { Element.DropDown += value; } }
 
-        public KeyPressEventHandler KeyPressEvent
-        { set { Element.KeyPress += value; } }
-
-        public EventHandler IndexChangedEvent
-        { set { Element.SelectedIndexChanged += value; } }
-
         public EventHandler OpenEventRemove
         { set { Element.DropDown -= value; } }
 
+        public KeyPressEventHandler KeyPressEvent
+        { set { Element.KeyPress += value; } }
+
         public KeyPressEventHandler KeyPressEventRemove
         { set { Element.KeyPress -= value; } }
+
+        public EventHandler IndexChangedEvent
+        { set { Element.SelectedIndexChanged += value; } }
 
         public EventHandler IndexChangedEventRemove
         { set { Element.SelectedIndexChanged -= value; } }
@@ -120,6 +125,15 @@ namespace IO_list_automation_new.General
                 Location = new System.Drawing.Point(20, 20),
                 Name = name,
             };
+            ChangeDisplayMember(DropDownElementType.FullName);
+        }
+
+        /// <summary>
+        /// Show element in front
+        /// </summary>
+        public void BringToFront()
+        {
+            Element.BringToFront();
         }
 
         /// <summary>
@@ -196,7 +210,7 @@ namespace IO_list_automation_new.General
         /// <param name="text">name of item</param>
         public void AddItemText(string text)
         {
-            DropDownElement _element = new DropDownElement(string.Empty, text, text);
+            DropDownElement _element = new DropDownElement(string.Empty, Separator, text, text);
             Element.Items.Add(_element);
         }
 
@@ -207,7 +221,7 @@ namespace IO_list_automation_new.General
         /// <param name="keyword">keyword of item</param>
         public void AddItemFull(string mod, string keyword)
         {
-            DropDownElement _element = new DropDownElement(mod, keyword, ColumnNames.GetColumnOrChoicesName(keyword));
+            DropDownElement _element = new DropDownElement(mod, Separator, keyword, ColumnNames.GetColumnOrChoicesName(keyword));
 
             Element.Items.Add(_element);
         }
@@ -219,7 +233,19 @@ namespace IO_list_automation_new.General
         /// <param name="keyword">keyword of item</param>
         public void AddItemColumn(string mod, string keyword)
         {
-            DropDownElement _element = new DropDownElement(mod, keyword, ColumnNames.GetColumnName(keyword, false));
+            DropDownElement _element = new DropDownElement(mod, Separator, keyword, ColumnNames.GetColumnName(keyword, false));
+
+            Element.Items.Add(_element);
+        }
+
+        /// <summary>
+        /// Add dropdown elements custom
+        /// </summary>
+        /// <param name="mod">Name modification</param>
+        /// <param name="keyword">keyword of item</param>
+        public void AddItemCustom(string mod, string keyword)
+        {
+            DropDownElement _element = new DropDownElement(mod, Separator, keyword, keyword);
 
             Element.Items.Add(_element);
         }

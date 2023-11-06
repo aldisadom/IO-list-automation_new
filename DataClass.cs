@@ -671,7 +671,7 @@ namespace IO_list_automation_new
             UpdateColumnNumbers(design.BaseColumns.Columns);
 
             Signals.Clear();
-            design.Grid.GetData();
+            design.Grid.GetData(false);
             string _keyword;
             for (int _designNumber = 0; _designNumber < design.Signals.Count; _designNumber++)
             {

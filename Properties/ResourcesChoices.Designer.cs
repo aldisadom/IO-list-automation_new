@@ -61,6 +61,24 @@ namespace IO_list_automation_new.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Adress.
+        /// </summary>
+        internal static string Address {
+            get {
+                return ResourceManager.GetString("Address", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Base index.
+        /// </summary>
+        internal static string BaseIndex {
+            get {
+                return ResourceManager.GetString("BaseIndex", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Data.
         /// </summary>
         internal static string Data {
@@ -102,15 +120,6 @@ namespace IO_list_automation_new.Properties {
         internal static string If {
             get {
                 return ResourceManager.GetString("If", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Index.
-        /// </summary>
-        internal static string Index {
-            get {
-                return ResourceManager.GetString("Index", resourceCulture);
             }
         }
         

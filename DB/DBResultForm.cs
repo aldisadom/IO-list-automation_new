@@ -1,8 +1,10 @@
 ﻿using IO_list_automation_new.Forms;
+using IO_list_automation_new.General;
 using IO_list_automation_new.Properties;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 
@@ -10,48 +12,82 @@ namespace IO_list_automation_new.DB
 {
     public partial class DBResultForm : Form
     {
+        private string Directory { get; set; }
+        private string FileExtension { get; set; }
         private bool Editable { get; set; }
-        private bool ModuleBased { get; set; }
+
+        private BaseTypes Base { get; }
 
         private void ResultForm_Shown(object sender, EventArgs e)
         {
             UpdateResult();
         }
 
+        private void DeleteComboBox()
+        {
+            foreach (var _item in this.Controls)
+            {
+                if (!_item.GetType().Name.Contains("ComboBox"))
+                    continue;
+
+                if (((System.Windows.Forms.ComboBox)_item).Name == "RowEditComboBox")
+                {
+                    DropDownClass comboBox = new DropDownClass((System.Windows.Forms.ComboBox)_item)
+                    {
+                        IndexChangedEventRemove = RowEditComboBox_SelectedIndexChanged,
+                    };
+                    this.Controls.Remove((System.Windows.Forms.Control)_item);
+                }
+                else if (((System.Windows.Forms.ComboBox)_item).Name == "PageEditComboBox")
+                {
+                    DropDownClass comboBox = new DropDownClass((System.Windows.Forms.ComboBox)_item)
+                    {
+                        IndexChangedEventRemove = PageEditComboBox_SelectedIndexChanged,
+                    };
+                    this.Controls.Remove((System.Windows.Forms.Control)_item);
+                }
+            }
+        }
+
         private void DBTabControl_SelectedIndexChanged(object sender, EventArgs e)
         {
-            PageEditComboBox.Visible = false;
-            CellEditComboBox.Visible = false;
+            DeleteComboBox();
             UpdateResult();
         }
 
         private void DBTabControl_MouseClick(object sender, MouseEventArgs e)
         {
-            PageEditComboBox.Visible = false;
-            CellEditComboBox.Visible = false;
+            DeleteComboBox();
 
             if (e.Button != MouseButtons.Right)
                 return;
 
-            PageEditComboBox.Items.Clear();
-            PageEditComboBox.Items.Add(string.Empty);
-            PageEditComboBox.Items.Add(Resources.Add);
-            PageEditComboBox.Items.Add(Resources.Copy);
+            DropDownClass comboBox = new DropDownClass("PageEditComboBox");
+
+            comboBox.Editable(false);
+            comboBox.Location = PointToClient(Cursor.Position);
+
+            comboBox.AddItemCustom(string.Empty, string.Empty);
+            comboBox.AddItemCustom(Resources.Add, string.Empty);
+            comboBox.AddItemCustom(Resources.Copy, string.Empty);
 
             for (int i = 0; i < DBTabControl.TabPages.Count; i++)
-                PageEditComboBox.Items.Add(Resources.Remove + ": " + DBTabControl.TabPages[i].Name);
+                comboBox.AddItemCustom(Resources.Remove, DBTabControl.TabPages[i].Text);
 
-            PageEditComboBox.Visible = true;
-            PageEditComboBox.Location = PointToClient(Cursor.Position);
-            PageEditComboBox.BringToFront();
+            this.Controls.Add(comboBox.Element);
+
+            comboBox.IndexChangedEvent = PageEditComboBox_SelectedIndexChanged;
+            comboBox.BringToFront();
         }
 
         private void PageEditComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            string _text = PageEditComboBox.SelectedItem.ToString();
-            PageEditComboBox.Visible = false;
+            DropDownClass dropDown = new DropDownClass((ComboBox)sender);
+            string _text = dropDown.SelectedName();
+            string _mod = dropDown.SelectedMod();
 
-            if (_text == Resources.Add)
+            DeleteComboBox();
+            if (_mod == Resources.Add)
             {
                 NewName _newName = new NewName(Resources.CreateNew + " " + this.Text);
                 _newName.ShowDialog();
@@ -62,12 +98,22 @@ namespace IO_list_automation_new.DB
 
                 _grid.Columns.Add("0", "0");
                 _grid.Rows.Add();
+
+                DBTabControl.SelectedIndex = DBTabControl.TabCount - 1;
             }
-            else if (_text == Resources.Remove)
+            else if (_mod == Resources.Remove)
             {
-                DBTabControl.TabPages.RemoveByKey(_text.Replace(Resources.Remove + ": ", string.Empty));
+                for (int i = 0; i < DBTabControl.TabPages.Count; i++)
+                {
+                    if (DBTabControl.TabPages[i].Text != _text)
+                        continue;
+
+                    DBTabControl.TabPages.RemoveAt(i);
+                    string _filePath = Directory + "\\" + _text + "." + FileExtension;
+                    File.Delete(_filePath);
+                }
             }
-            else if (_text == Resources.Copy)
+            else if (_mod == Resources.Copy)
             {
                 NewName _newName = new NewName(Resources.CreateNew + " " + this.Text);
                 _newName.ShowDialog();
@@ -82,36 +128,40 @@ namespace IO_list_automation_new.DB
 
                 for (int i = 0; i < _gridCopyFrom.RowCount; i++)
                     _grid.Rows.Add(_gridCopyFrom.Rows[i].Cells.Cast<DataGridViewCell>().Select(c => c.Value).ToArray());
+
+                DBTabControl.SelectedIndex = DBTabControl.TabCount - 1;
             }
         }
 
         private void DataGridView_RowHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
         {
-            PageEditComboBox.Visible = false;
-            CellEditComboBox.Visible = false;
+            DeleteComboBox();
 
             if (e.Button != MouseButtons.Right)
                 return;
 
-            CellEditComboBox.Items.Clear();
-            CellEditComboBox.Items.Add(string.Empty);
-            CellEditComboBox.Items.Add(Resources.Add);
-            CellEditComboBox.Items.Add(Resources.AddBefore);
-            CellEditComboBox.Items.Add(Resources.Copy);
-            CellEditComboBox.Items.Add(Resources.CopyEnd);
-            CellEditComboBox.Items.Add(Resources.Remove);
+            DropDownClass comboBox = new DropDownClass("RowEditComboBox");
 
-            CellEditComboBox.Tag = e.RowIndex;
+            comboBox.Editable(false);
+            comboBox.Location = PointToClient(Cursor.Position);
+            comboBox.ChangeDisplayMember(DropDownElementType.Mod);
 
-            CellEditComboBox.Visible = true;
-            CellEditComboBox.Location = PointToClient(Cursor.Position);
-            CellEditComboBox.BringToFront();
+            string _index = e.RowIndex.ToString();
+            comboBox.AddItemCustom(string.Empty, _index);
+            comboBox.AddItemCustom(Resources.Add, _index);
+            comboBox.AddItemCustom(Resources.AddBefore, _index);
+            comboBox.AddItemCustom(Resources.Copy, _index);
+            comboBox.AddItemCustom(Resources.CopyEnd, _index);
+            comboBox.AddItemCustom(Resources.Remove, _index);
+
+            this.Controls.Add(comboBox.Element);
+            comboBox.IndexChangedEvent = RowEditComboBox_SelectedIndexChanged;
+            comboBox.BringToFront();
         }
 
         private void DataGridView_CellClick(object sender, EventArgs e)
         {
-            PageEditComboBox.Visible = false;
-            CellEditComboBox.Visible = false;
+            DeleteComboBox();
 
             int _row = ((System.Windows.Forms.DataGridViewCellEventArgs)e).RowIndex;
             DataGridView _grid = (DataGridView)sender;
@@ -125,7 +175,7 @@ namespace IO_list_automation_new.DB
                     _line.Add(_grid.Rows[_row].Cells[i].Value.ToString());
             }
 
-            DBCellEdit _DBCellEdit = new DBCellEdit(_line, ModuleBased);
+            DBCellEdit _DBCellEdit = new DBCellEdit(_line, Base);
             _DBCellEdit.ShowDialog();
             _line = _DBCellEdit.OutputData;
 
@@ -160,46 +210,49 @@ namespace IO_list_automation_new.DB
             UpdateResult();
         }
 
-        private void CellEditComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        private void RowEditComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
             DataGridView _grid = (DataGridView)DBTabControl.SelectedTab.Controls[0];
 
+            DropDownClass dropDown = new DropDownClass((ComboBox)sender);
+            string _mod = dropDown.SelectedMod();
+            int _selectedRow = int.Parse(dropDown.SelectedKeyword());
+
+            DeleteComboBox();
+
             //add after selected row
-            if (CellEditComboBox.SelectedItem.ToString() == Resources.Add)
+            if (_mod == Resources.Add)
             {
-                _grid.Rows.Insert((int)CellEditComboBox.Tag + 1, 1);
+                _grid.Rows.Insert(_selectedRow + 1, 1);
                 for (int i = 0; i < _grid.ColumnCount; i++)
-                    _grid.Rows[(int)CellEditComboBox.Tag + 1].Cells[i].Value = string.Empty;
+                    _grid.Rows[_selectedRow + 1].Cells[i].Value = string.Empty;
             }
-            else if (CellEditComboBox.SelectedItem.ToString() == Resources.AddBefore)
+            else if (_mod == Resources.AddBefore)
             {
-                _grid.Rows.Insert((int)CellEditComboBox.Tag, 1);
+                _grid.Rows.Insert(_selectedRow, 1);
                 for (int i = 0; i < _grid.ColumnCount; i++)
-                    _grid.Rows[(int)CellEditComboBox.Tag].Cells[i].Value = string.Empty;
+                    _grid.Rows[_selectedRow].Cells[i].Value = string.Empty;
             }
-            else if (CellEditComboBox.SelectedItem.ToString() == Resources.Copy)
+            else if (_mod == Resources.Copy)
             {
-                _grid.Rows.Insert((int)CellEditComboBox.Tag + 1, 1);
+                _grid.Rows.Insert(_selectedRow + 1, 1);
                 for (int i = 0; i < _grid.ColumnCount; i++)
-                    _grid.Rows[(int)CellEditComboBox.Tag + 1].Cells[i].Value = _grid.Rows[(int)CellEditComboBox.Tag].Cells[i].Value;
+                    _grid.Rows[_selectedRow + 1].Cells[i].Value = _grid.Rows[_selectedRow].Cells[i].Value;
             }
-            else if (CellEditComboBox.SelectedItem.ToString() == Resources.CopyEnd)
+            else if (_mod == Resources.CopyEnd)
             {
                 _grid.Rows.Add();
                 for (int i = 0; i < _grid.ColumnCount; i++)
-                    _grid.Rows[_grid.RowCount-1].Cells[i].Value = _grid.Rows[(int)CellEditComboBox.Tag].Cells[i].Value;
+                    _grid.Rows[_grid.RowCount - 1].Cells[i].Value = _grid.Rows[_selectedRow].Cells[i].Value;
             }
-            else if (CellEditComboBox.SelectedItem.ToString() == Resources.Remove)
+            else if (_mod == Resources.Remove)
             {
-                _grid.Rows.RemoveAt((int)CellEditComboBox.Tag);
+                _grid.Rows.RemoveAt(_selectedRow);
             }
-
-            DBTabControl.SelectedTab.Controls.Remove(this.CellEditComboBox);
-            CellEditComboBox.Visible = false;
             UpdateResult();
         }
 
-        public DataGridView AddData(string fullName,string tabName)
+        public DataGridView AddData(string fullName, string tabName)
         {
             DataGridView dataGridView1 = new DataGridView();
             TabPage tabPage1 = new TabPage();
@@ -246,12 +299,14 @@ namespace IO_list_automation_new.DB
             return dataGridView1;
         }
 
-        public DBResultForm(string name, bool editable, bool moduleBased)
+        public DBResultForm(string name, bool editable, BaseTypes inputBase, string directory, string fileExtension)
         {
             InitializeComponent();
             this.Text = name;
             Editable = editable;
-            ModuleBased = moduleBased;
+            Base = inputBase;
+            Directory = directory;
+            FileExtension = fileExtension;
 
             if (!editable)
                 tableLayoutPanel1.ColumnStyles[1].Width = 0;

@@ -29,6 +29,8 @@ namespace IO_list_automation_new
 
         private DataGridView Grid { get; set; }
 
+        public bool UseKeywordAsName = false;
+
         public GeneralGrid(string name, GridTypes gridType, string fileExtension, ProgressIndication progress, DataGridView grid, ColumnList columns)
         {
             Name = name;
@@ -63,11 +65,12 @@ namespace IO_list_automation_new
         /// <summary>
         /// Clear all grid data
         /// </summary>
-        private void GridClear()
+        public void GridClear()
         {
             Grid.Rows.Clear();
             Grid.Columns.Clear();
 
+            Grid.DataSource = null;
             Debug debug = new Debug();
             debug.ToFile("Clearing all grid: " + Name, DebugLevels.Development, DebugMessageType.Info);
         }
@@ -93,7 +96,7 @@ namespace IO_list_automation_new
                 switch (GridType)
                 {
                     case GridTypes.Data:
-                        _columnGridView.HeaderText = _column.GetColumnName();
+                        _columnGridView.HeaderText = _column.GetColumnName(UseKeywordAsName);
                         break;
 
                     case GridTypes.DB:
@@ -227,8 +230,9 @@ namespace IO_list_automation_new
         /// <summary>
         /// Get all data from grid
         /// </summary>
+        /// <param name="suppressError">suppress error</param>
         /// <returns>grid data as list of list string</returns>
-        public List<List<string>> GetData()
+        public List<List<string>> GetData(bool suppressError)
         {
             Debug debug = new Debug();
             debug.ToFile(Resources.GetDataFromGrid + ": " + Name, DebugLevels.Development, DebugMessageType.Info);
@@ -259,7 +263,7 @@ namespace IO_list_automation_new
 
             debug.ToFile(Resources.GetDataFromGrid + ": " + Name + " - " + Resources.Finished, DebugLevels.Development, DebugMessageType.Info);
 
-            if (_signalCount == 0)
+            if (_signalCount == 0 && !suppressError)
                 debug.ToPopUp(Resources.NoDataGrid + ": " + Name, DebugLevels.None, DebugMessageType.Warning);
 
             return Data;
@@ -293,7 +297,7 @@ namespace IO_list_automation_new
         /// <param name="fileName">file name</param>
         public void SaveToFile(string fileName)
         {
-            List<List<string>> _data = GetData();
+            List<List<string>> _data = GetData(false);
             if (_data == null)
                 return;
 
@@ -408,7 +412,7 @@ namespace IO_list_automation_new
                     _excel.Read();
                     for (int _columnNumber = 0; _columnNumber < _excel.FieldCount; _columnNumber++)
                     {
-                        _cellValue = GeneralFunctions.ReadExcelCell(1,_columnNumber, _excel.FieldCount, _excel);
+                        _cellValue = GeneralFunctions.ReadExcelCell(1, _columnNumber, _excel.FieldCount, _excel);
                         if (string.IsNullOrEmpty(_cellValue))
                             break;
 

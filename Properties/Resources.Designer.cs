@@ -160,6 +160,15 @@ namespace IO_list_automation_new.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Convert data to list.
+        /// </summary>
+        internal static string ConvertDataToList {
+            get {
+                return ResourceManager.GetString("ConvertDataToList", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Convert list to data.
         /// </summary>
         internal static string ConvertListToData {

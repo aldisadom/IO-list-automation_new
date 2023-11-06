@@ -120,6 +120,12 @@
   <data name="About" xml:space="preserve">
     <value>About</value>
   </data>
+  <data name="Address" xml:space="preserve">
+    <value>Address</value>
+  </data>
+  <data name="Area" xml:space="preserve">
+    <value>Area</value>
+  </data>
   <data name="CompareWithNewDesign" xml:space="preserve">
     <value>Compare with new design</value>
   </data>
@@ -218,6 +224,15 @@
   </data>
   <data name="ScadaEdit" xml:space="preserve">
     <value>SCADA DB edit</value>
+  </data>
+  <data name="SCADAGenerate" xml:space="preserve">
+    <value>SCADA generate Instances</value>
+  </data>
+  <data name="Size" xml:space="preserve">
+    <value>Size</value>
+  </data>
+  <data name="Start" xml:space="preserve">
+    <value>Start</value>
   </data>
   <data name="TransferProjectToData" xml:space="preserve">
     <value>Transfer project to data</value>

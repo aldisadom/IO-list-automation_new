@@ -330,4 +330,7 @@
   <data name="CopyEnd" xml:space="preserve">
     <value>Copy to end</value>
   </data>
+  <data name="ConvertDataToList" xml:space="preserve">
+    <value>Convert data to list</value>
+  </data>
 </root>

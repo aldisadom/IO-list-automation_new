@@ -133,7 +133,7 @@ namespace IO_list_automation_new
             string _fileName = System.IO.Path.GetDirectoryName(System.Windows.Forms.Application.ExecutablePath) + "\\DB\\" + Settings.Default.IOLanguage;
 
             //convert data from file to signals
-            if (!ListToSignals(Grid.LoadFromFileToMemory(_fileName), BaseColumns.Columns))
+            if (!ListToSignals(Grid.LoadFromFileToMemory(_fileName), BaseColumns.Columns, false))
                 return;
 
             Progress.RenameProgressBar(Resources.FindObjectType, objects.Signals.Count);
@@ -147,7 +147,7 @@ namespace IO_list_automation_new
             }
             Progress.HideProgressBar();
 
-            objects.PutDataToGrid();
+            objects.PutDataToGrid(false);
             debug.ToFile("Finding object type in objects - finished", DebugLevels.Development, DebugMessageType.Info);
         }
     }
@@ -334,7 +334,7 @@ namespace IO_list_automation_new
             string _fileName = System.IO.Path.GetDirectoryName(System.Windows.Forms.Application.ExecutablePath) + "\\DB\\" + Settings.Default.IOLanguage;
 
             //convert data from file to signals
-            if (!ListToSignals(Grid.LoadFromFileToMemory(_fileName), BaseColumns.Columns))
+            if (!ListToSignals(Grid.LoadFromFileToMemory(_fileName), BaseColumns.Columns, false))
                 return;
 
             Progress.RenameProgressBar(Resources.FindFunction, data.Signals.Count);
@@ -349,7 +349,7 @@ namespace IO_list_automation_new
 
             Progress.HideProgressBar();
 
-            data.PutDataToGrid();
+            data.PutDataToGrid(false);
             debug.ToFile("Finding function type in data - " + Resources.Finished, DebugLevels.Development, DebugMessageType.Info);
         }
     }

@@ -28,8 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.CellEditComboBox = new System.Windows.Forms.ComboBox();
-            this.PageEditComboBox = new System.Windows.Forms.ComboBox();
             this.DBTabControl = new System.Windows.Forms.TabControl();
             this.ResultTabControl = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
@@ -40,28 +38,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.ResultDataGridView)).BeginInit();
             this.tableLayoutPanel1.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // CellEditComboBox
-            // 
-            this.CellEditComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.CellEditComboBox.FormattingEnabled = true;
-            this.CellEditComboBox.Location = new System.Drawing.Point(3, 3);
-            this.CellEditComboBox.Name = "CellEditComboBox";
-            this.CellEditComboBox.Size = new System.Drawing.Size(121, 21);
-            this.CellEditComboBox.TabIndex = 3;
-            this.CellEditComboBox.Visible = false;
-            this.CellEditComboBox.SelectedIndexChanged += new System.EventHandler(this.CellEditComboBox_SelectedIndexChanged);
-            // 
-            // PageEditComboBox
-            // 
-            this.PageEditComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.PageEditComboBox.FormattingEnabled = true;
-            this.PageEditComboBox.Location = new System.Drawing.Point(3, 3);
-            this.PageEditComboBox.Name = "PageEditComboBox";
-            this.PageEditComboBox.Size = new System.Drawing.Size(121, 21);
-            this.PageEditComboBox.TabIndex = 3;
-            this.PageEditComboBox.Visible = false;
-            this.PageEditComboBox.SelectedIndexChanged += new System.EventHandler(this.PageEditComboBox_SelectedIndexChanged);
             // 
             // DBTabControl
             // 
@@ -135,8 +111,6 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1184, 699);
             this.Controls.Add(this.tableLayoutPanel1);
-            this.Controls.Add(this.CellEditComboBox);
-            this.Controls.Add(this.PageEditComboBox);
             this.Name = "DBResultForm";
             this.Text = "ResultForm";
             this.Shown += new System.EventHandler(this.ResultForm_Shown);
@@ -149,8 +123,6 @@
         }
 
         #endregion
-        private System.Windows.Forms.ComboBox CellEditComboBox;
-        private System.Windows.Forms.ComboBox PageEditComboBox;
         private System.Windows.Forms.TabControl ResultTabControl;
         private System.Windows.Forms.TabPage tabPage1;
         private System.Windows.Forms.DataGridView ResultDataGridView;
