@@ -5,18 +5,25 @@ namespace IO_list_automation_new.DB
 {
     internal class DBChoices
     {
-        //only for objects
+        //only for objects--------------------------------------
         public List<string> ChoicesObjectsMain { get; }
+
         public List<string> ChoicesObjectsIfStatement { get; }
         public List<string> ChoicesObjectsIfCondition { get; }
 
-        //only for modules
+        //only for modules--------------------------------------
         public List<string> ChoicesModulesMain { get; }
 
         public List<string> ChoicesModulesIfStatement { get; }
         public List<string> ChoicesModulesIfCondition { get; }
 
-        //for all
+        //only for address--------------------------------------
+        public List<string> ChoicesSCADAMain { get; }
+
+        public List<string> ChoicesSCADAIfStatement { get; }
+        public List<string> ChoicesSCADAIfCondition { get; }
+
+        //for all--------------------------------------
         public List<string> ChoicesIfConditions { get; }
 
         public List<string> DataColumns { get; }
@@ -25,7 +32,7 @@ namespace IO_list_automation_new.DB
 
         public DBChoices()
         {
-            //only for objects
+            //only for objects--------------------------------------
             ChoicesObjectsMain = new List<string>()
             {
                 KeywordDBChoices.None,
@@ -33,7 +40,8 @@ namespace IO_list_automation_new.DB
                 KeywordDBChoices.If,
                 KeywordDBChoices.Tab,
                 KeywordDBChoices.Text,
-                KeywordDBChoices.Index,
+                KeywordDBChoices.BaseIndex,
+                KeywordDBChoices.Address,
                 KeywordDBChoices.Object,
                 KeywordDBChoices.Data,
                 KeywordDBChoices.IOTag,
@@ -41,10 +49,22 @@ namespace IO_list_automation_new.DB
                 KeywordDBChoices.IOPin,
                 KeywordDBChoices.IOText,
             };
-            ChoicesObjectsIfStatement = GeneralFunctions.ListCopy(ChoicesObjectsMain);
-            ChoicesObjectsIfStatement.Remove(KeywordDBChoices.None);
-            ChoicesObjectsIfStatement.Remove(KeywordDBChoices.Insert);
-            ChoicesObjectsIfStatement.Add(KeywordDBChoices.MultiLine);
+
+            ChoicesObjectsIfStatement = new List<string>()
+            {
+                KeywordDBChoices.If,
+                KeywordDBChoices.Tab,
+                KeywordDBChoices.Text,
+                KeywordDBChoices.BaseIndex,
+                KeywordDBChoices.Address,
+                KeywordDBChoices.Object,
+                KeywordDBChoices.Data,
+                KeywordDBChoices.IOTag,
+                KeywordDBChoices.IOChannel,
+                KeywordDBChoices.IOPin,
+                KeywordDBChoices.IOText,
+                KeywordDBChoices.MultiLine,
+            };
 
             ChoicesObjectsIfCondition = new List<string>()
             {
@@ -56,7 +76,7 @@ namespace IO_list_automation_new.DB
                 KeywordDBChoices.IOText,
             };
 
-            //only for modules
+            //only for modules--------------------------------------
             ChoicesModulesMain = new List<string>()
             {
                 KeywordDBChoices.None,
@@ -64,7 +84,8 @@ namespace IO_list_automation_new.DB
                 KeywordDBChoices.If,
                 KeywordDBChoices.Tab,
                 KeywordDBChoices.Text,
-                KeywordDBChoices.Index,
+                KeywordDBChoices.BaseIndex,
+                KeywordDBChoices.Address,
                 KeywordDBChoices.Modules,
                 KeywordDBChoices.Data,
                 KeywordDBChoices.IOTag,
@@ -72,10 +93,22 @@ namespace IO_list_automation_new.DB
                 KeywordDBChoices.IOPin,
                 KeywordDBChoices.IOText,
             };
-            ChoicesModulesIfStatement = GeneralFunctions.ListCopy(ChoicesModulesMain);
-            ChoicesModulesIfStatement.Remove(KeywordDBChoices.None);
-            ChoicesModulesIfStatement.Remove(KeywordDBChoices.Insert);
-            ChoicesModulesIfStatement.Add(KeywordDBChoices.MultiLine);
+
+            ChoicesModulesIfStatement = new List<string>()
+            {
+                KeywordDBChoices.If,
+                KeywordDBChoices.Tab,
+                KeywordDBChoices.Text,
+                KeywordDBChoices.BaseIndex,
+                KeywordDBChoices.Address,
+                KeywordDBChoices.Modules,
+                KeywordDBChoices.Data,
+                KeywordDBChoices.IOTag,
+                KeywordDBChoices.IOChannel,
+                KeywordDBChoices.IOPin,
+                KeywordDBChoices.IOText,
+                KeywordDBChoices.MultiLine,
+            };
 
             ChoicesModulesIfCondition = new List<string>()
             {
@@ -87,7 +120,47 @@ namespace IO_list_automation_new.DB
                 KeywordDBChoices.IOText,
             };
 
-            //for all
+            //only for address--------------------------------------
+            ChoicesSCADAMain = new List<string>()
+            {
+                KeywordDBChoices.None,
+                KeywordDBChoices.Insert,
+                KeywordDBChoices.If,
+                KeywordDBChoices.Tab,
+                KeywordDBChoices.Text,
+                KeywordDBChoices.Modules,
+                KeywordDBChoices.Data,
+                KeywordDBChoices.IOTag,
+                KeywordDBChoices.IOChannel,
+                KeywordDBChoices.IOPin,
+                KeywordDBChoices.IOText,
+            };
+
+            ChoicesSCADAIfStatement = new List<string>()
+            {
+                KeywordDBChoices.If,
+                KeywordDBChoices.Tab,
+                KeywordDBChoices.Text,
+                KeywordDBChoices.Modules,
+                KeywordDBChoices.Data,
+                KeywordDBChoices.IOTag,
+                KeywordDBChoices.IOChannel,
+                KeywordDBChoices.IOPin,
+                KeywordDBChoices.IOText,
+                KeywordDBChoices.MultiLine,
+            };
+
+            ChoicesSCADAIfCondition = new List<string>()
+            {
+                KeywordDBChoices.Modules,
+                KeywordDBChoices.Data,
+                KeywordDBChoices.IOTag,
+                KeywordDBChoices.IOChannel,
+                KeywordDBChoices.IOPin,
+                KeywordDBChoices.IOText,
+            };
+
+            //for all--------------------------------------
             ChoicesIfConditions = new List<string>()
             {
                 KeywordDBChoices.IsNotEmpty,

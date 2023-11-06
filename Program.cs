@@ -18,6 +18,7 @@ namespace IO_list_automation_new
         decScadaDB,
         instScadaDB,
         modDB,
+        address,
     }
 
     internal enum TabIndex
@@ -26,6 +27,7 @@ namespace IO_list_automation_new
         Data = 1,
         Object = 2,
         Modules = 3,
+        Address = 4,
     }
 
     public static class KeywordColumn
@@ -61,6 +63,7 @@ namespace IO_list_automation_new
         public const string Terminal = "Terminal";
         public const string Tag = "Tag";
         public const string ModuleType = "ModuleType";
+        public const string ObjectGeneralType = "ObjectGeneralType";
 
         public const string DeviceTypeText = "DeviceTypeText";
         public const string FunctionText1 = "FunctionText1";
@@ -83,7 +86,8 @@ namespace IO_list_automation_new
         public const string IOChannel = "IOChannel";
         public const string IOPin = "IOPin";
         public const string IOText = "IOText";
-        public const string Index = "Index";
+        public const string BaseIndex = "BaseIndex";
+        public const string Address = "Address";
         public const string MultiLine = "MultiLine";
         public const string MultiLineEnd = "MultiLineEnd";
 

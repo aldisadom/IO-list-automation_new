@@ -127,20 +127,15 @@ namespace IO_list_automation_new
         }
 
         /// <summary>
-        /// Put all data to grid
+        /// Convert signals to list
         /// </summary>
-        public void PutDataToGrid()
+        /// <returns>return list</returns>
+        public virtual List<List<string>> SignalsToList()
         {
             Debug debug = new Debug();
-            if (Signals.Count == 0)
-            {
-                debug.ToPopUp(Resources.PutDataToGrid + ": " + Name + " - " + Resources.NoData, DebugLevels.Development, DebugMessageType.Info);
-                return;
-            }
+            debug.ToFile(Resources.ConvertDataToList + ": " + Name, DebugLevels.Development, DebugMessageType.Info);
 
-            debug.ToFile(Resources.PutDataToGrid + ": " + Name, DebugLevels.Development, DebugMessageType.Info);
-
-            Progress.RenameProgressBar(Resources.PutDataToGrid + ": " + Name, Signals.Count);
+            Progress.RenameProgressBar(Resources.ConvertDataToList + ": " + Name, Signals.Count);
 
             int _columnNumber;
             string _keyword;
@@ -170,16 +165,17 @@ namespace IO_list_automation_new
                 Progress.UpdateProgressBar(_signalNumber);
             }
             Progress.HideProgressBar();
+            debug.ToFile(Resources.ConvertDataToList + ": " + Name + " - " + Resources.Finished, DebugLevels.Development, DebugMessageType.Info);
 
-            Grid.PutData(_data);
-            debug.ToFile(Resources.PutDataToGrid + ": " + Name + " - " + Resources.Finished, DebugLevels.Development, DebugMessageType.Info);
+            return _data;
         }
 
         /// <summary>
         /// Convert list to signals
         /// </summary>
+        /// <param name="suppressError">suppress error</param>
         /// <returns>there is data in signals</returns>
-        public bool ListToSignals(List<List<string>> inputData, List<GeneralColumn> newColumnList)
+        public virtual bool ListToSignals(List<List<string>> inputData, List<GeneralColumn> newColumnList,bool suppressError)
         {
             Debug debug = new Debug();
             debug.ToFile(Resources.ConvertListToData + ": " + Name, DebugLevels.Development, DebugMessageType.Info);
@@ -218,22 +214,45 @@ namespace IO_list_automation_new
 
             debug.ToFile(Resources.ConvertListToData + ": " + Name + " - " + Resources.Finished, DebugLevels.Development, DebugMessageType.Info);
 
-            if (_signalCount == 0)
+            if (_signalCount == 0 && !suppressError)
                 debug.ToPopUp(Resources.NoData + ": " + Name, DebugLevels.None, DebugMessageType.Warning);
 
             return _signalCount > 0;
         }
 
         /// <summary>
+        /// Put all data to grid
+        /// </summary>
+        /// <param name="suppressError">suppress error</param>
+        public void PutDataToGrid(bool suppressError)
+        {
+            Debug debug = new Debug();
+            if (Signals.Count == 0)
+            {
+                if (!suppressError)
+                    debug.ToPopUp(Resources.PutDataToGrid + ": " + Name + " - " + Resources.NoData, DebugLevels.Development, DebugMessageType.Info);
+
+                return;
+            }
+            debug.ToFile(Resources.PutDataToGrid + ": " + Name, DebugLevels.Development, DebugMessageType.Info);
+
+            List<List<string>> _data = SignalsToList();
+
+            Grid.PutData(_data);
+            debug.ToFile(Resources.PutDataToGrid + ": " + Name + " - " + Resources.Finished, DebugLevels.Development, DebugMessageType.Info);
+        }
+
+        /// <summary>
         /// Get all data from grid
         /// </summary>
+        /// <param name="suppressError">suppress error</param>
         /// <returns>there is data in grid</returns>
-        public bool GetDataFromGrid()
+        public bool GetDataFromGrid(bool suppressError)
         {
             Debug debug = new Debug();
             debug.ToFile(Resources.GetDataFromGrid + ": " + Name, DebugLevels.Development, DebugMessageType.Info);
 
-            bool _validData = ListToSignals(Grid.GetData(), Grid.GetColumns());
+            bool _validData = ListToSignals(Grid.GetData(suppressError), Grid.GetColumns(), suppressError);
 
             debug.ToFile(Resources.GetDataFromGrid + ": " + Name + " - " + Resources.Finished, DebugLevels.Development, DebugMessageType.Info);
 

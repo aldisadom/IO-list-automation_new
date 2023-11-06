@@ -133,6 +133,7 @@
     </Compile>
     <Compile Include="DesignClass.cs" />
     <Compile Include="General\GeneralColumn.cs" />
+    <Compile Include="AddressesClass.cs" />
     <Compile Include="ModuleClass.cs" />
     <Compile Include="ObjectsClass.cs" />
     <Compile Include="DataClass.cs" />

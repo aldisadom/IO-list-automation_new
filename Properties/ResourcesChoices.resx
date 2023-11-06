@@ -141,8 +141,8 @@
   <data name="Text" xml:space="preserve">
     <value>Text</value>
   </data>
-  <data name="Index" xml:space="preserve">
-    <value>Index</value>
+  <data name="BaseIndex" xml:space="preserve">
+    <value>Base index</value>
   </data>
   <data name="Modules" xml:space="preserve">
     <value>Modules</value>
@@ -182,5 +182,8 @@
   </data>
   <data name="IOText" xml:space="preserve">
     <value>IO Text</value>
+  </data>
+  <data name="Address" xml:space="preserve">
+    <value>Adress</value>
   </data>
 </root>

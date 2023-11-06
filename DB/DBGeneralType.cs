@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using System.Windows.Forms;
 
 namespace IO_list_automation_new.DB
@@ -13,7 +9,13 @@ namespace IO_list_automation_new.DB
 
         public string FullDBType { get; }
 
+        public string ObjectVariableType { get; }
+
         public string DBType { get; }
+
+        public string MemoryArea { get; private set; }
+        public string Address { get; private set; }
+        public string AddressSize { get; private set; }
 
         public List<DBGeneralSignal> Data;
 
@@ -27,6 +29,12 @@ namespace IO_list_automation_new.DB
             Name = name;
             FullDBType = fullDBType;
             DBType = dbType;
+            MemoryArea = string.Empty;
+            Address = string.Empty;
+            AddressSize = string.Empty;
+
+            ObjectVariableType = FullDBType.Replace(dbType, "");
+
             Data = new List<DBGeneralSignal>();
             Progress = progress;
             Grid = new GeneralGrid(Name, GridTypes.EditableDB, fileExtension, Progress, grid, new ColumnList());
@@ -52,7 +60,19 @@ namespace IO_list_automation_new.DB
 
             List<List<string>> _decodedObject = new List<List<string>>();
             for (int i = 0; i < Data.Count; i++)
+            {
                 _decodedObject.Add(Data[i].DecodeLine(index, data, objectSignal, moduleSignal));
+                if (Data[i].BaseAddressSet)
+                {
+                    Address = Data[i].BaseAddress.ToString();
+                    MemoryArea = Data[i].MemoryArea;
+                    AddressSize = Data[i].AddressSize.ToString();
+
+                    // update other rows base addresses
+                    for (int j = i+1; j < Data.Count; j++)
+                        Data[j].UpdateBaseAddress(Data[i].MemoryArea, Data[i].BaseAddress, Data[i].AddressSize);
+                }
+            }
 
             index++;
             return _decodedObject;
@@ -65,7 +85,8 @@ namespace IO_list_automation_new.DB
         public List<List<string>> ConvertDataToList()
         {
             List<List<string>> _allData = new List<List<string>>();
-            //det all data from all lines of one type
+
+            //go through all data from all lines of one type
             for (int j = 0; j < Data.Count; j++)
                 _allData.Add(Data[j].Line);
 

@@ -1,12 +1,8 @@
 ﻿using IO_list_automation_new.Forms;
-using IO_list_automation_new.General;
 using IO_list_automation_new.Properties;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace IO_list_automation_new.DB
 {
@@ -15,7 +11,9 @@ namespace IO_list_automation_new.DB
         public List<string> Line { get; private set; }
 
         public string MemoryArea { get; private set; }
-        public string Address { get; private set; }
+        public int BaseAddress { get; private set; }
+        public int AddressSize { get; private set; }
+        public bool BaseAddressSet { get; private set; }
 
         private int Index;
 
@@ -26,16 +24,20 @@ namespace IO_list_automation_new.DB
         public DBGeneralSignal(bool simulation)
         {
             MemoryArea = string.Empty;
-            Address = string.Empty;
+            BaseAddress = 0;
+            AddressSize = 0;
             Line = new List<string>();
             Simulation = simulation;
+            BaseAddressSet = false;
         }
 
         public DBGeneralSignal()
         {
             MemoryArea = string.Empty;
-            Address = string.Empty;
+            AddressSize = 0;
+            BaseAddress = 0;
             Line = new List<string>();
+            BaseAddressSet = false;
         }
 
         /// <summary>
@@ -48,6 +50,20 @@ namespace IO_list_automation_new.DB
         }
 
         /// <summary>
+        /// Update base addresses
+        /// </summary>
+        /// <param name="memoryArea">new memory area</param>
+        /// <param name="baseAddress">new base address</param>
+        /// <param name="addressSize">new address size</param>
+        public void UpdateBaseAddress(string memoryArea, int baseAddress, int addressSize)
+        {
+            MemoryArea = memoryArea;
+            BaseAddress = baseAddress;
+            AddressSize = addressSize;
+            BaseAddressSet = true;
+        }
+
+        /// <summary>
         /// Find IO tag in data based on function of object KKS
         /// </summary>
         /// <param name="data">data</param>
@@ -56,7 +72,7 @@ namespace IO_list_automation_new.DB
         /// <returns>IO tag</returns>
         private string DecodeIOTag(DataClass data, ObjectSignal objectSignal, ModuleSignal moduleSignal)
         {
-            Index +=2;
+            Index += 2;
             if (Simulation)
             {
                 Value = "KKS." + Line[Index - 1];
@@ -77,10 +93,9 @@ namespace IO_list_automation_new.DB
             //module based
             else
             {
-                int _channel;
                 for (int i = 0; i < data.Signals.Count; i++)
                 {
-                    if (!int.TryParse(data.Signals[i].Channel, out _channel))
+                    if (!int.TryParse(data.Signals[i].Channel, out int _channel))
                         continue;
 
                     if ((moduleSignal.ModuleName == data.Signals[i].ModuleName) && (_channel == int.Parse(Line[Index - 1])))
@@ -124,10 +139,9 @@ namespace IO_list_automation_new.DB
             //module based
             else
             {
-                int _channel;
                 for (int i = 0; i < data.Signals.Count; i++)
                 {
-                    if (!int.TryParse(data.Signals[i].Channel, out _channel))
+                    if (!int.TryParse(data.Signals[i].Channel, out int _channel))
                         continue;
 
                     if ((moduleSignal.ModuleName == data.Signals[i].ModuleName) && (_channel == int.Parse(Line[Index - 1])))
@@ -172,10 +186,9 @@ namespace IO_list_automation_new.DB
             //module based
             else
             {
-                int _channel;
                 for (int i = 0; i < data.Signals.Count; i++)
                 {
-                    if (!int.TryParse(data.Signals[i].Channel, out _channel))
+                    if (!int.TryParse(data.Signals[i].Channel, out int _channel))
                         continue;
 
                     if ((moduleSignal.ModuleName == data.Signals[i].ModuleName) && (_channel == int.Parse(Line[Index - 1])))
@@ -220,10 +233,9 @@ namespace IO_list_automation_new.DB
             //module based
             else
             {
-                int _channel;
                 for (int i = 0; i < data.Signals.Count; i++)
                 {
-                    if (!int.TryParse(data.Signals[i].Channel, out _channel))
+                    if (!int.TryParse(data.Signals[i].Channel, out int _channel))
                         continue;
 
                     if ((moduleSignal.ModuleName == data.Signals[i].ModuleName) && (_channel == int.Parse(Line[Index - 1])))
@@ -246,10 +258,10 @@ namespace IO_list_automation_new.DB
         /// <returns>column value</returns>
         private string DecodeData(DataClass data, ObjectSignal objectSignal, ModuleSignal moduleSignal)
         {
-            Index+=2;
+            Index += 2;
             if (Simulation)
             {
-                Value = "Data." + Line[Index-1];
+                Value = "Data." + Line[Index - 1];
                 return Value;
             }
 
@@ -287,14 +299,14 @@ namespace IO_list_automation_new.DB
         /// <returns>column value</returns>
         private string DecodeObjects(ObjectSignal objectSignal)
         {
-            Index+=2;
+            Index += 2;
             if (Simulation)
             {
-                Value = "Object." + Line[Index-1];
+                Value = "Object." + Line[Index - 1];
                 return Value;
             }
 
-            Value = objectSignal.GetValueString(Line[Index-1], false);
+            Value = objectSignal.GetValueString(Line[Index - 1], false);
             return Value;
         }
 
@@ -337,29 +349,38 @@ namespace IO_list_automation_new.DB
         }
 
         /// <summary>
-        /// Calculate value
+        /// Calculate base address
         /// </summary>
         /// <param name="index">device index</param>
         /// <param name="line">coded line</param>
         /// <returns>value calculated with offset and multiplier</returns>
-        private string DecodeIndex(int index,List<string> line)
+        private void DecodeBaseAddress(int index, List<string> line)
         {
             Index += 4;
 
-            MemoryArea = line[Index-3];
-            if (!int.TryParse(line[Index -2], out int _value))
-            {
-                Value = string.Empty;
-                return Value;
-            }
+            if (!int.TryParse(line[Index - 2], out int _addressSize))
+                return;
 
-            int _returnValue = index * _value;
-            if (int.TryParse(line[Index -1], out _value))
-                _returnValue += _value;
+            int _baseAddress = index * _addressSize;
+            if (int.TryParse(line[Index - 1], out int _value))
+                _baseAddress += _value;
 
-            Address = _returnValue.ToString();
-            Value = Address;
-            return Value;
+            UpdateBaseAddress(line[Index - 3], _baseAddress, _addressSize);
+        }
+
+        /// <summary>
+        /// Calculate address value
+        /// </summary>
+        /// <param name="line">coded line</param>
+        /// <returns>value calculated with offset and multiplier</returns>
+        private string DecodeAddress(List<string> line)
+        {
+            Index += 2;
+
+            if (int.TryParse(line[Index - 1], out int _value))
+                return (BaseAddress + _value).ToString();
+
+            return BaseAddress.ToString();
         }
 
         /// <summary>
@@ -436,7 +457,7 @@ namespace IO_list_automation_new.DB
                     float _value1, _value2;
 
                     // then it is variable
-                    DecodeCell(Index, decodedLine, data, objectSignal, moduleSignal,true);
+                    DecodeCell(Index, decodedLine, data, objectSignal, moduleSignal, true);
                     //then search for operation sign
                     switch (_text)
                     {
@@ -519,13 +540,11 @@ namespace IO_list_automation_new.DB
         private List<string> DecodeMultiline(int index, List<string> decodedLine, DataClass data, ObjectSignal objectSignal, ModuleSignal moduleSignal)
         {
             Index++;
-            List<string> _cellText = new List<string>() { string.Empty};
-            List<string> cellText = new List<string>();
+            List<string> _cellText = new List<string>() { string.Empty };
 
             while (Line[Index] != KeywordDBChoices.MultiLineEnd)
-            {
                 TransferCellTextToDecoded(DecodeCell(index, decodedLine, data, objectSignal, moduleSignal, false), _cellText);
-            }
+
             return _cellText;
         }
 
@@ -586,15 +605,16 @@ namespace IO_list_automation_new.DB
                 case KeywordDBChoices.IOChannel:
                 case KeywordDBChoices.IOText:
                 case KeywordDBChoices.Text:
-                    return _newIndex+=2;
+                case KeywordDBChoices.Address:
+                    return _newIndex += 2;
 
-                case KeywordDBChoices.Index:
+                case KeywordDBChoices.BaseIndex:
                     return _newIndex += 4;
 
                 case KeywordDBChoices.MultiLine:
                     int _layer = 1;
                     _newIndex++;
-                    while (_layer>0)
+                    while (_layer > 0)
                     {
                         if (Line[_newIndex] == KeywordDBChoices.MultiLine)
                             _layer++;
@@ -604,6 +624,7 @@ namespace IO_list_automation_new.DB
                         _newIndex++;
                     }
                     return _newIndex;
+
                 default:
                     _debugText = "DBGeneralSignal.DecodePeek.IF";
                     _debug.ToFile(_debugText + " " + Resources.ParameterNotFound + ":" + _text, DebugLevels.None, DebugMessageType.Critical);
@@ -652,8 +673,12 @@ namespace IO_list_automation_new.DB
                     _cellText[_cellText.Count - 1] += DecodeData(data, objectSignal, moduleSignal);
                     break;
 
-                case KeywordDBChoices.Index:
-                    _cellText[_cellText.Count - 1] += DecodeIndex(index,Line);
+                case KeywordDBChoices.BaseIndex:
+                    DecodeBaseAddress(index, Line);
+                    break;
+
+                case KeywordDBChoices.Address:
+                    _cellText[_cellText.Count - 1] += DecodeAddress(Line);
                     break;
 
                 case KeywordDBChoices.Object:
@@ -724,7 +749,7 @@ namespace IO_list_automation_new.DB
                 if (_count > 1000)
                 {
                     Debug _debug = new Debug();
-                    const string _debugText = "DecodeElementsAll";
+                    const string _debugText = "DBGeneralSignal.DecodeLine";
                     _debug.ToFile(_debugText + ": infinite loop", DebugLevels.None, DebugMessageType.Critical);
                     throw new InvalidProgramException(_debugText + ": infinite loop");
                 }

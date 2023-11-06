@@ -207,8 +207,11 @@ namespace IO_list_automation_new
                 case KeywordDBChoices.IOChannel:
                     return ResourcesChoices.IOChannel;
 
-                case KeywordDBChoices.Index:
-                    return ResourcesChoices.Index;
+                case KeywordDBChoices.BaseIndex:
+                    return ResourcesChoices.BaseIndex;
+
+                case KeywordDBChoices.Address:
+                    return ResourcesChoices.Address;
 
                 case KeywordDBChoices.Insert:
                     return ResourcesChoices.Insert;
@@ -275,10 +278,9 @@ namespace IO_list_automation_new
         /// Get column name based on software language
         /// </summary>
         /// <returns>column name of column based on language</returns>
-        /// <exception cref="InvalidProgramException"></exception>
-        public string GetColumnName()
+        public string GetColumnName(bool useKeywordAsName)
         {
-            return ColumnName.GetColumnName(Keyword, false);
+            return useKeywordAsName ? Keyword : ColumnName.GetColumnName(Keyword, false);
         }
     }
 

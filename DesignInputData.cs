@@ -100,7 +100,7 @@ namespace IO_list_automation_new.Forms
             foreach (GeneralColumn _column in ExcelColumns)
             {
                 if (_column.Number == -1)
-                    _columnNames.Add(_column.GetColumnName());
+                    _columnNames.Add(_column.GetColumnName(false));
             }
 
             return _columnNames;
@@ -274,7 +274,7 @@ namespace IO_list_automation_new.Forms
                         continue;
 
                     InputDataGridView.Columns[i].Name = _column.Keyword;
-                    InputDataGridView.Columns[i].HeaderText = _column.GetColumnName();
+                    InputDataGridView.Columns[i].HeaderText = _column.GetColumnName(false);
                     break;
                 }
             }
