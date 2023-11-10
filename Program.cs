@@ -16,7 +16,7 @@ namespace IO_list_automation_new
         instDB,
         decDB,
         decScadaDB,
-        instScadaDB,
+        modScadaDB,
         modDB,
         address,
     }
@@ -82,14 +82,14 @@ namespace IO_list_automation_new
         public const string Object = "Object";
         public const string Modules = "Modules";
         public const string Text = "Text";
-        public const string IOTag = "IOTag";
-        public const string IOChannel = "IOChannel";
-        public const string IOPin = "IOPin";
-        public const string IOText = "IOText";
-        public const string BaseIndex = "BaseIndex";
+        public const string BaseAddress = "BaseAddress";
         public const string Address = "Address";
         public const string MultiLine = "MultiLine";
         public const string MultiLineEnd = "MultiLineEnd";
+        public const string AddressArea = "AddressArea";
+        public const string GetBaseAddress = "GetBaseAddress";
+        public const string CPU = "CPU";
+        public const string ObjectName = "ObjectName";
 
         public const string IsEmpty = "IsEmpty";
         public const string IsNotEmpty = "IsNotEmpty";

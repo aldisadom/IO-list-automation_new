@@ -7,6 +7,8 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.Menu;
 
 namespace IO_list_automation_new.DB
 {
@@ -62,37 +64,54 @@ namespace IO_list_automation_new.DB
             if (e.Button != MouseButtons.Right)
                 return;
 
-            DropDownClass comboBox = new DropDownClass("PageEditComboBox");
+            DropDownClass _dropDown = new DropDownClass("PageEditComboBox");
 
-            comboBox.Editable(false);
-            comboBox.Location = PointToClient(Cursor.Position);
+            _dropDown.Editable(false);
+            _dropDown.Location = PointToClient(Cursor.Position);
 
-            comboBox.AddItemCustom(string.Empty, string.Empty);
-            comboBox.AddItemCustom(Resources.Add, string.Empty);
-            comboBox.AddItemCustom(Resources.Copy, string.Empty);
+            _dropDown.AddItemCustom(string.Empty, string.Empty);
+            _dropDown.AddItemCustom(Resources.Add, string.Empty);
+            _dropDown.AddItemCustom(Resources.Copy, string.Empty);
 
-            for (int i = 0; i < DBTabControl.TabPages.Count; i++)
-                comboBox.AddItemCustom(Resources.Remove, DBTabControl.TabPages[i].Text);
+            if (DBTabControl.TabPages.Count > 1)
+            {
+                for (int i = 0; i < DBTabControl.TabPages.Count; i++)
+                    _dropDown.AddItemCustom(Resources.Remove, DBTabControl.TabPages[i].Text);
+            }
 
-            this.Controls.Add(comboBox.Element);
+            this.Controls.Add(_dropDown.Element);
 
-            comboBox.IndexChangedEvent = PageEditComboBox_SelectedIndexChanged;
-            comboBox.BringToFront();
+            _dropDown.IndexChangedEvent = PageEditComboBox_SelectedIndexChanged;
+            _dropDown.BringToFront();
         }
 
         private void PageEditComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            DropDownClass dropDown = new DropDownClass((ComboBox)sender);
+            DropDownClass dropDown = new DropDownClass((System.Windows.Forms.ComboBox)sender);
             string _text = dropDown.SelectedName();
             string _mod = dropDown.SelectedMod();
+            string _fileName;
 
             DeleteComboBox();
             if (_mod == Resources.Add)
             {
-                NewName _newName = new NewName(Resources.CreateNew + " " + this.Text);
+                NewName _newName = new NewName(Resources.CreateNew + " " + this.Text,true);
+
                 _newName.ShowDialog();
-                if (string.IsNullOrEmpty(_newName.Output))
+                _fileName = _newName.Output;
+                if (string.IsNullOrEmpty(_fileName))
+                {
+                    MessageBox.Show(Resources.EnteredEmptyName, "", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
+                }
+                for (int i = 0; i < DBTabControl.TabPages.Count; i++)
+                {
+                    if (DBTabControl.TabPages[i].Text == _fileName)
+                    {
+                        MessageBox.Show(Resources.EnteredExistingName, "", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return;
+                    }
+                }
 
                 DataGridView _grid = AddData(_newName.Output, _newName.Output);
 
@@ -115,10 +134,23 @@ namespace IO_list_automation_new.DB
             }
             else if (_mod == Resources.Copy)
             {
-                NewName _newName = new NewName(Resources.CreateNew + " " + this.Text);
+                NewName _newName = new NewName(Resources.CreateNew + " " + this.Text,true);
+
                 _newName.ShowDialog();
-                if (string.IsNullOrEmpty(_newName.Output))
+                _fileName = _newName.Output;
+                if (string.IsNullOrEmpty(_fileName))
+                {
+                    MessageBox.Show(Resources.EnteredEmptyName, "", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
+                }
+                for (int i = 0; i < DBTabControl.TabPages.Count; i++)
+                {
+                    if (DBTabControl.TabPages[i].Text == _fileName)
+                    {
+                        MessageBox.Show(Resources.EnteredExistingName, "", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return;
+                    }
+                }
 
                 DataGridView _gridCopyFrom = (DataGridView)DBTabControl.SelectedTab.Controls[0];
                 DataGridView _grid = AddData(_newName.Output, _newName.Output);
@@ -214,9 +246,9 @@ namespace IO_list_automation_new.DB
         {
             DataGridView _grid = (DataGridView)DBTabControl.SelectedTab.Controls[0];
 
-            DropDownClass dropDown = new DropDownClass((ComboBox)sender);
-            string _mod = dropDown.SelectedMod();
-            int _selectedRow = int.Parse(dropDown.SelectedKeyword());
+            DropDownClass _dropDown = new DropDownClass((System.Windows.Forms.ComboBox)sender);
+            string _mod = _dropDown.SelectedMod();
+            int _selectedRow = int.Parse(_dropDown.SelectedKeyword());
 
             DeleteComboBox();
 
@@ -344,7 +376,7 @@ namespace IO_list_automation_new.DB
 
                 //decode current line
                 _instance.SetValue(_line);
-                List<string> _decodedLine = _instance.DecodeLine(0, null, null, null);
+                List<string> _decodedLine = _instance.DecodeLine(0, null, null, null, null, Base);
 
                 string[] _row = new string[_decodedLine.Count];
                 for (int j = 0; j < _decodedLine.Count; j++)

@@ -649,11 +649,11 @@ namespace IO_list_automation_new
             SettingsData.Default.Save();
         }
 
-        public DataClass(ProgressIndication progress, DataGridView grid) : base("Data", nameof(FileExtensions.data), progress, grid)
+        public DataClass(ProgressIndication progress, DataGridView grid) : base("Data", nameof(FileExtensions.data), progress, grid,true)
         {
         }
 
-        public DataClass() : base("Data", nameof(FileExtensions.data), null, null)
+        public DataClass() : base("Data", nameof(FileExtensions.data), null, null,true)
         {
         }
 

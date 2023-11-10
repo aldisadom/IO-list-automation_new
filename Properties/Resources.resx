@@ -199,7 +199,7 @@
     <value>Column add drop down</value>
   </data>
   <data name="ConfirmExit" xml:space="preserve">
-    <value>Do you really whant to exit?</value>
+    <value>Do you want to save before exit?</value>
   </data>
   <data name="Created" xml:space="preserve">
     <value>Created</value>
@@ -332,5 +332,11 @@
   </data>
   <data name="ConvertDataToList" xml:space="preserve">
     <value>Convert data to list</value>
+  </data>
+  <data name="EnteredEmptyName" xml:space="preserve">
+    <value>Entered name is empty</value>
+  </data>
+  <data name="EnteredExistingName" xml:space="preserve">
+    <value>Entered name that already exists</value>
   </data>
 </root>

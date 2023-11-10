@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using IO_list_automation_new.Properties;
+using System;
+using System.Collections.Generic;
 using System.Windows.Forms;
 
 namespace IO_list_automation_new.DB
@@ -37,7 +39,8 @@ namespace IO_list_automation_new.DB
 
             Data = new List<DBGeneralSignal>();
             Progress = progress;
-            Grid = new GeneralGrid(Name, GridTypes.EditableDB, fileExtension, Progress, grid, new ColumnList());
+
+            Grid = new GeneralGrid(Name, GridTypes.DBEditable, fileExtension, Progress, grid, new ColumnList());
             GridResult = new GeneralGrid(Name, GridTypes.DB, fileExtension, Progress, new DataGridView(), new ColumnList());
         }
 
@@ -48,20 +51,42 @@ namespace IO_list_automation_new.DB
         /// <param name="objectSignal">object to be decoded</param>
         /// <param name="moduleSignal">module to be decoded</param>
         /// <returns>decoded text</returns>
-        public List<List<string>> Decode(ref int index, DataClass data, ObjectSignal objectSignal, ModuleSignal moduleSignal)
+        public List<List<string>> Decode(ref int index, DataClass data, ObjectSignal objectSignal, ModuleSignal moduleSignal, AddressObject addressObject, BaseTypes inputBase)
         {
             //if type mismatch skip
-            if (objectSignal == null && moduleSignal == null)
-                return null;
-            else if (objectSignal != null && objectSignal.ObjectType != DBType)
-                return null;
-            else if (moduleSignal != null && moduleSignal.ModuleType != DBType)
-                return null;
+            switch (inputBase)
+            {
+                case BaseTypes.ModuleCPU:
+                    if (moduleSignal == null || moduleSignal.ModuleType != DBType)
+                        return null;
+                    break;
+
+                case BaseTypes.ModuleSCADA:
+                    if (addressObject == null || addressObject.ObjectType != DBType || addressObject.ObjectGeneralType != ResourcesUI.Modules)
+                        return null;
+                    break;
+
+                case BaseTypes.ObjectsCPU:
+                    if (objectSignal == null || objectSignal.ObjectType != DBType)
+                        return null;
+                    break;
+
+                case BaseTypes.ObjectSCADA:
+                    if (addressObject == null || addressObject.ObjectType != DBType || addressObject.ObjectGeneralType != ResourcesUI.Objects)
+                        return null;
+                    break;
+
+                default:
+                    const string _debugText = "DBGeneralType.Decode";
+                    Debug _debug = new Debug();
+                    _debug.ToFile(_debugText + " " + Resources.ParameterNotFound + ":" + nameof(inputBase), DebugLevels.None, DebugMessageType.Critical);
+                    throw new InvalidProgramException(_debugText + "." + nameof(inputBase) + " is not created for this element");
+            }
 
             List<List<string>> _decodedObject = new List<List<string>>();
             for (int i = 0; i < Data.Count; i++)
             {
-                _decodedObject.Add(Data[i].DecodeLine(index, data, objectSignal, moduleSignal));
+                _decodedObject.Add(Data[i].DecodeLine(index, data, objectSignal, moduleSignal, addressObject, inputBase));
                 if (Data[i].BaseAddressSet)
                 {
                     Address = Data[i].BaseAddress.ToString();
@@ -69,7 +94,7 @@ namespace IO_list_automation_new.DB
                     AddressSize = Data[i].AddressSize.ToString();
 
                     // update other rows base addresses
-                    for (int j = i+1; j < Data.Count; j++)
+                    for (int j = i + 1; j < Data.Count; j++)
                         Data[j].UpdateBaseAddress(Data[i].MemoryArea, Data[i].BaseAddress, Data[i].AddressSize);
                 }
             }

@@ -92,6 +92,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DB\DBChoices.cs" />
+    <Compile Include="DB\DBForceEditForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DB\DBForceEditForm.Designer.cs">
+      <DependentUpon>DBForceEditForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="DB\DBGeneral.cs" />
     <Compile Include="DB\DBGeneralSignal.cs" />
     <Compile Include="DB\DBGeneralType.cs" />
@@ -151,11 +157,6 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
     </Compile>
-    <Compile Include="Properties\Resources.lt.Designer.cs">
-      <DependentUpon>Resources.lt.resx</DependentUpon>
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-    </Compile>
     <Compile Include="Properties\ResourcesChoices.Designer.cs">
       <DependentUpon>ResourcesChoices.resx</DependentUpon>
       <AutoGen>True</AutoGen>
@@ -195,6 +196,9 @@
       <DependentUpon>DBCellEdit.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <EmbeddedResource Include="DB\DBForceEditForm.resx">
+      <DependentUpon>DBForceEditForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="DB\NewName.resx">
       <DependentUpon>NewName.cs</DependentUpon>
     </EmbeddedResource>
@@ -211,11 +215,6 @@
     <EmbeddedResource Include="Properties\ResourcesUI.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>ResourcesUI.Designer.cs</LastGenOutput>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Properties\Resources.lt.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.lt.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\ResourcesChoices.resx">

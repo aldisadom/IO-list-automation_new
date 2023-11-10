@@ -151,7 +151,7 @@ namespace IO_list_automation_new.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Do you really whant to exit?.
+        ///   Looks up a localized string similar to Do you want to save before exit?.
         /// </summary>
         internal static string ConfirmExit {
             get {
@@ -327,6 +327,24 @@ namespace IO_list_automation_new.Properties {
         internal static string EarlyReleaseWarning {
             get {
                 return ResourceManager.GetString("EarlyReleaseWarning", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Entered name is empty.
+        /// </summary>
+        internal static string EnteredEmptyName {
+            get {
+                return ResourceManager.GetString("EnteredEmptyName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Entered name that already exists.
+        /// </summary>
+        internal static string EnteredExistingName {
+            get {
+                return ResourceManager.GetString("EnteredExistingName", resourceCulture);
             }
         }
         

@@ -79,6 +79,8 @@ namespace IO_list_automation_new
 
     internal class DBLanguageType : GeneralClass<DBLanguageTypeSignal>
     {
+        private string FileName = "";
+
         protected override List<GeneralColumn> GeneralGenerateColumnsList()
         {
             List<GeneralColumn> _columns = new List<GeneralColumn>()
@@ -90,12 +92,23 @@ namespace IO_list_automation_new
             return _columns;
         }
 
+        public void LoadEdit()
+        {
+            Grid.LoadFromFile(FileName);
+        }
+
+        public void SaveEdit()
+        {
+            Grid.SaveToFile(FileName);
+        }
+
         protected override void UpdateSettingsColumnsList()
         {
         }
 
-        public DBLanguageType(ProgressIndication progress, DataGridView grid) : base("DBLanguageType", nameof(FileExtensions.langTypeDB), progress, grid)
+        public DBLanguageType(ProgressIndication progress, DataGridView grid) : base("DBLanguageType", nameof(FileExtensions.langTypeDB), progress, grid, true)
         {
+            FileName = System.IO.Path.GetDirectoryName(System.Windows.Forms.Application.ExecutablePath) + "\\DB\\" + Settings.Default.IOLanguage;
         }
 
         /// <summary>
@@ -248,6 +261,7 @@ namespace IO_list_automation_new
 
     internal class DBLanguageFunctionType : GeneralClass<DBLanguageFunctionSignal>
     {
+        private string FileName = "";
         protected override List<GeneralColumn> GeneralGenerateColumnsList()
         {
             List<GeneralColumn> _columns = new List<GeneralColumn>()
@@ -266,8 +280,19 @@ namespace IO_list_automation_new
         {
         }
 
-        public DBLanguageFunctionType(ProgressIndication progress, DataGridView grid) : base("DBFunctionLanguage", nameof(FileExtensions.langFuncDB), progress, grid)
+        public DBLanguageFunctionType(ProgressIndication progress, DataGridView grid) : base("DBFunctionLanguage", nameof(FileExtensions.langFuncDB), progress, grid, true)
         {
+            FileName = System.IO.Path.GetDirectoryName(System.Windows.Forms.Application.ExecutablePath) + "\\DB\\" + Settings.Default.IOLanguage;
+        }
+
+        public void LoadEdit()
+        {
+            Grid.LoadFromFile(FileName);
+        }
+
+        public void SaveEdit()
+        {
+            Grid.SaveToFile(FileName);
         }
 
         /// <summary>
@@ -331,10 +356,8 @@ namespace IO_list_automation_new
             Debug debug = new Debug();
             debug.ToFile("Finding function type in data", DebugLevels.Development, DebugMessageType.Info);
 
-            string _fileName = System.IO.Path.GetDirectoryName(System.Windows.Forms.Application.ExecutablePath) + "\\DB\\" + Settings.Default.IOLanguage;
-
             //convert data from file to signals
-            if (!ListToSignals(Grid.LoadFromFileToMemory(_fileName), BaseColumns.Columns, false))
+            if (!ListToSignals(Grid.LoadFromFileToMemory(FileName), BaseColumns.Columns, false))
                 return;
 
             Progress.RenameProgressBar(Resources.FindFunction, data.Signals.Count);

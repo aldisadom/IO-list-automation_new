@@ -4,6 +4,7 @@ using IO_list_automation_new.Properties;
 using SwiftExcel;
 using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.IO;
 using System.Windows.Forms;
 
@@ -12,7 +13,9 @@ namespace IO_list_automation_new
     internal enum GridTypes
     {
         Data,
-        EditableDB,
+        DataNoEdit,
+        DBEditable,
+        DBForceEdit,
         DB,
     }
 
@@ -99,8 +102,14 @@ namespace IO_list_automation_new
                         _columnGridView.HeaderText = _column.GetColumnName(UseKeywordAsName);
                         break;
 
+                    case GridTypes.DataNoEdit:
+                        _columnGridView.HeaderText = _column.GetColumnName(UseKeywordAsName);
+                        _columnGridView.SortMode = DataGridViewColumnSortMode.NotSortable;
+                        break;
+
+                    case GridTypes.DBForceEdit:
                     case GridTypes.DB:
-                    case GridTypes.EditableDB:
+                    case GridTypes.DBEditable:
                         _columnGridView.HeaderText = _column.Keyword;
                         _columnGridView.SortMode = DataGridViewColumnSortMode.NotSortable;
                         break;
@@ -161,13 +170,15 @@ namespace IO_list_automation_new
             switch (GridType)
             {
                 case GridTypes.Data:
+                case GridTypes.DBForceEdit:
                     Grid.AllowUserToAddRows = true;
                     Grid.AllowUserToDeleteRows = true;
                     Grid.ReadOnly = false;
                     break;
 
                 case GridTypes.DB:
-                case GridTypes.EditableDB:
+                case GridTypes.DBEditable:
+                case GridTypes.DataNoEdit:
                     Grid.AllowUserToAddRows = false;
                     Grid.AllowUserToDeleteRows = false;
                     Grid.ReadOnly = true;
@@ -316,6 +327,7 @@ namespace IO_list_automation_new
             {
                 //first line in excel is column keywords
                 case GridTypes.Data:
+                case GridTypes.DataNoEdit:
                     foreach (GeneralColumn _column in Columns)
                     {
                         _ColumnNumber = _column.Number;
@@ -326,7 +338,8 @@ namespace IO_list_automation_new
                     break;
                 //if DB, do not add columns
                 case GridTypes.DB:
-                case GridTypes.EditableDB:
+                case GridTypes.DBEditable:
+                case GridTypes.DBForceEdit:
                     break;
 
                 default:
@@ -409,6 +422,7 @@ namespace IO_list_automation_new
             {
                 //read column keywords in line 1
                 case GridTypes.Data:
+                case GridTypes.DataNoEdit:
                     _excel.Read();
                     for (int _columnNumber = 0; _columnNumber < _excel.FieldCount; _columnNumber++)
                     {
@@ -423,7 +437,8 @@ namespace IO_list_automation_new
                     break;
                 //if DB, then columns not in excel then write 0 1 2 3 ...
                 case GridTypes.DB:
-                case GridTypes.EditableDB:
+                case GridTypes.DBEditable:
+                case GridTypes.DBForceEdit:
                     for (int _columnNumber = 0; _columnNumber < _excel.FieldCount; _columnNumber++)
                         _newColumns.Add(new GeneralColumn(_columnNumber.ToString(), _columnNumber, false));
 
@@ -457,12 +472,14 @@ namespace IO_list_automation_new
                 {
                     //only if Data type then check if all line element are empty
                     case GridTypes.Data:
+                    case GridTypes.DataNoEdit:
                         if (!_line.TrueForAll(e => e.Equals(string.Empty)))
                             _data.Add(_line);
                         break;
 
                     case GridTypes.DB:
-                    case GridTypes.EditableDB:
+                    case GridTypes.DBEditable:
+                    case GridTypes.DBForceEdit:
                         _data.Add(_line);
                         break;
 
@@ -501,6 +518,61 @@ namespace IO_list_automation_new
 
             PutData(_data);
             return true;
+        }
+
+
+        /// <summary>
+        /// Creates DB file
+        /// </summary>
+        /// <param name="fileName">file to check and create</param>
+        /// <param name="additionalFolder">additional folder in DB</param>
+        /// <param name="data">data to add to file</param>
+        /// <returns>DB files exists</returns>
+        public bool CreateFileInDB(string fileName,string additionalFolder, List<List<string>> data)
+        {
+            string _directory = System.IO.Path.GetDirectoryName(System.Windows.Forms.Application.ExecutablePath) + "\\DB";
+
+            if (!string.IsNullOrEmpty(additionalFolder))
+                _directory += "\\" + additionalFolder;
+
+            string _fileName = _directory + "\\" + fileName + "." + FileExtension;
+
+            Debug debug = new Debug();
+            debug.ToFile(Resources.CreateNew + ": " + _fileName, DebugLevels.Development, DebugMessageType.Info);
+
+            ExcelWriter _excel = new ExcelWriter(_fileName);
+
+            //write data
+            for (int i = 0; i < data.Count; i++)
+            {
+                for (int j = 0; j < data[i].Count; j++)
+                    _excel.Write(data[i][j], 1 + j, 1+i);
+            }
+            _excel.Save();
+            _excel.Dispose();
+
+            debug.ToFile(Resources.CreateNew + ": " + _fileName + Resources.Finished, DebugLevels.Development, DebugMessageType.Info);
+
+            return FileExistsInDB(fileName, additionalFolder);
+        }
+
+        /// <summary>
+        /// Check if database files exists and ask if needed to create
+        /// </summary>
+        /// <param name="fileName">file to check and create</param>
+        /// <returns>DB files exists</returns>
+        public bool FileExistsInDB(string fileName, string additionalFolder)
+        {
+            //get files in folder
+            string _directory = System.IO.Path.GetDirectoryName(System.Windows.Forms.Application.ExecutablePath) + "\\DB";
+
+            if (!string.IsNullOrEmpty(additionalFolder))
+                _directory += "\\" + additionalFolder;
+
+            string _fileName = _directory + "\\" + fileName + "." + FileExtension;
+
+            string[] _files = System.IO.Directory.GetFiles(_directory, fileName + "." + FileExtension);
+            return _files.Length > 0;
         }
     }
 }

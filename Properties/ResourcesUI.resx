@@ -132,6 +132,12 @@
   <data name="Data" xml:space="preserve">
     <value>Data</value>
   </data>
+  <data name="DBObjectName" xml:space="preserve">
+    <value>DB object name</value>
+  </data>
+  <data name="DBObjectSignalName" xml:space="preserve">
+    <value>DB object signal name</value>
+  </data>
   <data name="Declare" xml:space="preserve">
     <value>Declare</value>
   </data>
@@ -168,8 +174,8 @@
   <data name="Instance" xml:space="preserve">
     <value>Instance</value>
   </data>
-  <data name="InstanceDBEdit" xml:space="preserve">
-    <value>Instance DB edit</value>
+  <data name="InstanceEditDB" xml:space="preserve">
+    <value>Instance edit DB</value>
   </data>
   <data name="InstanceGenerate" xml:space="preserve">
     <value>Generate instances</value>
@@ -222,11 +228,20 @@
   <data name="SaveAll" xml:space="preserve">
     <value>SaveAll</value>
   </data>
-  <data name="ScadaEdit" xml:space="preserve">
-    <value>SCADA DB edit</value>
+  <data name="SCADA" xml:space="preserve">
+    <value>SCADA</value>
   </data>
-  <data name="SCADAGenerate" xml:space="preserve">
-    <value>SCADA generate Instances</value>
+  <data name="SCADAModuleEdit" xml:space="preserve">
+    <value>SCADA edit module DB</value>
+  </data>
+  <data name="SCADAModuleGenerate" xml:space="preserve">
+    <value>SCADA module generate</value>
+  </data>
+  <data name="SCADAObjectEdit" xml:space="preserve">
+    <value>SCADA edit object DB</value>
+  </data>
+  <data name="SCADAObjectGenerate" xml:space="preserve">
+    <value>SCADA object generate</value>
   </data>
   <data name="Size" xml:space="preserve">
     <value>Size</value>

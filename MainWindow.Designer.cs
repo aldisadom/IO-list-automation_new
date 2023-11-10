@@ -38,7 +38,7 @@ namespace IO_list_automation_new
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainWindow));
             this.ProgressLabel = new System.Windows.Forms.Label();
             this.ProgressBars = new System.Windows.Forms.ProgressBar();
-            this.toolStrip1 = new System.Windows.Forms.ToolStrip();
+            this.MainToolStrip = new System.Windows.Forms.ToolStrip();
             this.File_DropDown = new System.Windows.Forms.ToolStripDropDownButton();
             this.File_Save = new System.Windows.Forms.ToolStripMenuItem();
             this.File_SaveAll = new System.Windows.Forms.ToolStripMenuItem();
@@ -87,10 +87,12 @@ namespace IO_list_automation_new
             this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             this.Instances_Edit = new System.Windows.Forms.ToolStripMenuItem();
             this.SCADA_DropDown = new System.Windows.Forms.ToolStripDropDownButton();
-            this.SCADA_Generate = new System.Windows.Forms.ToolStripMenuItem();
+            this.SCADA_GenerateObjects = new System.Windows.Forms.ToolStripMenuItem();
+            this.SCADA_GenerateModules = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
-            this.SCADA_Edit = new System.Windows.Forms.ToolStripMenuItem();
-            this.tabControl1 = new System.Windows.Forms.TabControl();
+            this.SCADA_EditObjects = new System.Windows.Forms.ToolStripMenuItem();
+            this.SCADA_EditModules = new System.Windows.Forms.ToolStripMenuItem();
+            this.MainTabControl = new System.Windows.Forms.TabControl();
             this.DesignTab = new System.Windows.Forms.TabPage();
             this.DesignGridView = new System.Windows.Forms.DataGridView();
             this.DataTab = new System.Windows.Forms.TabPage();
@@ -103,8 +105,10 @@ namespace IO_list_automation_new
             this.AddressesGridView = new System.Windows.Forms.DataGridView();
             this.FindTextBox = new System.Windows.Forms.TextBox();
             this.FindButton = new System.Windows.Forms.Button();
-            this.toolStrip1.SuspendLayout();
-            this.tabControl1.SuspendLayout();
+            this.Data_EditFunctions = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator9 = new System.Windows.Forms.ToolStripSeparator();
+            this.MainToolStrip.SuspendLayout();
+            this.MainTabControl.SuspendLayout();
             this.DesignTab.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.DesignGridView)).BeginInit();
             this.DataTab.SuspendLayout();
@@ -143,9 +147,9 @@ namespace IO_list_automation_new
             this.ProgressBars.TabIndex = 5;
             this.ProgressBars.Visible = false;
             // 
-            // toolStrip1
+            // MainToolStrip
             // 
-            this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.MainToolStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.File_DropDown,
             this.Project_DropDown,
             this.Data_DropDown,
@@ -154,12 +158,12 @@ namespace IO_list_automation_new
             this.Declare_DropDown,
             this.Instance_DropDown,
             this.SCADA_DropDown});
-            this.toolStrip1.Location = new System.Drawing.Point(0, 0);
-            this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(1284, 25);
-            this.toolStrip1.TabIndex = 7;
-            this.toolStrip1.Text = "toolStrip1";
-            this.toolStrip1.Click += new System.EventHandler(this.toolStrip1_Click);
+            this.MainToolStrip.Location = new System.Drawing.Point(0, 0);
+            this.MainToolStrip.Name = "MainToolStrip";
+            this.MainToolStrip.Size = new System.Drawing.Size(1284, 25);
+            this.MainToolStrip.TabIndex = 7;
+            this.MainToolStrip.Text = "toolStrip1";
+            this.MainToolStrip.Click += new System.EventHandler(this.MainToolStrip_Click);
             // 
             // File_DropDown
             // 
@@ -363,7 +367,9 @@ namespace IO_list_automation_new
             this.Data_DropDown.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
             this.Data_DropDown.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.DataFindFunctionMenuItem,
-            this.Data_KKSCombine});
+            this.Data_KKSCombine,
+            this.toolStripSeparator9,
+            this.Data_EditFunctions});
             this.Data_DropDown.Image = ((System.Drawing.Image)(resources.GetObject("Data_DropDown.Image")));
             this.Data_DropDown.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.Data_DropDown.Name = "Data_DropDown";
@@ -373,14 +379,14 @@ namespace IO_list_automation_new
             // DataFindFunctionMenuItem
             // 
             this.DataFindFunctionMenuItem.Name = "DataFindFunctionMenuItem";
-            this.DataFindFunctionMenuItem.Size = new System.Drawing.Size(146, 22);
+            this.DataFindFunctionMenuItem.Size = new System.Drawing.Size(180, 22);
             this.DataFindFunctionMenuItem.Text = "Find function";
             this.DataFindFunctionMenuItem.Click += new System.EventHandler(this.DataFindFunctionMenuItem_Click);
             // 
             // Data_KKSCombine
             // 
             this.Data_KKSCombine.Name = "Data_KKSCombine";
-            this.Data_KKSCombine.Size = new System.Drawing.Size(146, 22);
+            this.Data_KKSCombine.Size = new System.Drawing.Size(180, 22);
             this.Data_KKSCombine.Text = "KKS Combine";
             this.Data_KKSCombine.Click += new System.EventHandler(this.Data_KKSCombine_Click);
             // 
@@ -402,33 +408,33 @@ namespace IO_list_automation_new
             // Objects_Find
             // 
             this.Objects_Find.Name = "Objects_Find";
-            this.Objects_Find.Size = new System.Drawing.Size(164, 22);
+            this.Objects_Find.Size = new System.Drawing.Size(180, 22);
             this.Objects_Find.Text = "Find Unique";
             this.Objects_Find.Click += new System.EventHandler(this.Objects_Find_Click);
             // 
             // ObjectsFindTypeMenuItem
             // 
             this.ObjectsFindTypeMenuItem.Name = "ObjectsFindTypeMenuItem";
-            this.ObjectsFindTypeMenuItem.Size = new System.Drawing.Size(164, 22);
+            this.ObjectsFindTypeMenuItem.Size = new System.Drawing.Size(180, 22);
             this.ObjectsFindTypeMenuItem.Text = "Find object types";
             this.ObjectsFindTypeMenuItem.Click += new System.EventHandler(this.ObjectsFindTypeMenuItem_Click);
             // 
             // Object_TransferToData
             // 
             this.Object_TransferToData.Name = "Object_TransferToData";
-            this.Object_TransferToData.Size = new System.Drawing.Size(164, 22);
+            this.Object_TransferToData.Size = new System.Drawing.Size(180, 22);
             this.Object_TransferToData.Text = "Transfer to data";
             this.Object_TransferToData.Click += new System.EventHandler(this.Object_TransferToData_Click);
             // 
             // toolStripSeparator7
             // 
             this.toolStripSeparator7.Name = "toolStripSeparator7";
-            this.toolStripSeparator7.Size = new System.Drawing.Size(161, 6);
+            this.toolStripSeparator7.Size = new System.Drawing.Size(177, 6);
             // 
             // Object_EditTypes
             // 
             this.Object_EditTypes.Name = "Object_EditTypes";
-            this.Object_EditTypes.Size = new System.Drawing.Size(164, 22);
+            this.Object_EditTypes.Size = new System.Drawing.Size(180, 22);
             this.Object_EditTypes.Text = "Edit object types";
             this.Object_EditTypes.Click += new System.EventHandler(this.Object_EditTypes_Click);
             // 
@@ -449,26 +455,26 @@ namespace IO_list_automation_new
             // IO_FindModules
             // 
             this.IO_FindModules.Name = "IO_FindModules";
-            this.IO_FindModules.Size = new System.Drawing.Size(146, 22);
+            this.IO_FindModules.Size = new System.Drawing.Size(180, 22);
             this.IO_FindModules.Text = "Find Modules";
             this.IO_FindModules.Click += new System.EventHandler(this.IO_FindModules_Click);
             // 
             // IO_Generate
             // 
             this.IO_Generate.Name = "IO_Generate";
-            this.IO_Generate.Size = new System.Drawing.Size(146, 22);
+            this.IO_Generate.Size = new System.Drawing.Size(180, 22);
             this.IO_Generate.Text = "Generate";
             this.IO_Generate.Click += new System.EventHandler(this.IO_Generate_Click);
             // 
             // toolStripSeparator8
             // 
             this.toolStripSeparator8.Name = "toolStripSeparator8";
-            this.toolStripSeparator8.Size = new System.Drawing.Size(143, 6);
+            this.toolStripSeparator8.Size = new System.Drawing.Size(177, 6);
             // 
             // IO_Edit
             // 
             this.IO_Edit.Name = "IO_Edit";
-            this.IO_Edit.Size = new System.Drawing.Size(146, 22);
+            this.IO_Edit.Size = new System.Drawing.Size(180, 22);
             this.IO_Edit.Text = "Edit IO";
             this.IO_Edit.Click += new System.EventHandler(this.IO_Edit_Click);
             // 
@@ -489,26 +495,26 @@ namespace IO_list_automation_new
             // Declare_Generate
             // 
             this.Declare_Generate.Name = "Declare_Generate";
-            this.Declare_Generate.Size = new System.Drawing.Size(148, 22);
+            this.Declare_Generate.Size = new System.Drawing.Size(180, 22);
             this.Declare_Generate.Text = "Generate";
             this.Declare_Generate.Click += new System.EventHandler(this.Declare_Generate_Click);
             // 
             // Declare_ClearAddresses
             // 
             this.Declare_ClearAddresses.Name = "Declare_ClearAddresses";
-            this.Declare_ClearAddresses.Size = new System.Drawing.Size(148, 22);
-            this.Declare_ClearAddresses.Text = "Clear adresses";
+            this.Declare_ClearAddresses.Size = new System.Drawing.Size(180, 22);
+            this.Declare_ClearAddresses.Text = "ClearAddresses";
             this.Declare_ClearAddresses.Click += new System.EventHandler(this.Declare_ClearAddresses_Click);
             // 
             // toolStripSeparator6
             // 
             this.toolStripSeparator6.Name = "toolStripSeparator6";
-            this.toolStripSeparator6.Size = new System.Drawing.Size(145, 6);
+            this.toolStripSeparator6.Size = new System.Drawing.Size(177, 6);
             // 
             // Declare_Edit
             // 
             this.Declare_Edit.Name = "Declare_Edit";
-            this.Declare_Edit.Size = new System.Drawing.Size(148, 22);
+            this.Declare_Edit.Size = new System.Drawing.Size(180, 22);
             this.Declare_Edit.Text = "Edit declare";
             this.Declare_Edit.Click += new System.EventHandler(this.Declare_Edit_Click);
             // 
@@ -528,19 +534,19 @@ namespace IO_list_automation_new
             // Instances_Generate
             // 
             this.Instances_Generate.Name = "Instances_Generate";
-            this.Instances_Generate.Size = new System.Drawing.Size(146, 22);
+            this.Instances_Generate.Size = new System.Drawing.Size(180, 22);
             this.Instances_Generate.Text = "Generate";
             this.Instances_Generate.Click += new System.EventHandler(this.Instances_Generate_Click);
             // 
             // toolStripSeparator4
             // 
             this.toolStripSeparator4.Name = "toolStripSeparator4";
-            this.toolStripSeparator4.Size = new System.Drawing.Size(143, 6);
+            this.toolStripSeparator4.Size = new System.Drawing.Size(177, 6);
             // 
             // Instances_Edit
             // 
             this.Instances_Edit.Name = "Instances_Edit";
-            this.Instances_Edit.Size = new System.Drawing.Size(146, 22);
+            this.Instances_Edit.Size = new System.Drawing.Size(180, 22);
             this.Instances_Edit.Text = "Edit instances";
             this.Instances_Edit.Click += new System.EventHandler(this.Instances_Edit_Click);
             // 
@@ -548,52 +554,68 @@ namespace IO_list_automation_new
             // 
             this.SCADA_DropDown.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
             this.SCADA_DropDown.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.SCADA_Generate,
+            this.SCADA_GenerateObjects,
+            this.SCADA_GenerateModules,
             this.toolStripSeparator5,
-            this.SCADA_Edit});
+            this.SCADA_EditObjects,
+            this.SCADA_EditModules});
             this.SCADA_DropDown.Image = ((System.Drawing.Image)(resources.GetObject("SCADA_DropDown.Image")));
             this.SCADA_DropDown.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.SCADA_DropDown.Name = "SCADA_DropDown";
             this.SCADA_DropDown.Size = new System.Drawing.Size(58, 22);
             this.SCADA_DropDown.Text = "SCADA";
             // 
-            // SCADA_Generate
+            // SCADA_GenerateObjects
             // 
-            this.SCADA_Generate.Name = "SCADA_Generate";
-            this.SCADA_Generate.Size = new System.Drawing.Size(135, 22);
-            this.SCADA_Generate.Text = "Generate";
-            this.SCADA_Generate.Click += new System.EventHandler(this.SCADAGenerateMenuItem_Click);
+            this.SCADA_GenerateObjects.Name = "SCADA_GenerateObjects";
+            this.SCADA_GenerateObjects.Size = new System.Drawing.Size(180, 22);
+            this.SCADA_GenerateObjects.Text = "GenerateObjects";
+            this.SCADA_GenerateObjects.Click += new System.EventHandler(this.SCADA_GenerateObjects_Click);
+            // 
+            // SCADA_GenerateModules
+            // 
+            this.SCADA_GenerateModules.Name = "SCADA_GenerateModules";
+            this.SCADA_GenerateModules.Size = new System.Drawing.Size(180, 22);
+            this.SCADA_GenerateModules.Text = "GenerateModules";
+            this.SCADA_GenerateModules.Click += new System.EventHandler(this.SCADA_GenerateModules_Click);
             // 
             // toolStripSeparator5
             // 
             this.toolStripSeparator5.Name = "toolStripSeparator5";
-            this.toolStripSeparator5.Size = new System.Drawing.Size(132, 6);
+            this.toolStripSeparator5.Size = new System.Drawing.Size(177, 6);
             // 
-            // SCADA_Edit
+            // SCADA_EditObjects
             // 
-            this.SCADA_Edit.Name = "SCADA_Edit";
-            this.SCADA_Edit.Size = new System.Drawing.Size(135, 22);
-            this.SCADA_Edit.Text = "Edit SCADA";
-            this.SCADA_Edit.Click += new System.EventHandler(this.SCADA_Edit_Click);
+            this.SCADA_EditObjects.Name = "SCADA_EditObjects";
+            this.SCADA_EditObjects.Size = new System.Drawing.Size(180, 22);
+            this.SCADA_EditObjects.Text = "EditObjects";
+            this.SCADA_EditObjects.Click += new System.EventHandler(this.SCADA_EditObjects_Click);
             // 
-            // tabControl1
+            // SCADA_EditModules
             // 
-            this.tabControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.SCADA_EditModules.Name = "SCADA_EditModules";
+            this.SCADA_EditModules.Size = new System.Drawing.Size(180, 22);
+            this.SCADA_EditModules.Text = "EditModules";
+            this.SCADA_EditModules.Click += new System.EventHandler(this.SCADA_EditModules_Click);
+            // 
+            // MainTabControl
+            // 
+            this.MainTabControl.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.tabControl1.Controls.Add(this.DesignTab);
-            this.tabControl1.Controls.Add(this.DataTab);
-            this.tabControl1.Controls.Add(this.ObjectTab);
-            this.tabControl1.Controls.Add(this.ModuleTab);
-            this.tabControl1.Controls.Add(this.AddressTab);
-            this.tabControl1.Location = new System.Drawing.Point(0, 28);
-            this.tabControl1.Margin = new System.Windows.Forms.Padding(0);
-            this.tabControl1.Name = "tabControl1";
-            this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(1284, 648);
-            this.tabControl1.TabIndex = 8;
-            this.tabControl1.Click += new System.EventHandler(this.tabControl1_Click);
-            this.tabControl1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.KeyDown_Event);
+            this.MainTabControl.Controls.Add(this.DesignTab);
+            this.MainTabControl.Controls.Add(this.DataTab);
+            this.MainTabControl.Controls.Add(this.ObjectTab);
+            this.MainTabControl.Controls.Add(this.ModuleTab);
+            this.MainTabControl.Controls.Add(this.AddressTab);
+            this.MainTabControl.Location = new System.Drawing.Point(0, 28);
+            this.MainTabControl.Margin = new System.Windows.Forms.Padding(0);
+            this.MainTabControl.Name = "MainTabControl";
+            this.MainTabControl.SelectedIndex = 0;
+            this.MainTabControl.Size = new System.Drawing.Size(1284, 648);
+            this.MainTabControl.TabIndex = 8;
+            this.MainTabControl.Click += new System.EventHandler(this.MainTabControl_Click);
+            this.MainTabControl.KeyDown += new System.Windows.Forms.KeyEventHandler(this.KeyDown_Event);
             // 
             // DesignTab
             // 
@@ -690,7 +712,7 @@ namespace IO_list_automation_new
             this.AddressTab.Name = "AddressTab";
             this.AddressTab.Size = new System.Drawing.Size(1276, 622);
             this.AddressTab.TabIndex = 4;
-            this.AddressTab.Text = "Adress";
+            this.AddressTab.Text = "Address";
             this.AddressTab.UseVisualStyleBackColor = true;
             // 
             // AddressesGridView
@@ -727,6 +749,18 @@ namespace IO_list_automation_new
             this.FindButton.Text = "Find";
             this.FindButton.UseVisualStyleBackColor = true;
             // 
+            // Data_EditFunctions
+            // 
+            this.Data_EditFunctions.Name = "Data_EditFunctions";
+            this.Data_EditFunctions.Size = new System.Drawing.Size(180, 22);
+            this.Data_EditFunctions.Text = "EditFunctions";
+            this.Data_EditFunctions.Click += new System.EventHandler(this.Data_EditFunctions_Click);
+            // 
+            // toolStripSeparator9
+            // 
+            this.toolStripSeparator9.Name = "toolStripSeparator9";
+            this.toolStripSeparator9.Size = new System.Drawing.Size(177, 6);
+            // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -734,8 +768,8 @@ namespace IO_list_automation_new
             this.ClientSize = new System.Drawing.Size(1284, 691);
             this.Controls.Add(this.FindButton);
             this.Controls.Add(this.FindTextBox);
-            this.Controls.Add(this.tabControl1);
-            this.Controls.Add(this.toolStrip1);
+            this.Controls.Add(this.MainTabControl);
+            this.Controls.Add(this.MainToolStrip);
             this.Controls.Add(this.ProgressLabel);
             this.Controls.Add(this.ProgressBars);
             this.DoubleBuffered = true;
@@ -744,9 +778,9 @@ namespace IO_list_automation_new
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainWindow_FormClosing);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.KeyDown_Event);
             this.MouseClick += new System.Windows.Forms.MouseEventHandler(this.MainWindow_MouseClick);
-            this.toolStrip1.ResumeLayout(false);
-            this.toolStrip1.PerformLayout();
-            this.tabControl1.ResumeLayout(false);
+            this.MainToolStrip.ResumeLayout(false);
+            this.MainToolStrip.PerformLayout();
+            this.MainTabControl.ResumeLayout(false);
             this.DesignTab.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.DesignGridView)).EndInit();
             this.DataTab.ResumeLayout(false);
@@ -765,7 +799,7 @@ namespace IO_list_automation_new
         #endregion
         private System.Windows.Forms.Label ProgressLabel;
         private System.Windows.Forms.ProgressBar ProgressBars;
-        private System.Windows.Forms.ToolStrip toolStrip1;
+        private System.Windows.Forms.ToolStrip MainToolStrip;
         private System.Windows.Forms.ToolStripDropDownButton File_DropDown;
         private System.Windows.Forms.ToolStripMenuItem File_Save;
         private System.Windows.Forms.ToolStripMenuItem File_SaveAll;
@@ -784,7 +818,7 @@ namespace IO_list_automation_new
         private System.Windows.Forms.ToolStripMenuItem Project_CompareDesign;
         private System.Windows.Forms.ToolStripMenuItem Project_TransferData;
         private System.Windows.Forms.ToolStripMenuItem DataFindFunctionMenuItem;
-        private System.Windows.Forms.TabControl tabControl1;
+        private System.Windows.Forms.TabControl MainTabControl;
         private System.Windows.Forms.TabPage DesignTab;
         private System.Windows.Forms.TabPage DataTab;
         private System.Windows.Forms.TabPage ObjectTab;
@@ -815,7 +849,7 @@ namespace IO_list_automation_new
         private ToolStripSeparator toolStripSeparator4;
         private ToolStripMenuItem Instances_Edit;
         private ToolStripSeparator toolStripSeparator5;
-        private ToolStripMenuItem SCADA_Edit;
+        private ToolStripMenuItem SCADA_EditModules;
         private ToolStripDropDownButton IO_DropDown;
         private ToolStripSeparator toolStripSeparator8;
         private ToolStripMenuItem IO_Edit;
@@ -826,10 +860,14 @@ namespace IO_list_automation_new
         private DataGridView ModulesGridView;
         private ToolStripMenuItem IO_FindModules;
         private ToolStripMenuItem IO_Generate;
-        private ToolStripMenuItem SCADA_Generate;
+        private ToolStripMenuItem SCADA_GenerateModules;
         private TabPage AddressTab;
         private DataGridView AddressesGridView;
         private ToolStripMenuItem Declare_ClearAddresses;
+        private ToolStripMenuItem SCADA_GenerateObjects;
+        private ToolStripMenuItem SCADA_EditObjects;
+        private ToolStripSeparator toolStripSeparator9;
+        private ToolStripMenuItem Data_EditFunctions;
     }
 }
 

@@ -12,8 +12,8 @@ namespace IO_list_automation_new
         public string AddressStart { get; private set; }
         public string AddressSize { get; private set; }
         public string ObjectVariableType { get; private set; }
-        
-        public AddressSingle(string area, string addressStart, string addressSize,string  objectVariableType)
+
+        public AddressSingle(string area, string addressStart, string addressSize, string objectVariableType)
         {
             Area = area;
             AddressStart = addressStart;
@@ -107,7 +107,7 @@ namespace IO_list_automation_new
                     return ObjectName;
 
                 case KeywordColumn.ObjectGeneralType:
-                        return ObjectGeneralType;
+                    return ObjectGeneralType;
 
                 default:
                     if (suppressError)
@@ -146,7 +146,7 @@ namespace IO_list_automation_new
             return -1;
         }
 
-        public void Update(string id, string _CPU,string objectGeneralType, string objectType, string objectName)
+        public void Update(string id, string _CPU, string objectGeneralType, string objectType, string objectName)
         {
             ID = id;
             CPU = _CPU;
@@ -184,12 +184,12 @@ namespace IO_list_automation_new
         {
         }
 
-        public AddressesClass(ProgressIndication progress, DataGridView grid) : base("Address", nameof(FileExtensions.address), progress, grid)
+        public AddressesClass(ProgressIndication progress, DataGridView grid) : base("Address", nameof(FileExtensions.address), progress, grid,false)
         {
             Grid.UseKeywordAsName = true;
         }
 
-        public AddressesClass() : base("Address", nameof(FileExtensions.address), null, null)
+        public AddressesClass() : base("Address", nameof(FileExtensions.address), null, null,false)
         {
             Grid.UseKeywordAsName = true;
         }
@@ -322,7 +322,7 @@ namespace IO_list_automation_new
                     _signal.SetValueFromString(_cellValue, _keyword);
                 }
 
-                for (int _columnIndex = BaseColumns.Columns.Count; _columnIndex < newColumnList.Count; _columnIndex+=3)
+                for (int _columnIndex = BaseColumns.Columns.Count; _columnIndex < newColumnList.Count; _columnIndex += 3)
                 {
                     _columnNumber = newColumnList[_columnIndex].Number;
                     if (string.IsNullOrEmpty(inputData[_rowNumber][_columnNumber]))
@@ -331,8 +331,8 @@ namespace IO_list_automation_new
                     _indexText = newColumnList[_columnIndex].Keyword.IndexOf("(");
                     _columnName = _indexText == -1 ? string.Empty : newColumnList[_columnIndex].Keyword.Substring(_indexText);
 
-                    AddressSingle _addressSingle = new AddressSingle(inputData[_rowNumber][_columnIndex], inputData[_rowNumber][_columnIndex+1],
-                                                                    inputData[_rowNumber][_columnIndex+2], _columnName);
+                    AddressSingle _addressSingle = new AddressSingle(inputData[_rowNumber][_columnIndex], inputData[_rowNumber][_columnIndex + 1],
+                                                                    inputData[_rowNumber][_columnIndex + 2], _columnName);
                     _signal.Addresses.Add(_addressSingle);
                 }
 
@@ -365,7 +365,7 @@ namespace IO_list_automation_new
         /// <param name="area">area of element</param>
         /// <param name="addressStart">start address of element</param>
         /// <param name="addressSize">address size of element</param>
-        public void PutDataToElement(string cpu, string objectGeneralType, string objectType, string objectName,string objectVariableType, string area, string addressStart, string addressSize)
+        public void PutDataToElement(string cpu, string objectGeneralType, string objectType, string objectName, string objectVariableType, string area, string addressStart, string addressSize)
         {
             if (string.IsNullOrEmpty(addressStart))
                 return;

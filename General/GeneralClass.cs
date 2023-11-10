@@ -1,6 +1,9 @@
 ﻿using IO_list_automation_new.Properties;
+using SwiftExcel;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Reflection.Emit;
 using System.Windows.Forms;
 
 namespace IO_list_automation_new
@@ -107,7 +110,7 @@ namespace IO_list_automation_new
 
         protected abstract void UpdateSettingsColumnsList();
 
-        public GeneralClass(string name, string fileExtension, ProgressIndication progress, DataGridView grid)
+        public GeneralClass(string name, string fileExtension, ProgressIndication progress, DataGridView grid, bool writableGrid)
         {
             Name = name;
             Signals = new List<T>();
@@ -115,9 +118,8 @@ namespace IO_list_automation_new
             BaseColumns = new ColumnList();
             Progress = progress;
 
-            //            Grid = new GeneralGrid<T>(name, notSortable, fileExtension, Signals, progress, grid, Columns, BaseColumns);
-            Grid = new GeneralGrid(name, GridTypes.Data, fileExtension, progress, grid, Columns);
-
+            GridTypes _gridType = writableGrid ? GridTypes.Data : GridTypes.DataNoEdit;
+            Grid = new GeneralGrid(name, _gridType, fileExtension, progress, grid, Columns);
             BaseColumns.SetColumns(GenerateColumnsList(false), false);
 
             Columns.SetColumns(GenerateColumnsList(true), true);
@@ -175,7 +177,7 @@ namespace IO_list_automation_new
         /// </summary>
         /// <param name="suppressError">suppress error</param>
         /// <returns>there is data in signals</returns>
-        public virtual bool ListToSignals(List<List<string>> inputData, List<GeneralColumn> newColumnList,bool suppressError)
+        public virtual bool ListToSignals(List<List<string>> inputData, List<GeneralColumn> newColumnList, bool suppressError)
         {
             Debug debug = new Debug();
             debug.ToFile(Resources.ConvertListToData + ": " + Name, DebugLevels.Development, DebugMessageType.Info);

@@ -66,7 +66,7 @@ namespace IO_list_automation_new
 
             Project_CPU.Text = Resources.CPU;
             Project_CPU_Add.Text = Resources.Add;
-            Project_SCADA.Text = Resources.SCADA;
+            Project_SCADA.Text = ResourcesUI.SCADA;
             Project_SCADA_Add.Text = Resources.Add;
             Project_Language.Text = ResourcesUI.IO + " " + Resources.Language;
             Project_Language_Add.Text = Resources.Add;
@@ -93,16 +93,19 @@ namespace IO_list_automation_new
             Declare_DropDown.Text = ResourcesUI.Declare;
             Declare_Edit.Text = ResourcesUI.DeclareDBEdit;
             Declare_Generate.Text = ResourcesUI.DeclareGenerate;
+            Declare_ClearAddresses.Text = ResourcesUI.SCADAObjectGenerate;
 
             // **********************
             Instance_DropDown.Text = ResourcesUI.Instance;
-            Instances_Edit.Text = ResourcesUI.InstanceDBEdit;
+            Instances_Edit.Text = ResourcesUI.InstanceEditDB;
             Instances_Generate.Text = ResourcesUI.InstanceGenerate;
 
             // **********************
-            SCADA_DropDown.Text = Resources.SCADA;
-            SCADA_Generate.Text = ResourcesUI.SCADAGenerate;
-            SCADA_Edit.Text = ResourcesUI.ScadaEdit;
+            SCADA_DropDown.Text = ResourcesUI.SCADA;
+            SCADA_GenerateObjects.Text = ResourcesUI.SCADAObjectGenerate;
+            SCADA_GenerateModules.Text = ResourcesUI.SCADAModuleGenerate;
+            SCADA_EditObjects.Text = ResourcesUI.SCADAObjectEdit;
+            SCADA_EditModules.Text = ResourcesUI.SCADAModuleEdit;
 
             // **********************
             DataTab.Text = ResourcesUI.Data;
@@ -153,17 +156,36 @@ namespace IO_list_automation_new
             _debug.ToPopUp($"{Resources.NoFunction}: {_buttonName}", DebugLevels.None, DebugMessageType.Critical);
         }
 
+        /// <summary>
+        /// Ask before terminating program
+        /// Yes - save and exit
+        /// No - do not save and exit
+        /// Cancel -  abort exit
+        /// </summary>
+        /// <returns>abort exit</returns>
+        private bool AskBeforeExit()
+        {
+            DialogResult _result = MessageBox.Show(Resources.ConfirmExit, "Exit", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+            if (_result == DialogResult.Yes)
+            {
+                SaveAll();
+                return false;
+            }
+            else if (_result == DialogResult.No)
+            {
+                Application.Exit();
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
+
         private void MainWindow_FormClosing(object sender, FormClosingEventArgs e)
         {
-            /*           if (e.CloseReason != CloseReason.ApplicationExitCall)
-                       {
-                           DialogResult _result = ShowConfirmWindow(Resources.ConfirmExit);
-                           if (_result == DialogResult.OK || _result == DialogResult.Yes)
-                               Application.Exit();
-                           else
-                               e.Cancel = true;
-                       }
-           */
+            if (e.CloseReason != CloseReason.ApplicationExitCall)
+                e.Cancel = AskBeforeExit();
         }
 
         private void DeleteColumnComboBox()
@@ -193,7 +215,7 @@ namespace IO_list_automation_new
                 return;
 
             string _keyword = comboBox.SelectedKeyword();
-            DataGridView _grid = (DataGridView)tabControl1.SelectedTab.Controls[0];
+            DataGridView _grid = (DataGridView)MainTabControl.SelectedTab.Controls[0];
 
             //if add column
             if (comboBox.SelectedMod().Contains(Resources.Add))
@@ -221,7 +243,6 @@ namespace IO_list_automation_new
                     break;
                 }
             }
-
             DeleteColumnComboBox();
         }
 
@@ -443,7 +464,7 @@ namespace IO_list_automation_new
         {
             ButtonPressed(sender);
 
-            switch ((TabIndex)tabControl1.SelectedIndex)
+            switch ((TabIndex)MainTabControl.SelectedIndex)
             {
                 case IO_list_automation_new.TabIndex.Design:
                     DesignClass design = new DesignClass(Progress, DesignGridView);
@@ -478,10 +499,8 @@ namespace IO_list_automation_new
             ButtonFunctionFinished(sender);
         }
 
-        private void File_SaveAll_Click(object sender, EventArgs e)
+        private void SaveAll()
         {
-            ButtonPressed(sender);
-
             Debug debug = new Debug();
 
             SaveFileDialog _saveFile = new SaveFileDialog();
@@ -509,7 +528,12 @@ namespace IO_list_automation_new
 
             Settings.Default.AutoLoadFile = _saveFile.FileName;
             Settings.Default.Save();
+        }
 
+        private void File_SaveAll_Click(object sender, EventArgs e)
+        {
+            ButtonPressed(sender);
+            SaveAll();
             ButtonFunctionFinished(sender);
         }
 
@@ -517,7 +541,7 @@ namespace IO_list_automation_new
         {
             ButtonPressed(sender);
 
-            switch ((TabIndex)tabControl1.SelectedIndex)
+            switch ((TabIndex)MainTabControl.SelectedIndex)
             {
                 case IO_list_automation_new.TabIndex.Design:
                     DesignClass design = new DesignClass(Progress, DesignGridView);
@@ -613,8 +637,7 @@ namespace IO_list_automation_new
 
         private void File_Exit_Click(object sender, EventArgs e)
         {
-            DialogResult _result = MessageBox.Show(Resources.ConfirmExit, "Exit", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
-            if (_result == DialogResult.Yes)
+            if (!AskBeforeExit())
                 System.Windows.Forms.Application.Exit();
         }
 
@@ -668,7 +691,7 @@ namespace IO_list_automation_new
 
         private void Project_CPU_MouseEnter(object sender, EventArgs e)
         {
-            DBGeneral _DB = new DBGeneral(Progress, Resources.CPU, nameof(FileExtensions.decDB), DBTypeLevel.CPU, BaseTypes.Objects);
+            DBGeneral _DB = new DBGeneral(Progress, Resources.CPU, nameof(FileExtensions.decDB), DBTypeLevel.CPU, BaseTypes.ObjectsCPU);
             List<string> _list = _DB.GetDBFolderList();
             //add items to dropdown
             AddMenuItemDropDown((ToolStripMenuItem)sender, _list);
@@ -681,17 +704,28 @@ namespace IO_list_automation_new
 
             if (e.ClickedItem.Text == Resources.Add)
             {
-                DBGeneral _DB = new DBGeneral(Progress, Resources.CPU, nameof(FileExtensions.decDB.ToString), DBTypeLevel.CPU, BaseTypes.Objects);
-                NewName _newName = new NewName(Resources.CreateNew + ": " + Resources.CPU);
+                DBGeneral _DB = new DBGeneral(Progress, Resources.CPU, nameof(FileExtensions.decDB.ToString), DBTypeLevel.CPU, BaseTypes.ObjectsCPU);
+                NewName _newName = new NewName(Resources.CreateNew + ": " + Resources.CPU,false);
 
                 _newName.ShowDialog();
-                if (!string.IsNullOrEmpty(_newName.Output))
-                    _DB.DBFolderCreate(_newName.Output);
+                string _folderName = _newName.Output;
+                if (string.IsNullOrEmpty(_folderName))
+                {
+                    MessageBox.Show(Resources.EnteredEmptyName, "", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+                else if (_DB.DBFolderExists(_folderName))
+                {
+                    MessageBox.Show(Resources.EnteredExistingName, "", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                _DB.DBFolderCreate(_newName.Output);
             }
             else
             {
                 Settings.Default.SelectedCPU = e.ClickedItem.Text;
-                DBGeneral _DBScada = new DBGeneral(Progress, Resources.CPU, nameof(FileExtensions.decScadaDB), DBTypeLevel.SCADA, BaseTypes.Objects);
+                DBGeneral _DBScada = new DBGeneral(Progress, Resources.CPU, nameof(FileExtensions.decScadaDB), DBTypeLevel.SCADA, BaseTypes.ObjectsCPU);
                 List<string> _list = _DBScada.GetDBFolderList();
 
                 //set SCADA for first element
@@ -705,7 +739,7 @@ namespace IO_list_automation_new
 
         private void Project_SCADA_MouseEnter(object sender, EventArgs e)
         {
-            DBGeneral _DB = new DBGeneral(Progress, Resources.SCADA, nameof(FileExtensions.decScadaDB), DBTypeLevel.SCADA, BaseTypes.Objects);
+            DBGeneral _DB = new DBGeneral(Progress, ResourcesUI.SCADA, nameof(FileExtensions.decScadaDB), DBTypeLevel.SCADA, BaseTypes.ObjectsCPU);
             List<string> _list = _DB.GetDBFolderList();
             //add items to dropdown
             AddMenuItemDropDown((ToolStripMenuItem)sender, _list);
@@ -718,12 +752,21 @@ namespace IO_list_automation_new
 
             if (e.ClickedItem.Text == Resources.Add)
             {
-                DBGeneral _DB = new DBGeneral(Progress, Resources.SCADA, nameof(FileExtensions.decScadaDB), DBTypeLevel.SCADA, BaseTypes.Objects);
-                NewName _newName = new NewName(Resources.CreateNew + ": " + Resources.SCADA);
+                DBGeneral _DB = new DBGeneral(Progress, ResourcesUI.SCADA, nameof(FileExtensions.decScadaDB), DBTypeLevel.SCADA, BaseTypes.ObjectsCPU);
+                NewName _newName = new NewName(Resources.CreateNew + ": " + ResourcesUI.SCADA,false);
 
                 _newName.ShowDialog();
-                if (string.IsNullOrEmpty(_newName.Output))
+                string _folderName = _newName.Output;
+                if (string.IsNullOrEmpty(_folderName))
+                {
+                    MessageBox.Show(Resources.EnteredEmptyName, "", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
+                }
+                else if (_DB.DBFolderExists(_folderName))
+                {
+                    MessageBox.Show(Resources.EnteredExistingName, "", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
 
                 _DB.DBFolderCreate(_newName.Output);
             }
@@ -736,7 +779,7 @@ namespace IO_list_automation_new
 
         private void Project_Language_MouseEnter(object sender, EventArgs e)
         {
-            DBGeneral _DB = new DBGeneral(Progress, ResourcesUI.IO + " " + Resources.Language, nameof(FileExtensions.langFuncDB), DBTypeLevel.Base, BaseTypes.Objects);
+            DBGeneral _DB = new DBGeneral(Progress, ResourcesUI.IO + " " + Resources.Language, nameof(FileExtensions.langFuncDB), DBTypeLevel.Base, BaseTypes.ObjectsCPU);
             List<string> _list = _DB.GetDBFileList();
             //add items to dropdown
             AddMenuItemDropDown((ToolStripMenuItem)sender, _list);
@@ -749,16 +792,37 @@ namespace IO_list_automation_new
 
             if (e.ClickedItem.Text == Resources.Add)
             {
-                DBGeneral _DB = new DBGeneral(Progress, ResourcesUI.IO + " " + Resources.Language, nameof(FileExtensions.langFuncDB), DBTypeLevel.Base, BaseTypes.Objects);
-                NewName _newName = new NewName(Resources.CreateNew + ": " + ResourcesUI.IO + " " + Resources.Language);
+                DataGridView _grid = new DataGridView();
+                DBLanguage _DBLanguage = new DBLanguage(Progress,_grid);
+
+                NewName _newName = new NewName(Resources.CreateNew + ": " + ResourcesUI.IO + " " + Resources.Language,false);
 
                 _newName.ShowDialog();
-                if (string.IsNullOrEmpty(_newName.Output))
+                string _fileName = _newName.Output;
+                if (string.IsNullOrEmpty(_fileName))
+                {
+                    MessageBox.Show(Resources.EnteredEmptyName, "", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
+                }
+                else if (_DBLanguage.FunctionType.Grid.FileExistsInDB(_fileName, null))
+                {
+                    MessageBox.Show(Resources.EnteredExistingName, "", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
 
-                DBGeneral _DBType = new DBGeneral(Progress, ResourcesUI.IO + " " + Resources.Language, nameof(FileExtensions.langTypeDB), DBTypeLevel.Base, BaseTypes.Objects);
-                _DB.CreateDBFile(_newName.Output);
-                _DBType.CreateDBFile(_newName.Output);
+                List <List<string>> _data= new List<List<string>>()
+                {
+                    _DBLanguage.FunctionType.Columns.GetColumnsKeyword(),
+                    new List<string>(){"Text to replace", "OPD"},
+                };
+                _DBLanguage.FunctionType.Grid.CreateFileInDB(_fileName, null, _data);
+
+                _data = new List<List<string>>()
+                {
+                    _DBLanguage.Type.Columns.GetColumnsKeyword(),
+                    new List<string>(){"Text to replace", "VLV"},
+                };
+                _DBLanguage.Type.Grid.CreateFileInDB(_fileName, null, _data);
             }
             else
             {
@@ -770,7 +834,7 @@ namespace IO_list_automation_new
         private void Project_DropDown_DropDownOpened(object sender, EventArgs e)
         {
             Project_CPU.Text = Resources.CPU + ": " + Settings.Default.SelectedCPU;
-            Project_SCADA.Text = Resources.SCADA + ": " + Settings.Default.SelectedSCADA;
+            Project_SCADA.Text = ResourcesUI.SCADA + ": " + Settings.Default.SelectedSCADA;
             Project_Language.Text = ResourcesUI.IO + " " + Resources.Language + ": " + Settings.Default.IOLanguage;
         }
 
@@ -801,6 +865,20 @@ namespace IO_list_automation_new
                 DBLanguage _DBLanguage = new DBLanguage(Progress, _grid);
                 _DBLanguage.FunctionType.FindAllFunctionType(data);
             }
+
+            ButtonFunctionFinished(sender);
+        }
+
+        private void Data_EditFunctions_Click(object sender, EventArgs e)
+        {
+            ButtonPressed(sender);
+
+            DBForceEditForm dBForceEditForm = new DBForceEditForm();
+            DBLanguage _DBLanguage = new DBLanguage(Progress, dBForceEditForm.DataGrid);
+
+            _DBLanguage.FunctionType.LoadEdit();
+            dBForceEditForm.ShowDialog();
+            _DBLanguage.FunctionType.SaveEdit();
 
             ButtonFunctionFinished(sender);
         }
@@ -856,7 +934,16 @@ namespace IO_list_automation_new
 
         private void Object_EditTypes_Click(object sender, EventArgs e)
         {
-            DisplayNoFunction(sender);
+            ButtonPressed(sender);
+
+            DBForceEditForm dBForceEditForm = new DBForceEditForm();
+            DBLanguage _DBLanguage = new DBLanguage(Progress, dBForceEditForm.DataGrid);
+
+            _DBLanguage.Type.LoadEdit();
+            dBForceEditForm.ShowDialog();
+            _DBLanguage.Type.SaveEdit();
+
+            ButtonFunctionFinished(sender);
         }
 
         //-------------------------IO dropdown------------------------------------------
@@ -888,7 +975,7 @@ namespace IO_list_automation_new
 
             if (data.GetDataFromGrid(false) && objects.GetDataFromGrid(false) && modules.GetDataFromGrid(false))
             {
-                DBGeneral _DB = new DBGeneral(Progress, ResourcesUI.Modules, nameof(FileExtensions.modDB), DBTypeLevel.CPU, BaseTypes.Module);
+                DBGeneral _DB = new DBGeneral(Progress, ResourcesUI.Modules, nameof(FileExtensions.modDB), DBTypeLevel.CPU, BaseTypes.ModuleCPU);
                 _DB.DecodeAll(data, objects, modules, addresses);
             }
             ButtonFunctionFinished(sender);
@@ -898,7 +985,7 @@ namespace IO_list_automation_new
         {
             ButtonPressed(sender);
 
-            DBGeneral _DB = new DBGeneral(Progress, ResourcesUI.Modules, nameof(FileExtensions.modDB), DBTypeLevel.CPU, BaseTypes.Module);
+            DBGeneral _DB = new DBGeneral(Progress, ResourcesUI.Modules, nameof(FileExtensions.modDB), DBTypeLevel.CPU, BaseTypes.ModuleCPU);
             _DB.EditAll();
 
             ButtonFunctionFinished(sender);
@@ -916,7 +1003,7 @@ namespace IO_list_automation_new
 
             if (data.GetDataFromGrid(false) && objects.GetDataFromGrid(false))
             {
-                DBGeneral _DB = new DBGeneral(Progress, ResourcesUI.Declare, nameof(FileExtensions.decDB), DBTypeLevel.CPU, BaseTypes.Objects);
+                DBGeneral _DB = new DBGeneral(Progress, ResourcesUI.Declare, nameof(FileExtensions.decDB), DBTypeLevel.CPU, BaseTypes.ObjectsCPU);
                 _DB.DecodeAll(data, objects, null, addresses);
             }
             ButtonFunctionFinished(sender);
@@ -924,7 +1011,7 @@ namespace IO_list_automation_new
 
         private void Declare_ClearAddresses_Click(object sender, EventArgs e)
         {
-            tabControl1.SelectedIndex = (int)IO_list_automation_new.TabIndex.Address;
+            MainTabControl.SelectedIndex = (int)IO_list_automation_new.TabIndex.Address;
             AddressesClass addresses = new AddressesClass(Progress, AddressesGridView);
             addresses.Grid.GridClear();
         }
@@ -933,7 +1020,7 @@ namespace IO_list_automation_new
         {
             ButtonPressed(sender);
 
-            DBGeneral _DB = new DBGeneral(Progress, ResourcesUI.Declare, nameof(FileExtensions.decDB), DBTypeLevel.CPU, BaseTypes.Objects);
+            DBGeneral _DB = new DBGeneral(Progress, ResourcesUI.Declare, nameof(FileExtensions.decDB), DBTypeLevel.CPU, BaseTypes.ObjectsCPU);
             _DB.EditAll();
 
             ButtonFunctionFinished(sender);
@@ -956,7 +1043,7 @@ namespace IO_list_automation_new
 
             if (data.GetDataFromGrid(false) && objects.GetDataFromGrid(false))
             {
-                DBGeneral _DB = new DBGeneral(Progress, ResourcesUI.Instance, nameof(FileExtensions.instDB), DBTypeLevel.CPU, BaseTypes.Objects);
+                DBGeneral _DB = new DBGeneral(Progress, ResourcesUI.Instance, nameof(FileExtensions.instDB), DBTypeLevel.CPU, BaseTypes.ObjectsCPU);
                 _DB.DecodeAll(data, objects, null, addresses);
             }
             ButtonFunctionFinished(sender);
@@ -966,7 +1053,7 @@ namespace IO_list_automation_new
         {
             ButtonPressed(sender);
 
-            DBGeneral _DB = new DBGeneral(Progress, ResourcesUI.Instance, nameof(FileExtensions.instDB), DBTypeLevel.CPU, BaseTypes.Objects);
+            DBGeneral _DB = new DBGeneral(Progress, ResourcesUI.Instance, nameof(FileExtensions.instDB), DBTypeLevel.CPU, BaseTypes.ObjectsCPU);
             _DB.EditAll();
 
             ButtonFunctionFinished(sender);
@@ -974,7 +1061,7 @@ namespace IO_list_automation_new
 
         //-------------------------SCADA dropdown------------------------------------------
 
-        private void SCADAGenerateMenuItem_Click(object sender, EventArgs e)
+        private void SCADA_GenerateObjects_Click(object sender, EventArgs e)
         {
             ButtonPressed(sender);
 
@@ -986,33 +1073,62 @@ namespace IO_list_automation_new
 
             if (modules.GetDataFromGrid(false) && data.GetDataFromGrid(false) && objects.GetDataFromGrid(false))
             {
-                DBGeneral _DB = new DBGeneral(Progress, Resources.SCADA, nameof(FileExtensions.instScadaDB), DBTypeLevel.SCADA, BaseTypes.SCADA);
+                DBGeneral _DB = new DBGeneral(Progress, ResourcesUI.SCADA, nameof(FileExtensions.decScadaDB), DBTypeLevel.SCADA, BaseTypes.ObjectSCADA);
                 _DB.DecodeAll(data, objects, modules, addresses);
             }
             ButtonFunctionFinished(sender);
         }
 
-        private void SCADA_Edit_Click(object sender, EventArgs e)
+        private void SCADA_GenerateModules_Click(object sender, EventArgs e)
         {
             ButtonPressed(sender);
 
-            DBGeneral _DB = new DBGeneral(Progress, Resources.SCADA, nameof(FileExtensions.instScadaDB), DBTypeLevel.SCADA, BaseTypes.SCADA);
+            DataClass data = new DataClass(Progress, DataGridView);
+            ObjectsClass objects = new ObjectsClass(Progress, ObjectsGridView);
+            ModuleClass modules = new ModuleClass(Progress, ModulesGridView);
+            AddressesClass addresses = new AddressesClass(Progress, AddressesGridView);
+            addresses.GetDataFromGrid(true);
+
+            if (modules.GetDataFromGrid(false) && data.GetDataFromGrid(false) && objects.GetDataFromGrid(false))
+            {
+                DBGeneral _DB = new DBGeneral(Progress, ResourcesUI.SCADA, nameof(FileExtensions.modScadaDB), DBTypeLevel.SCADA, BaseTypes.ModuleSCADA);
+                _DB.DecodeAll(data, objects, modules, addresses);
+            }
+            ButtonFunctionFinished(sender);
+        }
+
+        private void SCADA_EditObjects_Click(object sender, EventArgs e)
+        {
+            ButtonPressed(sender);
+
+            DBGeneral _DB = new DBGeneral(Progress, ResourcesUI.SCADA, nameof(FileExtensions.decScadaDB), DBTypeLevel.SCADA, BaseTypes.ObjectSCADA);
             _DB.EditAll();
 
             ButtonFunctionFinished(sender);
         }
 
+        private void SCADA_EditModules_Click(object sender, EventArgs e)
+        {
+            ButtonPressed(sender);
+
+            DBGeneral _DB = new DBGeneral(Progress, ResourcesUI.SCADA, nameof(FileExtensions.modScadaDB), DBTypeLevel.SCADA, BaseTypes.ModuleSCADA);
+            _DB.EditAll();
+
+            ButtonFunctionFinished(sender);
+        }
+
+        //-------------------------------------------------------------------
         private void MainWindow_MouseClick(object sender, MouseEventArgs e)
         {
             DeleteColumnComboBox();
         }
 
-        private void toolStrip1_Click(object sender, EventArgs e)
+        private void MainToolStrip_Click(object sender, EventArgs e)
         {
             DeleteColumnComboBox();
         }
 
-        private void tabControl1_Click(object sender, EventArgs e)
+        private void MainTabControl_Click(object sender, EventArgs e)
         {
             DeleteColumnComboBox();
         }
