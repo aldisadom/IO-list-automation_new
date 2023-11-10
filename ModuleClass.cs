@@ -131,10 +131,10 @@ namespace IO_list_automation_new
             SettingsObject.Default.Save();
         }
 
-        public ModuleClass(ProgressIndication progress, DataGridView grid) : base("Module", nameof(FileExtensions.modDB), progress, grid)
+        public ModuleClass(ProgressIndication progress, DataGridView grid) : base("Module", nameof(FileExtensions.modDB), progress, grid, true)
         { }
 
-        public ModuleClass() : base("Module", nameof(FileExtensions.modDB), null, null)
+        public ModuleClass() : base("Module", nameof(FileExtensions.modDB), null, null, true)
         { }
 
         /// <summary>

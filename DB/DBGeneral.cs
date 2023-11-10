@@ -1,4 +1,5 @@
 ﻿using IO_list_automation_new.DB;
+using IO_list_automation_new.General;
 using IO_list_automation_new.Properties;
 using SwiftExcel;
 using System;
@@ -16,9 +17,10 @@ namespace IO_list_automation_new
 
     public enum BaseTypes
     {
-        Module,
-        SCADA,
-        Objects,
+        ModuleCPU,
+        ModuleSCADA,
+        ObjectsCPU,
+        ObjectSCADA,
     }
 
     internal class DBGeneral
@@ -75,8 +77,9 @@ namespace IO_list_automation_new
         /// Creates DB file
         /// </summary>
         /// <param name="fileName">file to check and create</param>
+        /// <param name="data">data to add to file</param>
         /// <returns>DB files exists</returns>
-        public bool CreateDBFile(string fileName)
+        public bool CreateDBFile(string fileName, List<string> data)
         {
             string _fileName = Directory + "\\" + fileName + "." + FileExtension;
 
@@ -85,8 +88,10 @@ namespace IO_list_automation_new
 
             ExcelWriter _excel = new ExcelWriter(_fileName);
 
-            //write 1 empty cell
-            _excel.Write(string.Empty, 1, 1);
+            //write data
+            for (int i = 0; i < data.Count; i++)
+                _excel.Write(string.Empty, 1, 1+i);
+
             _excel.Save();
             _excel.Dispose();
 
@@ -259,13 +264,17 @@ namespace IO_list_automation_new
         /// </summary>
         /// <param name="_input">new data of device</param>
         /// <param name="_output">all device data</param>
-        private void CopyDecodedList(List<List<string>> _input, List<List<string>> _output)
+        private void CopyDecodedList(List<List<string>> _input, List<List<string>> _output, AddressesClass addresses, string cpu, string objectGeneralType, string objectType, string objectName, int _deviceIndex)
         {
             if (_input == null)
                 return;
 
             for (int i = 0; i < _input.Count; i++)
                 _output.Add(_input[i]);
+
+            //update addresses for this element
+            addresses.PutDataToElement(cpu, objectGeneralType, objectType, objectName,
+                                        Devices[_deviceIndex].ObjectVariableType, Devices[_deviceIndex].MemoryArea, Devices[_deviceIndex].Address, Devices[_deviceIndex].AddressSize);
         }
 
         /// <summary>
@@ -279,12 +288,16 @@ namespace IO_list_automation_new
         {
             switch (Base)
             {
-                case BaseTypes.Module:
+                case BaseTypes.ModuleCPU:
                     return modules.GetCPUList();
-                case BaseTypes.SCADA:
+
+                case BaseTypes.ModuleSCADA:
+                case BaseTypes.ObjectSCADA:
                     return addresses.GetCPUList();
-                case BaseTypes.Objects:
+
+                case BaseTypes.ObjectsCPU:
                     return objects.GetCPUList();
+
                 default:
                     const string _debugText = "DBGeneral.GetCPUList";
                     Debug _debug = new Debug();
@@ -309,21 +322,29 @@ namespace IO_list_automation_new
                 if (_result != DialogResult.Yes)
                     return;
 
-                NewName _newName = new NewName(Resources.CreateNew + ": " + ResourcesUI.IO + " " + Resources.Language);
+                NewName _newName = new NewName(Resources.CreateNew + ": " + ResourcesUI.IO + " " + Resources.Language,true);
+
                 _newName.ShowDialog();
-                if (!string.IsNullOrEmpty(_newName.Output))
+                string _fileName = _newName.Output;
+                if (string.IsNullOrEmpty(_fileName))
                 {
-                    CreateDBFile(_newName.Output);
-                    DecodeAll(data, objects, modules, addresses);
+                    MessageBox.Show(Resources.EnteredEmptyName, "", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
                 }
-                return;
+                else if (DBFileExists(_fileName))
+                {
+                    MessageBox.Show(Resources.EnteredExistingName, "", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                List<string> _data = new List<string>() { "" };
+                CreateDBFile(_newName.Output, _data);
+                DecodeAll(data, objects, modules, addresses);
             }
             GetDeviceTypesFromFile();
 
             if (Devices.Count < 1)
                 return;
-
-            List<List<string>> _decodedObject;
 
             Debug _debug = new Debug();
             string _debugText = "Generating " + NameDB;
@@ -331,7 +352,7 @@ namespace IO_list_automation_new
             Progress.RenameProgressBar(_debugText, Devices.Count);
 
             DBResultForm _DBResultForm = new DBResultForm(NameDB, false, Base, Directory, FileExtension);
-            List<string> _CPUList = GetCPUList(objects,modules,addresses);
+            List<string> _CPUList = GetCPUList(objects, modules, addresses);
 
             int _typeCount = 0;
             //go through all device types
@@ -347,43 +368,55 @@ namespace IO_list_automation_new
                     _typeCount = 0;
                     switch (Base)
                     {
-                        case BaseTypes.Module:
+                        case BaseTypes.ModuleCPU:
                             for (int _moduleIndex = 0; _moduleIndex < modules.Signals.Count; _moduleIndex++)
                             {
                                 ModuleSignal _module = modules.Signals[_moduleIndex];
 
                                 if (_CPUList[_CPUIndex] != _module.CPU)
                                     continue;
-                                _decodedObject = Devices[_deviceIndex].Decode(ref _typeCount, data, null, _module);
-                                CopyDecodedList(_decodedObject, _decodedDevices);
 
-                                if (_decodedObject == null)
-                                    continue;
-
-                                //update addresses for this element
-                                addresses.PutDataToElement(_module.CPU, ResourcesUI.Modules, _module.ModuleType, _module.ModuleName, Devices[_deviceIndex].ObjectVariableType
-                                    , Devices[_deviceIndex].MemoryArea, Devices[_deviceIndex].Address, Devices[_deviceIndex].AddressSize);
+                                CopyDecodedList(Devices[_deviceIndex].Decode(ref _typeCount, data, null, _module, null, Base), _decodedDevices, addresses,
+                                                    _module.CPU, ResourcesUI.Modules, _module.ModuleType, _module.ModuleName, _deviceIndex);
                             }
                             break;
-                        case BaseTypes.SCADA:
+
+                        case BaseTypes.ModuleSCADA:
+                            for (int _addressIndex = 0; _addressIndex < addresses.Signals.Count; _addressIndex++)
+                            {
+                                AddressObject _address = addresses.Signals[_addressIndex];
+                                if (_CPUList[_CPUIndex] != _address.CPU)
+                                    continue;
+
+                                CopyDecodedList(Devices[_deviceIndex].Decode(ref _typeCount, data, null, null, _address, Base), _decodedDevices, addresses,
+                                                    _address.CPU, ResourcesUI.Modules, _address.ObjectType, _address.ObjectName, _deviceIndex);
+                            }
                             break;
-                        case BaseTypes.Objects:
+
+                        case BaseTypes.ObjectsCPU:
                             for (int _objectIndex = 0; _objectIndex < objects.Signals.Count; _objectIndex++)
                             {
                                 ObjectSignal _object = objects.Signals[_objectIndex];
                                 if (_CPUList[_CPUIndex] != _object.CPU)
                                     continue;
-                                _decodedObject = Devices[_deviceIndex].Decode(ref _typeCount, data, _object, null);
-                                CopyDecodedList(_decodedObject, _decodedDevices);
 
-                                if (_decodedObject == null)
-                                    continue;
-
-                                //update addresses for this element
-                                addresses.PutDataToElement(_object.CPU, ResourcesUI.Objects, _object.ObjectType, _object.KKS, Devices[_deviceIndex].ObjectVariableType
-                                    , Devices[_deviceIndex].MemoryArea, Devices[_deviceIndex].Address, Devices[_deviceIndex].AddressSize);
+                                CopyDecodedList(Devices[_deviceIndex].Decode(ref _typeCount, data, _object, null, null, Base), _decodedDevices, addresses,
+                                                    _object.CPU, ResourcesUI.Objects, _object.ObjectType, _object.KKS, _deviceIndex);
                             }
                             break;
+
+                        case BaseTypes.ObjectSCADA:
+                            for (int _addressIndex = 0; _addressIndex < addresses.Signals.Count; _addressIndex++)
+                            {
+                                AddressObject _address = addresses.Signals[_addressIndex];
+                                if (_CPUList[_CPUIndex] != _address.CPU)
+                                    continue;
+
+                                CopyDecodedList(Devices[_deviceIndex].Decode(ref _typeCount, data, null, null, _address, Base), _decodedDevices, addresses,
+                                                    _address.CPU, ResourcesUI.Objects, _address.ObjectType, _address.ObjectName, _deviceIndex);
+                            }
+                            break;
+
                         default:
                             _debugText = "DBGeneral.DecodeAll";
                             _debug.ToFile(_debugText + " " + Resources.ParameterNotFound + ":" + nameof(Base), DebugLevels.None, DebugMessageType.Critical);
@@ -424,20 +457,32 @@ namespace IO_list_automation_new
         /// </summary>
         public void EditAll()
         {
+            string _fileName;
+
             if (!CheckDBFiles())
             {
                 DialogResult _result = MessageBox.Show(Resources.CreateNew + " " + NameDB + "?", Resources.CreateNew, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                 if (_result != DialogResult.Yes)
                     return;
 
-                NewName _newName = new NewName(Resources.CreateNew + ": " + ResourcesUI.IO + " " + Resources.Language);
+                NewName _newName = new NewName(Resources.CreateNew + ": " + ResourcesUI.IO + " " + Resources.Language,true);
+
                 _newName.ShowDialog();
-                if (!string.IsNullOrEmpty(_newName.Output))
+                _fileName = _newName.Output;
+                if (string.IsNullOrEmpty(_fileName))
                 {
-                    CreateDBFile(_newName.Output);
-                    EditAll();
+                    MessageBox.Show(Resources.EnteredEmptyName, "", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
                 }
-                return;
+                else if (DBFileExists(_fileName))
+                {
+                    MessageBox.Show(Resources.EnteredExistingName, "", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                List<string> _data = new List<string>() { "" };
+                CreateDBFile(_newName.Output,_data);
+                EditAll();
             }
             GetDeviceTypesFromFile();
 
@@ -472,8 +517,7 @@ namespace IO_list_automation_new
             _DBResultForm.ShowDialog();
 
             GetDeviceTypesFromGrid(_DBResultForm.DBTabControl);
-
-            string _fileName;
+            
             //go through all device types
             for (int _deviceIndex = 0; _deviceIndex < Devices.Count; _deviceIndex++)
             {

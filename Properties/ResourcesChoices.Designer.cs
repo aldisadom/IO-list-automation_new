@@ -70,11 +70,20 @@ namespace IO_list_automation_new.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Base index.
+        ///   Looks up a localized string similar to Address area.
         /// </summary>
-        internal static string BaseIndex {
+        internal static string AddressArea {
             get {
-                return ResourceManager.GetString("BaseIndex", resourceCulture);
+                return ResourceManager.GetString("AddressArea", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Base address.
+        /// </summary>
+        internal static string BaseAddress {
+            get {
+                return ResourceManager.GetString("BaseAddress", resourceCulture);
             }
         }
         
@@ -93,6 +102,15 @@ namespace IO_list_automation_new.Properties {
         internal static string Equal {
             get {
                 return ResourceManager.GetString("Equal", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Get base address.
+        /// </summary>
+        internal static string GetBaseAddress {
+            get {
+                return ResourceManager.GetString("GetBaseAddress", resourceCulture);
             }
         }
         
@@ -129,42 +147,6 @@ namespace IO_list_automation_new.Properties {
         internal static string Insert {
             get {
                 return ResourceManager.GetString("Insert", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to IO channel.
-        /// </summary>
-        internal static string IOChannel {
-            get {
-                return ResourceManager.GetString("IOChannel", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to IO Pin.
-        /// </summary>
-        internal static string IOPin {
-            get {
-                return ResourceManager.GetString("IOPin", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to IO Tag.
-        /// </summary>
-        internal static string IOTag {
-            get {
-                return ResourceManager.GetString("IOTag", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to IO Text.
-        /// </summary>
-        internal static string IOText {
-            get {
-                return ResourceManager.GetString("IOText", resourceCulture);
             }
         }
         

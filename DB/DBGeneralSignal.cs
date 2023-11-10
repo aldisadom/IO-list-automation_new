@@ -1,5 +1,4 @@
-﻿using IO_list_automation_new.Forms;
-using IO_list_automation_new.Properties;
+﻿using IO_list_automation_new.Properties;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +8,6 @@ namespace IO_list_automation_new.DB
     internal class DBGeneralSignal
     {
         public List<string> Line { get; private set; }
-
         public string MemoryArea { get; private set; }
         public int BaseAddress { get; private set; }
         public int AddressSize { get; private set; }
@@ -64,45 +62,60 @@ namespace IO_list_automation_new.DB
         }
 
         /// <summary>
-        /// Find IO tag in data based on function of object KKS
+        /// Checks data signal with correct object signal if it is a match
         /// </summary>
-        /// <param name="data">data</param>
-        /// <param name="objectSignal">object</param>
-        /// <param name="moduleSignal">object</param>
-        /// <returns>IO tag</returns>
-        private string DecodeIOTag(DataClass data, ObjectSignal objectSignal, ModuleSignal moduleSignal)
+        /// <param name="inputText">input text to check</param>
+        /// <param name="dataSignal">data signal</param>
+        /// <param name="objectSignal">object signal</param>
+        /// <param name="moduleSignal">module signal</param>
+        /// <param name="addressObject">address Object</param>
+        /// <param name="inputBase">signal base</param>
+        /// <returns>true if it is a match</returns>
+        private bool CheckDataSignal(string inputText, DataSignal dataSignal, ObjectSignal objectSignal, ModuleSignal moduleSignal, AddressObject addressObject, BaseTypes inputBase)
+        {
+            switch (inputBase)
+            {
+                case BaseTypes.ModuleCPU:
+                    if (!int.TryParse(dataSignal.Channel, out int _channel))
+                        return false;
+                    return (moduleSignal.ModuleName == dataSignal.ModuleName) && ((_channel == int.Parse(inputText)) || string.IsNullOrEmpty(inputText));
+
+                case BaseTypes.ModuleSCADA:
+                    if (!int.TryParse(dataSignal.Channel, out _channel))
+                        return false;
+                    return (addressObject.ObjectName == dataSignal.ModuleName) && ((_channel == int.Parse(inputText)) || string.IsNullOrEmpty(inputText));
+
+                case BaseTypes.ObjectsCPU:
+                    return (objectSignal.KKS == dataSignal.KKS) && ((dataSignal.Function == inputText) || (inputText == "*"));
+
+                case BaseTypes.ObjectSCADA:
+                    return (addressObject.ObjectName == dataSignal.KKS) && ((dataSignal.Function == inputText) || (inputText == "*"));
+
+                default:
+                    const string _debugText = "DBGeneralSignal.CheckDataSignal";
+                    Debug _debug = new Debug();
+                    _debug.ToFile(_debugText + " " + Resources.ParameterNotFound + ":" + nameof(inputBase), DebugLevels.None, DebugMessageType.Critical);
+                    throw new InvalidProgramException(_debugText + "." + nameof(inputBase) + " is not created for this element");
+            }
+        }
+
+        /// <summary>
+        /// Find requested address area in address object
+        /// </summary>
+        /// <param name="addressObject">address object</param>
+        /// <returns>address area</returns>
+        private string GetAreaAddress(AddressObject addressObject)
         {
             Index += 2;
             if (Simulation)
-            {
-                Value = "KKS." + Line[Index - 1];
-                return Value;
-            }
-            //objects based
-            if (moduleSignal == null)
-            {
-                for (int i = 0; i < data.Signals.Count; i++)
-                {
-                    if ((objectSignal.KKS == data.Signals[i].KKS) && (data.Signals[i].Function == Line[Index - 1]))
-                    {
-                        Value = data.Signals[i].Tag;
-                        return Value;
-                    }
-                }
-            }
-            //module based
-            else
-            {
-                for (int i = 0; i < data.Signals.Count; i++)
-                {
-                    if (!int.TryParse(data.Signals[i].Channel, out int _channel))
-                        continue;
+                return "KKS.Area";
 
-                    if ((moduleSignal.ModuleName == data.Signals[i].ModuleName) && (_channel == int.Parse(Line[Index - 1])))
-                    {
-                        Value = data.Signals[i].Tag;
-                        return Value;
-                    }
+            for (int i = 0; i < addressObject.Addresses.Count; i++)
+            {
+                if (Line[Index - 1] == addressObject.Addresses[i].ObjectVariableType)
+                {
+                    Value = addressObject.Addresses[i].Area;
+                    return Value;
                 }
             }
             Value = string.Empty;
@@ -110,144 +123,25 @@ namespace IO_list_automation_new.DB
         }
 
         /// <summary>
-        /// Find IO Pin in data based on channel number of module
+        /// Find requested address base in address object
         /// </summary>
-        /// <param name="data">data</param>
-        /// <param name="objectSignal">object</param>
-        /// <param name="moduleSignal">object</param>
-        /// <returns>IO Pin</returns>
-        private string DecodeIOPin(DataClass data, ObjectSignal objectSignal, ModuleSignal moduleSignal)
+        /// <param name="addressObject">address object</param>
+        /// <returns>address base address</returns>
+        private void GetBaseAddress(AddressObject addressObject)
         {
             Index += 2;
             if (Simulation)
+                return;
+
+            for (int i = 0; i < addressObject.Addresses.Count; i++)
             {
-                Value = "KKS.Pin_" + Line[Index - 1];
-                return Value;
-            }
-            //objects based
-            if (moduleSignal == null)
-            {
-                for (int i = 0; i < data.Signals.Count; i++)
+                if (Line[Index - 1] == addressObject.Addresses[i].ObjectVariableType)
                 {
-                    if ((objectSignal.KKS == data.Signals[i].KKS) && (data.Signals[i].Function == Line[Index - 1]))
-                    {
-                        Value = data.Signals[i].Pin;
-                        return Value;
-                    }
+                    Value = addressObject.Addresses[i].Area;
+                    UpdateBaseAddress(addressObject.Addresses[i].Area, int.Parse(addressObject.Addresses[i].AddressStart), int.Parse(addressObject.Addresses[i].AddressSize));
+                    return;
                 }
             }
-            //module based
-            else
-            {
-                for (int i = 0; i < data.Signals.Count; i++)
-                {
-                    if (!int.TryParse(data.Signals[i].Channel, out int _channel))
-                        continue;
-
-                    if ((moduleSignal.ModuleName == data.Signals[i].ModuleName) && (_channel == int.Parse(Line[Index - 1])))
-                    {
-                        Value = data.Signals[i].Pin;
-                        return Value;
-                    }
-                }
-            }
-
-            Value = string.Empty;
-            return Value;
-        }
-
-        /// <summary>
-        /// Find IO channel in data based on channel number of module
-        /// </summary>
-        /// <param name="data">data</param>
-        /// <param name="objectSignal">object</param>
-        /// <param name="moduleSignal">object</param>
-        /// <returns>IO channel</returns>
-        private string DecodeIOChannel(DataClass data, ObjectSignal objectSignal, ModuleSignal moduleSignal)
-        {
-            Index += 2;
-            if (Simulation)
-            {
-                Value = "KKS.Channel_" + Line[Index - 1];
-                return Value;
-            }
-            //objects based
-            if (moduleSignal == null)
-            {
-                for (int i = 0; i < data.Signals.Count; i++)
-                {
-                    if ((objectSignal.KKS == data.Signals[i].KKS) && (data.Signals[i].Function == Line[Index - 1]))
-                    {
-                        Value = data.Signals[i].Channel;
-                        return Value;
-                    }
-                }
-            }
-            //module based
-            else
-            {
-                for (int i = 0; i < data.Signals.Count; i++)
-                {
-                    if (!int.TryParse(data.Signals[i].Channel, out int _channel))
-                        continue;
-
-                    if ((moduleSignal.ModuleName == data.Signals[i].ModuleName) && (_channel == int.Parse(Line[Index - 1])))
-                    {
-                        Value = data.Signals[i].Channel;
-                        return Value;
-                    }
-                }
-            }
-
-            Value = string.Empty;
-            return Value;
-        }
-
-        /// <summary>
-        /// Find IO text in data based on channel number of module
-        /// </summary>
-        /// <param name="data">data</param>
-        /// <param name="objectSignal">object</param>
-        /// <param name="moduleSignal">object</param>
-        /// <returns>IO channel</returns>
-        private string DecodeIOText(DataClass data, ObjectSignal objectSignal, ModuleSignal moduleSignal)
-        {
-            Index += 2;
-            if (Simulation)
-            {
-                Value = "KKS." + Line[Index - 1];
-                return Value;
-            }
-            //objects based
-            if (moduleSignal == null)
-            {
-                for (int i = 0; i < data.Signals.Count; i++)
-                {
-                    if ((objectSignal.KKS == data.Signals[i].KKS) && (data.Signals[i].Function == Line[Index - 1]))
-                    {
-                        Value = data.Signals[i].IOText;
-                        return Value;
-                    }
-                }
-            }
-            //module based
-            else
-            {
-                for (int i = 0; i < data.Signals.Count; i++)
-                {
-                    if (!int.TryParse(data.Signals[i].Channel, out int _channel))
-                        continue;
-
-                    if ((moduleSignal.ModuleName == data.Signals[i].ModuleName) && (_channel == int.Parse(Line[Index - 1])))
-                    {
-                        Value = data.Signals[i].IOText;
-                        return Value;
-                    }
-                }
-            }
-
-            Value = string.Empty;
-            return Value;
         }
 
         /// <summary>
@@ -256,35 +150,21 @@ namespace IO_list_automation_new.DB
         /// <param name="data">data</param>
         /// <param name="objectSignal">object</param>
         /// <returns>column value</returns>
-        private string DecodeData(DataClass data, ObjectSignal objectSignal, ModuleSignal moduleSignal)
+        private string DecodeData(DataClass data, ObjectSignal objectSignal, ModuleSignal moduleSignal, AddressObject addressObject, BaseTypes inputBase)
         {
-            Index += 2;
+            Index += 3;
             if (Simulation)
             {
-                Value = "Data." + Line[Index - 1];
+                Value = "Data." + Line[Index - 2];
                 return Value;
             }
 
-            if (moduleSignal == null)
+            for (int i = 0; i < data.Signals.Count; i++)
             {
-                for (int i = 0; i < data.Signals.Count; i++)
+                if (CheckDataSignal(Line[Index - 1], data.Signals[i], objectSignal, moduleSignal, addressObject, inputBase))
                 {
-                    if (objectSignal.KKS == data.Signals[i].KKS)
-                    {
-                        Value = data.Signals[i].GetValueString(Line[Index - 1], false);
-                        return Value;
-                    }
-                }
-            }
-            else
-            {
-                for (int i = 0; i < data.Signals.Count; i++)
-                {
-                    if (moduleSignal.ModuleName == data.Signals[i].ModuleName)
-                    {
-                        Value = data.Signals[i].GetValueString(Line[Index - 1], false);
-                        return Value;
-                    }
+                    Value = data.Signals[i].GetValueString(Line[Index - 2], false);
+                    return Value;
                 }
             }
 
@@ -307,6 +187,42 @@ namespace IO_list_automation_new.DB
             }
 
             Value = objectSignal.GetValueString(Line[Index - 1], false);
+            return Value;
+        }
+
+        /// <summary>
+        /// find CPU in address object
+        /// </summary>
+        /// <param name="addressObject">object</param>
+        /// <returns>column value</returns>
+        private string DecodeCPU(AddressObject addressObject)
+        {
+            Index++;
+            if (Simulation)
+            {
+                Value = "Object.CPU";
+                return Value;
+            }
+
+            Value = addressObject.CPU;
+            return Value;
+        }
+
+        /// <summary>
+        /// find object name in address object
+        /// </summary>
+        /// <param name="addressObject">object</param>
+        /// <returns>column value</returns>
+        private string DecodeObjectName(AddressObject addressObject)
+        {
+            Index++;
+            if (Simulation)
+            {
+                Value = "Object.ObjectName";
+                return Value;
+            }
+
+            Value = addressObject.ObjectName;
             return Value;
         }
 
@@ -392,7 +308,7 @@ namespace IO_list_automation_new.DB
         /// <param name="objectSignal">object</param>
         /// <param name="moduleSignal">module</param>
         /// <param name="decodeReadOnly">do not put decoded cell to decode line</param>
-        private List<string> DecodeIf(int index, List<string> decodedLine, DataClass data, ObjectSignal objectSignal, ModuleSignal moduleSignal, bool decodeReadOnly)
+        private List<string> DecodeIf(int index, List<string> decodedLine, DataClass data, ObjectSignal objectSignal, ModuleSignal moduleSignal, AddressObject addressObject, BaseTypes inputBase, bool decodeReadOnly)
         {
             Index++;
             string _text = Line[Index];
@@ -404,7 +320,7 @@ namespace IO_list_automation_new.DB
             switch (_text)
             {
                 case KeywordDBChoices.Data:
-                    _returnPart1 = DecodeData(data, objectSignal, moduleSignal);
+                    _returnPart1 = DecodeData(data, objectSignal, moduleSignal, addressObject, inputBase);
                     break;
 
                 case KeywordDBChoices.Object:
@@ -415,20 +331,12 @@ namespace IO_list_automation_new.DB
                     _returnPart1 = DecodeModules(moduleSignal);
                     break;
 
-                case KeywordDBChoices.IOTag:
-                    _returnPart1 = DecodeIOTag(data, objectSignal, moduleSignal);
+                case KeywordDBChoices.CPU:
+                    _returnPart1 = DecodeCPU(addressObject);
                     break;
 
-                case KeywordDBChoices.IOChannel:
-                    _returnPart1 = DecodeIOChannel(data, objectSignal, moduleSignal);
-                    break;
-
-                case KeywordDBChoices.IOPin:
-                    _returnPart1 = DecodeIOPin(data, objectSignal, moduleSignal);
-                    break;
-
-                case KeywordDBChoices.IOText:
-                    _returnPart1 = DecodeIOText(data, objectSignal, moduleSignal);
+                case KeywordDBChoices.ObjectName:
+                    _returnPart1 = DecodeObjectName(addressObject);
                     break;
 
                 default:
@@ -457,7 +365,7 @@ namespace IO_list_automation_new.DB
                     float _value1, _value2;
 
                     // then it is variable
-                    DecodeCell(Index, decodedLine, data, objectSignal, moduleSignal, true);
+                    DecodeCell(Index, decodedLine, data, objectSignal, moduleSignal, addressObject, inputBase, true);
                     //then search for operation sign
                     switch (_text)
                     {
@@ -510,7 +418,7 @@ namespace IO_list_automation_new.DB
             //if = true
             if (_ifTrue)
             {
-                _cellText = DecodeCell(index, decodedLine, data, objectSignal, moduleSignal, decodeReadOnly);
+                _cellText = DecodeCell(index, decodedLine, data, objectSignal, moduleSignal, addressObject, inputBase, decodeReadOnly);
 
                 //peek false statement and update index to skip it
                 _newIndex = DecodePeek(Index);
@@ -523,7 +431,7 @@ namespace IO_list_automation_new.DB
                 _newIndex = DecodePeek(Index);
 
                 Index = _newIndex;
-                _cellText = DecodeCell(index, decodedLine, data, objectSignal, moduleSignal, decodeReadOnly);
+                _cellText = DecodeCell(index, decodedLine, data, objectSignal, moduleSignal, addressObject, inputBase, decodeReadOnly);
             }
 
             return _cellText;
@@ -537,13 +445,13 @@ namespace IO_list_automation_new.DB
         /// <param name="data">data</param>
         /// <param name="objectSignal">object</param>
         /// <param name="moduleSignal">module</param>
-        private List<string> DecodeMultiline(int index, List<string> decodedLine, DataClass data, ObjectSignal objectSignal, ModuleSignal moduleSignal)
+        private List<string> DecodeMultiline(int index, List<string> decodedLine, DataClass data, ObjectSignal objectSignal, ModuleSignal moduleSignal, AddressObject addressObject, BaseTypes inputBase)
         {
             Index++;
             List<string> _cellText = new List<string>() { string.Empty };
 
             while (Line[Index] != KeywordDBChoices.MultiLineEnd)
-                TransferCellTextToDecoded(DecodeCell(index, decodedLine, data, objectSignal, moduleSignal, false), _cellText);
+                TransferCellTextToDecoded(DecodeCell(index, decodedLine, data, objectSignal, moduleSignal, addressObject, inputBase, false), _cellText);
 
             return _cellText;
         }
@@ -598,17 +506,21 @@ namespace IO_list_automation_new.DB
                     return _newIndex++;
 
                 case KeywordDBChoices.Data:
+                    return _newIndex += 3;
+
                 case KeywordDBChoices.Object:
                 case KeywordDBChoices.Modules:
-                case KeywordDBChoices.IOTag:
-                case KeywordDBChoices.IOPin:
-                case KeywordDBChoices.IOChannel:
-                case KeywordDBChoices.IOText:
                 case KeywordDBChoices.Text:
                 case KeywordDBChoices.Address:
+                case KeywordDBChoices.AddressArea:
+                case KeywordDBChoices.GetBaseAddress:
                     return _newIndex += 2;
 
-                case KeywordDBChoices.BaseIndex:
+                case KeywordDBChoices.CPU:
+                case KeywordDBChoices.ObjectName:
+                    return _newIndex++;
+
+                case KeywordDBChoices.BaseAddress:
                     return _newIndex += 4;
 
                 case KeywordDBChoices.MultiLine:
@@ -653,7 +565,7 @@ namespace IO_list_automation_new.DB
         /// <param name="objectSignal">object</param>
         /// <param name="moduleSignal">module</param>
         /// <param name="decodeReadOnly">do not put decoded cell to decode line</param>
-        private List<string> DecodeCell(int index, List<string> decodedLine, DataClass data, ObjectSignal objectSignal, ModuleSignal moduleSignal, bool decodeReadOnly)
+        private List<string> DecodeCell(int index, List<string> decodedLine, DataClass data, ObjectSignal objectSignal, ModuleSignal moduleSignal, AddressObject addressObject, BaseTypes inputBase, bool decodeReadOnly)
         {
             string _text = Line[Index];
             List<string> _cellText = new List<string>() { decodedLine.Last() };
@@ -661,7 +573,7 @@ namespace IO_list_automation_new.DB
             switch (_text)
             {
                 case KeywordDBChoices.If:
-                    TransferCellTextToDecoded(DecodeIf(index, decodedLine, data, objectSignal, moduleSignal, decodeReadOnly), _cellText);
+                    TransferCellTextToDecoded(DecodeIf(index, decodedLine, data, objectSignal, moduleSignal, addressObject, inputBase, decodeReadOnly), _cellText);
                     break;
 
                 case KeywordDBChoices.Tab:
@@ -670,15 +582,23 @@ namespace IO_list_automation_new.DB
                     break;
 
                 case KeywordDBChoices.Data:
-                    _cellText[_cellText.Count - 1] += DecodeData(data, objectSignal, moduleSignal);
+                    _cellText[_cellText.Count - 1] += DecodeData(data, objectSignal, moduleSignal, addressObject, inputBase);
                     break;
 
-                case KeywordDBChoices.BaseIndex:
+                case KeywordDBChoices.BaseAddress:
                     DecodeBaseAddress(index, Line);
                     break;
 
                 case KeywordDBChoices.Address:
                     _cellText[_cellText.Count - 1] += DecodeAddress(Line);
+                    break;
+
+                case KeywordDBChoices.GetBaseAddress:
+                    GetBaseAddress(addressObject);
+                    break;
+
+                case KeywordDBChoices.AddressArea:
+                    _cellText[_cellText.Count - 1] += GetAreaAddress(addressObject);
                     break;
 
                 case KeywordDBChoices.Object:
@@ -693,24 +613,16 @@ namespace IO_list_automation_new.DB
                     _cellText[_cellText.Count - 1] += DecodeText();
                     break;
 
-                case KeywordDBChoices.IOPin:
-                    _cellText[_cellText.Count - 1] += DecodeIOPin(data, objectSignal, moduleSignal);
+                case KeywordDBChoices.CPU:
+                    _cellText[_cellText.Count - 1] += DecodeCPU(addressObject);
                     break;
 
-                case KeywordDBChoices.IOTag:
-                    _cellText[_cellText.Count - 1] += DecodeIOTag(data, objectSignal, moduleSignal);
-                    break;
-
-                case KeywordDBChoices.IOChannel:
-                    _cellText[_cellText.Count - 1] += DecodeIOChannel(data, objectSignal, moduleSignal);
-                    break;
-
-                case KeywordDBChoices.IOText:
-                    _cellText[_cellText.Count - 1] += DecodeIOText(data, objectSignal, moduleSignal);
+                case KeywordDBChoices.ObjectName:
+                    _cellText[_cellText.Count - 1] += DecodeObjectName(addressObject);
                     break;
 
                 case KeywordDBChoices.MultiLine:
-                    _cellText = DecodeMultiline(index, decodedLine, data, objectSignal, moduleSignal);
+                    _cellText = DecodeMultiline(index, decodedLine, data, objectSignal, moduleSignal, addressObject, inputBase);
                     break;
 
                 case KeywordDBChoices.MultiLineEnd:
@@ -736,7 +648,7 @@ namespace IO_list_automation_new.DB
         /// <param name="data">data</param>
         /// <param name="objectSignal">object</param>
         /// <returns>decoded text line</returns>
-        public List<string> DecodeLine(int index, DataClass data, ObjectSignal objectSignal, ModuleSignal moduleSignal)
+        public List<string> DecodeLine(int index, DataClass data, ObjectSignal objectSignal, ModuleSignal moduleSignal, AddressObject addressObject, BaseTypes inputBase)
         {
             Index = 0;
             List<string> decodedLine = new List<string>() { string.Empty };
@@ -745,7 +657,7 @@ namespace IO_list_automation_new.DB
             while (Index < Line.Count)
             {
                 _count++;
-                DecodeCell(index, decodedLine, data, objectSignal, moduleSignal, false);
+                DecodeCell(index, decodedLine, data, objectSignal, moduleSignal, addressObject, inputBase, false);
                 if (_count > 1000)
                 {
                     Debug _debug = new Debug();

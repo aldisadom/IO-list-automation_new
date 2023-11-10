@@ -1,5 +1,4 @@
-﻿using IO_list_automation_new.General;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace IO_list_automation_new.DB
 {
@@ -40,14 +39,10 @@ namespace IO_list_automation_new.DB
                 KeywordDBChoices.If,
                 KeywordDBChoices.Tab,
                 KeywordDBChoices.Text,
-                KeywordDBChoices.BaseIndex,
+                KeywordDBChoices.BaseAddress,
                 KeywordDBChoices.Address,
                 KeywordDBChoices.Object,
                 KeywordDBChoices.Data,
-                KeywordDBChoices.IOTag,
-                KeywordDBChoices.IOChannel,
-                KeywordDBChoices.IOPin,
-                KeywordDBChoices.IOText,
             };
 
             ChoicesObjectsIfStatement = new List<string>()
@@ -55,14 +50,10 @@ namespace IO_list_automation_new.DB
                 KeywordDBChoices.If,
                 KeywordDBChoices.Tab,
                 KeywordDBChoices.Text,
-                KeywordDBChoices.BaseIndex,
+                KeywordDBChoices.BaseAddress,
                 KeywordDBChoices.Address,
                 KeywordDBChoices.Object,
                 KeywordDBChoices.Data,
-                KeywordDBChoices.IOTag,
-                KeywordDBChoices.IOChannel,
-                KeywordDBChoices.IOPin,
-                KeywordDBChoices.IOText,
                 KeywordDBChoices.MultiLine,
             };
 
@@ -70,10 +61,6 @@ namespace IO_list_automation_new.DB
             {
                 KeywordDBChoices.Object,
                 KeywordDBChoices.Data,
-                KeywordDBChoices.IOTag,
-                KeywordDBChoices.IOChannel,
-                KeywordDBChoices.IOPin,
-                KeywordDBChoices.IOText,
             };
 
             //only for modules--------------------------------------
@@ -84,14 +71,10 @@ namespace IO_list_automation_new.DB
                 KeywordDBChoices.If,
                 KeywordDBChoices.Tab,
                 KeywordDBChoices.Text,
-                KeywordDBChoices.BaseIndex,
+                KeywordDBChoices.BaseAddress,
                 KeywordDBChoices.Address,
                 KeywordDBChoices.Modules,
                 KeywordDBChoices.Data,
-                KeywordDBChoices.IOTag,
-                KeywordDBChoices.IOChannel,
-                KeywordDBChoices.IOPin,
-                KeywordDBChoices.IOText,
             };
 
             ChoicesModulesIfStatement = new List<string>()
@@ -99,14 +82,10 @@ namespace IO_list_automation_new.DB
                 KeywordDBChoices.If,
                 KeywordDBChoices.Tab,
                 KeywordDBChoices.Text,
-                KeywordDBChoices.BaseIndex,
+                KeywordDBChoices.BaseAddress,
                 KeywordDBChoices.Address,
                 KeywordDBChoices.Modules,
                 KeywordDBChoices.Data,
-                KeywordDBChoices.IOTag,
-                KeywordDBChoices.IOChannel,
-                KeywordDBChoices.IOPin,
-                KeywordDBChoices.IOText,
                 KeywordDBChoices.MultiLine,
             };
 
@@ -114,10 +93,6 @@ namespace IO_list_automation_new.DB
             {
                 KeywordDBChoices.Modules,
                 KeywordDBChoices.Data,
-                KeywordDBChoices.IOTag,
-                KeywordDBChoices.IOChannel,
-                KeywordDBChoices.IOPin,
-                KeywordDBChoices.IOText,
             };
 
             //only for address--------------------------------------
@@ -128,12 +103,12 @@ namespace IO_list_automation_new.DB
                 KeywordDBChoices.If,
                 KeywordDBChoices.Tab,
                 KeywordDBChoices.Text,
-                KeywordDBChoices.Modules,
                 KeywordDBChoices.Data,
-                KeywordDBChoices.IOTag,
-                KeywordDBChoices.IOChannel,
-                KeywordDBChoices.IOPin,
-                KeywordDBChoices.IOText,
+                KeywordDBChoices.GetBaseAddress,
+                KeywordDBChoices.Address,
+                KeywordDBChoices.AddressArea,
+                KeywordDBChoices.CPU,
+                KeywordDBChoices.ObjectName,
             };
 
             ChoicesSCADAIfStatement = new List<string>()
@@ -141,23 +116,23 @@ namespace IO_list_automation_new.DB
                 KeywordDBChoices.If,
                 KeywordDBChoices.Tab,
                 KeywordDBChoices.Text,
-                KeywordDBChoices.Modules,
                 KeywordDBChoices.Data,
-                KeywordDBChoices.IOTag,
-                KeywordDBChoices.IOChannel,
-                KeywordDBChoices.IOPin,
-                KeywordDBChoices.IOText,
+                KeywordDBChoices.Address,
+                KeywordDBChoices.AddressArea,
+                KeywordDBChoices.CPU,
+                KeywordDBChoices.ObjectName,
                 KeywordDBChoices.MultiLine,
             };
 
             ChoicesSCADAIfCondition = new List<string>()
             {
-                KeywordDBChoices.Modules,
                 KeywordDBChoices.Data,
-                KeywordDBChoices.IOTag,
-                KeywordDBChoices.IOChannel,
-                KeywordDBChoices.IOPin,
-                KeywordDBChoices.IOText,
+                KeywordDBChoices.BaseAddress,
+                KeywordDBChoices.Address,
+                KeywordDBChoices.AddressArea,
+                KeywordDBChoices.GetBaseAddress,
+                KeywordDBChoices.CPU,
+                KeywordDBChoices.ObjectName,
             };
 
             //for all--------------------------------------

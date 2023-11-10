@@ -146,10 +146,10 @@ namespace IO_list_automation_new
             SettingsObject.Default.Save();
         }
 
-        public ObjectsClass(ProgressIndication progress, DataGridView grid) : base("Object", nameof(FileExtensions.objects), progress, grid)
+        public ObjectsClass(ProgressIndication progress, DataGridView grid) : base("Object", nameof(FileExtensions.objects), progress, grid, true)
         { }
 
-        public ObjectsClass() : base("Object", nameof(FileExtensions.objects), null, null)
+        public ObjectsClass() : base("Object", nameof(FileExtensions.objects), null, null, true)
         { }
 
         /// <summary>

@@ -106,6 +106,24 @@ namespace IO_list_automation_new.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to DB object name.
+        /// </summary>
+        internal static string DBObjectName {
+            get {
+                return ResourceManager.GetString("DBObjectName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to DB object signal name.
+        /// </summary>
+        internal static string DBObjectSignalName {
+            get {
+                return ResourceManager.GetString("DBObjectSignalName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Declare.
         /// </summary>
         internal static string Declare {
@@ -214,11 +232,11 @@ namespace IO_list_automation_new.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Instance DB edit.
+        ///   Looks up a localized string similar to Instance edit DB.
         /// </summary>
-        internal static string InstanceDBEdit {
+        internal static string InstanceEditDB {
             get {
-                return ResourceManager.GetString("InstanceDBEdit", resourceCulture);
+                return ResourceManager.GetString("InstanceEditDB", resourceCulture);
             }
         }
         
@@ -376,20 +394,47 @@ namespace IO_list_automation_new.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to SCADA DB edit.
+        ///   Looks up a localized string similar to SCADA.
         /// </summary>
-        internal static string ScadaEdit {
+        internal static string SCADA {
             get {
-                return ResourceManager.GetString("ScadaEdit", resourceCulture);
+                return ResourceManager.GetString("SCADA", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to SCADA generate Instances.
+        ///   Looks up a localized string similar to SCADA edit module DB.
         /// </summary>
-        internal static string SCADAGenerate {
+        internal static string SCADAModuleEdit {
             get {
-                return ResourceManager.GetString("SCADAGenerate", resourceCulture);
+                return ResourceManager.GetString("SCADAModuleEdit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SCADA module generate.
+        /// </summary>
+        internal static string SCADAModuleGenerate {
+            get {
+                return ResourceManager.GetString("SCADAModuleGenerate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SCADA edit object DB.
+        /// </summary>
+        internal static string SCADAObjectEdit {
+            get {
+                return ResourceManager.GetString("SCADAObjectEdit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SCADA object generate.
+        /// </summary>
+        internal static string SCADAObjectGenerate {
+            get {
+                return ResourceManager.GetString("SCADAObjectGenerate", resourceCulture);
             }
         }
         

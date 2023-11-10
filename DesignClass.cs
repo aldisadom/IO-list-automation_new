@@ -384,7 +384,7 @@ namespace IO_list_automation_new
             SetExcelColumnList(_excelColumn, false);
         }
 
-        public DesignClass(ProgressIndication progress, DataGridView grid) : base("Design", nameof(FileExtensions.design), progress, grid)
+        public DesignClass(ProgressIndication progress, DataGridView grid) : base("Design", nameof(FileExtensions.design), progress, grid, true)
         {
             ExcelColumns = new ColumnList();
         }

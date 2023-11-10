@@ -195,23 +195,17 @@ namespace IO_list_automation_new
                 case KeywordDBChoices.Modules:
                     return ResourcesChoices.Modules;
 
-                case KeywordDBChoices.IOTag:
-                    return ResourcesChoices.IOTag;
-
-                case KeywordDBChoices.IOPin:
-                    return ResourcesChoices.IOPin;
-
-                case KeywordDBChoices.IOText:
-                    return ResourcesChoices.IOText;
-
-                case KeywordDBChoices.IOChannel:
-                    return ResourcesChoices.IOChannel;
-
-                case KeywordDBChoices.BaseIndex:
-                    return ResourcesChoices.BaseIndex;
+                case KeywordDBChoices.BaseAddress:
+                    return ResourcesChoices.BaseAddress;
 
                 case KeywordDBChoices.Address:
                     return ResourcesChoices.Address;
+
+                case KeywordDBChoices.AddressArea:
+                    return ResourcesChoices.AddressArea;
+
+                case KeywordDBChoices.GetBaseAddress:
+                    return ResourcesChoices.GetBaseAddress;
 
                 case KeywordDBChoices.Insert:
                     return ResourcesChoices.Insert;
@@ -373,6 +367,16 @@ namespace IO_list_automation_new
                 Columns.Add(_newColumn);
             }
             SortColumnsList(columnsFromZero);
+        }
+
+        public List<string> GetColumnsKeyword()
+        {
+            List<string> _columns = new List<string>();
+
+            foreach (GeneralColumn _column in Columns)
+                _columns.Add(_column.Keyword);
+
+            return _columns;
         }
 
         /// <summary>
