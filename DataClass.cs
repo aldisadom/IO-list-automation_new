@@ -664,7 +664,7 @@ namespace IO_list_automation_new
         public void ExtractFromDesign(DesignClass design)
         {
             Debug debug = new Debug();
-            debug.ToFile(Resources.ExtractDataFromDesign, DebugLevels.Development, DebugMessageType.Info);
+            debug.ToFile(Resources.ExtractDataFromDesign, DebugLevels.High, DebugMessageType.Info);
 
             Progress.RenameProgressBar(Resources.ExtractDataFromDesign, design.Signals.Count);
 
@@ -692,7 +692,7 @@ namespace IO_list_automation_new
             }
             Progress.HideProgressBar();
 
-            debug.ToFile(Resources.ExtractDataFromDesign + " - " + Resources.Finished, DebugLevels.Development, DebugMessageType.Info);
+            debug.ToFile(Resources.ExtractDataFromDesign + " - " + Resources.Finished, DebugLevels.High, DebugMessageType.Info);
         }
 
         /// <summary>
@@ -701,7 +701,7 @@ namespace IO_list_automation_new
         public void MakeKKS()
         {
             Debug debug = new Debug();
-            debug.ToFile(Resources.KKSCombine, DebugLevels.Development, DebugMessageType.Info);
+            debug.ToFile(Resources.KKSCombine, DebugLevels.High, DebugMessageType.Info);
 
             Progress.RenameProgressBar(Resources.KKSCombine, Signals.Count);
 
@@ -732,7 +732,7 @@ namespace IO_list_automation_new
             }
             Progress.HideProgressBar();
 
-            debug.ToFile(Resources.KKSCombine + " - " + Resources.Finished, DebugLevels.Development, DebugMessageType.Info);
+            debug.ToFile(Resources.KKSCombine + " - " + Resources.Finished, DebugLevels.High, DebugMessageType.Info);
         }
     }
 }

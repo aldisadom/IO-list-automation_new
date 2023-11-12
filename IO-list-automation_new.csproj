@@ -91,6 +91,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DB\CellTag.cs" />
     <Compile Include="DB\DBChoices.cs" />
     <Compile Include="DB\DBForceEditForm.cs">
       <SubType>Form</SubType>

@@ -159,7 +159,7 @@ namespace IO_list_automation_new
         public void ExtractFromData(DataClass data)
         {
             Debug debug = new Debug();
-            debug.ToFile(Resources.ObjectGenerateUniqueData, DebugLevels.Development, DebugMessageType.Info);
+            debug.ToFile(Resources.ObjectGenerateUniqueData, DebugLevels.High, DebugMessageType.Info);
 
             Progress.RenameProgressBar(Resources.ObjectGenerateUniqueData, data.Signals.Count);
 
@@ -204,7 +204,7 @@ namespace IO_list_automation_new
 
             Progress.HideProgressBar();
 
-            debug.ToFile(Resources.ObjectGenerateUniqueData + " - " + Resources.Finished, DebugLevels.Development, DebugMessageType.Info);
+            debug.ToFile(Resources.ObjectGenerateUniqueData + " - " + Resources.Finished, DebugLevels.High, DebugMessageType.Info);
         }
 
         /// <summary>
@@ -214,7 +214,7 @@ namespace IO_list_automation_new
         public void SendToData(DataClass data)
         {
             Debug debug = new Debug();
-            debug.ToFile(Resources.ObjectTransferToData, DebugLevels.Development, DebugMessageType.Info);
+            debug.ToFile(Resources.ObjectTransferToData, DebugLevels.High, DebugMessageType.Info);
 
             Progress.RenameProgressBar(Resources.ObjectTransferToData, data.Signals.Count);
 
@@ -251,7 +251,7 @@ namespace IO_list_automation_new
 
                 Progress.UpdateProgressBar(_dataNumber);
             }
-            debug.ToFile(Resources.ObjectTransferToData + " - " + Resources.Finished, DebugLevels.Development, DebugMessageType.Info);
+            debug.ToFile(Resources.ObjectTransferToData + " - " + Resources.Finished, DebugLevels.High, DebugMessageType.Info);
         }
     }
 }

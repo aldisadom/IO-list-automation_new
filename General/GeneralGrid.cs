@@ -520,7 +520,6 @@ namespace IO_list_automation_new
             return true;
         }
 
-
         /// <summary>
         /// Creates DB file
         /// </summary>
@@ -569,7 +568,7 @@ namespace IO_list_automation_new
             if (!string.IsNullOrEmpty(additionalFolder))
                 _directory += "\\" + additionalFolder;
 
-            string _fileName = _directory + "\\" + fileName + "." + FileExtension;
+ //           string _fileName = _directory + "\\" + fileName + "." + FileExtension;
 
             string[] _files = System.IO.Directory.GetFiles(_directory, fileName + "." + FileExtension);
             return _files.Length > 0;

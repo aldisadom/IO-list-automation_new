@@ -224,7 +224,7 @@ namespace IO_list_automation_new
         public override List<List<string>> SignalsToList()
         {
             Debug debug = new Debug();
-            debug.ToFile(Resources.ConvertDataToList + ": " + Name, DebugLevels.Development, DebugMessageType.Info);
+            debug.ToFile(Resources.ConvertDataToList + ": " + Name, DebugLevels.High, DebugMessageType.Info);
 
             Progress.RenameProgressBar(Resources.ConvertDataToList + ": " + Name, Signals.Count);
 
@@ -282,7 +282,7 @@ namespace IO_list_automation_new
                 Progress.UpdateProgressBar(_signalNumber);
             }
             Progress.HideProgressBar();
-            debug.ToFile(Resources.ConvertDataToList + ": " + Name + " - " + Resources.Finished, DebugLevels.Development, DebugMessageType.Info);
+            debug.ToFile(Resources.ConvertDataToList + ": " + Name + " - " + Resources.Finished, DebugLevels.High, DebugMessageType.Info);
 
             return _data;
         }
@@ -295,7 +295,7 @@ namespace IO_list_automation_new
         public override bool ListToSignals(List<List<string>> inputData, List<GeneralColumn> newColumnList, bool suppressError)
         {
             Debug debug = new Debug();
-            debug.ToFile(Resources.ConvertListToData + ": " + Name, DebugLevels.Development, DebugMessageType.Info);
+            debug.ToFile(Resources.ConvertListToData + ": " + Name, DebugLevels.High, DebugMessageType.Info);
 
             Signals.Clear();
 
@@ -346,7 +346,7 @@ namespace IO_list_automation_new
             }
             Progress.HideProgressBar();
 
-            debug.ToFile(Resources.ConvertListToData + ": " + Name + " - " + Resources.Finished, DebugLevels.Development, DebugMessageType.Info);
+            debug.ToFile(Resources.ConvertListToData + ": " + Name + " - " + Resources.Finished, DebugLevels.High, DebugMessageType.Info);
 
             if (_signalCount == 0 && !suppressError)
                 debug.ToPopUp(Resources.NoData + ": " + Name, DebugLevels.None, DebugMessageType.Warning);

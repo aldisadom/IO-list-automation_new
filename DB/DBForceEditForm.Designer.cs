@@ -41,6 +41,7 @@
             this.DataGrid.Name = "DataGrid";
             this.DataGrid.Size = new System.Drawing.Size(800, 450);
             this.DataGrid.TabIndex = 0;
+            this.DataGrid.KeyDown += new System.Windows.Forms.KeyEventHandler(this.KeyDown_Event);
             // 
             // DBForceEditForm
             // 
@@ -50,6 +51,7 @@
             this.Controls.Add(this.DataGrid);
             this.Name = "DBForceEditForm";
             this.Text = "Force Edit";
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.KeyDown_Event);
             ((System.ComponentModel.ISupportInitialize)(this.DataGrid)).EndInit();
             this.ResumeLayout(false);
 

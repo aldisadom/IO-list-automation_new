@@ -3,6 +3,7 @@ using IO_list_automation_new.General;
 using IO_list_automation_new.Properties;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.Threading;
 using System.Windows.Forms;
@@ -165,6 +166,9 @@ namespace IO_list_automation_new
         /// <returns>abort exit</returns>
         private bool AskBeforeExit()
         {
+            if (Settings.Default.DebugLevel == (uint)DebugLevels.Development)
+                return false;
+
             DialogResult _result = MessageBox.Show(Resources.ConfirmExit, "Exit", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
             if (_result == DialogResult.Yes)
             {
@@ -327,110 +331,6 @@ namespace IO_list_automation_new
         }
 
         /// <summary>
-        /// Paste data to grid
-        /// </summary>
-        /// <param name="_grid"></param>
-        private void Global_paste(DataGridView _grid)
-        {
-            Debug _debug = new Debug();
-
-            IDataObject _dataInClipboard = Clipboard.GetDataObject();
-
-            string _stringInClipboard = _dataInClipboard.GetData(DataFormats.UnicodeText).ToString();
-
-            // no row data
-            if (_stringInClipboard == null)
-            {
-                _debug.ToPopUp(Resources.NoPasteData, DebugLevels.None, DebugMessageType.Alarm);
-                return;
-            }
-
-            int _selRowMin = _grid.SelectedCells[0].RowIndex;
-            int _selColMin = _grid.SelectedCells[0].ColumnIndex;
-
-            int _selRow;
-            int _selCol;
-
-            //get selected min and max cells
-            for (int i = 0; i < _grid.SelectedCells.Count; i++)
-            {
-                _selRow = _grid.SelectedCells[i].RowIndex;
-                _selCol = _grid.SelectedCells[i].ColumnIndex;
-
-                if (_selRow < _selRowMin)
-                    _selRowMin = _selRow;
-
-                if (_selCol < _selColMin)
-                    _selColMin = _selCol;
-            }
-
-            int _enableRowCount = _grid.RowCount - _selRowMin;
-            int _enableColumnCount = _grid.ColumnCount - _selColMin;
-
-            _stringInClipboard = _stringInClipboard.Replace("\r", "");
-            string[] _clipboardRows = _stringInClipboard.Split('\n');
-
-            int _rowsInBoard = _clipboardRows.Length;
-
-            string[] _clipboardCells = _clipboardRows[0].Split('\t');
-            int _colsInBoard = _clipboardCells.Length;
-
-            if (_rowsInBoard < 1)
-            {
-                _debug.ToPopUp(Resources.NoPasteData + ": " + Resources.Row, DebugLevels.None, DebugMessageType.Alarm);
-                return;
-            }
-            else if (_colsInBoard < 1)
-            {
-                _debug.ToPopUp(Resources.NoPasteData + ": " + Resources.Column, DebugLevels.None, DebugMessageType.Alarm);
-                return;
-            }
-
-            _debug.ToFile(Resources.PasteData + ": " + _grid.Name +
-                            " " + Resources.Row + "(" + _rowsInBoard + ")" +
-                            " " + Resources.Column + "(" + _colsInBoard + ")" +
-                            " " + Resources.PasteAt + "(" + _selRowMin + ":" + _selColMin + ")"
-                            , DebugLevels.Medium, DebugMessageType.Info);
-
-            if ((_enableRowCount < _rowsInBoard) || (_enableColumnCount < _colsInBoard))
-            {
-                _debug.ToPopUp(Resources.ToMuchDataPaste, DebugLevels.None, DebugMessageType.Alarm);
-                return;
-            }
-
-            int _row;
-            //when only 1 row is copied, paste it in all selected rows
-            if (_rowsInBoard == 1)
-            {
-                Progress.RenameProgressBar(Resources.PasteData + ": " + _grid.Name, _grid.SelectedCells.Count);
-                for (int i = 0; i < _grid.SelectedCells.Count; i++)
-                {
-                    _row = _grid.SelectedCells[i].RowIndex;
-                    for (int _col = 0; _col < _clipboardCells.Length; _col++)
-                        _grid.Rows[_row].Cells[_selColMin + _col].Value = _clipboardCells[_col];
-
-                    Progress.UpdateProgressBar(i);
-                }
-            }
-            //else paste to required amount
-            else
-            {
-                Progress.RenameProgressBar(Resources.PasteData + ": " + _grid.Name, _rowsInBoard);
-                for (_row = 0; _row < _rowsInBoard; _row++)
-                {
-                    _clipboardCells = _clipboardRows[_row].Split('\t');
-                    for (int _col = 0; _col < _clipboardCells.Length; _col++)
-                        _grid.Rows[_selRowMin + _row].Cells[_selColMin + _col].Value = _clipboardCells[_col];
-
-                    Progress.UpdateProgressBar(_row);
-                }
-            }
-            Progress.HideProgressBar();
-
-            this.Update();
-        }
-
-        /// <summary>
         /// Key Down event for all forms and application
         /// </summary>
         /// <param name="sender"></param>
@@ -441,21 +341,28 @@ namespace IO_list_automation_new
             // Delete function
             if ((e.KeyCode == Keys.Delete) || (e.KeyCode == Keys.Back))
             {
+                this.SuspendLayout();
                 DataGridView _grid = (DataGridView)((TabControl)sender).SelectedTab.Controls[0];
 
                 for (int i = 0; i < (_grid.SelectedCells.Count); i++)
                     _grid.SelectedCells[i].Value = "";
+
+                this.ResumeLayout();
                 this.Update();
             }
             // Paste function
             else if ((e.Modifiers == Keys.Control) && (e.KeyCode == Keys.V))
             {
+                this.SuspendLayout();
                 DataGridView _grid = (DataGridView)((TabControl)sender).SelectedTab.Controls[0];
 
                 if (_grid.SelectedCells.Count == 0)
                     return;
 
-                Global_paste(_grid);
+                GeneralFunctions.Paste(_grid);
+
+                this.ResumeLayout();
+                this.Update();
             }
         }
 
@@ -625,6 +532,30 @@ namespace IO_list_automation_new
             this.Update();
         }
 
+        private void File_DebugLevel_None_Click(object sender, EventArgs e)
+        {
+            Debug debug = new Debug();
+            debug.SetDebugLevel(DebugLevels.None);
+        }
+
+        private void File_DebugLevel_Minimum_Click(object sender, EventArgs e)
+        {
+            Debug debug = new Debug();
+            debug.SetDebugLevel(DebugLevels.Minimum);
+        }
+
+        private void File_DebugLevel_High_Click(object sender, EventArgs e)
+        {
+            Debug debug = new Debug();
+            debug.SetDebugLevel(DebugLevels.High);
+        }
+
+        private void File_DebugLevel_Development_Click(object sender, EventArgs e)
+        {
+            Debug debug = new Debug();
+            debug.SetDebugLevel(DebugLevels.Development);
+        }
+
         private void File_Help_Click(object sender, EventArgs e)
         {
             DisplayNoFunction(sender);
@@ -779,7 +710,7 @@ namespace IO_list_automation_new
 
         private void Project_Language_MouseEnter(object sender, EventArgs e)
         {
-            DBGeneral _DB = new DBGeneral(Progress, ResourcesUI.IO + " " + Resources.Language, nameof(FileExtensions.langFuncDB), DBTypeLevel.Base, BaseTypes.ObjectsCPU);
+            DBGeneral _DB = new DBGeneral(Progress, ResourcesUI.IO + " " + Resources.Language, nameof(FileExtensions.langTypeDB), DBTypeLevel.Base, BaseTypes.ObjectsCPU);
             List<string> _list = _DB.GetDBFileList();
             //add items to dropdown
             AddMenuItemDropDown((ToolStripMenuItem)sender, _list);

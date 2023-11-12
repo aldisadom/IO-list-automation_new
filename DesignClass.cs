@@ -409,7 +409,7 @@ namespace IO_list_automation_new
                 return false;
             }
 
-            debug.ToFile("Excel file for design is: " + _importFile.FileName, DebugLevels.Development, DebugMessageType.Info);
+            debug.ToFile("Excel file for design is: " + _importFile.FileName, DebugLevels.High, DebugMessageType.Info);
             //open excel file
             FileStream stream = File.Open(_importFile.FileName, FileMode.Open, FileAccess.Read);
             IExcelDataReader _excel = ExcelReaderFactory.CreateReader(stream);
@@ -417,7 +417,7 @@ namespace IO_list_automation_new
             int _rowCount = _excel.RowCount;
             Progress.RenameProgressBar(Resources.DesignImport, _rowCount);
 
-            debug.ToFile("Processing input file", DebugLevels.Development, DebugMessageType.Info);
+            debug.ToFile("Processing input file", DebugLevels.High, DebugMessageType.Info);
 
             int _columnCount;
             bool _checkPin = SettingsDesignInput.Default.ColumnPin >= 0;
@@ -440,7 +440,7 @@ namespace IO_list_automation_new
 
                 Progress.UpdateProgressBar(_row);
             }
-            debug.ToFile("Processing input file - " + Resources.Finished, DebugLevels.Development, DebugMessageType.Info);
+            debug.ToFile("Processing input file - " + Resources.Finished, DebugLevels.High, DebugMessageType.Info);
             Progress.HideProgressBar();
             _excel.Close();
 
@@ -458,7 +458,7 @@ namespace IO_list_automation_new
 
             _rowCount = _inputData.GetLength(0);
             Progress.RenameProgressBar(Resources.DesignImport, _rowCount);
-            debug.ToFile("Extracting data from input file", DebugLevels.Development, DebugMessageType.Info);
+            debug.ToFile("Extracting data from input file", DebugLevels.High, DebugMessageType.Info);
 
             for (int _row = SettingsDesignInput.Default.RowOffset; _row < _rowCount; _row++)
             {
@@ -486,7 +486,7 @@ namespace IO_list_automation_new
                 Progress.UpdateProgressBar(_row);
             }
 
-            debug.ToFile("Extracting data from input file - " + Resources.Finished, DebugLevels.Development, DebugMessageType.Info);
+            debug.ToFile("Extracting data from input file - " + Resources.Finished, DebugLevels.High, DebugMessageType.Info);
             Progress.HideProgressBar();
 
             return Signals.Count > 0;

@@ -1,10 +1,11 @@
-﻿using System;
+﻿using IO_list_automation_new.Forms;
+using System;
 using System.Drawing;
 using System.Windows.Forms;
 
 namespace IO_list_automation_new.General
 {
-    internal enum ComboBoxType
+    public enum ComboBoxType
     {
         Main,
         IfCondition,
@@ -15,7 +16,7 @@ namespace IO_list_automation_new.General
         Number,
     }
 
-    internal enum DropDownElementType
+    public enum DropDownElementType
     {
         Mod,
         Keyword,
@@ -45,11 +46,14 @@ namespace IO_list_automation_new.General
     internal class ComboBoxTag
     {
         public ComboBoxType Type { get; }
-        public string PreviousValue { get; set; }
+        public string PreviousValue { get;}
 
-        public ComboBoxTag(ComboBoxType type, string previousValue)
+        public string Name { get; }
+
+        public ComboBoxTag(ComboBoxType type,string name, string previousValue)
         {
             Type = type;
+            Name = name;
             PreviousValue = previousValue;
         }
     }
@@ -61,17 +65,12 @@ namespace IO_list_automation_new.General
         public ComboBoxTag Tag
         {
             get { return (ComboBoxTag)Element.Tag; }
+            set { Element.Tag = value; }
         }
 
         public string Name
         {
             get { return Element.Name; }
-        }
-
-        public bool Visible
-        {
-            set { Element.Visible = value; }
-            get { return Element.Visible; }
         }
 
         public int SelectedIndex
@@ -85,12 +84,6 @@ namespace IO_list_automation_new.General
             set { Element.Location = value; }
             get { return Element.Location; }
         }
-
-        public EventHandler OpenEvent
-        { set { Element.DropDown += value; } }
-
-        public EventHandler OpenEventRemove
-        { set { Element.DropDown -= value; } }
 
         public KeyPressEventHandler KeyPressEvent
         { set { Element.KeyPress += value; } }
@@ -107,9 +100,6 @@ namespace IO_list_automation_new.General
         private GeneralColumnName ColumnNames = new GeneralColumnName();
 
         public System.Windows.Forms.ComboBox Element { get; }
-
-        public bool ChangeLayout
-        { get { return Tag.Type != ComboBoxType.Text && Tag.Type != ComboBoxType.Data && Tag.Type != ComboBoxType.Object && Tag.Type != ComboBoxType.Module; } }
 
         public DropDownClass(System.Windows.Forms.ComboBox element)
         {
@@ -136,22 +126,9 @@ namespace IO_list_automation_new.General
             Element.BringToFront();
         }
 
-        /// <summary>
-        /// Clear all items of comboBox
-        /// </summary>
-        public void ClearItems()
-        {
-            Element.Items.Clear();
-        }
-
         public void Editable(bool editable)
         {
             Element.DropDownStyle = editable ? ComboBoxStyle.DropDown : ComboBoxStyle.DropDownList;
-        }
-
-        public void SetTag(ComboBoxType type, string previousValue)
-        {
-            Element.Tag = new ComboBoxTag(type, previousValue);
         }
 
         /// <summary>

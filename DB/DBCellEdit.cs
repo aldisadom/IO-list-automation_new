@@ -3,7 +3,10 @@ using IO_list_automation_new.General;
 using IO_list_automation_new.Properties;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Reflection.Emit;
+using System.Security.Cryptography;
+using System.Text;
 using System.Windows.Forms;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.Menu;
 
@@ -23,18 +26,9 @@ namespace IO_list_automation_new.Forms
 
         private readonly DBChoices Choices = new DBChoices();
 
-        private const int StartX = 10;
-        private const int StartY = 10;
-        private const int _offsetX = 135;
-        private const int _offsetY = 45;
-
-        private int MaxX = 100;
-        private int MaxY = 100;
-
         private int Index;
         private int PositionColumn;
         private int PositionRow;
-        private int ComboBoxIndex = 1;
 
         private BaseTypes Base { get; }
 
@@ -80,6 +74,30 @@ namespace IO_list_automation_new.Forms
 
                 default:
                     const string _debugText = "DBCellEdit.GetIOComboBoxType";
+                    Debug _debug = new Debug();
+                    _debug.ToFile(_debugText + " " + Resources.ParameterNotFound + ":" + nameof(Base), DebugLevels.None, DebugMessageType.Critical);
+                    throw new InvalidProgramException(_debugText + "." + nameof(Base) + " is not created for this element");
+            }
+        }
+
+        /// <summary>
+        /// Get label text depending on base
+        /// </summary>
+        /// <returns>label text</returns>
+        private string GetIOLabel()
+        {
+            switch (Base)
+            {
+                case BaseTypes.ModuleCPU:
+                case BaseTypes.ModuleSCADA:
+                    return ResourcesColumns.Channel;
+
+                case BaseTypes.ObjectSCADA:
+                case BaseTypes.ObjectsCPU:
+                    return ResourcesColumns.Function;
+
+                default:
+                    const string _debugText = "DBCellEdit.GetIOLabel";
                     Debug _debug = new Debug();
                     _debug.ToFile(_debugText + " " + Resources.ParameterNotFound + ":" + nameof(Base), DebugLevels.None, DebugMessageType.Critical);
                     throw new InvalidProgramException(_debugText + "." + nameof(Base) + " is not created for this element");
@@ -190,6 +208,74 @@ namespace IO_list_automation_new.Forms
         }
 
         /// <summary>
+        /// Remove column comboBox element from controls
+        /// </summary>
+        private void DeleteColumnComboBox()
+        {
+            foreach (var _item in this.Controls)
+            {
+                if (!_item.GetType().Name.Contains("ComboBox"))
+                    continue;
+
+                if (((System.Windows.Forms.ComboBox)_item).Name != "ComboBoxCell")
+                    continue;
+
+                DropDownClass comboBox = new DropDownClass((System.Windows.Forms.ComboBox)_item)
+                {
+                    IndexChangedEventRemove = ComboBox_ValueChangedEvent,
+                };
+                this.Controls.Remove((System.Windows.Forms.Control)_item);
+                break;
+            }
+        }
+
+        /// <summary>
+        /// Grid cell click and create comboBox for selection or other edit options
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Grid_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            DeleteColumnComboBox();
+            DataGridViewCell _cell = ((DataGridView)sender).Rows[e.RowIndex].Cells[e.ColumnIndex];
+
+            if (_cell.Tag == null)
+                return;
+
+            CellTag _cellTag = (CellTag)_cell.Tag;
+
+            //no need of comboBox
+            switch (_cellTag.ComboType)
+            {
+                case ComboBoxType.Text:
+                case ComboBoxType.Number:
+                    Grid.ReadOnly = _cellTag.Restrain == RestrainLevel.NoEdit;
+                    return;
+            }
+            Grid.ReadOnly = true;
+
+            List<string> _selectList = GetSelectList(_cellTag.Restrain, _cellTag.ComboType);
+            DropDownClass _dropDowns = new DropDownClass("ComboBoxCell");
+            _dropDowns.ChangeDisplayMember(DropDownElementType.Name);
+            _dropDowns.Location = PointToClient(Cursor.Position);
+            _dropDowns.Editable(false);
+            _dropDowns.Tag = new ComboBoxTag(_cellTag.ComboType, _cellTag.UniqueName, _cellTag.Keyword);
+
+            for (int i = 0; i < _selectList.Count; i++)
+            {
+                _dropDowns.AddItemFull(string.Empty, _selectList[i]);
+                if (_cellTag.Keyword == _selectList[i])
+                    _dropDowns.SelectedIndex = i;
+            }
+
+            //change index event
+            _dropDowns.IndexChangedEvent = ComboBox_ValueChangedEvent;
+
+            this.Controls.Add(_dropDowns.Element);
+            _dropDowns.Element.BringToFront();
+        }
+
+        /// <summary>
         /// ComboBox value changed event
         /// </summary>
         /// <param name="sender">ComboBox</param>
@@ -200,15 +286,28 @@ namespace IO_list_automation_new.Forms
 
             string _currentValue = _box.SelectedKeyword();
 
+            //decode tag
+            ComboBoxTag _tag = _box.Tag;
+
+            DeleteColumnComboBox();
             //ComboBox type is of type that need to change layout
-            if (!_box.ChangeLayout)
-                return;
+            switch (_tag.Type)
+            {
+                case ComboBoxType.Data:
+                case ComboBoxType.Object:
+                case ComboBoxType.Module:
+                case ComboBoxType.Text:
+                case ComboBoxType.Number:
+                    return;
+            }
 
+            string _previousValue = _tag.PreviousValue;
+            string _elementName = _tag.Name;
             //dropdown value changed
-            if (_box.Tag.PreviousValue == _currentValue)
+            if (_previousValue == _currentValue)
                 return;
 
-            List<string> _list = SortElements();
+            List<string> _list = GetElementsUnique();
             OutputData.Clear();
 
             //extracting keyword to list
@@ -220,7 +319,7 @@ namespace IO_list_automation_new.Forms
             int _index = 0;
             for (int i = 0; i < _list.Count; i++)
             {
-                if (_list[i] == _box.Name)
+                if (_list[i] == _elementName)
                 {
                     _index = i;
                     break;
@@ -230,7 +329,7 @@ namespace IO_list_automation_new.Forms
             }
             //delete elements
             if (_currentValue != KeywordDBChoices.Insert)
-                DeleteOldElements(_index, _list, _box.Tag.PreviousValue);
+                DeleteOldElements(_index, _list, _previousValue);
 
             //add new
             switch (_currentValue)
@@ -339,7 +438,7 @@ namespace IO_list_automation_new.Forms
             //add after
             if (_currentValue == KeywordDBChoices.Insert)
             {
-                OutputData.Add(_box.Tag.PreviousValue);
+                OutputData.Add(_previousValue);
                 _index++;
             }
 
@@ -355,7 +454,7 @@ namespace IO_list_automation_new.Forms
         /// </summary>
         /// <param name="sender">ComboBox</param>
         /// <param name="e">event arguments</param>
-        private void ComboBox_KeyPress(object sender, KeyPressEventArgs e)
+        private void Cell_KeyPress(object sender, KeyPressEventArgs e)
         {
             // Check if the key is not a digit and not a control key (e.g., Backspace)
             if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar))
@@ -363,17 +462,21 @@ namespace IO_list_automation_new.Forms
         }
 
         /// <summary>
-        /// ComboBox opened event, to get previous value
+        /// Grid cell add key check event
         /// </summary>
-        /// <param name="sender">ComboBox</param>
-        /// <param name="e">event arguments</param>
-        private void ComboBox_OpenEvent(object sender, EventArgs e)
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Grid_EditingControlShowing(object sender, DataGridViewEditingControlShowingEventArgs e)
         {
-            DropDownClass _box = new DropDownClass((System.Windows.Forms.ComboBox)sender);
-            if (_box.Tag == null)
-                _box.SetTag(ComboBoxType.Text, _box.SelectedKeyword());
-            else
-                _box.Tag.PreviousValue = _box.SelectedKeyword();
+            e.Control.KeyPress -= Cell_KeyPress;
+            CellTag _cellTag = (CellTag)Grid.CurrentCell.Tag;
+
+            if (_cellTag.ComboType == ComboBoxType.Number && _cellTag.Restrain != RestrainLevel.NoEdit)
+            {
+                TextBox tb = e.Control as TextBox;
+                if (tb != null)
+                    tb.KeyPress += Cell_KeyPress;
+            }
         }
 
         /// <summary>
@@ -381,34 +484,20 @@ namespace IO_list_automation_new.Forms
         /// </summary>
         private void UpdateOutputData()
         {
-            List<string> _list = SortElements();
+            List<string> _list = GetElements();
             OutputData.Clear();
 
             for (int i = 0; i < _list.Count; i++)
-                OutputData.Add(GetDropDownSelectedKeyword(_list[i]));
+                OutputData.Add(_list[i]);
         }
 
         /// <summary>
-        /// remove all elements from this.control
+        /// clear all grid
         /// </summary>
         private void DeleteAllItem()
         {
-            this.SuspendLayout();
-            while (this.Controls.Count > 0)
-            {
-                System.Windows.Forms.Control _item = this.Controls[0];
-
-                if (_item.GetType().Name.Contains("ComboBox"))
-                {
-                    DropDownClass DropDowns = new DropDownClass((System.Windows.Forms.ComboBox)_item)
-                    {
-                        IndexChangedEventRemove = ComboBox_ValueChangedEvent,
-                        KeyPressEventRemove = ComboBox_KeyPress,
-                        OpenEventRemove = ComboBox_OpenEvent,
-                    };
-                }
-                this.Controls.Remove(_item);
-            }
+            Grid.Rows.Clear();
+            Grid.Columns.Clear();
         }
 
         /// <summary>
@@ -418,25 +507,76 @@ namespace IO_list_automation_new.Forms
         /// <returns>comboBox selected keyword</returns>
         private string GetDropDownSelectedKeyword(string name)
         {
-            DropDownClass _boxFound = new DropDownClass((System.Windows.Forms.ComboBox)this.Controls.Find(name, false)[0]);
-            return _boxFound.SelectedKeyword();
+            for (int _row = 0; _row < Grid.RowCount; _row++)
+            {
+                for (int _column = 0; _column < Grid.ColumnCount; _column++)
+                {
+                    if (Grid.Rows[_row].Cells[_column].Tag == null)
+                        continue;
+
+                    CellTag _cellTag = (CellTag)Grid.Rows[_row].Cells[_column].Tag;
+
+                    if (_cellTag.UniqueName == name)
+                        return _cellTag.Keyword;
+                }
+            }
+            return null;
         }
 
         /// <summary>
-        /// Create and sort all comboBoxes names
+        /// create list of elements unique names
         /// </summary>
-        /// <returns>comboBoxes names</returns>
-        private List<string> SortElements()
+        /// <returns>elements unique names</returns>
+        private List<string> GetElementsUnique()
         {
             List<string> _list = new List<string>();
 
-            foreach (var item in this.Controls)
+            for (int _row = 0; _row < Grid.RowCount; _row++)
             {
-                if (item.GetType().Name.Contains("ComboBox"))
-                    _list.Add(((System.Windows.Forms.ComboBox)item).Name);
-            }
-            _list.Sort();
+                for (int _column = 0; _column < Grid.ColumnCount; _column++)
+                {
+                    if (Grid.Rows[_row].Cells[_column].Tag == null)
+                        continue;
 
+                    CellTag _cellTag = (CellTag)Grid.Rows[_row].Cells[_column].Tag;
+                    _list.Add(_cellTag.UniqueName);
+                }
+            }
+            return _list;
+        }
+
+        /// <summary>
+        /// create list of elements keywords
+        /// </summary>
+        /// <returns>elements keywords</returns>
+        private List<string> GetElements()
+        {
+            List<string> _list = new List<string>();
+
+            for (int _row = 0; _row < Grid.RowCount; _row++)
+            {
+                for (int _column = 0; _column < Grid.ColumnCount; _column++)
+                {
+                    if (Grid.Rows[_row].Cells[_column].Tag == null)
+                        continue;
+
+                    CellTag _cellTag = (CellTag)Grid.Rows[_row].Cells[_column].Tag;
+                    switch (_cellTag.ComboType)
+                    {
+                        case ComboBoxType.Main:
+                        case ComboBoxType.IfCondition:
+                        case ComboBoxType.Data:
+                        case ComboBoxType.Object:
+                        case ComboBoxType.Module:
+                            _list.Add(_cellTag.Keyword);
+                            break;
+                        case ComboBoxType.Text:
+                        case ComboBoxType.Number:
+                            _list.Add(Grid.Rows[_row].Cells[_column].Value.ToString());
+                            break;
+                    }
+                }
+            }
             return _list;
         }
 
@@ -544,79 +684,48 @@ namespace IO_list_automation_new.Forms
         /// <summary>
         /// Add elements to form
         /// </summary>
-        /// <param name="row">y location </param>
+        /// <param name="rowIndex">y location </param>
         /// <param name="column">x location</param>
         /// <param name="comboBoxKeyword">ComboBox name keyword</param>
         /// <param name="labelText">Text of label</param>
         /// <param name="restrainLevel">restrains level</param>
-        private void AddElement(int row, int column, string comboBoxKeyword, string labelText, RestrainLevel restrainLevel, ComboBoxType elementType)
+        private void AddElement(int rowIndex, int column, string comboBoxKeyword, string labelText, RestrainLevel restrainLevel, ComboBoxType elementType)
         {
-            List<string> _selectList = GetSelectList(restrainLevel, elementType);
+            for (int i = Grid.ColumnCount; i <= column; i++)
+                Grid.Columns.Add("","");
 
-            //
-            // label1
-            //
+            int _row = rowIndex * 2;
+            for (int i = Grid.RowCount; i <= _row+2; i++)
+                Grid.Rows.Add();
+
             if (labelText != null)
+                Grid.Rows[_row].Cells[column].Value = labelText;
+
+            GeneralColumnName ccc = new GeneralColumnName();
+
+            switch (elementType)
             {
-                System.Windows.Forms.Label label1 = new System.Windows.Forms.Label()
-                {
-                    AutoSize = true,
-                    Font = new System.Drawing.Font("Microsoft Sans Serif", 10F),
-                    Location = new System.Drawing.Point((column * _offsetX) + StartX, (row * _offsetY) + StartY),
-                    Name = "Element:" + GeneralFunctions.AddZeroes(ComboBoxIndex) + ":Label",
-                    Size = new System.Drawing.Size(46, 17),
-                    Text = labelText,
-                };
-                this.Controls.Add(label1);
+                case ComboBoxType.Main:
+                case ComboBoxType.IfCondition:
+                case ComboBoxType.Data:
+                case ComboBoxType.Object:
+                case ComboBoxType.Module:
+                    Grid.Rows[_row + 1].Cells[column].Value = ccc.GetColumnOrChoicesName(comboBoxKeyword);
+                    Grid.Rows[_row + 1].Cells[column].Style.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular);
+                    Grid.Rows[_row + 1].Cells[column].Style.Alignment = DataGridViewContentAlignment.MiddleLeft;
+                    break;
+                case ComboBoxType.Text:
+                case ComboBoxType.Number:
+                    Grid.Rows[_row + 1].Cells[column].Value = comboBoxKeyword;
+                    Grid.Rows[_row + 1].Cells[column].Style.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular);
+                    Grid.Rows[_row + 1].Cells[column].Style.Alignment = DataGridViewContentAlignment.MiddleRight;
+                    break;
             }
-            //
-            // comboBox1
-            //
+            if (restrainLevel != RestrainLevel.NoEdit)
+                Grid.Rows[_row + 1].Cells[column].Style.BackColor = System.Drawing.Color.FromArgb(255, 255, 255);
 
-            DropDownClass DropDowns = new DropDownClass("Element:" + GeneralFunctions.AddZeroes(ComboBoxIndex) + ":Dropdown");
-            DropDowns.SetTag(elementType, comboBoxKeyword);
-            DropDowns.ChangeDisplayMember(DropDownElementType.Name);
-            DropDowns.Location = new System.Drawing.Point((column * _offsetX) + StartX, (row * _offsetY) + StartY + 20);
-
-            if (_selectList == null)
-            {
-                if (restrainLevel == RestrainLevel.NoEdit)
-                    DropDowns.Editable(false);
-                else
-                    DropDowns.Editable(true);
-
-                DropDowns.AddItemText(comboBoxKeyword);
-                DropDowns.SelectedIndex = 0;
-            }
-            else
-            {
-                DropDowns.Editable(false);
-                for (int i = 0; i < _selectList.Count; i++)
-                {
-                    DropDowns.AddItemFull(string.Empty, _selectList[i]);
-                    if (comboBoxKeyword == _selectList[i])
-                        DropDowns.SelectedIndex = i;
-                }
-            }
-
-            MaxX = Math.Max(MaxX, DropDowns.Location.X+150);
-            MaxY = Math.Max(MaxY, DropDowns.Location.Y + 70);
-            //comboBox open event to get previous value
-            if (elementType != ComboBoxType.Text || elementType != ComboBoxType.Data || elementType != ComboBoxType.Object || elementType != ComboBoxType.Module)
-                DropDowns.OpenEvent = ComboBox_OpenEvent;
-
-            //to check if entered text is number
-            if (elementType == ComboBoxType.Number)
-                DropDowns.KeyPressEvent = ComboBox_KeyPress;
-
-            //change index event
-            DropDowns.IndexChangedEvent = ComboBox_ValueChangedEvent;
-
-            ComboBoxIndex++;
+            Grid.Rows[_row+1].Cells[column].Tag = new CellTag(comboBoxKeyword,elementType, restrainLevel, rowIndex,column);
             Index++;
-
-            // Add elements to listBox1
-            this.Controls.Add(DropDowns.Element);
         }
 
         /// <summary>
@@ -629,7 +738,7 @@ namespace IO_list_automation_new.Forms
         {
             AddElement(PositionRow, PositionColumn, inputData[Index], labelText, restrainLevel, ComboBoxType.Main);
             AddElement(PositionRow, PositionColumn + 1, inputData[Index], null, restrainLevel, ComboBoxType.Data);
-            AddElement(PositionRow, PositionColumn + 2, inputData[Index], null, restrainLevel, GetIOComboBoxType());
+            AddElement(PositionRow, PositionColumn + 2, inputData[Index], GetIOLabel(), restrainLevel, GetIOComboBoxType());
             PositionRow++;
         }
 
@@ -948,6 +1057,32 @@ namespace IO_list_automation_new.Forms
         }
 
         /// <summary>
+        /// Clear all data rows and columns in DataGrid
+        /// </summary>
+        private void ClearEmptyRows()
+        {
+            bool found;
+            for (int row = Grid.RowCount-1; row > 1; row--)
+            {
+                found = false;
+                for (int column = 0; column < Grid.ColumnCount; column++)
+                {
+                    if (Grid.Rows[row].Cells[column].Value == null)
+                        continue;
+
+                    if (!string.IsNullOrEmpty(Grid.Rows[row].Cells[column].Value.ToString()))
+                    {
+                        found = true;
+                        break;
+                    }
+                }
+
+                if (!found)
+                    Grid.Rows.RemoveAt(row);
+            }
+        }
+
+        /// <summary>
         /// Decode all input data
         /// </summary>
         /// <param name="inputData">DB line</param>
@@ -958,9 +1093,6 @@ namespace IO_list_automation_new.Forms
             PositionColumn = 0;
             PositionRow = 0;
             Index = 0;
-
-            MaxX = 100;
-            MaxY = 100;
 
             int _count = 0;
             while (Index < inputData.Count)
@@ -977,7 +1109,9 @@ namespace IO_list_automation_new.Forms
             }
             AddElement(PositionRow, PositionColumn, "", null, RestrainLevel.None, ComboBoxType.Main);
 
-            this.Size = new System.Drawing.Size(MaxX, MaxY);
+            ClearEmptyRows();
+            Grid.AutoResizeColumns();
+            Grid.AutoResizeRows();
 
             this.ResumeLayout(true);
             this.Refresh();
@@ -995,6 +1129,12 @@ namespace IO_list_automation_new.Forms
         private void DBCellEdit_FormClosing(object sender, FormClosingEventArgs e)
         {
             UpdateOutputData();
+        }
+
+        private void DBCellEdit_Shown(object sender, EventArgs e)
+        {
+            Grid.AutoResizeColumns();
+            Grid.AutoResizeRows();
         }
     }
 }

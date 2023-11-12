@@ -66,6 +66,8 @@ namespace IO_list_automation_new
             this.Data_DropDown = new System.Windows.Forms.ToolStripDropDownButton();
             this.DataFindFunctionMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.Data_KKSCombine = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator9 = new System.Windows.Forms.ToolStripSeparator();
+            this.Data_EditFunctions = new System.Windows.Forms.ToolStripMenuItem();
             this.Objects_DropDown = new System.Windows.Forms.ToolStripDropDownButton();
             this.Objects_Find = new System.Windows.Forms.ToolStripMenuItem();
             this.ObjectsFindTypeMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -105,8 +107,11 @@ namespace IO_list_automation_new
             this.AddressesGridView = new System.Windows.Forms.DataGridView();
             this.FindTextBox = new System.Windows.Forms.TextBox();
             this.FindButton = new System.Windows.Forms.Button();
-            this.Data_EditFunctions = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator9 = new System.Windows.Forms.ToolStripSeparator();
+            this.File_DebugLevel = new System.Windows.Forms.ToolStripMenuItem();
+            this.File_DebugLevel_None = new System.Windows.Forms.ToolStripMenuItem();
+            this.File_DebugLevel_Minimum = new System.Windows.Forms.ToolStripMenuItem();
+            this.File_DebugLevel_High = new System.Windows.Forms.ToolStripMenuItem();
+            this.File_DebugLevel_Development = new System.Windows.Forms.ToolStripMenuItem();
             this.MainToolStrip.SuspendLayout();
             this.MainTabControl.SuspendLayout();
             this.DesignTab.SuspendLayout();
@@ -175,6 +180,7 @@ namespace IO_list_automation_new
             this.File_LoadAll,
             this.toolStripSeparator1,
             this.File_Language,
+            this.File_DebugLevel,
             this.File_Help,
             this.File_About,
             this.toolStripSeparator2,
@@ -188,35 +194,35 @@ namespace IO_list_automation_new
             // File_Save
             // 
             this.File_Save.Name = "File_Save";
-            this.File_Save.Size = new System.Drawing.Size(126, 22);
+            this.File_Save.Size = new System.Drawing.Size(180, 22);
             this.File_Save.Text = "Save";
             this.File_Save.Click += new System.EventHandler(this.File_Save_Click);
             // 
             // File_SaveAll
             // 
             this.File_SaveAll.Name = "File_SaveAll";
-            this.File_SaveAll.Size = new System.Drawing.Size(126, 22);
+            this.File_SaveAll.Size = new System.Drawing.Size(180, 22);
             this.File_SaveAll.Text = "Save all";
             this.File_SaveAll.Click += new System.EventHandler(this.File_SaveAll_Click);
             // 
             // File_Load
             // 
             this.File_Load.Name = "File_Load";
-            this.File_Load.Size = new System.Drawing.Size(126, 22);
+            this.File_Load.Size = new System.Drawing.Size(180, 22);
             this.File_Load.Text = "Load";
             this.File_Load.Click += new System.EventHandler(this.File_Load_Click);
             // 
             // File_LoadAll
             // 
             this.File_LoadAll.Name = "File_LoadAll";
-            this.File_LoadAll.Size = new System.Drawing.Size(126, 22);
+            this.File_LoadAll.Size = new System.Drawing.Size(180, 22);
             this.File_LoadAll.Text = "Load all";
             this.File_LoadAll.Click += new System.EventHandler(this.File_LoadAll_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(123, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(177, 6);
             // 
             // File_Language
             // 
@@ -224,46 +230,46 @@ namespace IO_list_automation_new
             this.File_Language_EN,
             this.File_Language_LT});
             this.File_Language.Name = "File_Language";
-            this.File_Language.Size = new System.Drawing.Size(126, 22);
+            this.File_Language.Size = new System.Drawing.Size(180, 22);
             this.File_Language.Text = "Language";
             // 
             // File_Language_EN
             // 
             this.File_Language_EN.Name = "File_Language_EN";
-            this.File_Language_EN.Size = new System.Drawing.Size(89, 22);
+            this.File_Language_EN.Size = new System.Drawing.Size(180, 22);
             this.File_Language_EN.Text = "EN";
             this.File_Language_EN.Click += new System.EventHandler(this.FileLanguage_Click);
             // 
             // File_Language_LT
             // 
             this.File_Language_LT.Name = "File_Language_LT";
-            this.File_Language_LT.Size = new System.Drawing.Size(89, 22);
+            this.File_Language_LT.Size = new System.Drawing.Size(180, 22);
             this.File_Language_LT.Text = "LT";
             this.File_Language_LT.Click += new System.EventHandler(this.FileLanguage_Click);
             // 
             // File_Help
             // 
             this.File_Help.Name = "File_Help";
-            this.File_Help.Size = new System.Drawing.Size(126, 22);
+            this.File_Help.Size = new System.Drawing.Size(180, 22);
             this.File_Help.Text = "Help";
             this.File_Help.Click += new System.EventHandler(this.File_Help_Click);
             // 
             // File_About
             // 
             this.File_About.Name = "File_About";
-            this.File_About.Size = new System.Drawing.Size(126, 22);
+            this.File_About.Size = new System.Drawing.Size(180, 22);
             this.File_About.Text = "About";
             this.File_About.Click += new System.EventHandler(this.File_About_Click);
             // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(123, 6);
+            this.toolStripSeparator2.Size = new System.Drawing.Size(177, 6);
             // 
             // File_Exit
             // 
             this.File_Exit.Name = "File_Exit";
-            this.File_Exit.Size = new System.Drawing.Size(126, 22);
+            this.File_Exit.Size = new System.Drawing.Size(180, 22);
             this.File_Exit.Text = "Exit";
             this.File_Exit.Click += new System.EventHandler(this.File_Exit_Click);
             // 
@@ -341,7 +347,7 @@ namespace IO_list_automation_new
             // Project_SCADA_Add
             // 
             this.Project_SCADA_Add.Name = "Project_SCADA_Add";
-            this.Project_SCADA_Add.Size = new System.Drawing.Size(96, 22);
+            this.Project_SCADA_Add.Size = new System.Drawing.Size(180, 22);
             this.Project_SCADA_Add.Tag = "Add";
             this.Project_SCADA_Add.Text = "Add";
             // 
@@ -379,16 +385,28 @@ namespace IO_list_automation_new
             // DataFindFunctionMenuItem
             // 
             this.DataFindFunctionMenuItem.Name = "DataFindFunctionMenuItem";
-            this.DataFindFunctionMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.DataFindFunctionMenuItem.Size = new System.Drawing.Size(146, 22);
             this.DataFindFunctionMenuItem.Text = "Find function";
             this.DataFindFunctionMenuItem.Click += new System.EventHandler(this.DataFindFunctionMenuItem_Click);
             // 
             // Data_KKSCombine
             // 
             this.Data_KKSCombine.Name = "Data_KKSCombine";
-            this.Data_KKSCombine.Size = new System.Drawing.Size(180, 22);
+            this.Data_KKSCombine.Size = new System.Drawing.Size(146, 22);
             this.Data_KKSCombine.Text = "KKS Combine";
             this.Data_KKSCombine.Click += new System.EventHandler(this.Data_KKSCombine_Click);
+            // 
+            // toolStripSeparator9
+            // 
+            this.toolStripSeparator9.Name = "toolStripSeparator9";
+            this.toolStripSeparator9.Size = new System.Drawing.Size(143, 6);
+            // 
+            // Data_EditFunctions
+            // 
+            this.Data_EditFunctions.Name = "Data_EditFunctions";
+            this.Data_EditFunctions.Size = new System.Drawing.Size(146, 22);
+            this.Data_EditFunctions.Text = "EditFunctions";
+            this.Data_EditFunctions.Click += new System.EventHandler(this.Data_EditFunctions_Click);
             // 
             // Objects_DropDown
             // 
@@ -408,33 +426,33 @@ namespace IO_list_automation_new
             // Objects_Find
             // 
             this.Objects_Find.Name = "Objects_Find";
-            this.Objects_Find.Size = new System.Drawing.Size(180, 22);
+            this.Objects_Find.Size = new System.Drawing.Size(164, 22);
             this.Objects_Find.Text = "Find Unique";
             this.Objects_Find.Click += new System.EventHandler(this.Objects_Find_Click);
             // 
             // ObjectsFindTypeMenuItem
             // 
             this.ObjectsFindTypeMenuItem.Name = "ObjectsFindTypeMenuItem";
-            this.ObjectsFindTypeMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.ObjectsFindTypeMenuItem.Size = new System.Drawing.Size(164, 22);
             this.ObjectsFindTypeMenuItem.Text = "Find object types";
             this.ObjectsFindTypeMenuItem.Click += new System.EventHandler(this.ObjectsFindTypeMenuItem_Click);
             // 
             // Object_TransferToData
             // 
             this.Object_TransferToData.Name = "Object_TransferToData";
-            this.Object_TransferToData.Size = new System.Drawing.Size(180, 22);
+            this.Object_TransferToData.Size = new System.Drawing.Size(164, 22);
             this.Object_TransferToData.Text = "Transfer to data";
             this.Object_TransferToData.Click += new System.EventHandler(this.Object_TransferToData_Click);
             // 
             // toolStripSeparator7
             // 
             this.toolStripSeparator7.Name = "toolStripSeparator7";
-            this.toolStripSeparator7.Size = new System.Drawing.Size(177, 6);
+            this.toolStripSeparator7.Size = new System.Drawing.Size(161, 6);
             // 
             // Object_EditTypes
             // 
             this.Object_EditTypes.Name = "Object_EditTypes";
-            this.Object_EditTypes.Size = new System.Drawing.Size(180, 22);
+            this.Object_EditTypes.Size = new System.Drawing.Size(164, 22);
             this.Object_EditTypes.Text = "Edit object types";
             this.Object_EditTypes.Click += new System.EventHandler(this.Object_EditTypes_Click);
             // 
@@ -455,26 +473,26 @@ namespace IO_list_automation_new
             // IO_FindModules
             // 
             this.IO_FindModules.Name = "IO_FindModules";
-            this.IO_FindModules.Size = new System.Drawing.Size(180, 22);
+            this.IO_FindModules.Size = new System.Drawing.Size(146, 22);
             this.IO_FindModules.Text = "Find Modules";
             this.IO_FindModules.Click += new System.EventHandler(this.IO_FindModules_Click);
             // 
             // IO_Generate
             // 
             this.IO_Generate.Name = "IO_Generate";
-            this.IO_Generate.Size = new System.Drawing.Size(180, 22);
+            this.IO_Generate.Size = new System.Drawing.Size(146, 22);
             this.IO_Generate.Text = "Generate";
             this.IO_Generate.Click += new System.EventHandler(this.IO_Generate_Click);
             // 
             // toolStripSeparator8
             // 
             this.toolStripSeparator8.Name = "toolStripSeparator8";
-            this.toolStripSeparator8.Size = new System.Drawing.Size(177, 6);
+            this.toolStripSeparator8.Size = new System.Drawing.Size(143, 6);
             // 
             // IO_Edit
             // 
             this.IO_Edit.Name = "IO_Edit";
-            this.IO_Edit.Size = new System.Drawing.Size(180, 22);
+            this.IO_Edit.Size = new System.Drawing.Size(146, 22);
             this.IO_Edit.Text = "Edit IO";
             this.IO_Edit.Click += new System.EventHandler(this.IO_Edit_Click);
             // 
@@ -495,26 +513,26 @@ namespace IO_list_automation_new
             // Declare_Generate
             // 
             this.Declare_Generate.Name = "Declare_Generate";
-            this.Declare_Generate.Size = new System.Drawing.Size(180, 22);
+            this.Declare_Generate.Size = new System.Drawing.Size(154, 22);
             this.Declare_Generate.Text = "Generate";
             this.Declare_Generate.Click += new System.EventHandler(this.Declare_Generate_Click);
             // 
             // Declare_ClearAddresses
             // 
             this.Declare_ClearAddresses.Name = "Declare_ClearAddresses";
-            this.Declare_ClearAddresses.Size = new System.Drawing.Size(180, 22);
+            this.Declare_ClearAddresses.Size = new System.Drawing.Size(154, 22);
             this.Declare_ClearAddresses.Text = "ClearAddresses";
             this.Declare_ClearAddresses.Click += new System.EventHandler(this.Declare_ClearAddresses_Click);
             // 
             // toolStripSeparator6
             // 
             this.toolStripSeparator6.Name = "toolStripSeparator6";
-            this.toolStripSeparator6.Size = new System.Drawing.Size(177, 6);
+            this.toolStripSeparator6.Size = new System.Drawing.Size(151, 6);
             // 
             // Declare_Edit
             // 
             this.Declare_Edit.Name = "Declare_Edit";
-            this.Declare_Edit.Size = new System.Drawing.Size(180, 22);
+            this.Declare_Edit.Size = new System.Drawing.Size(154, 22);
             this.Declare_Edit.Text = "Edit declare";
             this.Declare_Edit.Click += new System.EventHandler(this.Declare_Edit_Click);
             // 
@@ -534,19 +552,19 @@ namespace IO_list_automation_new
             // Instances_Generate
             // 
             this.Instances_Generate.Name = "Instances_Generate";
-            this.Instances_Generate.Size = new System.Drawing.Size(180, 22);
+            this.Instances_Generate.Size = new System.Drawing.Size(146, 22);
             this.Instances_Generate.Text = "Generate";
             this.Instances_Generate.Click += new System.EventHandler(this.Instances_Generate_Click);
             // 
             // toolStripSeparator4
             // 
             this.toolStripSeparator4.Name = "toolStripSeparator4";
-            this.toolStripSeparator4.Size = new System.Drawing.Size(177, 6);
+            this.toolStripSeparator4.Size = new System.Drawing.Size(143, 6);
             // 
             // Instances_Edit
             // 
             this.Instances_Edit.Name = "Instances_Edit";
-            this.Instances_Edit.Size = new System.Drawing.Size(180, 22);
+            this.Instances_Edit.Size = new System.Drawing.Size(146, 22);
             this.Instances_Edit.Text = "Edit instances";
             this.Instances_Edit.Click += new System.EventHandler(this.Instances_Edit_Click);
             // 
@@ -568,33 +586,33 @@ namespace IO_list_automation_new
             // SCADA_GenerateObjects
             // 
             this.SCADA_GenerateObjects.Name = "SCADA_GenerateObjects";
-            this.SCADA_GenerateObjects.Size = new System.Drawing.Size(180, 22);
+            this.SCADA_GenerateObjects.Size = new System.Drawing.Size(167, 22);
             this.SCADA_GenerateObjects.Text = "GenerateObjects";
             this.SCADA_GenerateObjects.Click += new System.EventHandler(this.SCADA_GenerateObjects_Click);
             // 
             // SCADA_GenerateModules
             // 
             this.SCADA_GenerateModules.Name = "SCADA_GenerateModules";
-            this.SCADA_GenerateModules.Size = new System.Drawing.Size(180, 22);
+            this.SCADA_GenerateModules.Size = new System.Drawing.Size(167, 22);
             this.SCADA_GenerateModules.Text = "GenerateModules";
             this.SCADA_GenerateModules.Click += new System.EventHandler(this.SCADA_GenerateModules_Click);
             // 
             // toolStripSeparator5
             // 
             this.toolStripSeparator5.Name = "toolStripSeparator5";
-            this.toolStripSeparator5.Size = new System.Drawing.Size(177, 6);
+            this.toolStripSeparator5.Size = new System.Drawing.Size(164, 6);
             // 
             // SCADA_EditObjects
             // 
             this.SCADA_EditObjects.Name = "SCADA_EditObjects";
-            this.SCADA_EditObjects.Size = new System.Drawing.Size(180, 22);
+            this.SCADA_EditObjects.Size = new System.Drawing.Size(167, 22);
             this.SCADA_EditObjects.Text = "EditObjects";
             this.SCADA_EditObjects.Click += new System.EventHandler(this.SCADA_EditObjects_Click);
             // 
             // SCADA_EditModules
             // 
             this.SCADA_EditModules.Name = "SCADA_EditModules";
-            this.SCADA_EditModules.Size = new System.Drawing.Size(180, 22);
+            this.SCADA_EditModules.Size = new System.Drawing.Size(167, 22);
             this.SCADA_EditModules.Text = "EditModules";
             this.SCADA_EditModules.Click += new System.EventHandler(this.SCADA_EditModules_Click);
             // 
@@ -749,17 +767,44 @@ namespace IO_list_automation_new
             this.FindButton.Text = "Find";
             this.FindButton.UseVisualStyleBackColor = true;
             // 
-            // Data_EditFunctions
+            // File_DebugLevel
             // 
-            this.Data_EditFunctions.Name = "Data_EditFunctions";
-            this.Data_EditFunctions.Size = new System.Drawing.Size(180, 22);
-            this.Data_EditFunctions.Text = "EditFunctions";
-            this.Data_EditFunctions.Click += new System.EventHandler(this.Data_EditFunctions_Click);
+            this.File_DebugLevel.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.File_DebugLevel_None,
+            this.File_DebugLevel_Minimum,
+            this.File_DebugLevel_High,
+            this.File_DebugLevel_Development});
+            this.File_DebugLevel.Name = "File_DebugLevel";
+            this.File_DebugLevel.Size = new System.Drawing.Size(180, 22);
+            this.File_DebugLevel.Text = "DebugLevel";
             // 
-            // toolStripSeparator9
+            // File_DebugLevel_None
             // 
-            this.toolStripSeparator9.Name = "toolStripSeparator9";
-            this.toolStripSeparator9.Size = new System.Drawing.Size(177, 6);
+            this.File_DebugLevel_None.Name = "File_DebugLevel_None";
+            this.File_DebugLevel_None.Size = new System.Drawing.Size(180, 22);
+            this.File_DebugLevel_None.Text = "None";
+            this.File_DebugLevel_None.Click += new System.EventHandler(this.File_DebugLevel_None_Click);
+            // 
+            // File_DebugLevel_Minimum
+            // 
+            this.File_DebugLevel_Minimum.Name = "File_DebugLevel_Minimum";
+            this.File_DebugLevel_Minimum.Size = new System.Drawing.Size(180, 22);
+            this.File_DebugLevel_Minimum.Text = "Minimum";
+            this.File_DebugLevel_Minimum.Click += new System.EventHandler(this.File_DebugLevel_Minimum_Click);
+            // 
+            // File_DebugLevel_High
+            // 
+            this.File_DebugLevel_High.Name = "File_DebugLevel_High";
+            this.File_DebugLevel_High.Size = new System.Drawing.Size(180, 22);
+            this.File_DebugLevel_High.Text = "High";
+            this.File_DebugLevel_High.Click += new System.EventHandler(this.File_DebugLevel_High_Click);
+            // 
+            // File_DebugLevel_Development
+            // 
+            this.File_DebugLevel_Development.Name = "File_DebugLevel_Development";
+            this.File_DebugLevel_Development.Size = new System.Drawing.Size(180, 22);
+            this.File_DebugLevel_Development.Text = "Development";
+            this.File_DebugLevel_Development.Click += new System.EventHandler(this.File_DebugLevel_Development_Click);
             // 
             // MainWindow
             // 
@@ -868,6 +913,11 @@ namespace IO_list_automation_new
         private ToolStripMenuItem SCADA_EditObjects;
         private ToolStripSeparator toolStripSeparator9;
         private ToolStripMenuItem Data_EditFunctions;
+        private ToolStripMenuItem File_DebugLevel;
+        private ToolStripMenuItem File_DebugLevel_None;
+        private ToolStripMenuItem File_DebugLevel_Minimum;
+        private ToolStripMenuItem File_DebugLevel_High;
+        private ToolStripMenuItem File_DebugLevel_Development;
     }
 }
 

@@ -9,7 +9,6 @@ namespace IO_list_automation_new
     {
         None = 0,
         Minimum = 1,
-        Medium = 2,
         High = 3,
         Development = 10,
     }
@@ -177,13 +176,13 @@ namespace IO_list_automation_new
         /// Set new debug level
         /// </summary>
         /// <param name="newDebugLevel">new debugging level</param>
-        public void SetDebugLevel(uint newDebugLevel)
+        public void SetDebugLevel(DebugLevels newDebugLevel)
         {
             string _currentDebugLevel = ((DebugLevels)Settings.Default.DebugLevel).ToString();
-            string _newDebugLevel = ((DebugLevels)newDebugLevel).ToString();
+            string _newDebugLevel = nameof(newDebugLevel);
 
             ToPopUp($"{Resources.DebugLevel} {_currentDebugLevel} -> {_newDebugLevel}", DebugLevels.High, DebugMessageType.Info);
-            Settings.Default.DebugLevel = newDebugLevel;
+            Settings.Default.DebugLevel = (uint)newDebugLevel;
             Settings.Default.Save();
         }
     }

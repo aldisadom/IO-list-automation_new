@@ -84,7 +84,7 @@ namespace IO_list_automation_new
             string _fileName = Directory + "\\" + fileName + "." + FileExtension;
 
             Debug debug = new Debug();
-            debug.ToFile(Resources.CreateNew + " " + Level.ToString() + ": " + _fileName, DebugLevels.Development, DebugMessageType.Info);
+            debug.ToFile(Resources.CreateNew + " " + Level.ToString() + ": " + _fileName, DebugLevels.High, DebugMessageType.Info);
 
             ExcelWriter _excel = new ExcelWriter(_fileName);
 
@@ -95,7 +95,7 @@ namespace IO_list_automation_new
             _excel.Save();
             _excel.Dispose();
 
-            debug.ToFile(Resources.CreateNew + " " + Level.ToString() + ": " + _fileName + Resources.Finished, DebugLevels.Development, DebugMessageType.Info);
+            debug.ToFile(Resources.CreateNew + " " + Level.ToString() + ": " + _fileName + Resources.Finished, DebugLevels.High, DebugMessageType.Info);
 
             return DBFileExists(fileName);
         }
@@ -165,7 +165,7 @@ namespace IO_list_automation_new
                 return true;
 
             Debug _debug = new Debug();
-            _debug.ToFile(Resources.CreateNew + " " + Level.ToString() + " " + folderName + " " + NameDB, DebugLevels.Development, DebugMessageType.Info);
+            _debug.ToFile(Resources.CreateNew + " " + Level.ToString() + " " + folderName + " " + NameDB, DebugLevels.High, DebugMessageType.Info);
 
             System.IO.Directory.CreateDirectory(folderPath);
             return DBFolderExists(folderName);
@@ -348,7 +348,7 @@ namespace IO_list_automation_new
 
             Debug _debug = new Debug();
             string _debugText = "Generating " + NameDB;
-            _debug.ToFile(_debugText, DebugLevels.Development, DebugMessageType.Info);
+            _debug.ToFile(_debugText, DebugLevels.High, DebugMessageType.Info);
             Progress.RenameProgressBar(_debugText, Devices.Count);
 
             DBResultForm _DBResultForm = new DBResultForm(NameDB, false, Base, Directory, FileExtension);
@@ -441,7 +441,7 @@ namespace IO_list_automation_new
             }
             Progress.HideProgressBar();
 
-            _debug.ToFile(_debugText + " - " + Resources.Finished, DebugLevels.Development, DebugMessageType.Info);
+            _debug.ToFile(_debugText + " - " + Resources.Finished, DebugLevels.High, DebugMessageType.Info);
             //put updated data with used column
             data.PutDataToGrid(false);
             addresses.PutDataToGrid(true);
@@ -517,7 +517,7 @@ namespace IO_list_automation_new
             _DBResultForm.ShowDialog();
 
             GetDeviceTypesFromGrid(_DBResultForm.DBTabControl);
-            
+
             //go through all device types
             for (int _deviceIndex = 0; _deviceIndex < Devices.Count; _deviceIndex++)
             {

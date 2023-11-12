@@ -144,7 +144,7 @@ namespace IO_list_automation_new
         public void ExtractFromData(DataClass data)
         {
             Debug debug = new Debug();
-            debug.ToFile(Resources.ModuleGenerateUniqueData, DebugLevels.Development, DebugMessageType.Info);
+            debug.ToFile(Resources.ModuleGenerateUniqueData, DebugLevels.High, DebugMessageType.Info);
 
             Progress.RenameProgressBar(Resources.ModuleGenerateUniqueData, data.Signals.Count);
 
@@ -188,7 +188,7 @@ namespace IO_list_automation_new
             }
             Progress.HideProgressBar();
 
-            debug.ToFile(Resources.ModuleGenerateUniqueData + " - " + Resources.Finished, DebugLevels.Development, DebugMessageType.Info);
+            debug.ToFile(Resources.ModuleGenerateUniqueData + " - " + Resources.Finished, DebugLevels.High, DebugMessageType.Info);
         }
     }
 }

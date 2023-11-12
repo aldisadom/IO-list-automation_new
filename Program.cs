@@ -110,7 +110,7 @@ namespace IO_list_automation_new
         [STAThread]
         public static void Main()
         {
-            const string _versionNumber = "0.0.1";
+            const string _versionNumber = "0.0.2";
 
             Debug _debug = new Debug();
             if (Settings.Default.DebugLevel == (uint)DebugLevels.Development)

@@ -141,7 +141,7 @@ namespace IO_list_automation_new
             string _functionType;
 
             Debug debug = new Debug();
-            debug.ToFile("Finding object type in objects", DebugLevels.Development, DebugMessageType.Info);
+            debug.ToFile("Finding object type in objects", DebugLevels.High, DebugMessageType.Info);
 
             string _fileName = System.IO.Path.GetDirectoryName(System.Windows.Forms.Application.ExecutablePath) + "\\DB\\" + Settings.Default.IOLanguage;
 
@@ -161,7 +161,7 @@ namespace IO_list_automation_new
             Progress.HideProgressBar();
 
             objects.PutDataToGrid(false);
-            debug.ToFile("Finding object type in objects - finished", DebugLevels.Development, DebugMessageType.Info);
+            debug.ToFile("Finding object type in objects - finished", DebugLevels.High, DebugMessageType.Info);
         }
     }
 
@@ -354,7 +354,7 @@ namespace IO_list_automation_new
             string _functionType;
 
             Debug debug = new Debug();
-            debug.ToFile("Finding function type in data", DebugLevels.Development, DebugMessageType.Info);
+            debug.ToFile("Finding function type in data", DebugLevels.High, DebugMessageType.Info);
 
             //convert data from file to signals
             if (!ListToSignals(Grid.LoadFromFileToMemory(FileName), BaseColumns.Columns, false))
@@ -373,7 +373,7 @@ namespace IO_list_automation_new
             Progress.HideProgressBar();
 
             data.PutDataToGrid(false);
-            debug.ToFile("Finding function type in data - " + Resources.Finished, DebugLevels.Development, DebugMessageType.Info);
+            debug.ToFile("Finding function type in data - " + Resources.Finished, DebugLevels.High, DebugMessageType.Info);
         }
     }
 
