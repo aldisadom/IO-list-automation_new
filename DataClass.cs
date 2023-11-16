@@ -30,9 +30,6 @@ namespace IO_list_automation_new
         public string Pin { get; private set; }
         public string Channel { get; private set; }
         public string IOText { get; private set; }
-        public string ObjectName { get; private set; }
-        public string ObjectSpecifics { get; private set; }
-        public string FunctionText { get; private set; }
         public string Function { get; private set; }
         public string Page { get; private set; }
         public string Changed { get; private set; }
@@ -70,9 +67,6 @@ namespace IO_list_automation_new
             Changed = string.Empty;
             Used = string.Empty;
             ObjectType = string.Empty;
-            ObjectName = string.Empty;
-            ObjectSpecifics = string.Empty;
-            FunctionText = string.Empty;
             Function = string.Empty;
             Terminal = string.Empty;
             Tag = string.Empty;
@@ -183,18 +177,6 @@ namespace IO_list_automation_new
                     ObjectType = value;
                     break;
 
-                case KeywordColumn.ObjectName:
-                    ObjectName = value;
-                    break;
-
-                case KeywordColumn.ObjectSpecifics:
-                    ObjectSpecifics = value;
-                    break;
-
-                case KeywordColumn.FunctionText:
-                    FunctionText = value;
-                    break;
-
                 case KeywordColumn.Function:
                     Function = value;
                     break;
@@ -291,15 +273,6 @@ namespace IO_list_automation_new
                 case KeywordColumn.ObjectType:
                     return ObjectType;
 
-                case KeywordColumn.ObjectName:
-                    return ObjectName;
-
-                case KeywordColumn.ObjectSpecifics:
-                    return ObjectSpecifics;
-
-                case KeywordColumn.FunctionText:
-                    return FunctionText;
-
                 case KeywordColumn.Function:
                     return Function;
 
@@ -323,7 +296,7 @@ namespace IO_list_automation_new
         /// <summary>
         /// Checks if at least one KKS part has value
         /// </summary>
-        /// <returns></returns>
+        /// <returns>KKS found</returns>
         public bool HasKKS()
         {
             return (KKS.Length != 0) || (KKSPlant.Length != 0) || (KKSLocation.Length != 0) || (KKSDevice.Length != 0) || (KKSFunction.Length != 0);
@@ -343,6 +316,22 @@ namespace IO_list_automation_new
                 return false;
 
             return true;
+        }
+
+        /// <summary>
+        /// get next index of letter
+        /// </summary>
+        /// <param name="text">search text</param>
+        /// <param name="startIndex">search index start</param>
+        /// <returns>index of letter</returns>
+        private int NumberIndex(string text, int startIndex)
+        {
+            for (int i = startIndex; i < text.Length; i++)
+            {
+                if (Char.IsDigit(text[i]))
+                    return i;
+            }
+            return -1;
         }
 
         /// <summary>
@@ -569,6 +558,21 @@ namespace IO_list_automation_new
                     KKSPlant = KKS.Substring(0, _index);
             }
         }
+
+        public void ExtractNumberFromChannel()
+        {
+            int _indexNumber = NumberIndex(Channel, 0);
+
+            //no number found
+            if (_indexNumber < 0)
+            {
+                Channel = string.Empty;
+                return;
+            }
+
+            int _countNumbers = CountConsecutiveNumbers(Channel, _indexNumber);
+            Channel = Channel.Substring(_indexNumber, _countNumbers);
+        }
     }
 
     internal class DataClass : GeneralClass<DataSignal>
@@ -601,9 +605,6 @@ namespace IO_list_automation_new
                 new GeneralColumn(KeywordColumn.KKSFunction, SettingsData.Default.ColumnKKSFunction, true),
                 new GeneralColumn(KeywordColumn.Used, SettingsData.Default.ColumnUsed, false),
                 new GeneralColumn(KeywordColumn.ObjectType, SettingsData.Default.ColumnObjectType, false),
-                new GeneralColumn(KeywordColumn.ObjectName, SettingsData.Default.ColumnObjectName, false),
-                new GeneralColumn(KeywordColumn.ObjectSpecifics, SettingsData.Default.ColumnObjectSpecifics, true),
-                new GeneralColumn(KeywordColumn.FunctionText, SettingsData.Default.ColumnFunctionText, false),
                 new GeneralColumn(KeywordColumn.Function, SettingsData.Default.ColumnFunction, false),
                 new GeneralColumn(KeywordColumn.Terminal, SettingsData.Default.ColumnTerminal, true),
                 new GeneralColumn(KeywordColumn.Tag, SettingsData.Default.ColumnTag, false),
@@ -639,9 +640,6 @@ namespace IO_list_automation_new
             SettingsData.Default.ColumnKKSFunction = _columns.GetColumnNumberFromKeyword(KeywordColumn.KKSFunction);
             SettingsData.Default.ColumnUsed = _columns.GetColumnNumberFromKeyword(KeywordColumn.Used);
             SettingsData.Default.ColumnObjectType = _columns.GetColumnNumberFromKeyword(KeywordColumn.ObjectType);
-            SettingsData.Default.ColumnObjectName = _columns.GetColumnNumberFromKeyword(KeywordColumn.ObjectName);
-            SettingsData.Default.ColumnObjectSpecifics = _columns.GetColumnNumberFromKeyword(KeywordColumn.ObjectSpecifics);
-            SettingsData.Default.ColumnFunctionText = _columns.GetColumnNumberFromKeyword(KeywordColumn.FunctionText);
             SettingsData.Default.ColumnFunction = _columns.GetColumnNumberFromKeyword(KeywordColumn.Function);
             SettingsData.Default.ColumnTerminal = _columns.GetColumnNumberFromKeyword(KeywordColumn.Terminal);
             SettingsData.Default.ColumnTag = _columns.GetColumnNumberFromKeyword(KeywordColumn.Tag);
@@ -686,6 +684,7 @@ namespace IO_list_automation_new
                 }
                 _dataSignal.FindKKSInSignal(false);
                 _dataSignal.KKSDecode();
+                _dataSignal.ExtractNumberFromChannel();
 
                 Signals.Add(_dataSignal);
                 Progress.UpdateProgressBar(_designNumber);

@@ -74,15 +74,6 @@
     <Setting Name="ColumnObjectType" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">9</Value>
     </Setting>
-    <Setting Name="ColumnObjectName" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">10</Value>
-    </Setting>
-    <Setting Name="ColumnObjectSpecifics" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">11</Value>
-    </Setting>
-    <Setting Name="ColumnFunctionText" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">12</Value>
-    </Setting>
     <Setting Name="ColumnFunction" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">13</Value>
     </Setting>
@@ -118,6 +109,12 @@
     </Setting>
     <Setting Name="ColumnTag" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">28</Value>
+    </Setting>
+    <Setting Name="ObjectSpecificsSeparator" Type="System.String" Scope="User">
+      <Value Profile="(Default)">;</Value>
+    </Setting>
+    <Setting Name="FunctionTextSeparator" Type="System.String" Scope="User">
+      <Value Profile="(Default)">:</Value>
     </Setting>
   </Settings>
 </SettingsFile>

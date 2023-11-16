@@ -339,4 +339,19 @@
   <data name="EnteredExistingName" xml:space="preserve">
     <value>Entered name that already exists</value>
   </data>
+  <data name="CheckOverlap" xml:space="preserve">
+    <value>Checking overlaping memory address</value>
+  </data>
+  <data name="Separator" xml:space="preserve">
+    <value>Separator</value>
+  </data>
+  <data name="Declare" xml:space="preserve">
+    <value>Declare</value>
+  </data>
+  <data name="Instance" xml:space="preserve">
+    <value>Instance</value>
+  </data>
+  <data name="MemoryOverlap" xml:space="preserve">
+    <value>There is memory overlap, review offsets, sizes, areas</value>
+  </data>
 </root>

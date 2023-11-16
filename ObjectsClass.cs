@@ -166,6 +166,7 @@ namespace IO_list_automation_new
             UpdateColumnNumbers(data.BaseColumns.Columns);
             Signals.Clear();
             string _keyword;
+            string _getKeyword;
             for (int _dataNumber = 0; _dataNumber < data.Signals.Count; _dataNumber++)
             {
                 DataSignal _dataSignal = data.Signals[_dataNumber];
@@ -179,7 +180,10 @@ namespace IO_list_automation_new
                 foreach (GeneralColumn _column in Columns)
                 {
                     _keyword = _column.Keyword;
-                    _objectSignal.SetValueFromString(_dataSignal.GetValueString(_keyword, true), _keyword);
+
+                    // IOText is transferred to object Name column
+                    _getKeyword = _keyword == KeywordColumn.ObjectName ? KeywordColumn.IOText : _keyword;
+                    _objectSignal.SetValueFromString(_dataSignal.GetValueString(_getKeyword, true), _keyword);
                 }
 
                 if (_objectSignal.ValidateSignal())

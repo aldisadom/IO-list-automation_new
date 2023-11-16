@@ -322,7 +322,7 @@ namespace IO_list_automation_new
                 if (_result != DialogResult.Yes)
                     return;
 
-                NewName _newName = new NewName(Resources.CreateNew + ": " + ResourcesUI.IO + " " + Resources.Language,true);
+                NewName _newName = new NewName(Resources.CreateNew + ": " + ResourcesUI.IO + " " + Resources.Language,string.Empty, true);
 
                 _newName.ShowDialog();
                 string _fileName = _newName.Output;
@@ -465,7 +465,7 @@ namespace IO_list_automation_new
                 if (_result != DialogResult.Yes)
                     return;
 
-                NewName _newName = new NewName(Resources.CreateNew + ": " + ResourcesUI.IO + " " + Resources.Language,true);
+                NewName _newName = new NewName(Resources.CreateNew + ": " + ResourcesUI.IO + " " + Resources.Language, string.Empty, true);
 
                 _newName.ShowDialog();
                 _fileName = _newName.Output;

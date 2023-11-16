@@ -88,6 +88,15 @@ namespace IO_list_automation_new.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Clear addresses.
+        /// </summary>
+        internal static string ClearAddresses {
+            get {
+                return ResourceManager.GetString("ClearAddresses", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Compare with new design.
         /// </summary>
         internal static string CompareWithNewDesign {
@@ -124,29 +133,29 @@ namespace IO_list_automation_new.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Declare.
+        ///   Looks up a localized string similar to Element must have channel and it should have number.
         /// </summary>
-        internal static string Declare {
+        internal static string ElementHasChannelAndIsNumber {
             get {
-                return ResourceManager.GetString("Declare", resourceCulture);
+                return ResourceManager.GetString("ElementHasChannelAndIsNumber", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Declare DB edit.
+        ///   Looks up a localized string similar to Element must have IO text.
         /// </summary>
-        internal static string DeclareDBEdit {
+        internal static string ElementHasIOText {
             get {
-                return ResourceManager.GetString("DeclareDBEdit", resourceCulture);
+                return ResourceManager.GetString("ElementHasIOText", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Generate declarations.
+        ///   Looks up a localized string similar to Element must have module name.
         /// </summary>
-        internal static string DeclareGenerate {
+        internal static string ElementHasModuleName {
             get {
-                return ResourceManager.GetString("DeclareGenerate", resourceCulture);
+                return ResourceManager.GetString("ElementHasModuleName", resourceCulture);
             }
         }
         
@@ -214,38 +223,20 @@ namespace IO_list_automation_new.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Get data from project.
+        /// </summary>
+        internal static string GetDataFromProject {
+            get {
+                return ResourceManager.GetString("GetDataFromProject", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Help.
         /// </summary>
         internal static string Help {
             get {
                 return ResourceManager.GetString("Help", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Instance.
-        /// </summary>
-        internal static string Instance {
-            get {
-                return ResourceManager.GetString("Instance", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Instance edit DB.
-        /// </summary>
-        internal static string InstanceEditDB {
-            get {
-                return ResourceManager.GetString("InstanceEditDB", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Generate instances.
-        /// </summary>
-        internal static string InstanceGenerate {
-            get {
-                return ResourceManager.GetString("InstanceGenerate", resourceCulture);
             }
         }
         
@@ -322,11 +313,47 @@ namespace IO_list_automation_new.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Declare DB edit.
+        /// </summary>
+        internal static string ObjectDeclareDBEdit {
+            get {
+                return ResourceManager.GetString("ObjectDeclareDBEdit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Generate declarations.
+        /// </summary>
+        internal static string ObjectDeclareGenerate {
+            get {
+                return ResourceManager.GetString("ObjectDeclareGenerate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Find object types.
         /// </summary>
         internal static string ObjectFindType {
             get {
                 return ResourceManager.GetString("ObjectFindType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Instance DB edit.
+        /// </summary>
+        internal static string ObjectInstanceEditDB {
+            get {
+                return ResourceManager.GetString("ObjectInstanceEditDB", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Generate instances.
+        /// </summary>
+        internal static string ObjectInstanceGenerate {
+            get {
+                return ResourceManager.GetString("ObjectInstanceGenerate", resourceCulture);
             }
         }
         
@@ -453,15 +480,6 @@ namespace IO_list_automation_new.Properties {
         internal static string Start {
             get {
                 return ResourceManager.GetString("Start", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Transfer project to data.
-        /// </summary>
-        internal static string TransferProjectToData {
-            get {
-                return ResourceManager.GetString("TransferProjectToData", resourceCulture);
             }
         }
     }

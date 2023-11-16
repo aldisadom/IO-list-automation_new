@@ -289,5 +289,49 @@ namespace IO_list_automation_new
             }
             return _CPUList;
         }
+
+        /// <summary>
+        /// Load saved file and remove columns that are not in base columns, to correctly load files
+        /// </summary>
+        /// <param name="fileName">file name to load</param>
+        /// <returns>there is data to load</returns>
+        public bool LoadFromFile (string fileName)
+        {
+            bool _return = Grid.LoadFromFile(fileName);
+            Grid.RemoveNotBaseColumns(BaseColumns.Columns);
+            UpdateSettingsColumnsList();
+
+            return _return;
+        }
+
+        /// <summary>
+        /// Load saved selected file and remove columns that are not in base columns, to correctly load files
+        /// </summary>
+        /// <returns>there is data to load</returns>
+        public bool LoadSelect()
+        {
+            bool _return = Grid.LoadSelect();
+            Grid.RemoveNotBaseColumns(BaseColumns.Columns);
+            UpdateSettingsColumnsList();
+
+            return _return;
+        }
+
+        /// <summary>
+        /// Create save file of current grid to excel
+        /// </summary>
+        /// <param name="fileName">file name</param>
+        public void SaveToFile(string fileName)
+        {
+            Grid.SaveToFile(fileName);
+        }
+
+        /// <summary>
+        /// Create save file of current grid to excel with file selection
+        /// </summary>
+        public void SaveSelect()
+        {
+            Grid.SaveSelect();
+        }
     }
 }

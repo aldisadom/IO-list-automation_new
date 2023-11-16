@@ -2,6 +2,7 @@
 using IO_list_automation_new.Properties;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Windows.Forms;
 
 namespace IO_list_automation_new
@@ -13,12 +14,15 @@ namespace IO_list_automation_new
         public string AddressSize { get; private set; }
         public string ObjectVariableType { get; private set; }
 
+        public bool Overlap;
+
         public AddressSingle(string area, string addressStart, string addressSize, string objectVariableType)
         {
             Area = area;
             AddressStart = addressStart;
             AddressSize = addressSize;
             ObjectVariableType = objectVariableType;
+            Overlap = false;
         }
 
         public void Update(string area, string addressStart, string addressSize, string objectVariableType)
@@ -27,6 +31,50 @@ namespace IO_list_automation_new
             AddressStart = addressStart;
             AddressSize = addressSize;
             ObjectVariableType = objectVariableType;
+        }
+
+        public bool CheckOverlapString(AddressSingle address)
+        {
+            if (address.Area != Area)
+                return false;
+
+            if (!int.TryParse(AddressStart, out int myAddress))
+                return false;
+
+            if (!int.TryParse(AddressSize, out int myAddressSize))
+                return false;
+
+            if (!int.TryParse(address.AddressStart, out int addressStart))
+                return false;
+
+            if (!int.TryParse(address.AddressSize, out int addressSize))
+                return false;
+
+            if (myAddress < addressStart + addressSize && addressStart < myAddress + myAddressSize)
+            {
+                Overlap = true;
+                return true;
+            }
+            return false;
+        }
+
+        public bool CheckOverlap(string area, int addressStart, int addressSize)
+        {
+            if (area != Area)
+                return false;
+
+            if (!int.TryParse(AddressStart, out int myAddress))
+                return false;
+
+            if (!int.TryParse(AddressSize, out int myAddressSize))
+                return false;
+
+            if (myAddress < addressStart + addressSize && addressStart < myAddress + myAddressSize)
+            {
+                Overlap = true;
+                return true;
+            }
+            return false;
         }
     }
 
@@ -162,6 +210,22 @@ namespace IO_list_automation_new
                 _columns.Add(Addresses[_addressIndex].ObjectVariableType);
 
             return _columns;
+        }
+
+        public bool CheckOverlap(AddressSingle address)
+        {
+            if (!int.TryParse(address.AddressStart, out int addressStart))
+                return false;
+
+            if (!int.TryParse(address.AddressSize, out int addressSize))
+                return false;
+
+            for (int i = 0; i < Addresses.Count; i++)
+            {
+                if (Addresses[i].CheckOverlap(address.Area, addressStart, addressSize))
+                    return true;
+            }
+            return false;
         }
     }
 
@@ -305,6 +369,8 @@ namespace IO_list_automation_new
             string _cellValue;
             string _columnName;
             int _indexText;
+
+            Progress.RenameProgressBar(Resources.ConvertListToData + ": " + Name, inputData.Count);
             for (int _rowNumber = 0; _rowNumber < inputData.Count; _rowNumber++)
             {
                 AddressObject _signal = new AddressObject();
@@ -395,6 +461,101 @@ namespace IO_list_automation_new
             _objects.Addresses.Add(new AddressSingle(area, addressStart, addressSize, objectVariableType));
 
             Signals.Add(_objects);
+        }
+
+        /// <summary>
+        /// Check overlap of address
+        /// </summary>
+        /// <param name="checkIndex">index of address to check overlap</param>
+        /// <param name="checkAddressIndex">index of address to check</param>
+        /// <returns>overlapped</returns>
+        private bool CheckOverlap(int checkIndex, int checkAddressIndex)
+        {
+            AddressObject _signal = Signals[checkIndex];
+            AddressSingle _address = Signals[checkIndex].Addresses[checkAddressIndex];
+
+            for (int i = checkAddressIndex + 1; i < Signals[checkIndex].Addresses.Count; i++)
+            {
+                if (Signals[checkIndex].Addresses[i].CheckOverlapString(_address))
+                    _address.Overlap = true;
+            }
+
+            for (int _signalIndex = checkIndex+1; _signalIndex < Signals.Count; _signalIndex++)
+            {
+                if (_signal.CPU != Signals[_signalIndex].CPU)
+                    continue;
+
+                if (Signals[_signalIndex].CheckOverlap(_address))
+                    _address.Overlap = true;
+            }
+
+            return _address.Overlap;
+        }
+
+        public void CheckOverlapAll()
+        {
+            Debug debug = new Debug();
+            debug.ToFile(Resources.CheckOverlap + ": " + Name, DebugLevels.High, DebugMessageType.Info);
+            Progress.RenameProgressBar(Resources.CheckOverlap + ": " + Name, Signals.Count);
+            bool _overlap = false;
+
+            //clear overlap
+            for (int _signalIndex = 0; _signalIndex < Signals.Count; _signalIndex++)
+            {
+                for (int i = 0; i < Signals[_signalIndex].Addresses.Count; i++)
+                    Signals[_signalIndex].Addresses[i].Overlap = false;
+            }
+
+            for (int _signalIndex = 0; _signalIndex < Signals.Count; _signalIndex++)
+            {
+                AddressObject _signal = Signals[_signalIndex];
+
+                for (int i = 0; i < _signal.Addresses.Count; i++)
+                {
+                    if (CheckOverlap(_signalIndex, i))
+                        _overlap = true;
+                }
+                Progress.UpdateProgressBar(_signalIndex);
+            }
+            if (_overlap)
+                ColorOverlap();
+
+            Progress.HideProgressBar();
+            debug.ToFile(Resources.CheckOverlap + ": " + Name + " - " + Resources.Finished, DebugLevels.High, DebugMessageType.Info);
+        }
+
+        private void ColorOverlap()
+        {
+            Debug debug = new Debug();
+            debug.ToFile("Color overlapping addresses: " + Name, DebugLevels.High, DebugMessageType.Info);
+
+            bool _overlap = false;
+
+            for (int _signalIndex = 0; _signalIndex < Signals.Count; _signalIndex++)
+            {
+                for (int i = 0; i < Signals[_signalIndex].Addresses.Count; i++)
+                {
+                    if (!Signals[_signalIndex].Addresses[i].Overlap)
+                        continue;
+
+                    for (int _column = BaseColumns.Columns.Count; _column < Columns.Columns.Count; _column+=3)
+                    {
+                        if (Columns.Columns[_column].Keyword != (ResourcesUI.Area +Signals[_signalIndex].Addresses[i].ObjectVariableType))
+                            continue;
+
+                        _overlap = true;
+                        Grid.ColorCell(_signalIndex, _column);
+                        Grid.ColorCell(_signalIndex, _column + 1);
+                        Grid.ColorCell(_signalIndex, _column + 2);
+                        break;
+                    }
+                }
+            }
+
+            if (_overlap)
+                debug.ToPopUp(Resources.MemoryOverlap, DebugLevels.None, DebugMessageType.Warning);
+
+            debug.ToFile("Color overlapping addresses: " + Name + " - " + Resources.Finished, DebugLevels.High, DebugMessageType.Info);
         }
     }
 }

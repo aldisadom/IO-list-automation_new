@@ -49,7 +49,7 @@
             this.buttonOK.Location = new System.Drawing.Point(113, 125);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 23);
-            this.buttonOK.TabIndex = 31;
+            this.buttonOK.TabIndex = 32;
             this.buttonOK.Text = "OK";
             this.buttonOK.UseVisualStyleBackColor = true;
             this.buttonOK.Click += new System.EventHandler(this.ButtonOK_Click);
@@ -80,7 +80,7 @@
             this.InputDBObjectSignalName.Location = new System.Drawing.Point(51, 85);
             this.InputDBObjectSignalName.Name = "InputDBObjectSignalName";
             this.InputDBObjectSignalName.Size = new System.Drawing.Size(195, 26);
-            this.InputDBObjectSignalName.TabIndex = 33;
+            this.InputDBObjectSignalName.TabIndex = 31;
             this.InputDBObjectSignalName.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // NewName

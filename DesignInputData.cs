@@ -33,10 +33,7 @@ namespace IO_list_automation_new.Forms
         /// <param name="e"></param>
         private void DesignInputData_FormClosed(object sender, FormClosedEventArgs e)
         {
-            SettingsDesignInput.Default.PinHasNumber = PinHasNumber.Checked;
-            SettingsDesignInput.Default.PinIsNumber = PinIsNumber.Checked;
-            SettingsDesignInput.Default.ChannelIsNumber = ChannelIsNumber.Checked;
-            SettingsDesignInput.Default.ChannelHasNumber = ChannelHasNumber.Checked;
+            SettingsDesignInput.Default.RowOffset = int.Parse(RowOffsetInput.Text);
             SettingsDesignInput.Default.Save();
         }
 
@@ -142,11 +139,6 @@ namespace IO_list_automation_new.Forms
 
             RowOffsetInput.Text = SettingsDesignInput.Default.RowOffset.ToString();
 
-            PinHasNumber.Checked = SettingsDesignInput.Default.PinHasNumber;
-            PinIsNumber.Checked = SettingsDesignInput.Default.PinIsNumber;
-            ChannelHasNumber.Checked = SettingsDesignInput.Default.ChannelHasNumber;
-            ChannelIsNumber.Checked = SettingsDesignInput.Default.ChannelIsNumber;
-
             //adding columns
             for (int i = 0; i < _data.GetLength(1); i++)
             {
@@ -180,6 +172,10 @@ namespace IO_list_automation_new.Forms
 
             InputDataGridView.Visible = true;
             InputDataGridView.AutoResizeColumns();
+
+            ElementHasChannelAndIsNumber.Text = ResourcesUI.ElementHasChannelAndIsNumber;
+            ElementHasIOText.Text = ResourcesUI.ElementHasIOText;
+            ElementHasModuleName.Text = ResourcesUI.ElementHasModuleName;
         }
 
         /// <summary>

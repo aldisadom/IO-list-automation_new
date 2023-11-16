@@ -133,6 +133,15 @@ namespace IO_list_automation_new.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Checking overlaping memory address.
+        /// </summary>
+        internal static string CheckOverlap {
+            get {
+                return ResourceManager.GetString("CheckOverlap", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Column.
         /// </summary>
         internal static string Column {
@@ -304,6 +313,15 @@ namespace IO_list_automation_new.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Declare.
+        /// </summary>
+        internal static string Declare {
+            get {
+                return ResourceManager.GetString("Declare", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Delete Me.
         /// </summary>
         internal static string DeleteMe {
@@ -439,6 +457,15 @@ namespace IO_list_automation_new.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Instance.
+        /// </summary>
+        internal static string Instance {
+            get {
+                return ResourceManager.GetString("Instance", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to KKS from 4 parts are combined.
         /// </summary>
         internal static string KKSCombine {
@@ -471,6 +498,15 @@ namespace IO_list_automation_new.Properties {
         internal static string MemoryArea {
             get {
                 return ResourceManager.GetString("MemoryArea", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to There is memory overlap, review offsets, sizes, areas.
+        /// </summary>
+        internal static string MemoryOverlap {
+            get {
+                return ResourceManager.GetString("MemoryOverlap", resourceCulture);
             }
         }
         
@@ -669,6 +705,15 @@ namespace IO_list_automation_new.Properties {
         internal static string SCADA {
             get {
                 return ResourceManager.GetString("SCADA", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Separator.
+        /// </summary>
+        internal static string Separator {
+            get {
+                return ResourceManager.GetString("Separator", resourceCulture);
             }
         }
         

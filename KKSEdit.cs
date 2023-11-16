@@ -12,6 +12,7 @@ namespace IO_list_automation_new.Forms
         {
             InitializeComponent();
             InitSettings();
+            label.Text = ResourcesColumns.KKS;
             KKS1Label.Text = ResourcesColumns.KKSPlant;
             KKS2Label.Text = ResourcesColumns.KKSLocation;
             KKS3Label.Text = ResourcesColumns.KKSDevice;
@@ -64,17 +65,11 @@ namespace IO_list_automation_new.Forms
         /// <param name="_KKSFunction">kks part 4</param>
         public void UpdateKKS(string _KKS, string _KKSPlant, string _KKSLocation, string _KKSDevice, string _KKSFunction)
         {
-            KKS = _KKS;
-            KKSPlant = _KKSPlant;
-            KKSLocation = _KKSLocation;
-            KKSDevice = _KKSDevice;
-            KKSFunction = _KKSFunction;
-
-            KKSIn.Text = KKS;
-            KKSPart1.Text = KKSPlant;
-            KKSPart2.Text = KKSLocation;
-            KKSPart3.Text = KKSDevice;
-            KKSPart4.Text = KKSFunction;
+            KKSIn.Text = _KKS;
+            KKSPart1.Text = _KKSPlant;
+            KKSPart2.Text = _KKSLocation;
+            KKSPart3.Text = _KKSDevice;
+            KKSPart4.Text = _KKSFunction;
 
             Combine();
         }

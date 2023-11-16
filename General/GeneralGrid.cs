@@ -230,10 +230,10 @@ namespace IO_list_automation_new
             for (int _dataIndex = 0; _dataIndex < data.Count; _dataIndex++)
                 Grid.Rows[_dataIndex].SetValues(data[_dataIndex].ToArray());
 
-            Grid.ResumeLayout();
+            Grid.ResumeLayout(false);
             Grid.Refresh();
-            Grid.AutoResizeColumns();
             Grid.Visible = true;
+            Grid.AutoResizeColumns();
 
             debug.ToFile(Resources.PutDataToGrid + ": " + Name + " - " + Resources.Finished, DebugLevels.Development, DebugMessageType.Info);
         }
@@ -521,6 +521,35 @@ namespace IO_list_automation_new
         }
 
         /// <summary>
+        /// Remove columns from grid that are not in base column list
+        /// </summary>
+        /// <param name="baseColumns">base column list</param>
+        public void RemoveNotBaseColumns(List<GeneralColumn> baseColumns)
+        {
+            bool _found;
+            if (GridType == GridTypes.DataNoEdit)
+                return;
+
+            for (int _gridColumn = Grid.ColumnCount-1; _gridColumn >=0; _gridColumn--)
+            {
+                _found = false;
+                foreach (GeneralColumn _generalColumn in baseColumns)
+                {
+                    if (Grid.Columns[_gridColumn].Name != _generalColumn.Keyword)
+                        continue;
+
+                    _found = true;
+                    break;
+                }
+
+                if (_found)
+                    continue;
+
+                Grid.Columns.RemoveAt(_gridColumn);
+            }
+        }
+
+        /// <summary>
         /// Creates DB file
         /// </summary>
         /// <param name="fileName">file to check and create</param>
@@ -572,6 +601,11 @@ namespace IO_list_automation_new
 
             string[] _files = System.IO.Directory.GetFiles(_directory, fileName + "." + FileExtension);
             return _files.Length > 0;
+        }
+
+        public void ColorCell(int row, int column)
+        {
+            Grid.Rows[row].Cells[column].Style.BackColor = System.Drawing.Color.FromArgb(0, 255, 255);
         }
     }
 }

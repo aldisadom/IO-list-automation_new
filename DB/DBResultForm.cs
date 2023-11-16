@@ -95,7 +95,7 @@ namespace IO_list_automation_new.DB
             DeleteComboBox();
             if (_mod == Resources.Add)
             {
-                NewName _newName = new NewName(Resources.CreateNew + " " + this.Text,true);
+                NewName _newName = new NewName(Resources.CreateNew + " " + this.Text, string.Empty, true);
 
                 _newName.ShowDialog();
                 _fileName = _newName.Output;
@@ -134,7 +134,7 @@ namespace IO_list_automation_new.DB
             }
             else if (_mod == Resources.Copy)
             {
-                NewName _newName = new NewName(Resources.CreateNew + " " + this.Text,true);
+                NewName _newName = new NewName(Resources.CreateNew + " " + this.Text, DBTabControl.SelectedTab.Name, true);
 
                 _newName.ShowDialog();
                 _fileName = _newName.Output;

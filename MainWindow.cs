@@ -7,6 +7,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Threading;
 using System.Windows.Forms;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace IO_list_automation_new
 {
@@ -30,14 +31,17 @@ namespace IO_list_automation_new
                 ModuleClass modules = new ModuleClass(Progress, ModulesGridView);
                 AddressesClass address = new AddressesClass(Progress, AddressesGridView);
 
-                design.Grid.LoadFromFile(Settings.Default.AutoLoadFile);
-                data.Grid.LoadFromFile(Settings.Default.AutoLoadFile);
-                objects.Grid.LoadFromFile(Settings.Default.AutoLoadFile);
-                modules.Grid.LoadFromFile(Settings.Default.AutoLoadFile);
-                address.Grid.LoadFromFile(Settings.Default.AutoLoadFile);
+                design.LoadFromFile(Settings.Default.AutoLoadFile);
+                data.LoadFromFile(Settings.Default.AutoLoadFile);
+                objects.LoadFromFile(Settings.Default.AutoLoadFile);
+                modules.LoadFromFile(Settings.Default.AutoLoadFile);
+                address.LoadFromFile(Settings.Default.AutoLoadFile);
+                address.GetDataFromGrid(true);
+                address.CheckOverlapAll();
 
                 debug.ToFile(Resources.FileAutoLoad + " " + Resources.Finished, DebugLevels.Minimum, DebugMessageType.Info);
             }
+
             UpdateUIElement();
         }
 
@@ -63,7 +67,6 @@ namespace IO_list_automation_new
             Project_DropDown.Text = ResourcesUI.Project;
             Project_GetDataFromDesign.Text = ResourcesUI.GetDataFromDesign;
             Project_CompareDesign.Text = ResourcesUI.CompareWithNewDesign;
-            Project_TransferData.Text = ResourcesUI.TransferProjectToData;
 
             Project_CPU.Text = Resources.CPU;
             Project_CPU_Add.Text = Resources.Add;
@@ -74,6 +77,7 @@ namespace IO_list_automation_new
 
             // **********************
             Data_DropDown.Text = ResourcesUI.Data;
+            Data_GetDataFromProject.Text = ResourcesUI.GetDataFromProject;
             DataFindFunctionMenuItem.Text = ResourcesUI.FindFunction;
             Data_KKSCombine.Text = ResourcesUI.KKSCombine;
 
@@ -82,24 +86,21 @@ namespace IO_list_automation_new
             Objects_Find.Text = ResourcesUI.ObjectsFindUnique;
             ObjectsFindTypeMenuItem.Text = ResourcesUI.ObjectFindType;
             Object_TransferToData.Text = ResourcesUI.ObjectsTransferData;
+
+            Objects_DeclareGenerate.Text = ResourcesUI.ObjectDeclareGenerate;
+            Objects_InstancesGenerate.Text = ResourcesUI.ObjectInstanceGenerate;
+            Objects_ClearAddresses.Text = ResourcesUI.ClearAddresses;
+
             Object_EditTypes.Text = ResourcesUI.ObjectsEdit;
+            Objects_DeclareEdit.Text = ResourcesUI.ObjectDeclareDBEdit;
+            Objects_InstancesEdit.Text = ResourcesUI.ObjectInstanceEditDB;
 
             // **********************
             IO_DropDown.Text = ResourcesUI.IO;
             IO_FindModules.Text = ResourcesUI.FindUniqueModules;
             IO_Generate.Text = ResourcesUI.IOGenerate;
+            IO_ClearAddresses.Text = ResourcesUI.ClearAddresses;
             IO_Edit.Text = ResourcesUI.IODBEdit;
-
-            // **********************
-            Declare_DropDown.Text = ResourcesUI.Declare;
-            Declare_Edit.Text = ResourcesUI.DeclareDBEdit;
-            Declare_Generate.Text = ResourcesUI.DeclareGenerate;
-            Declare_ClearAddresses.Text = ResourcesUI.SCADAObjectGenerate;
-
-            // **********************
-            Instance_DropDown.Text = ResourcesUI.Instance;
-            Instances_Edit.Text = ResourcesUI.InstanceEditDB;
-            Instances_Generate.Text = ResourcesUI.InstanceGenerate;
 
             // **********************
             SCADA_DropDown.Text = ResourcesUI.SCADA;
@@ -366,6 +367,12 @@ namespace IO_list_automation_new
             }
         }
 
+        private void SelectTab(TabIndex tabIndex)
+        {
+            MainTabControl.SelectedIndex = (int)tabIndex;
+            ((DataGridView)MainTabControl.SelectedTab.Controls[0]).AutoResizeColumns();
+        }
+
         //-------------------------File drop down------------------------------------------
         private void File_Save_Click(object sender, EventArgs e)
         {
@@ -375,27 +382,27 @@ namespace IO_list_automation_new
             {
                 case IO_list_automation_new.TabIndex.Design:
                     DesignClass design = new DesignClass(Progress, DesignGridView);
-                    design.Grid.SaveSelect();
+                    design.SaveSelect();
                     break;
 
                 case IO_list_automation_new.TabIndex.Data:
                     DataClass data = new DataClass(Progress, DataGridView);
-                    data.Grid.SaveSelect();
+                    data.SaveSelect();
                     break;
 
                 case IO_list_automation_new.TabIndex.Object:
                     ObjectsClass objects = new ObjectsClass(Progress, ObjectsGridView);
-                    objects.Grid.SaveSelect();
+                    objects.SaveSelect();
                     break;
 
                 case IO_list_automation_new.TabIndex.Modules:
                     ModuleClass modules = new ModuleClass(Progress, ModulesGridView);
-                    modules.Grid.SaveSelect();
+                    modules.SaveSelect();
                     break;
 
                 case IO_list_automation_new.TabIndex.Address:
                     AddressesClass address = new AddressesClass(Progress, AddressesGridView);
-                    address.Grid.SaveSelect();
+                    address.SaveSelect();
                     break;
 
                 default:
@@ -427,11 +434,11 @@ namespace IO_list_automation_new
                 debug.ToFile(Resources.FileSellectCanceled, DebugLevels.Minimum, DebugMessageType.Info);
                 return;
             }
-            design.Grid.SaveToFile(_saveFile.FileName);
-            data.Grid.SaveToFile(_saveFile.FileName);
-            objects.Grid.SaveToFile(_saveFile.FileName);
-            modules.Grid.SaveToFile(_saveFile.FileName);
-            address.Grid.SaveToFile(_saveFile.FileName);
+            design.SaveToFile(_saveFile.FileName);
+            data.SaveToFile(_saveFile.FileName);
+            objects.SaveToFile(_saveFile.FileName);
+            modules.SaveToFile(_saveFile.FileName);
+            address.SaveToFile(_saveFile.FileName);
 
             Settings.Default.AutoLoadFile = _saveFile.FileName;
             Settings.Default.Save();
@@ -452,27 +459,29 @@ namespace IO_list_automation_new
             {
                 case IO_list_automation_new.TabIndex.Design:
                     DesignClass design = new DesignClass(Progress, DesignGridView);
-                    design.Grid.LoadSelect();
+                    design.LoadSelect();
                     break;
 
                 case IO_list_automation_new.TabIndex.Data:
                     DataClass data = new DataClass(Progress, DataGridView);
-                    data.Grid.LoadSelect();
+                    data.LoadSelect();
                     break;
 
                 case IO_list_automation_new.TabIndex.Object:
                     ObjectsClass objects = new ObjectsClass(Progress, ObjectsGridView);
-                    objects.Grid.LoadSelect();
+                    objects.LoadSelect();
                     break;
 
                 case IO_list_automation_new.TabIndex.Modules:
                     ModuleClass modules = new ModuleClass(Progress, ModulesGridView);
-                    modules.Grid.LoadSelect();
+                    modules.LoadSelect();
                     break;
 
                 case IO_list_automation_new.TabIndex.Address:
                     AddressesClass address = new AddressesClass(Progress, AddressesGridView);
-                    address.Grid.LoadSelect();
+                    address.LoadSelect();
+                    address.GetDataFromGrid(true);
+                    address.CheckOverlapAll();
                     break;
 
                 default:
@@ -505,14 +514,18 @@ namespace IO_list_automation_new
                 debug.ToFile(Resources.FileSellectCanceled, DebugLevels.Minimum, DebugMessageType.Info);
                 return;
             }
-            design.Grid.LoadFromFile(_loadFile.FileName);
-            data.Grid.LoadFromFile(_loadFile.FileName);
-            objects.Grid.LoadFromFile(_loadFile.FileName);
-            modules.Grid.LoadFromFile(_loadFile.FileName);
-            address.Grid.LoadFromFile(_loadFile.FileName);
+            design.LoadFromFile(_loadFile.FileName);
+            data.LoadFromFile(_loadFile.FileName);
+            objects.LoadFromFile(_loadFile.FileName);
+            modules.LoadFromFile(_loadFile.FileName);
+            address.LoadFromFile(_loadFile.FileName);
+            address.GetDataFromGrid(true);
+            address.CheckOverlapAll();
 
             Settings.Default.AutoLoadFile = _loadFile.FileName;
             Settings.Default.Save();
+
+            AutoSizeAllTabs();
 
             ButtonFunctionFinished(sender);
         }
@@ -581,27 +594,13 @@ namespace IO_list_automation_new
             if (design.GetDataFromImportFile())
                 design.PutDataToGrid(false);
 
+            SelectTab(IO_list_automation_new.TabIndex.Design);
             ButtonFunctionFinished(sender);
         }
 
         private void Project_CompareDesign_Click(object sender, EventArgs e)
         {
             DisplayNoFunction(sender);
-        }
-
-        private void Project_TransferData_Click(object sender, EventArgs e)
-        {
-            ButtonPressed(sender);
-
-            DesignClass design = new DesignClass(Progress, DesignGridView);
-            if (design.GetDataFromGrid(false))
-            {
-                DataClass data = new DataClass(Progress, DataGridView);
-                data.ExtractFromDesign(design);
-                data.PutDataToGrid(false);
-            }
-
-            ButtonFunctionFinished(sender);
         }
 
         /// <summary>
@@ -620,14 +619,6 @@ namespace IO_list_automation_new
                 menuItem.DropDownItems.Add(list[i]);
         }
 
-        private void Project_CPU_MouseEnter(object sender, EventArgs e)
-        {
-            DBGeneral _DB = new DBGeneral(Progress, Resources.CPU, nameof(FileExtensions.decDB), DBTypeLevel.CPU, BaseTypes.ObjectsCPU);
-            List<string> _list = _DB.GetDBFolderList();
-            //add items to dropdown
-            AddMenuItemDropDown((ToolStripMenuItem)sender, _list);
-        }
-
         private void Project_CPU_DropDownItemClicked(object sender, ToolStripItemClickedEventArgs e)
         {
             if (e.ClickedItem.Text == null)
@@ -636,7 +627,7 @@ namespace IO_list_automation_new
             if (e.ClickedItem.Text == Resources.Add)
             {
                 DBGeneral _DB = new DBGeneral(Progress, Resources.CPU, nameof(FileExtensions.decDB.ToString), DBTypeLevel.CPU, BaseTypes.ObjectsCPU);
-                NewName _newName = new NewName(Resources.CreateNew + ": " + Resources.CPU,false);
+                NewName _newName = new NewName(Resources.CreateNew + ": " + Resources.CPU, string.Empty, false);
 
                 _newName.ShowDialog();
                 string _folderName = _newName.Output;
@@ -668,14 +659,6 @@ namespace IO_list_automation_new
             }
         }
 
-        private void Project_SCADA_MouseEnter(object sender, EventArgs e)
-        {
-            DBGeneral _DB = new DBGeneral(Progress, ResourcesUI.SCADA, nameof(FileExtensions.decScadaDB), DBTypeLevel.SCADA, BaseTypes.ObjectsCPU);
-            List<string> _list = _DB.GetDBFolderList();
-            //add items to dropdown
-            AddMenuItemDropDown((ToolStripMenuItem)sender, _list);
-        }
-
         private void Project_SCADA_DropDownItemClicked(object sender, ToolStripItemClickedEventArgs e)
         {
             if (e.ClickedItem.Text == null)
@@ -684,7 +667,7 @@ namespace IO_list_automation_new
             if (e.ClickedItem.Text == Resources.Add)
             {
                 DBGeneral _DB = new DBGeneral(Progress, ResourcesUI.SCADA, nameof(FileExtensions.decScadaDB), DBTypeLevel.SCADA, BaseTypes.ObjectsCPU);
-                NewName _newName = new NewName(Resources.CreateNew + ": " + ResourcesUI.SCADA,false);
+                NewName _newName = new NewName(Resources.CreateNew + ": " + ResourcesUI.SCADA, string.Empty, false);
 
                 _newName.ShowDialog();
                 string _folderName = _newName.Output;
@@ -708,14 +691,6 @@ namespace IO_list_automation_new
             }
         }
 
-        private void Project_Language_MouseEnter(object sender, EventArgs e)
-        {
-            DBGeneral _DB = new DBGeneral(Progress, ResourcesUI.IO + " " + Resources.Language, nameof(FileExtensions.langTypeDB), DBTypeLevel.Base, BaseTypes.ObjectsCPU);
-            List<string> _list = _DB.GetDBFileList();
-            //add items to dropdown
-            AddMenuItemDropDown((ToolStripMenuItem)sender, _list);
-        }
-
         private void Project_Language_DropDownItemClicked(object sender, ToolStripItemClickedEventArgs e)
         {
             if (e.ClickedItem.Text == null)
@@ -726,7 +701,7 @@ namespace IO_list_automation_new
                 DataGridView _grid = new DataGridView();
                 DBLanguage _DBLanguage = new DBLanguage(Progress,_grid);
 
-                NewName _newName = new NewName(Resources.CreateNew + ": " + ResourcesUI.IO + " " + Resources.Language,false);
+                NewName _newName = new NewName(Resources.CreateNew + ": " + ResourcesUI.IO + " " + Resources.Language, string.Empty, false);
 
                 _newName.ShowDialog();
                 string _fileName = _newName.Output;
@@ -767,9 +742,41 @@ namespace IO_list_automation_new
             Project_CPU.Text = Resources.CPU + ": " + Settings.Default.SelectedCPU;
             Project_SCADA.Text = ResourcesUI.SCADA + ": " + Settings.Default.SelectedSCADA;
             Project_Language.Text = ResourcesUI.IO + " " + Resources.Language + ": " + Settings.Default.IOLanguage;
+
+            DBGeneral _DBCPU = new DBGeneral(Progress, Resources.CPU, nameof(FileExtensions.decDB), DBTypeLevel.CPU, BaseTypes.ObjectsCPU);
+            List<string> _listCPU = _DBCPU.GetDBFolderList();
+            //add items to dropdown
+            AddMenuItemDropDown(Project_CPU, _listCPU);
+
+            DBGeneral _DBSCADA = new DBGeneral(Progress, ResourcesUI.SCADA, nameof(FileExtensions.decScadaDB), DBTypeLevel.SCADA, BaseTypes.ObjectsCPU);
+            List<string> _listSCADA = _DBSCADA.GetDBFolderList();
+            //add items to dropdown
+            AddMenuItemDropDown(Project_SCADA, _listSCADA);
+
+            DBGeneral _DBIO = new DBGeneral(Progress, ResourcesUI.IO + " " + Resources.Language, nameof(FileExtensions.langTypeDB), DBTypeLevel.Base, BaseTypes.ObjectsCPU);
+            List<string> _listIO = _DBIO.GetDBFileList();
+            //add items to dropdown
+            AddMenuItemDropDown(Project_Language, _listIO);
         }
 
         //-------------------------Data dropdown------------------------------------------
+
+        private void Data_GetDataFromProject_Click(object sender, EventArgs e)
+        {
+            ButtonPressed(sender);
+
+            DesignClass design = new DesignClass(Progress, DesignGridView);
+            if (design.GetDataFromGrid(false))
+            {
+                DataClass data = new DataClass(Progress, DataGridView);
+                data.ExtractFromDesign(design);
+                data.PutDataToGrid(false);
+            }
+
+            SelectTab(IO_list_automation_new.TabIndex.Data);
+            ButtonFunctionFinished(sender);
+        }
+
         private void Data_KKSCombine_Click(object sender, EventArgs e)
         {
             ButtonPressed(sender);
@@ -781,6 +788,7 @@ namespace IO_list_automation_new
                 data.PutDataToGrid(false);
             }
 
+            SelectTab(IO_list_automation_new.TabIndex.Data);
             ButtonFunctionFinished(sender);
         }
 
@@ -797,6 +805,7 @@ namespace IO_list_automation_new
                 _DBLanguage.FunctionType.FindAllFunctionType(data);
             }
 
+            SelectTab(IO_list_automation_new.TabIndex.Data);
             ButtonFunctionFinished(sender);
         }
 
@@ -828,6 +837,7 @@ namespace IO_list_automation_new
                 objects.PutDataToGrid(false);
             }
 
+            SelectTab(IO_list_automation_new.TabIndex.Object);
             ButtonFunctionFinished(sender);
         }
 
@@ -844,6 +854,7 @@ namespace IO_list_automation_new
                 _DBLanguage.Type.FindAllType(objects);
             }
 
+            SelectTab(IO_list_automation_new.TabIndex.Object);
             ButtonFunctionFinished(sender);
         }
 
@@ -860,7 +871,56 @@ namespace IO_list_automation_new
                 data.PutDataToGrid(false);
             }
 
+            SelectTab(IO_list_automation_new.TabIndex.Object);
             ButtonFunctionFinished(sender);
+        }
+
+        private void Objects_DeclareGenerate_Click(object sender, EventArgs e)
+        {
+            ButtonPressed(sender);
+
+            DataClass data = new DataClass(Progress, DataGridView);
+            ObjectsClass objects = new ObjectsClass(Progress, ObjectsGridView);
+            AddressesClass addresses = new AddressesClass(Progress, AddressesGridView);
+            addresses.GetDataFromGrid(true);
+
+            if (data.GetDataFromGrid(false) && objects.GetDataFromGrid(false))
+            {
+                DBGeneral _DB = new DBGeneral(Progress, Resources.Declare, nameof(FileExtensions.decDB), DBTypeLevel.CPU, BaseTypes.ObjectsCPU);
+                _DB.DecodeAll(data, objects, null, addresses);
+
+                addresses.CheckOverlapAll();
+            }
+
+            SelectTab(IO_list_automation_new.TabIndex.Address);
+            ButtonFunctionFinished(sender);
+        }
+
+        private void Objects_InstancesGenerate_Click(object sender, EventArgs e)
+        {
+            ButtonPressed(sender);
+
+            DataClass data = new DataClass(Progress, DataGridView);
+            ObjectsClass objects = new ObjectsClass(Progress, ObjectsGridView);
+            AddressesClass addresses = new AddressesClass(Progress, AddressesGridView);
+            addresses.GetDataFromGrid(true);
+
+            //clear all used columns
+            for (int _objectIndex = 0; _objectIndex < objects.Signals.Count; _objectIndex++)
+                objects.Signals[_objectIndex].SetValueFromString(string.Empty, KeywordColumn.Used);
+
+            if (data.GetDataFromGrid(false) && objects.GetDataFromGrid(false))
+            {
+                DBGeneral _DB = new DBGeneral(Progress, Resources.Instance, nameof(FileExtensions.instDB), DBTypeLevel.CPU, BaseTypes.ObjectsCPU);
+                _DB.DecodeAll(data, objects, null, addresses);
+            }
+            ButtonFunctionFinished(sender);
+        }
+
+        private void ClearAddresses_Click(object sender, EventArgs e)
+        {
+            AddressesClass addresses = new AddressesClass(Progress, AddressesGridView);
+            addresses.Grid.GridClear();
         }
 
         private void Object_EditTypes_Click(object sender, EventArgs e)
@@ -873,6 +933,26 @@ namespace IO_list_automation_new
             _DBLanguage.Type.LoadEdit();
             dBForceEditForm.ShowDialog();
             _DBLanguage.Type.SaveEdit();
+
+            ButtonFunctionFinished(sender);
+        }
+
+        private void Objects_DeclareEdit_Click(object sender, EventArgs e)
+        {
+            ButtonPressed(sender);
+
+            DBGeneral _DB = new DBGeneral(Progress, Resources.Declare, nameof(FileExtensions.decDB), DBTypeLevel.CPU, BaseTypes.ObjectsCPU);
+            _DB.EditAll();
+
+            ButtonFunctionFinished(sender);
+        }
+
+        private void Objects_InstancesEdit_Click(object sender, EventArgs e)
+        {
+            ButtonPressed(sender);
+
+            DBGeneral _DB = new DBGeneral(Progress, Resources.Instance, nameof(FileExtensions.instDB), DBTypeLevel.CPU, BaseTypes.ObjectsCPU);
+            _DB.EditAll();
 
             ButtonFunctionFinished(sender);
         }
@@ -891,6 +971,7 @@ namespace IO_list_automation_new
                 modules.PutDataToGrid(false);
             }
 
+            SelectTab(IO_list_automation_new.TabIndex.Modules);
             ButtonFunctionFinished(sender);
         }
 
@@ -908,7 +989,11 @@ namespace IO_list_automation_new
             {
                 DBGeneral _DB = new DBGeneral(Progress, ResourcesUI.Modules, nameof(FileExtensions.modDB), DBTypeLevel.CPU, BaseTypes.ModuleCPU);
                 _DB.DecodeAll(data, objects, modules, addresses);
+
+                addresses.CheckOverlapAll();
             }
+
+            SelectTab(IO_list_automation_new.TabIndex.Address);
             ButtonFunctionFinished(sender);
         }
 
@@ -917,74 +1002,6 @@ namespace IO_list_automation_new
             ButtonPressed(sender);
 
             DBGeneral _DB = new DBGeneral(Progress, ResourcesUI.Modules, nameof(FileExtensions.modDB), DBTypeLevel.CPU, BaseTypes.ModuleCPU);
-            _DB.EditAll();
-
-            ButtonFunctionFinished(sender);
-        }
-
-        //-------------------------Declare dropdown------------------------------------------
-        private void Declare_Generate_Click(object sender, EventArgs e)
-        {
-            ButtonPressed(sender);
-
-            DataClass data = new DataClass(Progress, DataGridView);
-            ObjectsClass objects = new ObjectsClass(Progress, ObjectsGridView);
-            AddressesClass addresses = new AddressesClass(Progress, AddressesGridView);
-            addresses.GetDataFromGrid(true);
-
-            if (data.GetDataFromGrid(false) && objects.GetDataFromGrid(false))
-            {
-                DBGeneral _DB = new DBGeneral(Progress, ResourcesUI.Declare, nameof(FileExtensions.decDB), DBTypeLevel.CPU, BaseTypes.ObjectsCPU);
-                _DB.DecodeAll(data, objects, null, addresses);
-            }
-            ButtonFunctionFinished(sender);
-        }
-
-        private void Declare_ClearAddresses_Click(object sender, EventArgs e)
-        {
-            MainTabControl.SelectedIndex = (int)IO_list_automation_new.TabIndex.Address;
-            AddressesClass addresses = new AddressesClass(Progress, AddressesGridView);
-            addresses.Grid.GridClear();
-        }
-
-        private void Declare_Edit_Click(object sender, EventArgs e)
-        {
-            ButtonPressed(sender);
-
-            DBGeneral _DB = new DBGeneral(Progress, ResourcesUI.Declare, nameof(FileExtensions.decDB), DBTypeLevel.CPU, BaseTypes.ObjectsCPU);
-            _DB.EditAll();
-
-            ButtonFunctionFinished(sender);
-        }
-
-        //-------------------------Instances dropdown------------------------------------------
-
-        private void Instances_Generate_Click(object sender, EventArgs e)
-        {
-            ButtonPressed(sender);
-
-            DataClass data = new DataClass(Progress, DataGridView);
-            ObjectsClass objects = new ObjectsClass(Progress, ObjectsGridView);
-            AddressesClass addresses = new AddressesClass(Progress, AddressesGridView);
-            addresses.GetDataFromGrid(true);
-
-            //clear all used columns
-            for (int _objectIndex = 0; _objectIndex < objects.Signals.Count; _objectIndex++)
-                objects.Signals[_objectIndex].SetValueFromString(string.Empty, KeywordColumn.Used);
-
-            if (data.GetDataFromGrid(false) && objects.GetDataFromGrid(false))
-            {
-                DBGeneral _DB = new DBGeneral(Progress, ResourcesUI.Instance, nameof(FileExtensions.instDB), DBTypeLevel.CPU, BaseTypes.ObjectsCPU);
-                _DB.DecodeAll(data, objects, null, addresses);
-            }
-            ButtonFunctionFinished(sender);
-        }
-
-        private void Instances_Edit_Click(object sender, EventArgs e)
-        {
-            ButtonPressed(sender);
-
-            DBGeneral _DB = new DBGeneral(Progress, ResourcesUI.Instance, nameof(FileExtensions.instDB), DBTypeLevel.CPU, BaseTypes.ObjectsCPU);
             _DB.EditAll();
 
             ButtonFunctionFinished(sender);
@@ -1087,6 +1104,69 @@ namespace IO_list_automation_new
         private void AddressesGridView_CellClick(object sender, DataGridViewCellEventArgs e)
         {
             DeleteColumnComboBox();
+        }
+
+        private void AutoSizeAllTabs()
+        {
+            foreach (TabPage _tab in MainTabControl.TabPages)
+            {
+                MainTabControl.SelectedTab = _tab;
+                ((DataGridView)_tab.Controls[0]).AutoResizeColumns();
+            }
+            MainTabControl.SelectedIndex = (int)IO_list_automation_new.TabIndex.Data;
+        }
+
+        private void MainWindow_Shown(object sender, EventArgs e)
+        {
+            AutoSizeAllTabs();
+        }
+
+        private void FindButton_Click(object sender, EventArgs e)
+        {
+            int _startRow = 0;
+            int _startColumn = 0;
+
+            DataGridView  _grid = (DataGridView)MainTabControl.SelectedTab.Controls[0];
+
+            if (_grid.SelectedCells.Count >= 1)
+            {
+                _startRow = _grid.SelectedCells[0].RowIndex;
+                _startColumn = _grid.SelectedCells[0].ColumnIndex + 1;
+            }
+
+            if (_grid.RowCount < 1)
+                return;
+
+            string cell_text;
+            int _row;
+
+            for (int _rowIndex = 0; _rowIndex < _grid.RowCount - 1; _rowIndex++)
+            {
+                // to be able to go back from beginning
+                _row = _rowIndex + _startRow;
+                if (_row >= _grid.RowCount - 1)
+                    _row -= _grid.RowCount - 1;
+
+                // fill all cells with data
+                for (int _column = _startColumn; _column <= _grid.ColumnCount - 1; _column++)
+                {
+                    cell_text = _grid.Rows[_row].Cells[_column].Value.ToString();
+
+                    if (!cell_text.Contains(FindTextBox.Text))
+                        continue;
+
+                    _grid.ClearSelection();
+
+                    //go to that cell and select it
+                    _grid.CurrentCell = _grid.Rows[_row].Cells[_column];
+                    _grid.Rows[_row].Cells[_column].Selected = true;
+
+                    //breaking first loop
+                    _rowIndex = _grid.RowCount;
+                    break;
+                }
+                _startColumn = 0;
+            }
         }
     }
 }

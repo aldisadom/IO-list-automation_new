@@ -94,12 +94,12 @@ namespace IO_list_automation_new
 
         public void LoadEdit()
         {
-            Grid.LoadFromFile(FileName);
+            LoadFromFile(FileName);
         }
 
         public void SaveEdit()
         {
-            Grid.SaveToFile(FileName);
+            SaveToFile(FileName);
         }
 
         protected override void UpdateSettingsColumnsList()
@@ -287,12 +287,12 @@ namespace IO_list_automation_new
 
         public void LoadEdit()
         {
-            Grid.LoadFromFile(FileName);
+            LoadFromFile(FileName);
         }
 
         public void SaveEdit()
         {
-            Grid.SaveToFile(FileName);
+            SaveToFile(FileName);
         }
 
         /// <summary>

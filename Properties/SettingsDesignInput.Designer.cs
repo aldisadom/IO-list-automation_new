@@ -229,54 +229,6 @@ namespace IO_list_automation_new.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool PinIsNumber {
-            get {
-                return ((bool)(this["PinIsNumber"]));
-            }
-            set {
-                this["PinIsNumber"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool ChannelIsNumber {
-            get {
-                return ((bool)(this["ChannelIsNumber"]));
-            }
-            set {
-                this["ChannelIsNumber"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool PinHasNumber {
-            get {
-                return ((bool)(this["PinHasNumber"]));
-            }
-            set {
-                this["PinHasNumber"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool ChannelHasNumber {
-            get {
-                return ((bool)(this["ChannelHasNumber"]));
-            }
-            set {
-                this["ChannelHasNumber"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("2")]
         public int RowOffset {
             get {

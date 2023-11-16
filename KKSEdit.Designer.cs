@@ -41,7 +41,6 @@
             this.KKSPart1 = new System.Windows.Forms.Label();
             this.KKSIn = new System.Windows.Forms.Label();
             this.KKS2Label = new System.Windows.Forms.Label();
-            this.KKS1Label = new System.Windows.Forms.Label();
             this.label = new System.Windows.Forms.Label();
             this.KKSPart4 = new System.Windows.Forms.Label();
             this.KKSPart3 = new System.Windows.Forms.Label();
@@ -57,6 +56,7 @@
             this.KKSPartCheck2 = new System.Windows.Forms.CheckBox();
             this.KKSPartCheck4 = new System.Windows.Forms.CheckBox();
             this.KKSPartCheck3 = new System.Windows.Forms.CheckBox();
+            this.KKS1Label = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // KKSCancelButton
@@ -141,18 +141,6 @@
             this.KKS2Label.TabIndex = 13;
             this.KKS2Label.Text = "KKS2";
             this.KKS2Label.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // KKS1Label
-            // 
-            this.KKS1Label.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.KKS1Label.AutoSize = true;
-            this.KKS1Label.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.KKS1Label.Location = new System.Drawing.Point(75, 117);
-            this.KKS1Label.Name = "KKS1Label";
-            this.KKS1Label.Size = new System.Drawing.Size(50, 18);
-            this.KKS1Label.TabIndex = 12;
-            this.KKS1Label.Text = "KKS1";
-            this.KKS1Label.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // label
             // 
@@ -324,6 +312,18 @@
             this.KKSPartCheck3.UseVisualStyleBackColor = true;
             this.KKSPartCheck3.CheckedChanged += new System.EventHandler(this.Combine_Event);
             // 
+            // KKS1Label
+            // 
+            this.KKS1Label.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.KKS1Label.AutoSize = true;
+            this.KKS1Label.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.KKS1Label.Location = new System.Drawing.Point(75, 117);
+            this.KKS1Label.Name = "KKS1Label";
+            this.KKS1Label.Size = new System.Drawing.Size(50, 18);
+            this.KKS1Label.TabIndex = 12;
+            this.KKS1Label.Text = "KKS1";
+            this.KKS1Label.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
             // KKSEdit
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -371,7 +371,6 @@
         private System.Windows.Forms.Label KKSPart1;
         private System.Windows.Forms.Label KKSIn;
         private System.Windows.Forms.Label KKS2Label;
-        private System.Windows.Forms.Label KKS1Label;
         private System.Windows.Forms.Label label;
         private System.Windows.Forms.Label KKSPart4;
         private System.Windows.Forms.Label KKSPart3;
@@ -387,5 +386,6 @@
         private System.Windows.Forms.CheckBox KKSPartCheck2;
         private System.Windows.Forms.CheckBox KKSPartCheck4;
         private System.Windows.Forms.CheckBox KKSPartCheck3;
+        private System.Windows.Forms.Label KKS1Label;
     }
 }

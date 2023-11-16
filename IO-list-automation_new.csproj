@@ -132,6 +132,12 @@
     <Compile Include="General\GeneralClass.cs" />
     <Compile Include="General\GeneralFunctions.cs" />
     <Compile Include="Helper functions\Debug.cs" />
+    <Compile Include="IOTextEdit.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="IOTextEdit.Designer.cs">
+      <DependentUpon>IOTextEdit.cs</DependentUpon>
+    </Compile>
     <Compile Include="KKSEdit.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -205,6 +211,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="DesignInputData.resx">
       <DependentUpon>DesignInputData.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="IOTextEdit.resx">
+      <DependentUpon>IOTextEdit.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="KKSEdit.resx">
       <DependentUpon>KKSEdit.cs</DependentUpon>

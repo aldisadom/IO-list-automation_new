@@ -29,13 +29,12 @@
         private void InitializeComponent()
         {
             this.InputDataGridView = new System.Windows.Forms.DataGridView();
-            this.PinIsNumber = new System.Windows.Forms.CheckBox();
-            this.PinHasNumber = new System.Windows.Forms.CheckBox();
-            this.ChannelIsNumber = new System.Windows.Forms.CheckBox();
-            this.ChannelHasNumber = new System.Windows.Forms.CheckBox();
             this.RowOffsetInput = new System.Windows.Forms.TextBox();
             this.RowOffsetLabel = new System.Windows.Forms.Label();
             this.comboBoxColumn = new System.Windows.Forms.ComboBox();
+            this.ElementHasChannelAndIsNumber = new System.Windows.Forms.Label();
+            this.ElementHasModuleName = new System.Windows.Forms.Label();
+            this.ElementHasIOText = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.InputDataGridView)).BeginInit();
             this.SuspendLayout();
             // 
@@ -48,63 +47,20 @@
             this.InputDataGridView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.InputDataGridView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
             this.InputDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.InputDataGridView.Location = new System.Drawing.Point(2, 41);
+            this.InputDataGridView.Location = new System.Drawing.Point(2, 52);
             this.InputDataGridView.Name = "InputDataGridView";
             this.InputDataGridView.ReadOnly = true;
             this.InputDataGridView.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
-            this.InputDataGridView.Size = new System.Drawing.Size(998, 589);
+            this.InputDataGridView.Size = new System.Drawing.Size(998, 578);
             this.InputDataGridView.TabIndex = 0;
             this.InputDataGridView.Visible = false;
             this.InputDataGridView.ColumnHeaderMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.InputDataGridView_ColumnHeaderMouseClick);
             // 
-            // PinIsNumber
-            // 
-            this.PinIsNumber.AutoSize = true;
-            this.PinIsNumber.Checked = true;
-            this.PinIsNumber.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.PinIsNumber.Location = new System.Drawing.Point(325, 15);
-            this.PinIsNumber.Name = "PinIsNumber";
-            this.PinIsNumber.Size = new System.Drawing.Size(86, 17);
-            this.PinIsNumber.TabIndex = 40;
-            this.PinIsNumber.Text = "PinIsNumber";
-            this.PinIsNumber.UseVisualStyleBackColor = true;
-            // 
-            // PinHasNumber
-            // 
-            this.PinHasNumber.AutoSize = true;
-            this.PinHasNumber.Location = new System.Drawing.Point(325, 0);
-            this.PinHasNumber.Name = "PinHasNumber";
-            this.PinHasNumber.Size = new System.Drawing.Size(97, 17);
-            this.PinHasNumber.TabIndex = 39;
-            this.PinHasNumber.Text = "PinHasNumber";
-            this.PinHasNumber.UseVisualStyleBackColor = true;
-            // 
-            // ChannelIsNumber
-            // 
-            this.ChannelIsNumber.AutoSize = true;
-            this.ChannelIsNumber.Location = new System.Drawing.Point(2, 15);
-            this.ChannelIsNumber.Name = "ChannelIsNumber";
-            this.ChannelIsNumber.Size = new System.Drawing.Size(110, 17);
-            this.ChannelIsNumber.TabIndex = 38;
-            this.ChannelIsNumber.Text = "ChannelIsNumber";
-            this.ChannelIsNumber.UseVisualStyleBackColor = true;
-            // 
-            // ChannelHasNumber
-            // 
-            this.ChannelHasNumber.AutoSize = true;
-            this.ChannelHasNumber.Checked = true;
-            this.ChannelHasNumber.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.ChannelHasNumber.Location = new System.Drawing.Point(2, 0);
-            this.ChannelHasNumber.Name = "ChannelHasNumber";
-            this.ChannelHasNumber.Size = new System.Drawing.Size(121, 17);
-            this.ChannelHasNumber.TabIndex = 37;
-            this.ChannelHasNumber.Text = "ChannelHasNumber";
-            this.ChannelHasNumber.UseVisualStyleBackColor = true;
-            // 
             // RowOffsetInput
             // 
-            this.RowOffsetInput.Location = new System.Drawing.Point(533, 17);
+            this.RowOffsetInput.Location = new System.Drawing.Point(11, 18);
             this.RowOffsetInput.Name = "RowOffsetInput";
             this.RowOffsetInput.Size = new System.Drawing.Size(50, 20);
             this.RowOffsetInput.TabIndex = 41;
@@ -116,7 +72,7 @@
             // 
             this.RowOffsetLabel.AutoSize = true;
             this.RowOffsetLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.RowOffsetLabel.Location = new System.Drawing.Point(530, 0);
+            this.RowOffsetLabel.Location = new System.Drawing.Point(8, 1);
             this.RowOffsetLabel.Name = "RowOffsetLabel";
             this.RowOffsetLabel.Size = new System.Drawing.Size(68, 16);
             this.RowOffsetLabel.TabIndex = 42;
@@ -134,18 +90,53 @@
             this.comboBoxColumn.Visible = false;
             this.comboBoxColumn.SelectedValueChanged += new System.EventHandler(this.ComboBoxColumn_SelectedValueChanged);
             // 
+            // ElementHasChannelAndIsNumber
+            // 
+            this.ElementHasChannelAndIsNumber.AutoSize = true;
+            this.ElementHasChannelAndIsNumber.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ElementHasChannelAndIsNumber.Location = new System.Drawing.Point(237, 1);
+            this.ElementHasChannelAndIsNumber.Name = "ElementHasChannelAndIsNumber";
+            this.ElementHasChannelAndIsNumber.Size = new System.Drawing.Size(212, 16);
+            this.ElementHasChannelAndIsNumber.TabIndex = 44;
+            this.ElementHasChannelAndIsNumber.Tag = "";
+            this.ElementHasChannelAndIsNumber.Text = "ElementHasChannelAndIsNumber";
+            this.ElementHasChannelAndIsNumber.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // ElementHasModuleName
+            // 
+            this.ElementHasModuleName.AutoSize = true;
+            this.ElementHasModuleName.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ElementHasModuleName.Location = new System.Drawing.Point(237, 17);
+            this.ElementHasModuleName.Name = "ElementHasModuleName";
+            this.ElementHasModuleName.Size = new System.Drawing.Size(163, 16);
+            this.ElementHasModuleName.TabIndex = 45;
+            this.ElementHasModuleName.Tag = "";
+            this.ElementHasModuleName.Text = "ElementHasModuleName";
+            this.ElementHasModuleName.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // ElementHasIOText
+            // 
+            this.ElementHasIOText.AutoSize = true;
+            this.ElementHasIOText.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ElementHasIOText.Location = new System.Drawing.Point(237, 33);
+            this.ElementHasIOText.Name = "ElementHasIOText";
+            this.ElementHasIOText.Size = new System.Drawing.Size(120, 16);
+            this.ElementHasIOText.TabIndex = 46;
+            this.ElementHasIOText.Tag = "";
+            this.ElementHasIOText.Text = "ElementHasIOText";
+            this.ElementHasIOText.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
             // DesignInputData
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1000, 631);
+            this.Controls.Add(this.ElementHasIOText);
+            this.Controls.Add(this.ElementHasModuleName);
+            this.Controls.Add(this.ElementHasChannelAndIsNumber);
             this.Controls.Add(this.comboBoxColumn);
             this.Controls.Add(this.RowOffsetLabel);
             this.Controls.Add(this.RowOffsetInput);
-            this.Controls.Add(this.PinIsNumber);
-            this.Controls.Add(this.PinHasNumber);
-            this.Controls.Add(this.ChannelIsNumber);
-            this.Controls.Add(this.ChannelHasNumber);
             this.Controls.Add(this.InputDataGridView);
             this.Name = "DesignInputData";
             this.Text = "DesignInputData";
@@ -159,12 +150,11 @@
         #endregion
 
         private System.Windows.Forms.DataGridView InputDataGridView;
-        private System.Windows.Forms.CheckBox PinIsNumber;
-        private System.Windows.Forms.CheckBox PinHasNumber;
-        private System.Windows.Forms.CheckBox ChannelIsNumber;
-        private System.Windows.Forms.CheckBox ChannelHasNumber;
         private System.Windows.Forms.TextBox RowOffsetInput;
         private System.Windows.Forms.Label RowOffsetLabel;
         private System.Windows.Forms.ComboBox comboBoxColumn;
+        private System.Windows.Forms.Label ElementHasChannelAndIsNumber;
+        private System.Windows.Forms.Label ElementHasModuleName;
+        private System.Windows.Forms.Label ElementHasIOText;
     }
 }

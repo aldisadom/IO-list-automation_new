@@ -313,42 +313,6 @@ namespace IO_list_automation_new.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("10")]
-        public int ColumnObjectName {
-            get {
-                return ((int)(this["ColumnObjectName"]));
-            }
-            set {
-                this["ColumnObjectName"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("11")]
-        public int ColumnObjectSpecifics {
-            get {
-                return ((int)(this["ColumnObjectSpecifics"]));
-            }
-            set {
-                this["ColumnObjectSpecifics"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("12")]
-        public int ColumnFunctionText {
-            get {
-                return ((int)(this["ColumnFunctionText"]));
-            }
-            set {
-                this["ColumnFunctionText"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("13")]
         public int ColumnFunction {
             get {
@@ -488,6 +452,30 @@ namespace IO_list_automation_new.Properties {
             }
             set {
                 this["ColumnTag"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute(";")]
+        public string ObjectSpecificsSeparator {
+            get {
+                return ((string)(this["ObjectSpecificsSeparator"]));
+            }
+            set {
+                this["ObjectSpecificsSeparator"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute(":")]
+        public string FunctionTextSeparator {
+            get {
+                return ((string)(this["FunctionTextSeparator"]));
+            }
+            set {
+                this["FunctionTextSeparator"] = value;
             }
         }
     }

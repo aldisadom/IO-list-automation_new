@@ -5,6 +5,7 @@ using IO_list_automation_new.Properties;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Runtime.Remoting.Channels;
 using System.Windows.Forms;
 
 namespace IO_list_automation_new
@@ -234,7 +235,9 @@ namespace IO_list_automation_new
                 return false;
             else if (string.IsNullOrEmpty(IOText))
                 return false;
-            else if (string.IsNullOrEmpty(Pin) && !string.IsNullOrEmpty(Channel))
+            else if (string.IsNullOrEmpty(Channel))
+                return false;
+            else if (!HasNumber(Channel))
                 return false;
 
             return true;
@@ -253,33 +256,6 @@ namespace IO_list_automation_new
                     return true;
             }
             return false;
-        }
-
-        /// <summary>
-        /// Check if signal has useful information, if not discard
-        /// </summary>
-        /// <param name="_checkPin">pin check for number is needed</param>
-        /// <param name="_checkChannel">channel check for number is needed</param>
-        /// <returns>has useful data</returns>
-        public bool ExtractUseful(bool _checkPin, bool _checkChannel)
-        {
-            if (_checkPin)
-            {
-                if (SettingsDesignInput.Default.PinIsNumber && !int.TryParse(Pin, out _))
-                    return false;
-                else if (SettingsDesignInput.Default.PinHasNumber && !HasNumber(Pin))
-                    return false;
-            }
-
-            if (_checkChannel)
-            {
-                if (SettingsDesignInput.Default.ChannelIsNumber && !int.TryParse(Channel, out _))
-                    return false;
-                else if (SettingsDesignInput.Default.ChannelHasNumber && !HasNumber(Channel))
-                    return false;
-            }
-
-            return true;
         }
     }
 
@@ -419,11 +395,7 @@ namespace IO_list_automation_new
 
             debug.ToFile("Processing input file", DebugLevels.High, DebugMessageType.Info);
 
-            int _columnCount;
-            bool _checkPin = SettingsDesignInput.Default.ColumnPin >= 0;
-            bool _checkChannel = SettingsDesignInput.Default.ColumnChannel >= 0;
-
-            _columnCount = _excel.FieldCount;
+            int _columnCount = _excel.FieldCount;
             string[,] _inputData = new string[_rowCount, _columnCount + 1];
 
             //read all excel rows
@@ -478,11 +450,8 @@ namespace IO_list_automation_new
 
                 // if signal is valid add to list
                 if (_signalNew.ValidateSignal())
-                {
-                    // if signal has useful data add to list
-                    if (_signalNew.ExtractUseful(_checkPin, _checkChannel))
-                        Signals.Add(_signalNew);
-                }
+                    Signals.Add(_signalNew);
+
                 Progress.UpdateProgressBar(_row);
             }
 

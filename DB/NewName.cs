@@ -16,7 +16,7 @@ namespace IO_list_automation_new.DB
             }
         }
 
-        public NewName(string name, bool withSignalName)
+        public NewName(string name,string predefinedName, bool withSignalName)
         {
             InitializeComponent();
             this.Name = name;
@@ -26,6 +26,8 @@ namespace IO_list_automation_new.DB
 
             DBObjectSignalName.Visible = withSignalName;
             InputDBObjectSignalName.Visible = withSignalName;
+
+            InputDBObjectName.Text = predefinedName;
         }
 
         private void ButtonOK_Click(object sender, EventArgs e)
