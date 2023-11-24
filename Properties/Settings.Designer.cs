@@ -130,5 +130,17 @@ namespace IO_list_automation_new.Properties {
                 this["AutoLoadFile"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool SettingsUpgrade {
+            get {
+                return ((bool)(this["SettingsUpgrade"]));
+            }
+            set {
+                this["SettingsUpgrade"] = value;
+            }
+        }
     }
 }

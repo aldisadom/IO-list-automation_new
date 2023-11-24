@@ -1,11 +1,13 @@
 ﻿using IO_list_automation_new.Properties;
 using System;
 using System.Globalization;
+using System.Reflection;
 using System.Threading;
 using System.Windows.Forms;
 
 namespace IO_list_automation_new
 {
+    
     internal enum FileExtensions
     {
         data,
@@ -110,7 +112,28 @@ namespace IO_list_automation_new
         [STAThread]
         public static void Main()
         {
-            const string _versionNumber = "0.0.2";
+            if (Settings.Default.SettingsUpgrade)
+            {
+                Settings.Default.Upgrade();
+                SettingsData.Default.Upgrade();
+                SettingsDesign.Default.Upgrade();
+                SettingsDesignInput.Default.Upgrade();
+                SettingsModule.Default.Upgrade();
+                SettingsObject.Default.Upgrade();
+                Settings.Default.SettingsUpgrade = false;
+
+                Settings.Default.Save();
+            }
+
+            Assembly thisAssembly = typeof(Program).Assembly;
+            AssemblyName thisAssemblyName = thisAssembly.GetName();
+
+            Version ver = thisAssemblyName.Version;
+
+            string _versionNumber = ver.Major.ToString() + "." +
+                                    ver.Minor.ToString() + "." +
+                                    ver.Build.ToString() + "." +
+                                    ver.Revision.ToString();
 
             Debug _debug = new Debug();
             if (Settings.Default.DebugLevel == (uint)DebugLevels.Development)

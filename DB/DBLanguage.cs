@@ -146,7 +146,7 @@ namespace IO_list_automation_new
             string _fileName = System.IO.Path.GetDirectoryName(System.Windows.Forms.Application.ExecutablePath) + "\\DB\\" + Settings.Default.IOLanguage;
 
             //convert data from file to signals
-            if (!ListToSignals(Grid.LoadFromFileToMemory(_fileName), BaseColumns.Columns, false))
+            if (!ListToSignals(File.LoadFromFile(_fileName), BaseColumns.Columns, false))
                 return;
 
             Progress.RenameProgressBar(Resources.FindObjectType, objects.Signals.Count);
@@ -357,7 +357,7 @@ namespace IO_list_automation_new
             debug.ToFile("Finding function type in data", DebugLevels.High, DebugMessageType.Info);
 
             //convert data from file to signals
-            if (!ListToSignals(Grid.LoadFromFileToMemory(FileName), BaseColumns.Columns, false))
+            if (!ListToSignals(File.LoadFromFile(FileName), BaseColumns.Columns, false))
                 return;
 
             Progress.RenameProgressBar(Resources.FindFunction, data.Signals.Count);

@@ -238,6 +238,7 @@ namespace IO_list_automation_new.Forms
         {
             DeleteColumnComboBox();
             DataGridViewCell _cell = ((DataGridView)sender).Rows[e.RowIndex].Cells[e.ColumnIndex];
+            Grid.ReadOnly = true;
 
             if (_cell.Tag == null)
                 return;
@@ -252,7 +253,7 @@ namespace IO_list_automation_new.Forms
                     Grid.ReadOnly = _cellTag.Restrain == RestrainLevel.NoEdit;
                     return;
             }
-            Grid.ReadOnly = true;
+            
 
             List<string> _selectList = GetSelectList(_cellTag.Restrain, _cellTag.ComboType);
             DropDownClass _dropDowns = new DropDownClass("ComboBoxCell");
@@ -469,14 +470,19 @@ namespace IO_list_automation_new.Forms
         private void Grid_EditingControlShowing(object sender, DataGridViewEditingControlShowingEventArgs e)
         {
             e.Control.KeyPress -= Cell_KeyPress;
+
+            if (Grid.CurrentCell.Tag == null)
+                return;
+
             CellTag _cellTag = (CellTag)Grid.CurrentCell.Tag;
 
-            if (_cellTag.ComboType == ComboBoxType.Number && _cellTag.Restrain != RestrainLevel.NoEdit)
-            {
-                TextBox tb = e.Control as TextBox;
-                if (tb != null)
-                    tb.KeyPress += Cell_KeyPress;
-            }
+            if (_cellTag.ComboType != ComboBoxType.Number || _cellTag.Restrain == RestrainLevel.NoEdit)
+                return;
+
+            TextBox tb = e.Control as TextBox;
+            if (tb != null)
+                tb.KeyPress += Cell_KeyPress;
+
         }
 
         /// <summary>
@@ -695,7 +701,7 @@ namespace IO_list_automation_new.Forms
                 Grid.Columns.Add("","");
 
             int _row = rowIndex * 2;
-            for (int i = Grid.RowCount; i <= _row+2; i++)
+            for (int i = Grid.RowCount; i < _row+2; i++)
                 Grid.Rows.Add();
 
             if (labelText != null)
@@ -1062,7 +1068,7 @@ namespace IO_list_automation_new.Forms
         private void ClearEmptyRows()
         {
             bool found;
-            for (int row = Grid.RowCount-1; row > 1; row--)
+            for (int row = Grid.RowCount-2; row > 1; row--)
             {
                 found = false;
                 for (int column = 0; column < Grid.ColumnCount; column++)
@@ -1108,8 +1114,8 @@ namespace IO_list_automation_new.Forms
                 }
             }
             AddElement(PositionRow, PositionColumn, "", null, RestrainLevel.None, ComboBoxType.Main);
-
             ClearEmptyRows();
+
             Grid.AutoResizeColumns();
             Grid.AutoResizeRows();
 

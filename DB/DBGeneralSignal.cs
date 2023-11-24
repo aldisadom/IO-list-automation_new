@@ -1,7 +1,9 @@
 ﻿using IO_list_automation_new.Properties;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
+using System.Xml.Linq;
 
 namespace IO_list_automation_new.DB
 {
@@ -648,7 +650,7 @@ namespace IO_list_automation_new.DB
         /// <param name="data">data</param>
         /// <param name="objectSignal">object</param>
         /// <returns>decoded text line</returns>
-        public List<string> DecodeLine(int index, DataClass data, ObjectSignal objectSignal, ModuleSignal moduleSignal, AddressObject addressObject, BaseTypes inputBase)
+        public void DecodeLine(DataTable dataTable, int index, DataClass data, ObjectSignal objectSignal, ModuleSignal moduleSignal, AddressObject addressObject, BaseTypes inputBase)
         {
             Index = 0;
             List<string> decodedLine = new List<string>() { string.Empty };
@@ -666,7 +668,14 @@ namespace IO_list_automation_new.DB
                     throw new InvalidProgramException(_debugText + ": infinite loop");
                 }
             }
-            return decodedLine;
+            for (int _column = dataTable.Columns.Count; _column < decodedLine.Count; _column++)
+                dataTable.Columns.Add(_column.ToString());
+
+            DataRow _row = dataTable.NewRow();
+            for (int i = 0; i < decodedLine.Count; i++)
+                _row[i] = decodedLine[i];
+
+            dataTable.Rows.Add(_row);
         }
     }
 }

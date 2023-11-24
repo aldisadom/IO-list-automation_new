@@ -3,6 +3,7 @@ using IO_list_automation_new.General;
 using IO_list_automation_new.Properties;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Diagnostics;
 using System.Globalization;
 using System.Threading;
@@ -339,6 +340,10 @@ namespace IO_list_automation_new
         private void KeyDown_Event(object sender, KeyEventArgs e)
         {
             DeleteColumnComboBox();
+
+            if ((TabIndex)MainTabControl.SelectedIndex == IO_list_automation_new.TabIndex.Address)
+                return;
+
             // Delete function
             if ((e.KeyCode == Keys.Delete) || (e.KeyCode == Keys.Back))
             {
@@ -425,9 +430,9 @@ namespace IO_list_automation_new
             ModuleClass modules = new ModuleClass(Progress, ModulesGridView);
             AddressesClass address = new AddressesClass(Progress, AddressesGridView);
 
-            _saveFile.Filter = "All save files|*" + design.Grid.FileExtension + ";*" + data.Grid.FileExtension
-                                                    + ";*" + objects.Grid.FileExtension + ";*" + modules.Grid.FileExtension
-                                                    + ";*" + address.Grid.FileExtension;
+            _saveFile.Filter = "All save files|*" + design.File.FileExtension + ";*" + data.File.FileExtension
+                                                    + ";*" + objects.File.FileExtension + ";*" + modules.File.FileExtension
+                                                    + ";*" + address.File.FileExtension;
 
             if (_saveFile.ShowDialog() != DialogResult.OK)
             {
@@ -505,9 +510,9 @@ namespace IO_list_automation_new
             ModuleClass modules = new ModuleClass(Progress, ModulesGridView);
             AddressesClass address = new AddressesClass(Progress, AddressesGridView);
 
-            _loadFile.Filter = "All save files|*" + design.Grid.FileExtension + ";*" + data.Grid.FileExtension
-                                        + ";*" + objects.Grid.FileExtension + ";*" + modules.Grid.FileExtension
-                                        + ";*" + address.Grid.FileExtension;
+            _loadFile.Filter = "All save files|*" + design.File.FileExtension + ";*" + data.File.FileExtension
+                                        + ";*" + objects.File.FileExtension + ";*" + modules.File.FileExtension
+                                        + ";*" + address.File.FileExtension;
 
             if (_loadFile.ShowDialog() != DialogResult.OK)
             {
@@ -710,25 +715,23 @@ namespace IO_list_automation_new
                     MessageBox.Show(Resources.EnteredEmptyName, "", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
-                else if (_DBLanguage.FunctionType.Grid.FileExistsInDB(_fileName, null))
+                else if (_DBLanguage.FunctionType.File.FileExistsInDB(_fileName, null))
                 {
                     MessageBox.Show(Resources.EnteredExistingName, "", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
 
-                List <List<string>> _data= new List<List<string>>()
-                {
-                    _DBLanguage.FunctionType.Columns.GetColumnsKeyword(),
-                    new List<string>(){"Text to replace", "OPD"},
-                };
-                _DBLanguage.FunctionType.Grid.CreateFileInDB(_fileName, null, _data);
+                DataTable _data = new DataTable();
+                DataRow _row = _data.NewRow();
+                _data.Columns.Add("0");
+                _data.Columns.Add("");
+                _row[0] = "Text to replace";
+                _row[1] = "OPD";
+                _data.Rows.Add(_row);
+                _DBLanguage.FunctionType.File.CreateFileInDB(_fileName, null, _data);
 
-                _data = new List<List<string>>()
-                {
-                    _DBLanguage.Type.Columns.GetColumnsKeyword(),
-                    new List<string>(){"Text to replace", "VLV"},
-                };
-                _DBLanguage.Type.Grid.CreateFileInDB(_fileName, null, _data);
+                _data.Rows[0][1] = "VLV";
+                _DBLanguage.Type.File.CreateFileInDB(_fileName, null, _data);
             }
             else
             {

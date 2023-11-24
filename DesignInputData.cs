@@ -1,14 +1,18 @@
 ﻿using IO_list_automation_new.Properties;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Drawing;
 using System.Windows.Forms;
+using System.Xml.Linq;
 
 namespace IO_list_automation_new.Forms
 {
     public partial class DesignInputData : Form
     {
         private int ColumnIndex = 0;
+
+        private GeneralGrid Grid { get; set; }
 
         private ColumnList ExcelColumns { get; set; }
 
@@ -59,8 +63,8 @@ namespace IO_list_automation_new.Forms
             //add remove item
             comboBoxColumn.Items.Add("---");
 
-            //add current column if is is selected
-            if (InputDataGridView.Columns[ColumnIndex].HeaderText != ("Col " + ColumnIndex.ToString()))
+            //add current column if it is selected
+            if (InputDataGridView.Columns[ColumnIndex].HeaderText != (ColumnIndex.ToString()))
                 comboBoxColumn.Items.Add(InputDataGridView.Columns[ColumnIndex].HeaderText);
 
             //add new columns selection
@@ -80,7 +84,7 @@ namespace IO_list_automation_new.Forms
             string _columnName = comboBox.SelectedItem.ToString();
 
             if (_columnName == "---")
-                InputDataGridView.Columns[ColumnIndex].HeaderText = ("Col " + ColumnIndex.ToString());
+                InputDataGridView.Columns[ColumnIndex].HeaderText = (ColumnIndex.ToString());
             else
                 InputDataGridView.Columns[ColumnIndex].HeaderText = _columnName;
 
@@ -93,6 +97,7 @@ namespace IO_list_automation_new.Forms
         private List<string> GetAvailableColumns()
         {
             List<string> _columnNames = new List<string>();
+            InitExcelColumnsList();
 
             foreach (GeneralColumn _column in ExcelColumns)
             {
@@ -130,7 +135,7 @@ namespace IO_list_automation_new.Forms
             ExcelColumns.SetColumns(_excelColumn, false);
         }
 
-        public DesignInputData(string[,] _data)
+        public DesignInputData(DataTable data)
         {
             InitializeComponent();
 
@@ -138,40 +143,9 @@ namespace IO_list_automation_new.Forms
             InitExcelColumnsList();
 
             RowOffsetInput.Text = SettingsDesignInput.Default.RowOffset.ToString();
-
-            //adding columns
-            for (int i = 0; i < _data.GetLength(1); i++)
-            {
-                DataGridViewColumn _columnGridView = new DataGridViewColumn();
-
-                DataGridViewTextBoxCell _cell = new DataGridViewTextBoxCell();
-                _columnGridView.CellTemplate = _cell;
-                _columnGridView.SortMode = DataGridViewColumnSortMode.NotSortable;
-                InputDataGridView.Columns.Insert(i, _columnGridView);
-            }
-
-            //adding rows
-            for (int i = 0; i < _data.GetLength(0); i++)
-                InputDataGridView.Rows.Add();
-
-            RenameColumns();
-
-            //for removing columns that are outside of excel range
-            GetColumns();
-
-            //add data to grid
-            for (int i = 0; i < _data.GetLength(0); i++)
-            {
-                string[] _row = new string[_data.GetLength(1)];
-
-                for (int j = 0; j < _data.GetLength(1); j++)
-                    _row[j] = _data[i, j];
-
-                InputDataGridView.Rows[i].SetValues(_row);
-            }
-
-            InputDataGridView.Visible = true;
-            InputDataGridView.AutoResizeColumns();
+            ExcelColumns.SortColumnsList(true);
+            Grid = new GeneralGrid(Name, GridTypes.DataNoEdit, InputDataGridView, ExcelColumns);
+            Grid.PutData(data);
 
             ElementHasChannelAndIsNumber.Text = ResourcesUI.ElementHasChannelAndIsNumber;
             ElementHasIOText.Text = ResourcesUI.ElementHasIOText;

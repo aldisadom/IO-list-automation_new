@@ -2,6 +2,7 @@
 using IO_list_automation_new.Properties;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -285,7 +286,7 @@ namespace IO_list_automation_new
             return _columns;
         }
 
-        public override List<List<string>> SignalsToList()
+        public override DataTable SignalsToList()
         {
             Debug debug = new Debug();
             debug.ToFile(Resources.ConvertDataToList + ": " + Name, DebugLevels.High, DebugMessageType.Info);
@@ -317,18 +318,24 @@ namespace IO_list_automation_new
             }
 
             Columns.SetColumns(_newColumnList, false);
-            List<List<string>> _data = new List<List<string>>();
+            DataTable _data = new DataTable();
+
+            //add columns to dataTable
+            for (int _column = 0; _column < Columns.Columns.Count; _column++)
+                _data.Columns.Add(Columns.Columns[_column].Keyword);
+
             for (int _signalNumber = 0; _signalNumber < Signals.Count; _signalNumber++)
             {
                 AddressObject _signal = Signals[_signalNumber];
-                _data.Add(new List<string>(new string[_newColumnList.Count]));
+                DataRow row = _data.NewRow();
 
-                _data[_signalNumber][0] = _signal.ID;
-                _data[_signalNumber][1] = _signal.CPU;
-                _data[_signalNumber][2] = _signal.ObjectGeneralType;
-                _data[_signalNumber][3] = _signal.ObjectType;
-                _data[_signalNumber][4] = _signal.ObjectName;
+                row[0] = _signal.ID;
+                row[1] = _signal.CPU;
+                row[2] = _signal.ObjectGeneralType;
+                row[3] = _signal.ObjectType;
+                row[4] = _signal.ObjectName;
                 _columnIndex = BaseColumns.Columns.Count;
+
                 foreach (string _columnName in addressColumns)
                 {
                     for (int i = 0; i < _signal.Addresses.Count; i++)
@@ -336,13 +343,15 @@ namespace IO_list_automation_new
                         if (_signal.Addresses[i].ObjectVariableType != _columnName)
                             continue;
 
-                        _data[_signalNumber][_columnIndex] = _signal.Addresses[i].Area;
-                        _data[_signalNumber][_columnIndex + 1] = _signal.Addresses[i].AddressStart;
-                        _data[_signalNumber][_columnIndex + 2] = _signal.Addresses[i].AddressSize;
+                        row[_columnIndex] = _signal.Addresses[i].Area;
+                        row[_columnIndex+1] = _signal.Addresses[i].AddressStart;
+                        row[_columnIndex+2] = _signal.Addresses[i].AddressSize;
                         break;
                     }
                     _columnIndex += 3;
                 }
+
+                _data.Rows.Add(row);
                 Progress.UpdateProgressBar(_signalNumber);
             }
             Progress.HideProgressBar();
@@ -356,8 +365,11 @@ namespace IO_list_automation_new
         /// </summary>
         /// <param name="suppressError">suppress error</param>
         /// <returns>there is data in signals</returns>
-        public override bool ListToSignals(List<List<string>> inputData, List<GeneralColumn> newColumnList, bool suppressError)
+        public override bool ListToSignals(DataTable inputData, List<GeneralColumn> newColumnList, bool suppressError)
         {
+            if (inputData == null)
+                return false;
+
             Debug debug = new Debug();
             debug.ToFile(Resources.ConvertListToData + ": " + Name, DebugLevels.High, DebugMessageType.Info);
 
@@ -370,8 +382,8 @@ namespace IO_list_automation_new
             string _columnName;
             int _indexText;
 
-            Progress.RenameProgressBar(Resources.ConvertListToData + ": " + Name, inputData.Count);
-            for (int _rowNumber = 0; _rowNumber < inputData.Count; _rowNumber++)
+            Progress.RenameProgressBar(Resources.ConvertListToData + ": " + Name, inputData.Rows.Count);
+            for (int _rowNumber = 0; _rowNumber < inputData.Rows.Count; _rowNumber++)
             {
                 AddressObject _signal = new AddressObject();
                 for (int _columnIndex = 0; _columnIndex < BaseColumns.Columns.Count; _columnIndex++)
@@ -383,7 +395,7 @@ namespace IO_list_automation_new
 
                     //put value based on keyword to memory
                     _keyword = BaseColumns.Columns[_columnIndex].Keyword;
-                    _cellValue = inputData[_rowNumber][_columnNumber];
+                    _cellValue = GeneralFunctions.GetDataTableValue(inputData,_rowNumber,_columnNumber);
 
                     _signal.SetValueFromString(_cellValue, _keyword);
                 }
@@ -391,14 +403,16 @@ namespace IO_list_automation_new
                 for (int _columnIndex = BaseColumns.Columns.Count; _columnIndex < newColumnList.Count; _columnIndex += 3)
                 {
                     _columnNumber = newColumnList[_columnIndex].Number;
-                    if (string.IsNullOrEmpty(inputData[_rowNumber][_columnNumber]))
+                    if (string.IsNullOrEmpty(GeneralFunctions.GetDataTableValue(inputData, _rowNumber,_columnNumber)))
                         continue;
 
                     _indexText = newColumnList[_columnIndex].Keyword.IndexOf("(");
                     _columnName = _indexText == -1 ? string.Empty : newColumnList[_columnIndex].Keyword.Substring(_indexText);
 
-                    AddressSingle _addressSingle = new AddressSingle(inputData[_rowNumber][_columnIndex], inputData[_rowNumber][_columnIndex + 1],
-                                                                    inputData[_rowNumber][_columnIndex + 2], _columnName);
+                    AddressSingle _addressSingle = new AddressSingle(GeneralFunctions.GetDataTableValue(inputData, _rowNumber, _columnNumber)
+                                                                    ,GeneralFunctions.GetDataTableValue(inputData, _rowNumber, _columnNumber + 1)
+                                                                    ,GeneralFunctions.GetDataTableValue(inputData, _rowNumber, _columnNumber + 2)
+                                                                    ,_columnName);
                     _signal.Addresses.Add(_addressSingle);
                 }
 

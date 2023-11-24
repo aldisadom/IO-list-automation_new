@@ -4,6 +4,7 @@ using IO_list_automation_new.General;
 using IO_list_automation_new.Properties;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.IO;
 using System.Runtime.Remoting.Channels;
 using System.Windows.Forms;
@@ -387,61 +388,33 @@ namespace IO_list_automation_new
 
             debug.ToFile("Excel file for design is: " + _importFile.FileName, DebugLevels.High, DebugMessageType.Info);
             //open excel file
-            FileStream stream = File.Open(_importFile.FileName, FileMode.Open, FileAccess.Read);
-            IExcelDataReader _excel = ExcelReaderFactory.CreateReader(stream);
+            ExcelFiles _excelFile = new ExcelFiles(_importFile.FileName, Path.GetExtension(_importFile.FileName).Substring(1), Progress);
+            DataTable _data = _excelFile.LoadFromFile(_importFile.FileName);
 
-            int _rowCount = _excel.RowCount;
-            Progress.RenameProgressBar(Resources.DesignImport, _rowCount);
-
-            debug.ToFile("Processing input file", DebugLevels.High, DebugMessageType.Info);
-
-            int _columnCount = _excel.FieldCount;
-            string[,] _inputData = new string[_rowCount, _columnCount + 1];
-
-            //read all excel rows
-            for (int _row = 1; _row <= _rowCount; _row++)
-            {
-                // if nothing to read exit
-                if (!_excel.Read())
-                    break;
-
-                //first column is row number
-                _inputData[_row - 1, 0] = GeneralFunctions.AddZeroes(_row);
-                for (int _column = 0; _column < _columnCount; _column++)
-                    _inputData[_row - 1, _column + 1] = GeneralFunctions.ReadExcelCell(_row, _column, _columnCount, _excel);
-
-                Progress.UpdateProgressBar(_row);
-            }
-            debug.ToFile("Processing input file - " + Resources.Finished, DebugLevels.High, DebugMessageType.Info);
-            Progress.HideProgressBar();
-            _excel.Close();
-
-            DesignInputData _designInputData = new DesignInputData(_inputData);
+            DesignInputData _designInputData = new DesignInputData(_data);
             _designInputData.ShowDialog();
 
             InitExcelColumnsList();
 
-            int _maxColumns = _inputData.GetLength(1);
             int _columnNumber;
             string _cellValue;
             string _ColumnName;
 
             UpdateColumnNumbers(ExcelColumns.Columns);
 
-            _rowCount = _inputData.GetLength(0);
-            Progress.RenameProgressBar(Resources.DesignImport, _rowCount);
+            Progress.RenameProgressBar(Resources.DesignImport, _data.Rows.Count);
             debug.ToFile("Extracting data from input file", DebugLevels.High, DebugMessageType.Info);
 
-            for (int _row = SettingsDesignInput.Default.RowOffset; _row < _rowCount; _row++)
+            for (int _row = SettingsDesignInput.Default.RowOffset; _row < _data.Rows.Count; _row++)
             {
                 //create signal and add corresponding Columns to each signal element
                 DesignSignal _signalNew = new DesignSignal();
                 foreach (GeneralColumn _column in ExcelColumns)
                 {
                     _columnNumber = _column.Number;
-                    if (_columnNumber != -1 && _columnNumber < _maxColumns)
+                    if (_columnNumber != -1 && _columnNumber < _data.Columns.Count)
                     {
-                        _cellValue = _inputData[_row, _columnNumber];
+                        _cellValue = GeneralFunctions.GetDataTableValue(_data, _row, _columnNumber);
                         _ColumnName = _column.Keyword;
 
                         _signalNew.SetValueFromString(_cellValue, _ColumnName);

@@ -4,6 +4,11 @@ using IO_list_automation_new.Properties;
 using SwiftExcel;
 using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Net;
+using System.Reflection;
+using System.Runtime.InteropServices;
+using System.Security.AccessControl;
 using System.Windows.Forms;
 
 namespace IO_list_automation_new
@@ -222,7 +227,7 @@ namespace IO_list_automation_new
                 //assign dummy grid
                 DataGridView _grid = new DataGridView();
                 DBGeneralType _instance = new DBGeneralType(NameDB, _fullType, _type, FileExtension, Progress, _grid);
-                List<List<string>> _fileData = _instance.Grid.LoadFromFileToMemory(_fileName);
+                DataTable _fileData = _instance.File.LoadFromFile(_fileName);
                 _instance.SetData(_fileData);
 
                 Devices.Add(_instance);
@@ -234,8 +239,8 @@ namespace IO_list_automation_new
         /// <summary>
         /// Get all instances from grid to Devices object
         /// </summary>
-        /// <param name="tabControl">tab control where is pages and grids</param>
-        private void GetDeviceTypesFromGrid(TabControl tabControl)
+        /// <param name="mainTabControl">tab control where is pages and grids</param>
+        private void GetDeviceTypesFromGrid(TabControl mainTabControl)
         {
             Debug debug = new Debug();
             debug.ToFile("Searching " + NameDB + " configuration from grid", DebugLevels.Development, DebugMessageType.Info);
@@ -243,38 +248,26 @@ namespace IO_list_automation_new
 
             string _type;
             string _fullType;
-            //go through all tab control pages
-            for (int i = 0; i < tabControl.TabPages.Count; i++)
+            //go through all CPU tab control pages
+            for (int i = 0; i < mainTabControl.TabPages.Count; i++)
             {
-                _type = tabControl.TabPages[i].Name;
-                _fullType = tabControl.TabPages[i].Text;
+                TabControl _CPUTab = (TabControl)mainTabControl.TabPages[i].Controls[0];
 
-                DataGridView _grid = (DataGridView)tabControl.TabPages[i].Controls[0];
-                DBGeneralType _instance = new DBGeneralType(NameDB, _fullType, _type, FileExtension, Progress, _grid);
-                List<List<string>> _fileData = _instance.Grid.GetData(false);
-                _instance.SetData(_fileData);
+                //go through all tab control pages
+                for (int j = 0; j < _CPUTab.TabPages.Count; j++)
+                {
+                    _type = _CPUTab.TabPages[j].Name;
+                    _fullType = _CPUTab.TabPages[j].Text;
 
-                Devices.Add(_instance);
+                    DataGridView _grid = (DataGridView)_CPUTab.TabPages[j].Controls[0];
+                    DBGeneralType _instance = new DBGeneralType(NameDB, _fullType, _type, FileExtension, Progress, _grid);
+                    DataTable _fileData = _instance.Grid.GetData(false);
+                    _instance.SetData(_fileData);
+
+                    Devices.Add(_instance);
+                }
             }
             debug.ToFile("Searching " + NameDB + " configuration from grid - " + Resources.Finished, DebugLevels.Development, DebugMessageType.Info);
-        }
-
-        /// <summary>
-        /// copy device list to all list
-        /// </summary>
-        /// <param name="_input">new data of device</param>
-        /// <param name="_output">all device data</param>
-        private void CopyDecodedList(List<List<string>> _input, List<List<string>> _output, AddressesClass addresses, string cpu, string objectGeneralType, string objectType, string objectName, int _deviceIndex)
-        {
-            if (_input == null)
-                return;
-
-            for (int i = 0; i < _input.Count; i++)
-                _output.Add(_input[i]);
-
-            //update addresses for this element
-            addresses.PutDataToElement(cpu, objectGeneralType, objectType, objectName,
-                                        Devices[_deviceIndex].ObjectVariableType, Devices[_deviceIndex].MemoryArea, Devices[_deviceIndex].Address, Devices[_deviceIndex].AddressSize);
         }
 
         /// <summary>
@@ -358,13 +351,9 @@ namespace IO_list_automation_new
             //go through all device types
             for (int _deviceIndex = 0; _deviceIndex < Devices.Count; _deviceIndex++)
             {
-                List<List<string>> _decodedDevices = new List<List<string>>();
                 for (int _CPUIndex = 0; _CPUIndex < _CPUList.Count; _CPUIndex++)
                 {
-                    // if more than 1 cpu create visual division
-                    if (_CPUList.Count > 1)
-                        _decodedDevices.Add(new List<string> { "----------------------------" + _CPUList[_CPUIndex] + "----------------------------" });
-
+                    DataTable _decodedDevices = new DataTable();
                     _typeCount = 0;
                     switch (Base)
                     {
@@ -376,8 +365,10 @@ namespace IO_list_automation_new
                                 if (_CPUList[_CPUIndex] != _module.CPU)
                                     continue;
 
-                                CopyDecodedList(Devices[_deviceIndex].Decode(ref _typeCount, data, null, _module, null, Base), _decodedDevices, addresses,
-                                                    _module.CPU, ResourcesUI.Modules, _module.ModuleType, _module.ModuleName, _deviceIndex);
+                                Devices[_deviceIndex].Decode(_decodedDevices, ref _typeCount, data, null, _module, null, Base);
+
+                                addresses.PutDataToElement(_module.CPU, ResourcesUI.Modules, _module.ModuleType, _module.ModuleName,
+                                        Devices[_deviceIndex].ObjectVariableType, Devices[_deviceIndex].MemoryArea, Devices[_deviceIndex].Address, Devices[_deviceIndex].AddressSize);
                             }
                             break;
 
@@ -388,8 +379,10 @@ namespace IO_list_automation_new
                                 if (_CPUList[_CPUIndex] != _address.CPU)
                                     continue;
 
-                                CopyDecodedList(Devices[_deviceIndex].Decode(ref _typeCount, data, null, null, _address, Base), _decodedDevices, addresses,
-                                                    _address.CPU, ResourcesUI.Modules, _address.ObjectType, _address.ObjectName, _deviceIndex);
+                                Devices[_deviceIndex].Decode(_decodedDevices, ref _typeCount, data, null, null, _address, Base);
+
+                                addresses.PutDataToElement(_address.CPU, ResourcesUI.Modules, _address.ObjectType, _address.ObjectName,
+                                        Devices[_deviceIndex].ObjectVariableType, Devices[_deviceIndex].MemoryArea, Devices[_deviceIndex].Address, Devices[_deviceIndex].AddressSize);
                             }
                             break;
 
@@ -400,8 +393,10 @@ namespace IO_list_automation_new
                                 if (_CPUList[_CPUIndex] != _object.CPU)
                                     continue;
 
-                                CopyDecodedList(Devices[_deviceIndex].Decode(ref _typeCount, data, _object, null, null, Base), _decodedDevices, addresses,
-                                                    _object.CPU, ResourcesUI.Objects, _object.ObjectType, _object.KKS, _deviceIndex);
+                                Devices[_deviceIndex].Decode(_decodedDevices, ref _typeCount, data, _object, null, null, Base);
+
+                                addresses.PutDataToElement(_object.CPU, ResourcesUI.Objects, _object.ObjectType, _object.KKS,
+                                        Devices[_deviceIndex].ObjectVariableType, Devices[_deviceIndex].MemoryArea, Devices[_deviceIndex].Address, Devices[_deviceIndex].AddressSize);
                             }
                             break;
 
@@ -412,8 +407,10 @@ namespace IO_list_automation_new
                                 if (_CPUList[_CPUIndex] != _address.CPU)
                                     continue;
 
-                                CopyDecodedList(Devices[_deviceIndex].Decode(ref _typeCount, data, null, null, _address, Base), _decodedDevices, addresses,
-                                                    _address.CPU, ResourcesUI.Objects, _address.ObjectType, _address.ObjectName, _deviceIndex);
+                                Devices[_deviceIndex].Decode(_decodedDevices, ref _typeCount, data, null, null, _address, Base);
+
+                                addresses.PutDataToElement(_address.CPU, ResourcesUI.Objects, _address.ObjectType, _address.ObjectName,
+                                        Devices[_deviceIndex].ObjectVariableType, Devices[_deviceIndex].MemoryArea, Devices[_deviceIndex].Address, Devices[_deviceIndex].AddressSize);
                             }
                             break;
 
@@ -422,21 +419,12 @@ namespace IO_list_automation_new
                             _debug.ToFile(_debugText + " " + Resources.ParameterNotFound + ":" + nameof(Base), DebugLevels.None, DebugMessageType.Critical);
                             throw new InvalidProgramException(_debugText + "." + nameof(Base) + " is not created for this element");
                     }
+                    DataGridView _grid = _DBResultForm.AddData(_CPUList[_CPUIndex],Devices[_deviceIndex].FullDBType, Devices[_deviceIndex].DBType);
 
-                    //if no devices found clear last line if in multi cpu mode
-                    if (_CPUList.Count > 1)
-                    {
-                        if (_typeCount == 0)
-                            _decodedDevices.RemoveAt(_decodedDevices.Count - 1);
-                        else
-                            _decodedDevices.Add(new List<string> { string.Empty });
-                    }
+                    //add grid to form and update grid of device to match in form
+                    Devices[_deviceIndex].GridResult.ChangeGrid(_grid);
+                    Devices[_deviceIndex].GridResult.PutData(_decodedDevices);
                 }
-                DataGridView _grid = _DBResultForm.AddData(Devices[_deviceIndex].FullDBType, Devices[_deviceIndex].DBType);
-
-                //add grid to form and update grid of device to match in form
-                Devices[_deviceIndex].GridResult.ChangeGrid(_grid);
-                Devices[_deviceIndex].GridResult.PutData(_decodedDevices);
                 Progress.UpdateProgressBar(_deviceIndex);
             }
             Progress.HideProgressBar();
@@ -489,7 +477,7 @@ namespace IO_list_automation_new
             if (Devices.Count < 1)
                 return;
 
-            List<List<string>> _deviceData;
+            DataTable _deviceData;
 
             Debug debug = new Debug();
             string _debugText = "Editing " + NameDB;
@@ -502,7 +490,7 @@ namespace IO_list_automation_new
             for (int _deviceIndex = 0; _deviceIndex < Devices.Count; _deviceIndex++)
             {
                 _deviceData = Devices[_deviceIndex].ConvertDataToList();
-                DataGridView _grid = _DBResultForm.AddData(Devices[_deviceIndex].FullDBType, Devices[_deviceIndex].DBType);
+                DataGridView _grid = _DBResultForm.AddData("",Devices[_deviceIndex].FullDBType, Devices[_deviceIndex].DBType);
 
                 //add grid to form and update grid of device to match in form
                 Devices[_deviceIndex].Grid.ChangeGrid(_grid);
@@ -516,14 +504,29 @@ namespace IO_list_automation_new
 
             _DBResultForm.ShowDialog();
 
-            GetDeviceTypesFromGrid(_DBResultForm.DBTabControl);
+            GetDeviceTypesFromGrid(_DBResultForm.DBTabControlCPU);
 
             //go through all device types
             for (int _deviceIndex = 0; _deviceIndex < Devices.Count; _deviceIndex++)
             {
                 _fileName = Directory + "\\" + Devices[_deviceIndex].FullDBType + "." + FileExtension;
-                Devices[_deviceIndex].Grid.GetData(false);
-                Devices[_deviceIndex].Grid.SaveToFile(_fileName);
+                DataTable _data = Devices[_deviceIndex].Grid.GetData(false);
+
+                //remove empty columns
+                for (int column = _data.Columns.Count-1; column >=0 ; column--)
+                {
+                    bool _isEmpty = true;
+                    for (int row = 0; row < _data.Rows.Count; row++)
+                    {
+                        _isEmpty = string.IsNullOrEmpty(GeneralFunctions.GetDataTableValue(_data, row, column));
+                        if (!_isEmpty)
+                            break;
+                    }
+
+                    if (_isEmpty)
+                        _data.Columns.RemoveAt(column);
+                }
+                Devices[_deviceIndex].File.SaveToFile(_fileName, _data);
             }
         }
     }

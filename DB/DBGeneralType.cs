@@ -1,7 +1,10 @@
-﻿using IO_list_automation_new.Properties;
+﻿using IO_list_automation_new.General;
+using IO_list_automation_new.Properties;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Windows.Forms;
+using System.Xml.Linq;
 
 namespace IO_list_automation_new.DB
 {
@@ -22,8 +25,8 @@ namespace IO_list_automation_new.DB
         public List<DBGeneralSignal> Data;
 
         public ProgressIndication Progress { get; set; }
-
         public GeneralGrid Grid { get; }
+        public ExcelFiles File { get; set; }
         public GeneralGrid GridResult { get; }
 
         public DBGeneralType(string name, string fullDBType, string dbType, string fileExtension, ProgressIndication progress, DataGridView grid)
@@ -40,8 +43,9 @@ namespace IO_list_automation_new.DB
             Data = new List<DBGeneralSignal>();
             Progress = progress;
 
-            Grid = new GeneralGrid(Name, GridTypes.DBEditable, fileExtension, Progress, grid, new ColumnList());
-            GridResult = new GeneralGrid(Name, GridTypes.DB, fileExtension, Progress, new DataGridView(), new ColumnList());
+            Grid = new GeneralGrid(Name, GridTypes.DBEditable, grid, null);
+            File = new ExcelFiles(Name, fileExtension, Progress);
+            GridResult = new GeneralGrid(Name, GridTypes.DB, new DataGridView(), null);
         }
 
         /// <summary>
@@ -51,29 +55,29 @@ namespace IO_list_automation_new.DB
         /// <param name="objectSignal">object to be decoded</param>
         /// <param name="moduleSignal">module to be decoded</param>
         /// <returns>decoded text</returns>
-        public List<List<string>> Decode(ref int index, DataClass data, ObjectSignal objectSignal, ModuleSignal moduleSignal, AddressObject addressObject, BaseTypes inputBase)
+        public void Decode(DataTable dataTable, ref int index, DataClass data, ObjectSignal objectSignal, ModuleSignal moduleSignal, AddressObject addressObject, BaseTypes inputBase)
         {
             //if type mismatch skip
             switch (inputBase)
             {
                 case BaseTypes.ModuleCPU:
                     if (moduleSignal == null || moduleSignal.ModuleType != DBType)
-                        return null;
+                        return;
                     break;
 
                 case BaseTypes.ModuleSCADA:
                     if (addressObject == null || addressObject.ObjectType != DBType || addressObject.ObjectGeneralType != ResourcesUI.Modules)
-                        return null;
+                        return;
                     break;
 
                 case BaseTypes.ObjectsCPU:
                     if (objectSignal == null || objectSignal.ObjectType != DBType)
-                        return null;
+                        return;
                     break;
 
                 case BaseTypes.ObjectSCADA:
                     if (addressObject == null || addressObject.ObjectType != DBType || addressObject.ObjectGeneralType != ResourcesUI.Objects)
-                        return null;
+                        return;
                     break;
 
                 default:
@@ -83,10 +87,10 @@ namespace IO_list_automation_new.DB
                     throw new InvalidProgramException(_debugText + "." + nameof(inputBase) + " is not created for this element");
             }
 
-            List<List<string>> _decodedObject = new List<List<string>>();
             for (int i = 0; i < Data.Count; i++)
             {
-                _decodedObject.Add(Data[i].DecodeLine(index, data, objectSignal, moduleSignal, addressObject, inputBase));
+                Data[i].DecodeLine(dataTable, index, data, objectSignal, moduleSignal, addressObject, inputBase);
+
                 if (Data[i].BaseAddressSet)
                 {
                     Address = Data[i].BaseAddress.ToString();
@@ -98,22 +102,30 @@ namespace IO_list_automation_new.DB
                         Data[j].UpdateBaseAddress(Data[i].MemoryArea, Data[i].BaseAddress, Data[i].AddressSize);
                 }
             }
-
             index++;
-            return _decodedObject;
         }
 
         /// <summary>
         /// Convert DBGeneralSignal to List of List of string
         /// </summary>
         /// <returns>converted data</returns>
-        public List<List<string>> ConvertDataToList()
+        public DataTable ConvertDataToList()
         {
-            List<List<string>> _allData = new List<List<string>>();
+            DataTable _allData = new DataTable();
 
             //go through all data from all lines of one type
-            for (int j = 0; j < Data.Count; j++)
-                _allData.Add(Data[j].Line);
+            for (int i = 0; i < Data.Count; i++)
+            {
+                //add columns to dataTable
+                for (int _column = _allData.Columns.Count; _column < Data[i].Line.Count; _column++)
+                    _allData.Columns.Add(_column.ToString());
+
+                DataRow row = _allData.NewRow();
+                for (int j = 0; j < Data[i].Line.Count; j++)
+                    row[j] = (Data[i].Line[j]);
+
+                _allData.Rows.Add(row);
+            }
 
             return _allData;
         }
@@ -122,18 +134,22 @@ namespace IO_list_automation_new.DB
         /// Set data from list of list string
         /// </summary>
         /// <param name="inputData">list string</param>
-        public void SetData(List<List<string>> inputData)
+        public void SetData(DataTable inputData)
         {
             Data.Clear();
 
             if (inputData == null)
                 return;
 
-            for (int j = 0; j < inputData.Count; j++)
+            for (int row = 0; row < inputData.Rows.Count; row++)
             {
                 DBGeneralSignal _signal = new DBGeneralSignal();
 
-                _signal.SetValue(inputData[j]);
+                List<string> _list = new List<string>();
+                for (int column = 0; column < inputData.Columns.Count; column++)
+                    _list.Add(GeneralFunctions.GetDataTableValue(inputData,row,column));
+
+                _signal.SetValue(_list);
                 Data.Add(_signal);
             }
         }

@@ -28,27 +28,31 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.DBTabControl = new System.Windows.Forms.TabControl();
+            this.DBTabControlCPU = new System.Windows.Forms.TabControl();
             this.ResultTabControl = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.tabControl1 = new System.Windows.Forms.TabControl();
+            this.tabPage2 = new System.Windows.Forms.TabPage();
             this.ResultDataGridView = new System.Windows.Forms.DataGridView();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.ResultTabControl.SuspendLayout();
             this.tabPage1.SuspendLayout();
+            this.tabControl1.SuspendLayout();
+            this.tabPage2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.ResultDataGridView)).BeginInit();
             this.tableLayoutPanel1.SuspendLayout();
             this.SuspendLayout();
             // 
-            // DBTabControl
+            // DBTabControlCPU
             // 
-            this.DBTabControl.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.DBTabControl.Location = new System.Drawing.Point(3, 3);
-            this.DBTabControl.Name = "DBTabControl";
-            this.DBTabControl.SelectedIndex = 0;
-            this.DBTabControl.Size = new System.Drawing.Size(734, 693);
-            this.DBTabControl.TabIndex = 0;
-            this.DBTabControl.SelectedIndexChanged += new System.EventHandler(this.DBTabControl_SelectedIndexChanged);
-            this.DBTabControl.MouseClick += new System.Windows.Forms.MouseEventHandler(this.DBTabControl_MouseClick);
+            this.DBTabControlCPU.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.DBTabControlCPU.Location = new System.Drawing.Point(3, 3);
+            this.DBTabControlCPU.Name = "DBTabControlCPU";
+            this.DBTabControlCPU.SelectedIndex = 0;
+            this.DBTabControlCPU.Size = new System.Drawing.Size(734, 693);
+            this.DBTabControlCPU.TabIndex = 0;
+            this.DBTabControlCPU.SelectedIndexChanged += new System.EventHandler(this.DBTabControl_SelectedIndexChanged);
+            this.DBTabControlCPU.MouseClick += new System.Windows.Forms.MouseEventHandler(this.DBTabControl_MouseClick);
             // 
             // ResultTabControl
             // 
@@ -62,13 +66,32 @@
             // 
             // tabPage1
             // 
-            this.tabPage1.Controls.Add(this.ResultDataGridView);
+            this.tabPage1.Controls.Add(this.tabControl1);
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Size = new System.Drawing.Size(430, 667);
             this.tabPage1.TabIndex = 0;
-            this.tabPage1.Text = "If (true)";
             this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // tabControl1
+            // 
+            this.tabControl1.Controls.Add(this.tabPage2);
+            this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tabControl1.Location = new System.Drawing.Point(0, 0);
+            this.tabControl1.Name = "tabControl1";
+            this.tabControl1.SelectedIndex = 0;
+            this.tabControl1.Size = new System.Drawing.Size(430, 667);
+            this.tabControl1.TabIndex = 3;
+            // 
+            // tabPage2
+            // 
+            this.tabPage2.Controls.Add(this.ResultDataGridView);
+            this.tabPage2.Location = new System.Drawing.Point(4, 22);
+            this.tabPage2.Name = "tabPage2";
+            this.tabPage2.Size = new System.Drawing.Size(422, 641);
+            this.tabPage2.TabIndex = 0;
+            this.tabPage2.Text = "If (true)";
+            this.tabPage2.UseVisualStyleBackColor = true;
             // 
             // ResultDataGridView
             // 
@@ -76,16 +99,14 @@
             this.ResultDataGridView.AllowUserToDeleteRows = false;
             this.ResultDataGridView.AllowUserToResizeColumns = false;
             this.ResultDataGridView.AllowUserToResizeRows = false;
-            this.ResultDataGridView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
             this.ResultDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.ResultDataGridView.ColumnHeadersVisible = false;
+            this.ResultDataGridView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.ResultDataGridView.Location = new System.Drawing.Point(0, 0);
             this.ResultDataGridView.Name = "ResultDataGridView";
             this.ResultDataGridView.ReadOnly = true;
             this.ResultDataGridView.RowHeadersVisible = false;
-            this.ResultDataGridView.Size = new System.Drawing.Size(430, 1319);
+            this.ResultDataGridView.Size = new System.Drawing.Size(422, 641);
             this.ResultDataGridView.TabIndex = 0;
             // 
             // tableLayoutPanel1
@@ -95,7 +116,7 @@
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 62.53264F));
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 37.46736F));
             this.tableLayoutPanel1.Controls.Add(this.ResultTabControl, 1, 0);
-            this.tableLayoutPanel1.Controls.Add(this.DBTabControl, 0, 0);
+            this.tableLayoutPanel1.Controls.Add(this.DBTabControlCPU, 0, 0);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
@@ -116,6 +137,8 @@
             this.Shown += new System.EventHandler(this.ResultForm_Shown);
             this.ResultTabControl.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
+            this.tabControl1.ResumeLayout(false);
+            this.tabPage2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.ResultDataGridView)).EndInit();
             this.tableLayoutPanel1.ResumeLayout(false);
             this.ResumeLayout(false);
@@ -127,6 +150,8 @@
         private System.Windows.Forms.TabPage tabPage1;
         private System.Windows.Forms.DataGridView ResultDataGridView;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
-        public System.Windows.Forms.TabControl DBTabControl;
+        public System.Windows.Forms.TabControl DBTabControlCPU;
+        private System.Windows.Forms.TabControl tabControl1;
+        private System.Windows.Forms.TabPage tabPage2;
     }
 }
