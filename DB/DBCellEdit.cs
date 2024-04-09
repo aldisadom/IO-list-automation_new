@@ -3,12 +3,7 @@ using IO_list_automation_new.General;
 using IO_list_automation_new.Properties;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
-using System.Reflection.Emit;
-using System.Security.Cryptography;
-using System.Text;
 using System.Windows.Forms;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.Menu;
 
 namespace IO_list_automation_new.Forms
 {
@@ -49,10 +44,10 @@ namespace IO_list_automation_new.Forms
                     return "edit";
 
                 default:
-                    const string _debugText = "DBCellEdit.GetIODefaultText";
-                    Debug _debug = new Debug();
-                    _debug.ToFile(_debugText + " " + Resources.ParameterNotFound + ":" + nameof(Base), DebugLevels.None, DebugMessageType.Critical);
-                    throw new InvalidProgramException(_debugText + "." + nameof(Base) + " is not created for this element");
+                    const string debugText = "DBCellEdit.GetIODefaultText";
+                    Debug debug = new Debug();
+                    debug.ToFile(debugText + " " + Resources.ParameterNotFound + ":" + nameof(Base), DebugLevels.None, DebugMessageType.Critical);
+                    throw new InvalidProgramException(debugText + "." + nameof(Base) + " is not created for this element");
             }
         }
 
@@ -73,10 +68,10 @@ namespace IO_list_automation_new.Forms
                     return ComboBoxType.Text;
 
                 default:
-                    const string _debugText = "DBCellEdit.GetIOComboBoxType";
-                    Debug _debug = new Debug();
-                    _debug.ToFile(_debugText + " " + Resources.ParameterNotFound + ":" + nameof(Base), DebugLevels.None, DebugMessageType.Critical);
-                    throw new InvalidProgramException(_debugText + "." + nameof(Base) + " is not created for this element");
+                    const string debugText = "DBCellEdit.GetIOComboBoxType";
+                    Debug debug = new Debug();
+                    debug.ToFile(debugText + " " + Resources.ParameterNotFound + ":" + nameof(Base), DebugLevels.None, DebugMessageType.Critical);
+                    throw new InvalidProgramException(debugText + "." + nameof(Base) + " is not created for this element");
             }
         }
 
@@ -97,10 +92,10 @@ namespace IO_list_automation_new.Forms
                     return ResourcesColumns.Function;
 
                 default:
-                    const string _debugText = "DBCellEdit.GetIOLabel";
-                    Debug _debug = new Debug();
-                    _debug.ToFile(_debugText + " " + Resources.ParameterNotFound + ":" + nameof(Base), DebugLevels.None, DebugMessageType.Critical);
-                    throw new InvalidProgramException(_debugText + "." + nameof(Base) + " is not created for this element");
+                    const string debugText = "DBCellEdit.GetIOLabel";
+                    Debug debug = new Debug();
+                    debug.ToFile(debugText + " " + Resources.ParameterNotFound + ":" + nameof(Base), DebugLevels.None, DebugMessageType.Critical);
+                    throw new InvalidProgramException(debugText + "." + nameof(Base) + " is not created for this element");
             }
         }
 
@@ -112,8 +107,8 @@ namespace IO_list_automation_new.Forms
         /// <returns>choices list</returns>
         private List<string> GetSelectList(RestrainLevel restrainLevel, ComboBoxType elementType)
         {
-            string _debugText;
-            Debug _debug = new Debug();
+            string debugText;
+            Debug debug = new Debug();
 
             switch (elementType)
             {
@@ -134,9 +129,9 @@ namespace IO_list_automation_new.Forms
                                     return Choices.ChoicesObjectsMain;
 
                                 default:
-                                    _debugText = "GetSelectList.Main.None";
-                                    _debug.ToFile(_debugText + " " + Resources.ParameterNotFound + ":" + nameof(Base), DebugLevels.None, DebugMessageType.Critical);
-                                    throw new InvalidProgramException(_debugText + "." + nameof(Base) + " is not created for this element");
+                                    debugText = "GetSelectList.Main.None";
+                                    debug.ToFile(debugText + " " + Resources.ParameterNotFound + ":" + nameof(Base), DebugLevels.None, DebugMessageType.Critical);
+                                    throw new InvalidProgramException(debugText + "." + nameof(Base) + " is not created for this element");
                             }
                         case RestrainLevel.IfCondition:
                             switch (Base)
@@ -152,9 +147,9 @@ namespace IO_list_automation_new.Forms
                                     return Choices.ChoicesObjectsIfCondition;
 
                                 default:
-                                    _debugText = "DBCellEdit.Main.IfCondition";
-                                    _debug.ToFile(_debugText + " " + Resources.ParameterNotFound + ":" + nameof(Base), DebugLevels.None, DebugMessageType.Critical);
-                                    throw new InvalidProgramException(_debugText + "." + nameof(Base) + " is not created for this element");
+                                    debugText = "DBCellEdit.Main.IfCondition";
+                                    debug.ToFile(debugText + " " + Resources.ParameterNotFound + ":" + nameof(Base), DebugLevels.None, DebugMessageType.Critical);
+                                    throw new InvalidProgramException(debugText + "." + nameof(Base) + " is not created for this element");
                             }
                         case RestrainLevel.IfStatement:
                             switch (Base)
@@ -170,25 +165,25 @@ namespace IO_list_automation_new.Forms
                                     return Choices.ChoicesObjectsIfStatement;
 
                                 default:
-                                    _debugText = "DBCellEdit.Main.IfStatement";
-                                    _debug.ToFile(_debugText + " " + Resources.ParameterNotFound + ":" + nameof(Base), DebugLevels.None, DebugMessageType.Critical);
-                                    throw new InvalidProgramException(_debugText + "." + nameof(Base) + " is not created for this element");
+                                    debugText = "DBCellEdit.Main.IfStatement";
+                                    debug.ToFile(debugText + " " + Resources.ParameterNotFound + ":" + nameof(Base), DebugLevels.None, DebugMessageType.Critical);
+                                    throw new InvalidProgramException(debugText + "." + nameof(Base) + " is not created for this element");
                             }
 
                         case RestrainLevel.NoEdit:
                             return null;
 
                         default:
-                            _debugText = "DBCellEdit.Main.restrainLevel";
-                            _debug.ToFile(_debugText + " " + Resources.ParameterNotFound + ":" + nameof(restrainLevel), DebugLevels.None, DebugMessageType.Critical);
-                            throw new InvalidProgramException(_debugText + "." + nameof(restrainLevel) + " is not created for this element");
+                            debugText = "DBCellEdit.Main.restrainLevel";
+                            debug.ToFile(debugText + " " + Resources.ParameterNotFound + ":" + nameof(restrainLevel), DebugLevels.None, DebugMessageType.Critical);
+                            throw new InvalidProgramException(debugText + "." + nameof(restrainLevel) + " is not created for this element");
                     }
 
                 case ComboBoxType.IfCondition:
                     return Choices.ChoicesIfConditions;
 
-                case ComboBoxType.Data:
-                    return Choices.DataColumns;
+                case ComboBoxType.Data_:
+                    return Choices.Data_Columns;
 
                 case ComboBoxType.Object:
                     return Choices.ObjectColumns;
@@ -201,9 +196,9 @@ namespace IO_list_automation_new.Forms
                     return null;
 
                 default:
-                    _debugText = "DBCellEdit.elementType";
-                    _debug.ToFile(_debugText + " " + Resources.ParameterNotFound + ":" + nameof(elementType), DebugLevels.None, DebugMessageType.Critical);
-                    throw new InvalidProgramException(_debugText + "." + nameof(elementType) + " is not created for this element");
+                    debugText = "DBCellEdit.elementType";
+                    debug.ToFile(debugText + " " + Resources.ParameterNotFound + ":" + nameof(elementType), DebugLevels.None, DebugMessageType.Critical);
+                    throw new InvalidProgramException(debugText + "." + nameof(elementType) + " is not created for this element");
             }
         }
 
@@ -212,19 +207,19 @@ namespace IO_list_automation_new.Forms
         /// </summary>
         private void DeleteColumnComboBox()
         {
-            foreach (var _item in this.Controls)
+            foreach (var item in this.Controls)
             {
-                if (!_item.GetType().Name.Contains("ComboBox"))
+                if (!item.GetType().Name.Contains("ComboBox"))
                     continue;
 
-                if (((System.Windows.Forms.ComboBox)_item).Name != "ComboBoxCell")
+                if (((System.Windows.Forms.ComboBox)item).Name != "ComboBoxCell")
                     continue;
 
-                DropDownClass comboBox = new DropDownClass((System.Windows.Forms.ComboBox)_item)
+                DropDownClass comboBox = new DropDownClass((System.Windows.Forms.ComboBox)item)
                 {
-                    IndexChangedEventRemove = ComboBox_ValueChangedEvent,
+                    IndexChangedEventRemove = ComboBoxValueChangedEvent,
                 };
-                this.Controls.Remove((System.Windows.Forms.Control)_item);
+                this.Controls.Remove((System.Windows.Forms.Control)item);
                 break;
             }
         }
@@ -234,46 +229,41 @@ namespace IO_list_automation_new.Forms
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void Grid_CellClick(object sender, DataGridViewCellEventArgs e)
+        private void GridCellClick(object sender, DataGridViewCellEventArgs e)
         {
             DeleteColumnComboBox();
-            DataGridViewCell _cell = ((DataGridView)sender).Rows[e.RowIndex].Cells[e.ColumnIndex];
+            DataGridViewCell cell = ((DataGridView)sender).Rows[e.RowIndex].Cells[e.ColumnIndex];
             Grid.ReadOnly = true;
 
-            if (_cell.Tag == null)
+            if (cell.Tag == null)
                 return;
 
-            CellTag _cellTag = (CellTag)_cell.Tag;
+            CellTag cellTag = (CellTag)cell.Tag;
 
             //no need of comboBox
-            switch (_cellTag.ComboType)
+            switch (cellTag.ComboType)
             {
                 case ComboBoxType.Text:
                 case ComboBoxType.Number:
-                    Grid.ReadOnly = _cellTag.Restrain == RestrainLevel.NoEdit;
+                    Grid.ReadOnly = cellTag.Restrain == RestrainLevel.NoEdit;
                     return;
             }
-            
 
-            List<string> _selectList = GetSelectList(_cellTag.Restrain, _cellTag.ComboType);
-            DropDownClass _dropDowns = new DropDownClass("ComboBoxCell");
-            _dropDowns.ChangeDisplayMember(DropDownElementType.Name);
-            _dropDowns.Location = PointToClient(Cursor.Position);
-            _dropDowns.Editable(false);
-            _dropDowns.Tag = new ComboBoxTag(_cellTag.ComboType, _cellTag.UniqueName, _cellTag.Keyword);
+            List<string> selectList = GetSelectList(cellTag.Restrain, cellTag.ComboType);
+            DropDownClass dropDowns = new DropDownClass("ComboBoxCell");
+            dropDowns.ChangeDisplayMember(DropDownElementType.Name);
+            dropDowns.Location = PointToClient(Cursor.Position);
+            dropDowns.Editable(false);
+            dropDowns.Tag = new ComboBoxTag(cellTag.ComboType, cellTag.UniqueName, cellTag.Keyword, e.RowIndex, e.ColumnIndex);
 
-            for (int i = 0; i < _selectList.Count; i++)
-            {
-                _dropDowns.AddItemFull(string.Empty, _selectList[i]);
-                if (_cellTag.Keyword == _selectList[i])
-                    _dropDowns.SelectedIndex = i;
-            }
+            foreach (string item in selectList)
+                dropDowns.AddItemFull(string.Empty, item);
 
             //change index event
-            _dropDowns.IndexChangedEvent = ComboBox_ValueChangedEvent;
+            dropDowns.IndexChangedEvent = ComboBoxValueChangedEvent;
 
-            this.Controls.Add(_dropDowns.Element);
-            _dropDowns.Element.BringToFront();
+            this.Controls.Add(dropDowns.Element);
+            dropDowns.Element.BringToFront();
         }
 
         /// <summary>
@@ -281,66 +271,70 @@ namespace IO_list_automation_new.Forms
         /// </summary>
         /// <param name="sender">ComboBox</param>
         /// <param name="e">event arguments</param>
-        private void ComboBox_ValueChangedEvent(object sender, EventArgs e)
+        private void ComboBoxValueChangedEvent(object sender, EventArgs e)
         {
-            DropDownClass _box = new DropDownClass((System.Windows.Forms.ComboBox)sender);
+            DropDownClass box = new DropDownClass((System.Windows.Forms.ComboBox)sender);
 
-            string _currentValue = _box.SelectedKeyword();
+            string currentValue = box.SelectedKeyword();
 
             //decode tag
-            ComboBoxTag _tag = _box.Tag;
+            ComboBoxTag tag = box.Tag;
 
             DeleteColumnComboBox();
             //ComboBox type is of type that need to change layout
-            switch (_tag.Type)
+            switch (tag.Type)
             {
-                case ComboBoxType.Data:
+                case ComboBoxType.Data_:
                 case ComboBoxType.Object:
                 case ComboBoxType.Module:
+                    ((CellTag)Grid.Rows[tag.X].Cells[tag.Y].Tag).UpdateKeyword(currentValue);
+                    Grid.Rows[tag.X].Cells[tag.Y].Value = currentValue;
+                    return;
+
                 case ComboBoxType.Text:
                 case ComboBoxType.Number:
                     return;
             }
 
-            string _previousValue = _tag.PreviousValue;
-            string _elementName = _tag.Name;
+            string previousValue = tag.PreviousValue;
+            string elementName = tag.Name;
             //dropdown value changed
-            if (_previousValue == _currentValue)
+            if (previousValue == currentValue)
                 return;
 
-            List<string> _list = GetElementsUnique();
+            List<string> list = GetElementsUnique();
             OutputData.Clear();
 
             //extracting keyword to list
-            List<string> _listElementKeywords = new List<string>();
-            for (int i = 0; i < _list.Count; i++)
-                _listElementKeywords.Add(GetDropDownSelectedKeyword(_list[i]));
+            List<string> listElementKeywords = new List<string>();
+            foreach (string keyword in list)
+                listElementKeywords.Add(GetDropDownSelectedKeyword(keyword));
 
             //before element
-            int _index = 0;
-            for (int i = 0; i < _list.Count; i++)
+            int index = 0;
+            for (int i = 0; i < list.Count; i++)
             {
-                if (_list[i] == _elementName)
+                if (list[i] == elementName)
                 {
-                    _index = i;
+                    index = i;
                     break;
                 }
                 //extracting keyword to list
-                OutputData.Add(GetDropDownSelectedKeyword(_list[i]));
+                OutputData.Add(GetDropDownSelectedKeyword(list[i]));
             }
             //delete elements
-            if (_currentValue != KeywordDBChoices.Insert)
-                DeleteOldElements(_index, _list, _previousValue);
+            if (currentValue != KeywordDBChoices.Insert)
+                DeleteOldElements(index, list, previousValue);
 
             //add new
-            switch (_currentValue)
+            switch (currentValue)
             {
                 case KeywordDBChoices.If:
                     //if
-                    OutputData.Add(_currentValue);
+                    OutputData.Add(currentValue);
                     //object
                     OutputData.Add(KeywordDBChoices.Data);
-                    OutputData.Add(Choices.DataColumns[0]);
+                    OutputData.Add(Choices.Data_Columns[0]);
                     OutputData.Add(GetIODefaultText());
                     //statement
                     OutputData.Add(Choices.ChoicesIfConditions[0]);
@@ -354,7 +348,7 @@ namespace IO_list_automation_new.Forms
                     break;
 
                 case KeywordDBChoices.BaseAddress:
-                    OutputData.Add(_currentValue);
+                    OutputData.Add(currentValue);
                     //index memory area
                     OutputData.Add(string.Empty);
                     //index multiplier
@@ -364,21 +358,21 @@ namespace IO_list_automation_new.Forms
                     break;
 
                 case KeywordDBChoices.Address:
-                    OutputData.Add(_currentValue);
+                    OutputData.Add(currentValue);
                     //index offset
                     OutputData.Add("0");
                     break;
 
                 case KeywordDBChoices.AddressArea:
                 case KeywordDBChoices.GetBaseAddress:
-                    OutputData.Add(_currentValue);
+                    OutputData.Add(currentValue);
                     OutputData.Add("");
                     break;
 
                 case KeywordDBChoices.Tab:
                 case KeywordDBChoices.CPU:
                 case KeywordDBChoices.ObjectName:
-                    OutputData.Add(_currentValue);
+                    OutputData.Add(currentValue);
                     break;
 
                 case KeywordDBChoices.None:
@@ -391,18 +385,18 @@ namespace IO_list_automation_new.Forms
                     break;
 
                 case KeywordDBChoices.Data:
-                    OutputData.Add(_currentValue);
-                    OutputData.Add(Choices.DataColumns[0]);
+                    OutputData.Add(currentValue);
+                    OutputData.Add(Choices.Data_Columns[0]);
                     OutputData.Add(GetIODefaultText());
                     break;
 
                 case KeywordDBChoices.Object:
-                    OutputData.Add(_currentValue);
+                    OutputData.Add(currentValue);
                     OutputData.Add(Choices.ObjectColumns[0]);
                     break;
 
                 case KeywordDBChoices.Modules:
-                    OutputData.Add(_currentValue);
+                    OutputData.Add(currentValue);
                     OutputData.Add(Choices.ModuleColumns[0]);
                     break;
 
@@ -412,39 +406,39 @@ namespace IO_list_automation_new.Forms
                 case KeywordDBChoices.Greater:
                 case KeywordDBChoices.Less:
                 case KeywordDBChoices.LessEqual:
-                    OutputData.Add(_currentValue);
+                    OutputData.Add(currentValue);
                     OutputData.Add(KeywordDBChoices.Text);
                     OutputData.Add("edit");
                     break;
 
                 case KeywordDBChoices.IsEmpty:
                 case KeywordDBChoices.IsNotEmpty:
-                    OutputData.Add(_currentValue);
+                    OutputData.Add(currentValue);
                     break;
 
                 case KeywordDBChoices.MultiLine:
-                    OutputData.Add(_currentValue);
+                    OutputData.Add(currentValue);
                     OutputData.Add(KeywordDBChoices.Text);
                     OutputData.Add("edit");
                     OutputData.Add(KeywordDBChoices.MultiLineEnd);
                     break;
 
                 default:
-                    Debug _debug = new Debug();
-                    const string _debugText = "DBCellEdit.ComboBoxValueChangedEvent";
-                    _debug.ToFile(_debugText + " " + Resources.ParameterNotFound + ":" + _currentValue, DebugLevels.None, DebugMessageType.Critical);
-                    throw new InvalidProgramException(_debugText + "." + _currentValue + " is not created for this element");
+                    Debug debug = new Debug();
+                    const string debugText = "DBCellEdit.ComboBoxValueChangedEvent";
+                    debug.ToFile(debugText + " " + Resources.ParameterNotFound + ":" + currentValue, DebugLevels.None, DebugMessageType.Critical);
+                    throw new InvalidProgramException(debugText + "." + currentValue + " is not created for this element");
             }
 
             //add after
-            if (_currentValue == KeywordDBChoices.Insert)
+            if (currentValue == KeywordDBChoices.Insert)
             {
-                OutputData.Add(_previousValue);
-                _index++;
+                OutputData.Add(previousValue);
+                index++;
             }
 
-            for (int i = _index; i < _list.Count; i++)
-                OutputData.Add(GetDropDownSelectedKeyword(_list[i]));
+            for (int i = index; i < list.Count; i++)
+                OutputData.Add(GetDropDownSelectedKeyword(list[i]));
 
             DeleteAllItem();
             DecodeElementsAll(OutputData);
@@ -474,27 +468,24 @@ namespace IO_list_automation_new.Forms
             if (Grid.CurrentCell.Tag == null)
                 return;
 
-            CellTag _cellTag = (CellTag)Grid.CurrentCell.Tag;
+            CellTag cellTag = (CellTag)Grid.CurrentCell.Tag;
 
-            if (_cellTag.ComboType != ComboBoxType.Number || _cellTag.Restrain == RestrainLevel.NoEdit)
+            if (cellTag.ComboType != ComboBoxType.Number || cellTag.Restrain == RestrainLevel.NoEdit)
                 return;
 
-            TextBox tb = e.Control as TextBox;
-            if (tb != null)
+            if (e.Control is TextBox tb)
                 tb.KeyPress += Cell_KeyPress;
-
         }
 
         /// <summary>
-        /// Read all comboBoxes and update Output Data
+        /// Read all comboBoxes and update Output Data_
         /// </summary>
         private void UpdateOutputData()
         {
-            List<string> _list = GetElements();
+            List<string> list = GetElements();
             OutputData.Clear();
 
-            for (int i = 0; i < _list.Count; i++)
-                OutputData.Add(_list[i]);
+            OutputData.AddRange(list);
         }
 
         /// <summary>
@@ -513,17 +504,17 @@ namespace IO_list_automation_new.Forms
         /// <returns>comboBox selected keyword</returns>
         private string GetDropDownSelectedKeyword(string name)
         {
-            for (int _row = 0; _row < Grid.RowCount; _row++)
+            foreach (DataGridViewRow row in Grid.Rows)
             {
-                for (int _column = 0; _column < Grid.ColumnCount; _column++)
+                foreach (DataGridViewCell cell in row.Cells)
                 {
-                    if (Grid.Rows[_row].Cells[_column].Tag == null)
+                    if (cell.Tag == null)
                         continue;
 
-                    CellTag _cellTag = (CellTag)Grid.Rows[_row].Cells[_column].Tag;
+                    CellTag cellTag = (CellTag)cell.Tag;
 
-                    if (_cellTag.UniqueName == name)
-                        return _cellTag.Keyword;
+                    if (cellTag.UniqueName == name)
+                        return cellTag.Keyword;
                 }
             }
             return null;
@@ -535,20 +526,20 @@ namespace IO_list_automation_new.Forms
         /// <returns>elements unique names</returns>
         private List<string> GetElementsUnique()
         {
-            List<string> _list = new List<string>();
+            List<string> list = new List<string>();
 
-            for (int _row = 0; _row < Grid.RowCount; _row++)
+            foreach (DataGridViewRow row in Grid.Rows)
             {
-                for (int _column = 0; _column < Grid.ColumnCount; _column++)
+                foreach (DataGridViewCell cell in row.Cells)
                 {
-                    if (Grid.Rows[_row].Cells[_column].Tag == null)
+                    if (cell.Tag == null)
                         continue;
 
-                    CellTag _cellTag = (CellTag)Grid.Rows[_row].Cells[_column].Tag;
-                    _list.Add(_cellTag.UniqueName);
+                    CellTag cellTag = (CellTag)cell.Tag;
+                    list.Add(cellTag.UniqueName);
                 }
             }
-            return _list;
+            return list;
         }
 
         /// <summary>
@@ -557,33 +548,34 @@ namespace IO_list_automation_new.Forms
         /// <returns>elements keywords</returns>
         private List<string> GetElements()
         {
-            List<string> _list = new List<string>();
+            List<string> list = new List<string>();
 
-            for (int _row = 0; _row < Grid.RowCount; _row++)
+            foreach (DataGridViewRow row in Grid.Rows)
             {
-                for (int _column = 0; _column < Grid.ColumnCount; _column++)
+                foreach (DataGridViewCell cell in row.Cells)
                 {
-                    if (Grid.Rows[_row].Cells[_column].Tag == null)
+                    if (cell.Tag == null)
                         continue;
 
-                    CellTag _cellTag = (CellTag)Grid.Rows[_row].Cells[_column].Tag;
-                    switch (_cellTag.ComboType)
+                    CellTag cellTag = (CellTag)cell.Tag;
+                    switch (cellTag.ComboType)
                     {
                         case ComboBoxType.Main:
                         case ComboBoxType.IfCondition:
-                        case ComboBoxType.Data:
+                        case ComboBoxType.Data_:
                         case ComboBoxType.Object:
                         case ComboBoxType.Module:
-                            _list.Add(_cellTag.Keyword);
+                            list.Add(cellTag.Keyword);
                             break;
+
                         case ComboBoxType.Text:
                         case ComboBoxType.Number:
-                            _list.Add(Grid.Rows[_row].Cells[_column].Value.ToString());
+                            list.Add(cell.Value.ToString());
                             break;
                     }
                 }
             }
-            return _list;
+            return list;
         }
 
         /// <summary>
@@ -667,23 +659,23 @@ namespace IO_list_automation_new.Forms
                     break;
 
                 case KeywordDBChoices.MultiLine:
-                    int _layer = 1;
+                    int layer = 1;
                     list.RemoveAt(startIndex);
-                    while (_layer > 0)
+                    while (layer > 0)
                     {
                         if (GetDropDownSelectedKeyword(list[startIndex]) == KeywordDBChoices.MultiLine)
-                            _layer++;
+                            layer++;
                         else if (GetDropDownSelectedKeyword(list[startIndex]) == KeywordDBChoices.MultiLineEnd)
-                            _layer--;
+                            layer--;
                         list.RemoveAt(startIndex);
                     }
                     break;
 
                 default:
-                    Debug _debug = new Debug();
-                    const string _debugText = "DBCellEdit.DeleteOldElements";
-                    _debug.ToFile(_debugText + " " + Resources.ParameterNotFound + ":" + cellValue, DebugLevels.None, DebugMessageType.Critical);
-                    throw new InvalidProgramException(_debugText + "." + cellValue + " is not created for this element");
+                    Debug debug = new Debug();
+                    const string debugText = "DBCellEdit.DeleteOldElements";
+                    debug.ToFile(debugText + " " + Resources.ParameterNotFound + ":" + cellValue, DebugLevels.None, DebugMessageType.Critical);
+                    throw new InvalidProgramException(debugText + "." + cellValue + " is not created for this element");
             }
         }
 
@@ -698,14 +690,14 @@ namespace IO_list_automation_new.Forms
         private void AddElement(int rowIndex, int column, string comboBoxKeyword, string labelText, RestrainLevel restrainLevel, ComboBoxType elementType)
         {
             for (int i = Grid.ColumnCount; i <= column; i++)
-                Grid.Columns.Add("","");
+                Grid.Columns.Add("", "");
 
-            int _row = rowIndex * 2;
-            for (int i = Grid.RowCount; i < _row+2; i++)
+            int row = rowIndex * 2;
+            for (int i = Grid.RowCount; i < row + 2; i++)
                 Grid.Rows.Add();
 
             if (labelText != null)
-                Grid.Rows[_row].Cells[column].Value = labelText;
+                Grid.Rows[row].Cells[column].Value = labelText;
 
             GeneralColumnName ccc = new GeneralColumnName();
 
@@ -713,24 +705,25 @@ namespace IO_list_automation_new.Forms
             {
                 case ComboBoxType.Main:
                 case ComboBoxType.IfCondition:
-                case ComboBoxType.Data:
+                case ComboBoxType.Data_:
                 case ComboBoxType.Object:
                 case ComboBoxType.Module:
-                    Grid.Rows[_row + 1].Cells[column].Value = ccc.GetColumnOrChoicesName(comboBoxKeyword);
-                    Grid.Rows[_row + 1].Cells[column].Style.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular);
-                    Grid.Rows[_row + 1].Cells[column].Style.Alignment = DataGridViewContentAlignment.MiddleLeft;
+                    Grid.Rows[row + 1].Cells[column].Value = ccc.GetColumnOrChoicesName(comboBoxKeyword);
+                    Grid.Rows[row + 1].Cells[column].Style.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular);
+                    Grid.Rows[row + 1].Cells[column].Style.Alignment = DataGridViewContentAlignment.MiddleLeft;
                     break;
+
                 case ComboBoxType.Text:
                 case ComboBoxType.Number:
-                    Grid.Rows[_row + 1].Cells[column].Value = comboBoxKeyword;
-                    Grid.Rows[_row + 1].Cells[column].Style.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular);
-                    Grid.Rows[_row + 1].Cells[column].Style.Alignment = DataGridViewContentAlignment.MiddleRight;
+                    Grid.Rows[row + 1].Cells[column].Value = comboBoxKeyword;
+                    Grid.Rows[row + 1].Cells[column].Style.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular);
+                    Grid.Rows[row + 1].Cells[column].Style.Alignment = DataGridViewContentAlignment.MiddleRight;
                     break;
             }
             if (restrainLevel != RestrainLevel.NoEdit)
-                Grid.Rows[_row + 1].Cells[column].Style.BackColor = System.Drawing.Color.FromArgb(255, 255, 255);
+                Grid.Rows[row + 1].Cells[column].Style.BackColor = System.Drawing.Color.FromArgb(255, 255, 255);
 
-            Grid.Rows[_row+1].Cells[column].Tag = new CellTag(comboBoxKeyword,elementType, restrainLevel, rowIndex,column);
+            Grid.Rows[row + 1].Cells[column].Tag = new CellTag(comboBoxKeyword, elementType, restrainLevel, rowIndex, column);
             Index++;
         }
 
@@ -743,7 +736,7 @@ namespace IO_list_automation_new.Forms
         private void DecodeData(List<string> inputData, string labelText, RestrainLevel restrainLevel)
         {
             AddElement(PositionRow, PositionColumn, inputData[Index], labelText, restrainLevel, ComboBoxType.Main);
-            AddElement(PositionRow, PositionColumn + 1, inputData[Index], null, restrainLevel, ComboBoxType.Data);
+            AddElement(PositionRow, PositionColumn + 1, inputData[Index], null, restrainLevel, ComboBoxType.Data_);
             AddElement(PositionRow, PositionColumn + 2, inputData[Index], GetIOLabel(), restrainLevel, GetIOComboBoxType());
             PositionRow++;
         }
@@ -908,13 +901,13 @@ namespace IO_list_automation_new.Forms
 
         private void DecodeIf(List<string> inputData, string labelText, RestrainLevel restrainLevel)
         {
-            Debug _debug = new Debug();
-            string _debugText;
+            Debug debug = new Debug();
+            string debugText;
 
             AddElement(PositionRow, PositionColumn, inputData[Index], labelText, restrainLevel, ComboBoxType.Main);
             PositionColumn++;
 
-            int _additionalColumnOffset = 0;
+            int additionalColumnOffset = 0;
             //condition
             switch (inputData[Index])
             {
@@ -924,7 +917,7 @@ namespace IO_list_automation_new.Forms
 
                 case KeywordDBChoices.Data:
                     DecodeData(inputData, null, RestrainLevel.IfCondition);
-                    _additionalColumnOffset++;
+                    additionalColumnOffset++;
                     break;
 
                 case KeywordDBChoices.Modules:
@@ -940,15 +933,15 @@ namespace IO_list_automation_new.Forms
                     break;
 
                 default:
-                    _debugText = "DCCellEdit.DecodeIf.Condition";
+                    debugText = "DCCellEdit.DecodeIf.Condition";
 
-                    _debug.ToFile(_debugText + " " + Resources.ParameterNotFound + ":" + inputData[Index], DebugLevels.None, DebugMessageType.Critical);
-                    throw new InvalidProgramException(_debugText + "." + inputData[Index] + " is not created for this element");
+                    debug.ToFile(debugText + " " + Resources.ParameterNotFound + ":" + inputData[Index], DebugLevels.None, DebugMessageType.Critical);
+                    throw new InvalidProgramException(debugText + "." + inputData[Index] + " is not created for this element");
             }
             //go back 1 row to have if in one line
             PositionRow--;
-            PositionColumn += 2 + _additionalColumnOffset;
-            int _removeColumnCount;
+            PositionColumn += 2 + additionalColumnOffset;
+            int removeColumnCount;
 
             switch (inputData[Index])
             {
@@ -956,7 +949,7 @@ namespace IO_list_automation_new.Forms
                 case KeywordDBChoices.IsNotEmpty:
                     AddElement(PositionRow, PositionColumn, inputData[Index], Resources.Statement, RestrainLevel.IfStatement, ComboBoxType.IfCondition);
                     PositionRow++;
-                    _removeColumnCount = 3;
+                    removeColumnCount = 3;
                     break;
 
                 case KeywordDBChoices.Equal:
@@ -969,21 +962,21 @@ namespace IO_list_automation_new.Forms
                     PositionColumn++;
                     // then it is variable
                     DecodeElement(inputData, null, RestrainLevel.IfStatement);
-                    _removeColumnCount = 4;
+                    removeColumnCount = 4;
                     break;
 
                 default:
-                    _debugText = "DCCellEdit.DecodeIf.Statement";
+                    debugText = "DCCellEdit.DecodeIf.Statement";
 
-                    _debug.ToFile(_debugText + " " + Resources.ParameterNotFound + ":" + inputData[Index], DebugLevels.None, DebugMessageType.Critical);
-                    throw new InvalidProgramException(_debugText + "." + inputData[Index] + " is not created for this element");
+                    debug.ToFile(debugText + " " + Resources.ParameterNotFound + ":" + inputData[Index], DebugLevels.None, DebugMessageType.Critical);
+                    throw new InvalidProgramException(debugText + "." + inputData[Index] + " is not created for this element");
             }
             //if = true
             DecodeElement(inputData, Resources.True, RestrainLevel.IfStatement);
             //if = false
             DecodeElement(inputData, Resources.False, RestrainLevel.IfStatement);
 
-            PositionColumn -= _removeColumnCount + _additionalColumnOffset;
+            PositionColumn -= removeColumnCount + additionalColumnOffset;
         }
 
         /// <summary>
@@ -994,8 +987,8 @@ namespace IO_list_automation_new.Forms
         /// <param name="restrainLevel">choices are main not if statement</param>
         private void DecodeElement(List<string> inputData, string labelText, RestrainLevel restrainLevel)
         {
-            string _debugText;
-            Debug _debug = new Debug();
+            string debugText;
+            Debug debug = new Debug();
 
             switch (inputData[Index])
             {
@@ -1056,27 +1049,28 @@ namespace IO_list_automation_new.Forms
                     break;
 
                 default:
-                    _debugText = "DBCellEdit.Decode";
-                    _debug.ToFile(_debugText + " " + Resources.ParameterNotFound + ":" + inputData[Index], DebugLevels.None, DebugMessageType.Critical);
-                    throw new InvalidProgramException(_debugText + "." + inputData[Index] + " is not created for this element");
+                    debugText = "DBCellEdit.Decode";
+                    debug.ToFile(debugText + " " + Resources.ParameterNotFound + ":" + inputData[Index], DebugLevels.None, DebugMessageType.Critical);
+                    throw new InvalidProgramException(debugText + "." + inputData[Index] + " is not created for this element");
             }
         }
 
         /// <summary>
-        /// Clear all data rows and columns in DataGrid
+        /// Clear all data rows and columns in Data_Grid
         /// </summary>
         private void ClearEmptyRows()
         {
             bool found;
-            for (int row = Grid.RowCount-2; row > 1; row--)
+            for (int row = Grid.RowCount - 2; row > 1; row--)
             {
                 found = false;
-                for (int column = 0; column < Grid.ColumnCount; column++)
+
+                foreach (DataGridViewCell cell in Grid.Rows[row].Cells)
                 {
-                    if (Grid.Rows[row].Cells[column].Value == null)
+                    if (cell.Value == null)
                         continue;
 
-                    if (!string.IsNullOrEmpty(Grid.Rows[row].Cells[column].Value.ToString()))
+                    if (!string.IsNullOrEmpty(cell.Value.ToString()))
                     {
                         found = true;
                         break;
@@ -1100,17 +1094,17 @@ namespace IO_list_automation_new.Forms
             PositionRow = 0;
             Index = 0;
 
-            int _count = 0;
+            int count = 0;
             while (Index < inputData.Count)
             {
-                _count++;
+                count++;
                 DecodeElement(inputData, null, RestrainLevel.None);
-                if (_count > 1000)
+                if (count > 1000)
                 {
-                    Debug _debug = new Debug();
-                    const string _debugText = "DecodeElementsAll";
-                    _debug.ToFile(_debugText + ": infinite loop", DebugLevels.None, DebugMessageType.Critical);
-                    throw new InvalidProgramException(_debugText + ": infinite loop");
+                    Debug debug = new Debug();
+                    const string debugText = "DecodeElementsAll";
+                    debug.ToFile(debugText + ": infinite loop", DebugLevels.None, DebugMessageType.Critical);
+                    throw new InvalidProgramException(debugText + ": infinite loop");
                 }
             }
             AddElement(PositionRow, PositionColumn, "", null, RestrainLevel.None, ComboBoxType.Main);
@@ -1125,7 +1119,7 @@ namespace IO_list_automation_new.Forms
 
         public DBCellEdit(List<string> inputData, BaseTypes inputBase)
         {
-            OutputData = GeneralFunctions.ListCopy(inputData);
+            OutputData = new List<string>(inputData);
 
             InitializeComponent();
             Base = inputBase;

@@ -1,18 +1,10 @@
 ﻿using ExcelDataReader;
 using IO_list_automation_new.General;
 using IO_list_automation_new.Properties;
-using SharpCompress.Common;
 using SwiftExcel;
-using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Data.Common;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Xml.Linq;
 
 namespace IO_list_automation_new
 {
@@ -42,20 +34,20 @@ namespace IO_list_automation_new
             Debug debug = new Debug();
             if (col >= maxCol || col < 0)
             {
-                debug.ToFile(Resources.DataReadFailBounds + " " + Resources.Column + " " + col + " max(" + maxCol + ")" + Resources.Row + " " + row, DebugLevels.Minimum, DebugMessageType.Warning);
+                debug.ToFile(Resources.Data_ReadFailBounds + " " + Resources.Column + " " + col + " max(" + maxCol + ")" + Resources.Row + " " + row, DebugLevels.Minimum, DebugMessageType.Warning);
                 return string.Empty;
             }
 
-            System.Type _type = excel.GetFieldType(col);
-            if (_type == null)
+            System.Type type = excel.GetFieldType(col);
+            if (type == null)
                 return string.Empty;
 
-            if (_type.Name == "String")
+            if (type.Name == "String")
                 return excel.GetString(col);
-            else if (_type.Name == "Double")
+            else if (type.Name == "Double")
                 return excel.GetDouble(col).ToString();
 
-            debug.ToPopUp(Resources.DataReadFailFormat + ": " + _type.Name, DebugLevels.None, DebugMessageType.Critical);
+            debug.ToPopUp(Resources.Data_ReadFailFormat + ": " + type.Name, DebugLevels.None, DebugMessageType.Critical);
             return string.Empty;
         }
 
@@ -65,19 +57,19 @@ namespace IO_list_automation_new
         public void SaveSelect(DataTable data)
         {
             Debug debug = new Debug();
-            SaveFileDialog _saveFile = new SaveFileDialog()
+            SaveFileDialog saveFile = new SaveFileDialog()
             {
                 Filter = Name + "|*" + FileExtension,
                 AddExtension = false,
             };
 
-            if (_saveFile.ShowDialog() != DialogResult.OK)
+            if (saveFile.ShowDialog() != DialogResult.OK)
             {
                 debug.ToFile(Resources.FileSellectCanceled, DebugLevels.Minimum, DebugMessageType.Info);
                 return;
             }
 
-            SaveToFile(_saveFile.FileName, data);
+            SaveToFile(saveFile.FileName, data);
         }
 
         /// <summary>
@@ -89,40 +81,42 @@ namespace IO_list_automation_new
             if (!GeneralFunctions.ValidDataTable(data))
                 return;
 
-            string _fileName = System.IO.Path.ChangeExtension(fileName, null) + "." + FileExtension;
+            string fullPath = System.IO.Path.ChangeExtension(fileName, null) + "." + FileExtension;
 
             Debug debug = new Debug();
-            debug.ToFile(Resources.SaveDataToFile + ": " + _fileName, DebugLevels.Development, DebugMessageType.Info);
+            debug.ToFile(Resources.SaveDataToFile + ": " + fullPath, DebugLevels.Development, DebugMessageType.Info);
 
-            Progress.RenameProgressBar(Resources.SaveDataToFile + ": " + _fileName, data.Rows.Count);
+            Progress.RenameProgressBar(Resources.SaveDataToFile + ": " + fullPath, data.Rows.Count);
 
-            ExcelWriter _excel = new ExcelWriter(_fileName);
-            int _rowOffset = 1;
-            string _cellValue;
+            ExcelWriter excel = new ExcelWriter(fullPath);
+            int rowOffset = 1;
+            string cellValue;
 
             //write data to file
-            for (int _row = 0; _row < data.Rows.Count; _row++)
+            for (int row = 0; row < data.Rows.Count; row++)
             {
-                for (int _column = 0; _column < data.Columns.Count; _column++)
+                for (int column = 0; column < data.Columns.Count; column++)
                 {
-                    if (data.Rows[_row][_column] is System.DBNull)
-                        _cellValue = string.Empty;
+                    if (data.Rows[row][column] is System.DBNull)
+                    {
+                        cellValue = string.Empty;
+                    }
                     else
                     {
-                        _cellValue = GeneralFunctions.GetDataTableValue(data, _row, _column);
-                        if (string.IsNullOrEmpty(_cellValue))
-                            _cellValue = string.Empty;
+                        cellValue = GeneralFunctions.GetDataTableValue(data, row, column);
+                        if (string.IsNullOrEmpty(cellValue))
+                            cellValue = string.Empty;
                     }
-                    _excel.Write(_cellValue, _column + 1, _row + _rowOffset);
+                    excel.Write(cellValue, column + 1, row + rowOffset);
                 }
 
-                Progress.UpdateProgressBar(_row);
+                Progress.UpdateProgressBar(row);
             }
-            _excel.Save();
-            _excel.Dispose();
+            excel.Save();
+            excel.Dispose();
             Progress.HideProgressBar();
 
-            debug.ToFile(Resources.SaveDataToFile + ": " + _fileName + " - " + Resources.Finished, DebugLevels.Development, DebugMessageType.Info);
+            debug.ToFile(Resources.SaveDataToFile + ": " + fullPath + " - " + Resources.Finished, DebugLevels.Development, DebugMessageType.Info);
         }
 
         /// <summary>
@@ -133,17 +127,17 @@ namespace IO_list_automation_new
         {
             Debug debug = new Debug();
 
-            OpenFileDialog _loadFile = new OpenFileDialog()
+            OpenFileDialog loadFile = new OpenFileDialog()
             {
                 Filter = Name + "|*" + FileExtension,
             };
 
-            if (_loadFile.ShowDialog() != DialogResult.OK)
+            if (loadFile.ShowDialog() != DialogResult.OK)
             {
                 debug.ToFile(Resources.FileSellectCanceled, DebugLevels.Minimum, DebugMessageType.Info);
                 return null;
             }
-            return LoadFromFile(_loadFile.FileName);
+            return LoadFromFile(loadFile.FileName);
         }
 
         /// <summary>
@@ -153,58 +147,62 @@ namespace IO_list_automation_new
         /// <returns>list of list string array of data</returns>
         public DataTable LoadFromFile(string fileName)
         {
-            string _fileName = System.IO.Path.ChangeExtension(fileName, null) + "." + FileExtension;
+            string fullPath = System.IO.Path.ChangeExtension(fileName, null) + "." + FileExtension;
 
             Debug debug = new Debug();
-            debug.ToFile(Resources.LoadDataFromFile + ": " + _fileName, DebugLevels.Development, DebugMessageType.Info);
-            DataTable _data = new DataTable();
+            debug.ToFile(Resources.LoadDataFromFile + ": " + fullPath, DebugLevels.Development, DebugMessageType.Info);
+            DataTable data = new DataTable();
 
-            if (!File.Exists(_fileName))
+            if (!File.Exists(fullPath))
             {
-                debug.ToPopUp(Resources.NoFile + ": " + _fileName, DebugLevels.None, DebugMessageType.Alarm);
+                debug.ToPopUp(Resources.NoFile + ": " + fullPath, DebugLevels.None, DebugMessageType.Alarm);
                 return null;
             }
 
-            FileStream stream = File.Open(_fileName, FileMode.Open, FileAccess.Read);
-            IExcelDataReader _excel = ExcelReaderFactory.CreateReader(stream);
+            FileStream stream = File.Open(fullPath, FileMode.Open, FileAccess.Read);
+            IExcelDataReader excel = ExcelReaderFactory.CreateReader(stream);
 
-            int _rowCount = _excel.RowCount;
-            int _columnCount;
-            Progress.RenameProgressBar(Resources.LoadDataFromFile + ": " + _fileName, _rowCount);
+            int rowCount = excel.RowCount;
+            int columnCount;
+            Progress.RenameProgressBar(Resources.LoadDataFromFile + ": " + fullPath, rowCount);
 
             //add columns to dataTable
-            for (int _column = 0; _column < _excel.FieldCount; _column++)
-                _data.Columns.Add(_column.ToString());
+            for (int column = 0; column < excel.FieldCount; column++)
+                data.Columns.Add(column.ToString());
 
             //read all excel rows
-            for (int _row = 1; _row <= _rowCount; _row++)
+            for (int rowIndex = 1; rowIndex <= rowCount; rowIndex++)
             {
                 // if nothing to read exit
-                if (!_excel.Read())
+                if (!excel.Read())
                     break;
 
-                _columnCount = _excel.FieldCount;
+                columnCount = excel.FieldCount;
 
-                DataRow row = _data.NewRow();
-                for (int _column = 0; _column < _columnCount; _column++)
-                    row[_column] = ReadExcelCell(_row, _column, _columnCount, _excel);
+                DataRow row = data.NewRow();
+                for (int column = 0; column < columnCount; column++)
+                    row[column] = ReadExcelCell(rowIndex, column, columnCount, excel);
 
-                _data.Rows.Add(row);
+                data.Rows.Add(row);
 
-                Progress.UpdateProgressBar(_row);
+                Progress.UpdateProgressBar(rowIndex);
             }
-            _excel.Close();
+            excel.Close();
 
             Progress.HideProgressBar();
-            debug.ToFile(Resources.LoadDataFromFile + ": " + _fileName + " - " + Resources.Finished, DebugLevels.Development, DebugMessageType.Info);
+            debug.ToFile(Resources.LoadDataFromFile + ": " + fullPath + " - " + Resources.Finished, DebugLevels.Development, DebugMessageType.Info);
 
-            if (_data.Rows.Count == 0)
+            if (data.Rows.Count == 0)
             {
-                debug.ToPopUp(Resources.LoadDataFromFile + ": " + _fileName + " - " + Resources.NoData, DebugLevels.None, DebugMessageType.Info);
-                return null;
+                if (data.Columns.Count == 0)
+                    data.Columns.Add();
+
+                if (data.Rows.Count == 0)
+                    data.Rows.Add();
+                debug.ToPopUp(Resources.LoadDataFromFile + ": " + fullPath + " - " + Resources.NoData, DebugLevels.None, DebugMessageType.Info);
             }
 
-            return _data;
+            return data;
         }
 
         /// <summary>
@@ -216,30 +214,30 @@ namespace IO_list_automation_new
         /// <returns>DB files exists</returns>
         public bool CreateFileInDB(string fileName, string additionalFolder, DataTable data)
         {
-            string _directory = System.IO.Path.GetDirectoryName(System.Windows.Forms.Application.ExecutablePath) + "\\DB";
+            string directory = System.IO.Path.GetDirectoryName(System.Windows.Forms.Application.ExecutablePath) + "\\DB";
 
             if (!string.IsNullOrEmpty(additionalFolder))
-                _directory += "\\" + additionalFolder;
+                directory += "\\" + additionalFolder;
 
-            string _fileName = _directory + "\\" + fileName + "." + FileExtension;
+            string fullPath = directory + "\\" + fileName + "." + FileExtension;
 
             Debug debug = new Debug();
-            debug.ToFile(Resources.CreateNew + ": " + _fileName, DebugLevels.Development, DebugMessageType.Info);
+            debug.ToFile(Resources.CreateNew + ": " + fullPath, DebugLevels.Development, DebugMessageType.Info);
 
-            ExcelWriter _excel = new ExcelWriter(_fileName);
+            ExcelWriter excel = new ExcelWriter(fullPath);
 
             //write data
             for (int row = 0; row < data.Rows.Count; row++)
             {
                 for (int column = 0; column < data.Columns.Count; column++)
-                    _excel.Write(GeneralFunctions.GetDataTableValue(data, row, column), 1 + column, 1 + row);
+                    excel.Write(GeneralFunctions.GetDataTableValue(data, row, column), 1 + column, 1 + row);
             }
-            _excel.Save();
-            _excel.Dispose();
+            excel.Save();
+            excel.Dispose();
 
-            debug.ToFile(Resources.CreateNew + ": " + _fileName + Resources.Finished, DebugLevels.Development, DebugMessageType.Info);
+            debug.ToFile(Resources.CreateNew + ": " + fullPath + Resources.Finished, DebugLevels.Development, DebugMessageType.Info);
 
-            return FileExistsInDB(fileName, additionalFolder);
+            return FileExistsInDB(fullPath, additionalFolder);
         }
 
         /// <summary>
@@ -250,13 +248,13 @@ namespace IO_list_automation_new
         public bool FileExistsInDB(string fileName, string additionalFolder)
         {
             //get files in folder
-            string _directory = System.IO.Path.GetDirectoryName(System.Windows.Forms.Application.ExecutablePath) + "\\DB";
+            string directory = System.IO.Path.GetDirectoryName(System.Windows.Forms.Application.ExecutablePath) + "\\DB";
 
             if (!string.IsNullOrEmpty(additionalFolder))
-                _directory += "\\" + additionalFolder;
+                directory += "\\" + additionalFolder;
 
-            string[] _files = System.IO.Directory.GetFiles(_directory, fileName + "." + FileExtension);
-            return _files.Length > 0;
+            string[] files = System.IO.Directory.GetFiles(directory, fileName + "." + FileExtension);
+            return files.Length > 0;
         }
     }
 }

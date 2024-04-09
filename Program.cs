@@ -7,7 +7,6 @@ using System.Windows.Forms;
 
 namespace IO_list_automation_new
 {
-    
     internal enum FileExtensions
     {
         data,
@@ -26,7 +25,7 @@ namespace IO_list_automation_new
     internal enum TabIndex
     {
         Design = 0,
-        Data = 1,
+        Data_ = 1,
         Object = 2,
         Modules = 3,
         Address = 4,
@@ -130,27 +129,27 @@ namespace IO_list_automation_new
 
             Version ver = thisAssemblyName.Version;
 
-            string _versionNumber = ver.Major.ToString() + "." +
+            string version = ver.Major.ToString() + "." +
                                     ver.Minor.ToString() + "." +
                                     ver.Build.ToString() + "." +
                                     ver.Revision.ToString();
 
-            Debug _debug = new Debug();
+            Debug debug = new Debug();
             if (Settings.Default.DebugLevel == (uint)DebugLevels.Development)
-                _debug.ClearDebug();
+                debug.ClearDebug();
 
             Thread.CurrentThread.CurrentUICulture = CultureInfo.GetCultureInfo(Settings.Default.ApplicationLanguage);
 
-            _debug.ToFile("--------------------------------------------------------------", DebugLevels.None, DebugMessageType.Info);
-            _debug.ToFile(Resources.SoftwareStart + ": " + _versionNumber, DebugLevels.None, DebugMessageType.Info);
-            _debug.CurrentDebugLevel();
+            debug.ToFile("--------------------------------------------------------------", DebugLevels.None, DebugMessageType.Info);
+            debug.ToFile(Resources.SoftwareStart + ": " + version, DebugLevels.None, DebugMessageType.Info);
+            debug.CurrentDebugLevel();
 
-            _debug.ToFile("UI language: " + Thread.CurrentThread.CurrentUICulture, DebugLevels.None, DebugMessageType.Info);
+            debug.ToFile("UI language: " + Thread.CurrentThread.CurrentUICulture, DebugLevels.None, DebugMessageType.Info);
 
             if (Settings.Default.DebugLevel == (uint)DebugLevels.Development)
-                _debug.ToFile(Resources.EarlyReleaseWarning, DebugLevels.None, DebugMessageType.Warning);
+                debug.ToFile(Resources.EarlyReleaseWarning, DebugLevels.None, DebugMessageType.Warning);
             else
-                _debug.ToPopUp(Resources.EarlyReleaseWarning, DebugLevels.None, DebugMessageType.Warning);
+                debug.ToPopUp(Resources.EarlyReleaseWarning, DebugLevels.None, DebugMessageType.Warning);
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);

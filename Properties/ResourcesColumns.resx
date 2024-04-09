@@ -211,10 +211,10 @@
     <value>Device type text</value>
   </data>
   <data name="Function1" xml:space="preserve">
-    <value>Function</value>
+    <value>Function1</value>
   </data>
   <data name="Function2" xml:space="preserve">
-    <value>Function</value>
+    <value>Function2</value>
   </data>
   <data name="FunctionText1" xml:space="preserve">
     <value>Function text with 1 part</value>

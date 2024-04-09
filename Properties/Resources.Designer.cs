@@ -252,7 +252,7 @@ namespace IO_list_automation_new.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Extract data from excel file error, requested column is out of bound.
         /// </summary>
-        internal static string DataReadFailBounds {
+        internal static string Data_ReadFailBounds {
             get {
                 return ResourceManager.GetString("DataReadFailBounds", resourceCulture);
             }
@@ -261,14 +261,14 @@ namespace IO_list_automation_new.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Extract data from excel file error, this format of cell is not implemented.
         /// </summary>
-        internal static string DataReadFailFormat {
+        internal static string Data_ReadFailFormat {
             get {
                 return ResourceManager.GetString("DataReadFailFormat", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Database not found.
+        ///   Looks up a localized string similar to Data_base not found.
         /// </summary>
         internal static string DBNotFound {
             get {
@@ -511,7 +511,7 @@ namespace IO_list_automation_new.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Searching unique Modules signals in Data.
+        ///   Looks up a localized string similar to Searching unique Modules signals in Data_.
         /// </summary>
         internal static string ModuleGenerateUniqueData {
             get {
@@ -574,7 +574,7 @@ namespace IO_list_automation_new.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Searching unique KKS signals in Data.
+        ///   Looks up a localized string similar to Searching unique KKS signals in Data_.
         /// </summary>
         internal static string ObjectGenerateUniqueData {
             get {

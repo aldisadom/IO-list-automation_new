@@ -1,12 +1,10 @@
-﻿using ExcelDataReader;
-using IO_list_automation_new.Forms;
+﻿using IO_list_automation_new.Forms;
 using IO_list_automation_new.General;
 using IO_list_automation_new.Properties;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.IO;
-using System.Runtime.Remoting.Channels;
 using System.Windows.Forms;
 
 namespace IO_list_automation_new
@@ -219,10 +217,10 @@ namespace IO_list_automation_new
                     if (suppressError)
                         return string.Empty;
 
-                    const string _debugText = "DesignSignal.GetValueString";
-                    Debug _debug = new Debug();
-                    _debug.ToFile(_debugText + " " + Resources.ParameterNotFound + ":" + parameterName, DebugLevels.None, DebugMessageType.Critical);
-                    throw new InvalidProgramException(_debugText + "." + parameterName + " is not created for this element");
+                    const string debugText = "DesignSignal.GetValueString";
+                    Debug debug = new Debug();
+                    debug.ToFile(debugText + " " + Resources.ParameterNotFound + ":" + parameterName, DebugLevels.None, DebugMessageType.Critical);
+                    throw new InvalidProgramException(debugText + "." + parameterName + " is not created for this element");
             }
         }
 
@@ -267,7 +265,7 @@ namespace IO_list_automation_new
 
         protected override List<GeneralColumn> GeneralGenerateColumnsList()
         {
-            List<GeneralColumn> _columns = new List<GeneralColumn>()
+            List<GeneralColumn> columns = new List<GeneralColumn>()
             {
                 new GeneralColumn(KeywordColumn.ID, SettingsDesign.Default.ColumnID,false),
                 new GeneralColumn(KeywordColumn.CPU, SettingsDesign.Default.ColumnCPU, true),
@@ -290,32 +288,32 @@ namespace IO_list_automation_new
                 new GeneralColumn(KeywordColumn.Tag, SettingsDesign.Default.ColumnTag, true),
             };
 
-            return _columns;
+            return columns;
         }
 
         protected override void UpdateSettingsColumnsList()
         {
-            ColumnList _columns = Columns;
+            ColumnList columns = Columns;
 
-            SettingsDesign.Default.ColumnID = _columns.GetColumnNumberFromKeyword(KeywordColumn.ID);
-            SettingsDesign.Default.ColumnCPU = _columns.GetColumnNumberFromKeyword(KeywordColumn.CPU);
-            SettingsDesign.Default.ColumnKKS = _columns.GetColumnNumberFromKeyword(KeywordColumn.KKS);
-            SettingsDesign.Default.ColumnRangeMin = _columns.GetColumnNumberFromKeyword(KeywordColumn.RangeMin);
-            SettingsDesign.Default.ColumnRangeMax = _columns.GetColumnNumberFromKeyword(KeywordColumn.RangeMax);
-            SettingsDesign.Default.ColumnUnits = _columns.GetColumnNumberFromKeyword(KeywordColumn.Units);
-            SettingsDesign.Default.ColumnFalseText = _columns.GetColumnNumberFromKeyword(KeywordColumn.FalseText);
-            SettingsDesign.Default.ColumnTrueText = _columns.GetColumnNumberFromKeyword(KeywordColumn.TrueText);
-            SettingsDesign.Default.ColumnRevision = _columns.GetColumnNumberFromKeyword(KeywordColumn.Revision);
-            SettingsDesign.Default.ColumnCable = _columns.GetColumnNumberFromKeyword(KeywordColumn.Cable);
-            SettingsDesign.Default.ColumnCabinet = _columns.GetColumnNumberFromKeyword(KeywordColumn.Cabinet);
-            SettingsDesign.Default.ColumnModuleName = _columns.GetColumnNumberFromKeyword(KeywordColumn.ModuleName);
-            SettingsDesign.Default.ColumnPin = _columns.GetColumnNumberFromKeyword(KeywordColumn.Pin);
-            SettingsDesign.Default.ColumnChannel = _columns.GetColumnNumberFromKeyword(KeywordColumn.Channel);
-            SettingsDesign.Default.ColumnIOText = _columns.GetColumnNumberFromKeyword(KeywordColumn.IOText);
-            SettingsDesign.Default.ColumnPage = _columns.GetColumnNumberFromKeyword(KeywordColumn.Page);
-            SettingsDesign.Default.ColumnChanged = _columns.GetColumnNumberFromKeyword(KeywordColumn.Changed);
-            SettingsDesign.Default.ColumnTerminal = _columns.GetColumnNumberFromKeyword(KeywordColumn.Terminal);
-            SettingsDesign.Default.ColumnTag = _columns.GetColumnNumberFromKeyword(KeywordColumn.Tag);
+            SettingsDesign.Default.ColumnID = columns.GetColumnNumberFromKeyword(KeywordColumn.ID);
+            SettingsDesign.Default.ColumnCPU = columns.GetColumnNumberFromKeyword(KeywordColumn.CPU);
+            SettingsDesign.Default.ColumnKKS = columns.GetColumnNumberFromKeyword(KeywordColumn.KKS);
+            SettingsDesign.Default.ColumnRangeMin = columns.GetColumnNumberFromKeyword(KeywordColumn.RangeMin);
+            SettingsDesign.Default.ColumnRangeMax = columns.GetColumnNumberFromKeyword(KeywordColumn.RangeMax);
+            SettingsDesign.Default.ColumnUnits = columns.GetColumnNumberFromKeyword(KeywordColumn.Units);
+            SettingsDesign.Default.ColumnFalseText = columns.GetColumnNumberFromKeyword(KeywordColumn.FalseText);
+            SettingsDesign.Default.ColumnTrueText = columns.GetColumnNumberFromKeyword(KeywordColumn.TrueText);
+            SettingsDesign.Default.ColumnRevision = columns.GetColumnNumberFromKeyword(KeywordColumn.Revision);
+            SettingsDesign.Default.ColumnCable = columns.GetColumnNumberFromKeyword(KeywordColumn.Cable);
+            SettingsDesign.Default.ColumnCabinet = columns.GetColumnNumberFromKeyword(KeywordColumn.Cabinet);
+            SettingsDesign.Default.ColumnModuleName = columns.GetColumnNumberFromKeyword(KeywordColumn.ModuleName);
+            SettingsDesign.Default.ColumnPin = columns.GetColumnNumberFromKeyword(KeywordColumn.Pin);
+            SettingsDesign.Default.ColumnChannel = columns.GetColumnNumberFromKeyword(KeywordColumn.Channel);
+            SettingsDesign.Default.ColumnIOText = columns.GetColumnNumberFromKeyword(KeywordColumn.IOText);
+            SettingsDesign.Default.ColumnPage = columns.GetColumnNumberFromKeyword(KeywordColumn.Page);
+            SettingsDesign.Default.ColumnChanged = columns.GetColumnNumberFromKeyword(KeywordColumn.Changed);
+            SettingsDesign.Default.ColumnTerminal = columns.GetColumnNumberFromKeyword(KeywordColumn.Terminal);
+            SettingsDesign.Default.ColumnTag = columns.GetColumnNumberFromKeyword(KeywordColumn.Tag);
 
             SettingsDesign.Default.Save();
         }
@@ -335,7 +333,7 @@ namespace IO_list_automation_new
 
         public void InitExcelColumnsList()
         {
-            List<GeneralColumn> _excelColumn = new List<GeneralColumn>()
+            List<GeneralColumn> excelColumn = new List<GeneralColumn>()
             {
                 new GeneralColumn(KeywordColumn.ID, SettingsDesignInput.Default.ColumnID, true),
                 new GeneralColumn(KeywordColumn.CPU, SettingsDesignInput.Default.ColumnCPU, true),
@@ -358,7 +356,7 @@ namespace IO_list_automation_new
                 new GeneralColumn(KeywordColumn.Tag, SettingsDesignInput.Default.ColumnTag, true),
             };
 
-            SetExcelColumnList(_excelColumn, false);
+            SetExcelColumnList(excelColumn, false);
         }
 
         public DesignClass(ProgressIndication progress, DataGridView grid) : base("Design", nameof(FileExtensions.design), progress, grid, true)
@@ -375,57 +373,57 @@ namespace IO_list_automation_new
             Debug debug = new Debug();
 
             //crate open file dialog to open excel files only
-            OpenFileDialog _importFile = new OpenFileDialog()
+            OpenFileDialog importFile = new OpenFileDialog()
             {
                 Filter = "Excel Worksheets|*.xls;*.xlsx",
             };
 
-            if (_importFile.ShowDialog() != DialogResult.OK)
+            if (importFile.ShowDialog() != DialogResult.OK)
             {
                 debug.ToFile(Resources.FileSellectCanceled, DebugLevels.Minimum, DebugMessageType.Info);
                 return false;
             }
 
-            debug.ToFile("Excel file for design is: " + _importFile.FileName, DebugLevels.High, DebugMessageType.Info);
+            debug.ToFile("Excel file for design is: " + importFile.FileName, DebugLevels.High, DebugMessageType.Info);
             //open excel file
-            ExcelFiles _excelFile = new ExcelFiles(_importFile.FileName, Path.GetExtension(_importFile.FileName).Substring(1), Progress);
-            DataTable _data = _excelFile.LoadFromFile(_importFile.FileName);
+            ExcelFiles excelFile = new ExcelFiles(importFile.FileName, Path.GetExtension(importFile.FileName).Substring(1), Progress);
+            DataTable data = excelFile.LoadFromFile(importFile.FileName);
 
-            DesignInputData _designInputData = new DesignInputData(_data);
-            _designInputData.ShowDialog();
+            DesignInputData designInputData = new DesignInputData(data);
+            designInputData.ShowDialog();
 
             InitExcelColumnsList();
 
-            int _columnNumber;
-            string _cellValue;
-            string _ColumnName;
+            int columnNumber;
+            string cellValue;
+            string columnName;
 
             UpdateColumnNumbers(ExcelColumns.Columns);
 
-            Progress.RenameProgressBar(Resources.DesignImport, _data.Rows.Count);
+            Progress.RenameProgressBar(Resources.DesignImport, data.Rows.Count);
             debug.ToFile("Extracting data from input file", DebugLevels.High, DebugMessageType.Info);
 
-            for (int _row = SettingsDesignInput.Default.RowOffset; _row < _data.Rows.Count; _row++)
+            for (int row = SettingsDesignInput.Default.RowOffset; row < data.Rows.Count; row++)
             {
                 //create signal and add corresponding Columns to each signal element
-                DesignSignal _signalNew = new DesignSignal();
-                foreach (GeneralColumn _column in ExcelColumns)
+                DesignSignal signalNew = new DesignSignal();
+                foreach (GeneralColumn column in ExcelColumns)
                 {
-                    _columnNumber = _column.Number;
-                    if (_columnNumber != -1 && _columnNumber < _data.Columns.Count)
+                    columnNumber = column.Number;
+                    if (columnNumber != -1 && columnNumber < data.Columns.Count)
                     {
-                        _cellValue = GeneralFunctions.GetDataTableValue(_data, _row, _columnNumber);
-                        _ColumnName = _column.Keyword;
+                        cellValue = GeneralFunctions.GetDataTableValue(data, row, columnNumber);
+                        columnName = column.Keyword;
 
-                        _signalNew.SetValueFromString(_cellValue, _ColumnName);
+                        signalNew.SetValueFromString(cellValue, columnName);
                     }
                 }
 
                 // if signal is valid add to list
-                if (_signalNew.ValidateSignal())
-                    Signals.Add(_signalNew);
+                if (signalNew.ValidateSignal())
+                    Signals.Add(signalNew);
 
-                Progress.UpdateProgressBar(_row);
+                Progress.UpdateProgressBar(row);
             }
 
             debug.ToFile("Extracting data from input file - " + Resources.Finished, DebugLevels.High, DebugMessageType.Info);

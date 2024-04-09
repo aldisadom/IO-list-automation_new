@@ -7,16 +7,17 @@ namespace IO_list_automation_new.DB
     public partial class NewName : Form
     {
         public string Output
-        { get
+        {
+            get
             {
                 if (string.IsNullOrEmpty(InputDBObjectSignalName.Text))
                     return InputDBObjectName.Text;
                 else
-                    return InputDBObjectName.Text+"(" + InputDBObjectSignalName.Text + ")";
+                    return InputDBObjectName.Text + "(" + InputDBObjectSignalName.Text + ")";
             }
         }
 
-        public NewName(string name,string predefinedName, bool withSignalName)
+        public NewName(string name, string predefinedName, bool withSignalName)
         {
             InitializeComponent();
             this.Name = name;

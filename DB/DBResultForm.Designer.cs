@@ -51,8 +51,8 @@
             this.DBTabControlCPU.SelectedIndex = 0;
             this.DBTabControlCPU.Size = new System.Drawing.Size(734, 693);
             this.DBTabControlCPU.TabIndex = 0;
-            this.DBTabControlCPU.SelectedIndexChanged += new System.EventHandler(this.DBTabControl_SelectedIndexChanged);
-            this.DBTabControlCPU.MouseClick += new System.Windows.Forms.MouseEventHandler(this.DBTabControl_MouseClick);
+            this.DBTabControlCPU.SelectedIndexChanged += new System.EventHandler(this.DBTabControlSelectedIndexChanged);
+            this.DBTabControlCPU.MouseClick += new System.Windows.Forms.MouseEventHandler(this.DBTabControlMouseClick);
             // 
             // ResultTabControl
             // 

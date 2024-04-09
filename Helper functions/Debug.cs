@@ -31,11 +31,11 @@ namespace IO_list_automation_new
         /// <returns>number as string with additional zeroes</returns>
         private string NumberToString(int _number, int decimals)
         {
-            string _formattedString = _number.ToString();
+            string formattedString = _number.ToString();
             //check size of number if not enough numbers add 0 in front
-            for (int i = _formattedString.Length; i < decimals; i++)
-                _formattedString = "0" + _formattedString;
-            return _formattedString;
+            for (int i = formattedString.Length; i < decimals; i++)
+                formattedString = "0" + formattedString;
+            return formattedString;
         }
 
         /// <summary>
@@ -45,10 +45,10 @@ namespace IO_list_automation_new
         private string FormatTime()
         {
             System.DateTime currentTime = DateTime.Now;
-            string _formattedTime = NumberToString(currentTime.Year, 4) + "-" + NumberToString(currentTime.Month, 2) + "-" + NumberToString(currentTime.Day, 2) + " " +
+            string formattedTime = NumberToString(currentTime.Year, 4) + "-" + NumberToString(currentTime.Month, 2) + "-" + NumberToString(currentTime.Day, 2) + " " +
                                     NumberToString(currentTime.Hour, 2) + ":" + NumberToString(currentTime.Minute, 2) + ":" + NumberToString(currentTime.Second, 2) + "." +
                                     NumberToString(currentTime.Millisecond, 3);
-            return _formattedTime;
+            return formattedTime;
         }
 
         /// <summary>
@@ -56,7 +56,7 @@ namespace IO_list_automation_new
         /// </summary>
         public void ClearDebug()
         {
-            File.Create("_debug.txt").Dispose();
+            File.Create("debug.txt").Dispose();
         }
 
         /// <summary>
@@ -65,7 +65,7 @@ namespace IO_list_automation_new
         /// <param name="message">debug message</param>
         private void WriteToFile(string message)
         {
-            using (StreamWriter outputFile = new StreamWriter(Path.Combine(Directory.GetCurrentDirectory(), "_debug.txt"), true))
+            using (StreamWriter outputFile = new StreamWriter(Path.Combine(Directory.GetCurrentDirectory(), "debug.txt"), true))
                 outputFile.WriteLine(message);
         }
 
@@ -91,7 +91,7 @@ namespace IO_list_automation_new
             if (Settings.Default.DebugLevel < (uint)messageLevel)
                 return;
 
-            string _messageText = FormatTime() + " - ";
+            string messageText = FormatTime() + " - ";
 
             switch (messageType)
             {
@@ -99,22 +99,22 @@ namespace IO_list_automation_new
                     break;
 
                 case DebugMessageType.Warning:
-                    _messageText += Resources.DebugWarning;
-                    _messageText += ": ";
+                    messageText += Resources.DebugWarning;
+                    messageText += ": ";
                     break;
 
                 case DebugMessageType.Alarm:
-                    _messageText += Resources.DebugAlarm;
-                    _messageText += ": ";
+                    messageText += Resources.DebugAlarm;
+                    messageText += ": ";
                     break;
 
                 case DebugMessageType.Critical:
-                    _messageText += Resources.DebugCritical;
-                    _messageText += ": ";
+                    messageText += Resources.DebugCritical;
+                    messageText += ": ";
                     break;
             }
-            _messageText += message;
-            WriteToFile(_messageText);
+            messageText += message;
+            WriteToFile(messageText);
         }
 
         /// <summary>
@@ -129,8 +129,8 @@ namespace IO_list_automation_new
             if (Settings.Default.DebugLevel < (uint)messageLevel)
                 return;
 
-            string _messageText = FormatTime() + " - ";
-            MessageBoxIcon _icon = MessageBoxIcon.Information;
+            string messageText = FormatTime() + " - ";
+            MessageBoxIcon icon = MessageBoxIcon.Information;
 
             switch (messageType)
             {
@@ -138,26 +138,26 @@ namespace IO_list_automation_new
                     break;
 
                 case DebugMessageType.Warning:
-                    _icon = MessageBoxIcon.Information;
-                    _messageText += Resources.DebugWarning;
-                    _messageText += ": ";
+                    icon = MessageBoxIcon.Information;
+                    messageText += Resources.DebugWarning;
+                    messageText += ": ";
                     break;
 
                 case DebugMessageType.Alarm:
-                    _icon = MessageBoxIcon.Warning;
-                    _messageText += Resources.DebugAlarm;
-                    _messageText += ": ";
+                    icon = MessageBoxIcon.Warning;
+                    messageText += Resources.DebugAlarm;
+                    messageText += ": ";
                     break;
 
                 case DebugMessageType.Critical:
-                    _icon = MessageBoxIcon.Error;
-                    _messageText += Resources.DebugCritical;
-                    _messageText += ": ";
+                    icon = MessageBoxIcon.Error;
+                    messageText += Resources.DebugCritical;
+                    messageText += ": ";
                     break;
             }
-            _messageText += message;
-            WriteToFile(_messageText);
-            PopUp(message, _icon);
+            messageText += message;
+            WriteToFile(messageText);
+            PopUp(message, icon);
         }
 
         /// <summary>
@@ -166,9 +166,9 @@ namespace IO_list_automation_new
         /// <returns>current debug level</returns>
         public uint CurrentDebugLevel()
         {
-            string _currentDebugLevel = ((DebugLevels)Settings.Default.DebugLevel).ToString();
+            string currentDebugLevel = ((DebugLevels)Settings.Default.DebugLevel).ToString();
 
-            ToFile($"{Resources.CurrentDebugLevel}: {_currentDebugLevel}", DebugLevels.None, DebugMessageType.Info);
+            ToFile($"{Resources.CurrentDebugLevel}: {currentDebugLevel}", DebugLevels.None, DebugMessageType.Info);
             return Settings.Default.DebugLevel;
         }
 
@@ -178,10 +178,9 @@ namespace IO_list_automation_new
         /// <param name="newDebugLevel">new debugging level</param>
         public void SetDebugLevel(DebugLevels newDebugLevel)
         {
-            string _currentDebugLevel = ((DebugLevels)Settings.Default.DebugLevel).ToString();
-            string _newDebugLevel = nameof(newDebugLevel);
+            string currentDebugLevel = ((DebugLevels)Settings.Default.DebugLevel).ToString();
 
-            ToPopUp($"{Resources.DebugLevel} {_currentDebugLevel} -> {_newDebugLevel}", DebugLevels.High, DebugMessageType.Info);
+            ToPopUp($"{Resources.DebugLevel} {currentDebugLevel} -> {nameof(newDebugLevel)}", DebugLevels.High, DebugMessageType.Info);
             Settings.Default.DebugLevel = (uint)newDebugLevel;
             Settings.Default.Save();
         }

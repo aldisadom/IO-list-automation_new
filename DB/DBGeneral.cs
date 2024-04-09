@@ -5,10 +5,7 @@ using SwiftExcel;
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Net;
-using System.Reflection;
-using System.Runtime.InteropServices;
-using System.Security.AccessControl;
+using System.IO;
 using System.Windows.Forms;
 
 namespace IO_list_automation_new
@@ -71,10 +68,10 @@ namespace IO_list_automation_new
                     break;
 
                 default:
-                    Debug _debug = new Debug();
-                    const string _debugText = "DBGeneral.DBGeneral";
-                    _debug.ToFile(_debugText + " " + Resources.ParameterNotFound + ":" + nameof(level), DebugLevels.None, DebugMessageType.Critical);
-                    throw new InvalidProgramException(_debugText + "." + nameof(level) + " is not created for this element");
+                    Debug debug = new Debug();
+                    const string debugText = "DBGeneral.DBGeneral";
+                    debug.ToFile(debugText + " " + Resources.ParameterNotFound + ":" + nameof(level), DebugLevels.None, DebugMessageType.Critical);
+                    throw new InvalidProgramException(debugText + "." + nameof(level) + " is not created for this element");
             }
         }
 
@@ -86,23 +83,23 @@ namespace IO_list_automation_new
         /// <returns>DB files exists</returns>
         public bool CreateDBFile(string fileName, List<string> data)
         {
-            string _fileName = Directory + "\\" + fileName + "." + FileExtension;
+            string fullPath = Directory + "\\" + fileName + "." + FileExtension;
 
             Debug debug = new Debug();
-            debug.ToFile(Resources.CreateNew + " " + Level.ToString() + ": " + _fileName, DebugLevels.High, DebugMessageType.Info);
+            debug.ToFile(Resources.CreateNew + " " + Level.ToString() + ": " + fullPath, DebugLevels.High, DebugMessageType.Info);
 
-            ExcelWriter _excel = new ExcelWriter(_fileName);
+            ExcelWriter excel = new ExcelWriter(fullPath);
 
             //write data
             for (int i = 0; i < data.Count; i++)
-                _excel.Write(string.Empty, 1, 1+i);
+                excel.Write(data[i], 1, 1 + i);
 
-            _excel.Save();
-            _excel.Dispose();
+            excel.Save();
+            excel.Dispose();
 
-            debug.ToFile(Resources.CreateNew + " " + Level.ToString() + ": " + _fileName + Resources.Finished, DebugLevels.High, DebugMessageType.Info);
+            debug.ToFile(Resources.CreateNew + " " + Level.ToString() + ": " + fullPath + Resources.Finished, DebugLevels.High, DebugMessageType.Info);
 
-            return DBFileExists(fileName);
+            return DBFileExists(fullPath);
         }
 
         /// <summary>
@@ -112,9 +109,9 @@ namespace IO_list_automation_new
         /// <returns>DB files exists</returns>
         public bool DBFileExists(string fileName)
         {
-            //get files in folder
-            string[] _files = System.IO.Directory.GetFiles(Directory, fileName + "." + FileExtension);
-            return _files.Length > 0;
+            //get file in folder            
+ //           string[] files = System.IO.Directory.GetFiles(Directory, fileName + "." + FileExtension);
+            return File.Exists(fileName + "." + FileExtension);
         }
 
         /// <summary>
@@ -124,8 +121,8 @@ namespace IO_list_automation_new
         private bool DBFilesExists()
         {
             //get files in folder
-            string[] _files = System.IO.Directory.GetFiles(Directory, "*" + FileExtension);
-            return _files.Length > 0;
+            string[] files = System.IO.Directory.GetFiles(Directory, "*" + FileExtension);
+            return files.Length > 0;
         }
 
         /// <summary>
@@ -134,16 +131,16 @@ namespace IO_list_automation_new
         /// <returns>list of files in database with needed extension </returns>
         public List<string> GetDBFileList()
         {
-            List<string> _filesList = new List<string>();
+            List<string> filesList = new List<string>();
 
-            string[] _files = System.IO.Directory.GetFiles(Directory, "*" + FileExtension);
-            if (_files.Length == 0)
-                return _filesList;
+            string[] files = System.IO.Directory.GetFiles(Directory, "*" + FileExtension);
+            if (files.Length == 0)
+                return filesList;
 
-            for (int i = 0; i < _files.Length; i++)
-                _filesList.Add(_files[i].Replace(Directory + "\\", string.Empty).Replace("." + FileExtension, string.Empty));
+            foreach (string file in files)
+                filesList.Add(file.Replace(Directory + "\\", string.Empty).Replace("." + FileExtension, string.Empty));
 
-            return _filesList;
+            return filesList;
         }
 
         /// <summary>
@@ -169,8 +166,8 @@ namespace IO_list_automation_new
             if (DBFolderExists(folderPath))
                 return true;
 
-            Debug _debug = new Debug();
-            _debug.ToFile(Resources.CreateNew + " " + Level.ToString() + " " + folderName + " " + NameDB, DebugLevels.High, DebugMessageType.Info);
+            Debug debug = new Debug();
+            debug.ToFile(Resources.CreateNew + " " + Level.ToString() + " " + folderName + " " + NameDB, DebugLevels.High, DebugMessageType.Info);
 
             System.IO.Directory.CreateDirectory(folderPath);
             return DBFolderExists(folderName);
@@ -182,16 +179,16 @@ namespace IO_list_automation_new
         /// <returns>list of folders in database </returns>
         public List<string> GetDBFolderList()
         {
-            List<string> _folderList = new List<string>();
+            List<string> folderList = new List<string>();
 
-            string[] _folders = System.IO.Directory.GetDirectories(BaseDirectory);
-            if (_folders.Length == 0)
-                return _folderList;
+            string[] folders = System.IO.Directory.GetDirectories(BaseDirectory);
+            if (folders.Length == 0)
+                return folderList;
 
-            for (int i = 0; i < _folders.Length; i++)
-                _folderList.Add(_folders[i].Replace(BaseDirectory, string.Empty).Replace("\\", string.Empty));
+            foreach (string folder in folders)
+                folderList.Add(folder.Replace(BaseDirectory, string.Empty).Replace("\\", string.Empty));
 
-            return _folderList;
+            return folderList;
         }
 
         /// <summary>
@@ -212,25 +209,25 @@ namespace IO_list_automation_new
             debug.ToFile("Searching " + NameDB + " configuration from file", DebugLevels.Development, DebugMessageType.Info);
             Devices.Clear();
 
-            List<string> _files = GetDBFileList();
+            List<string> files = GetDBFileList();
 
-            string _fileName;
-            string _type;
-            string _fullType;
+            string fileName;
+            string type;
+            string fullType;
 
-            for (int i = 0; i < _files.Count; i++)
+            foreach (string file in files)
             {
-                _fileName = Directory + "\\" + _files[i] + "." + FileExtension;
-                _type = _files[i].Split('(')[0];
-                _fullType = _files[i];
+                fileName = Directory + "\\" + file + "." + FileExtension;
+                type = file.Split('(')[0];
+                fullType = file;
 
                 //assign dummy grid
-                DataGridView _grid = new DataGridView();
-                DBGeneralType _instance = new DBGeneralType(NameDB, _fullType, _type, FileExtension, Progress, _grid);
-                DataTable _fileData = _instance.File.LoadFromFile(_fileName);
-                _instance.SetData(_fileData);
+                DataGridView grid = new DataGridView();
+                DBGeneralType instance = new DBGeneralType(NameDB, fullType, type, FileExtension, Progress, grid);
+                DataTable fileData = instance.File.LoadFromFile(fileName);
+                instance.SetData(fileData);
 
-                Devices.Add(_instance);
+                Devices.Add(instance);
             }
 
             debug.ToFile("Searching " + NameDB + " configuration from file - " + Resources.Finished, DebugLevels.Development, DebugMessageType.Info);
@@ -246,25 +243,25 @@ namespace IO_list_automation_new
             debug.ToFile("Searching " + NameDB + " configuration from grid", DebugLevels.Development, DebugMessageType.Info);
             Devices.Clear();
 
-            string _type;
-            string _fullType;
+            string type;
+            string fullType;
             //go through all CPU tab control pages
-            for (int i = 0; i < mainTabControl.TabPages.Count; i++)
+            foreach (TabPage mainTabPage in mainTabControl.TabPages)
             {
-                TabControl _CPUTab = (TabControl)mainTabControl.TabPages[i].Controls[0];
+                TabControl cpuTab = (TabControl)mainTabPage.Controls[0];
 
                 //go through all tab control pages
-                for (int j = 0; j < _CPUTab.TabPages.Count; j++)
+                foreach (TabPage cpuPage in cpuTab.TabPages)
                 {
-                    _type = _CPUTab.TabPages[j].Name;
-                    _fullType = _CPUTab.TabPages[j].Text;
+                    type = cpuPage.Name;
+                    fullType = cpuPage.Text;
 
-                    DataGridView _grid = (DataGridView)_CPUTab.TabPages[j].Controls[0];
-                    DBGeneralType _instance = new DBGeneralType(NameDB, _fullType, _type, FileExtension, Progress, _grid);
-                    DataTable _fileData = _instance.Grid.GetData(false);
-                    _instance.SetData(_fileData);
+                    DataGridView grid = (DataGridView)cpuPage.Controls[0];
+                    DBGeneralType instance = new DBGeneralType(NameDB, fullType, type, FileExtension, Progress, grid);
+                    DataTable fileData = instance.Grid.GetData();
+                    instance.SetData(fileData);
 
-                    Devices.Add(_instance);
+                    Devices.Add(instance);
                 }
             }
             debug.ToFile("Searching " + NameDB + " configuration from grid - " + Resources.Finished, DebugLevels.Development, DebugMessageType.Info);
@@ -292,10 +289,10 @@ namespace IO_list_automation_new
                     return objects.GetCPUList();
 
                 default:
-                    const string _debugText = "DBGeneral.GetCPUList";
-                    Debug _debug = new Debug();
-                    _debug.ToFile(_debugText + " " + Resources.ParameterNotFound + ":" + nameof(Base), DebugLevels.None, DebugMessageType.Critical);
-                    throw new InvalidProgramException(_debugText + "." + nameof(Base) + " is not created for this element");
+                    const string debugText = "DBGeneral.GetCPUList";
+                    Debug debug = new Debug();
+                    debug.ToFile(debugText + " " + Resources.ParameterNotFound + ":" + nameof(Base), DebugLevels.None, DebugMessageType.Critical);
+                    throw new InvalidProgramException(debugText + "." + nameof(Base) + " is not created for this element");
             }
         }
 
@@ -311,27 +308,27 @@ namespace IO_list_automation_new
         {
             if (!CheckDBFiles())
             {
-                DialogResult _result = MessageBox.Show(Resources.CreateNew + " " + NameDB + "?", Resources.CreateNew, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-                if (_result != DialogResult.Yes)
+                DialogResult result = MessageBox.Show(Resources.CreateNew + " " + NameDB + "?", Resources.CreateNew, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                if (result != DialogResult.Yes)
                     return;
 
-                NewName _newName = new NewName(Resources.CreateNew + ": " + ResourcesUI.IO + " " + Resources.Language,string.Empty, true);
+                NewName newName = new NewName(Resources.CreateNew + ": " + ResourcesUI.IO + " " + Resources.Language, string.Empty, true);
 
-                _newName.ShowDialog();
-                string _fileName = _newName.Output;
-                if (string.IsNullOrEmpty(_fileName))
+                newName.ShowDialog();
+                string fileName = newName.Output;
+                if (string.IsNullOrEmpty(fileName))
                 {
                     MessageBox.Show(Resources.EnteredEmptyName, "", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
-                else if (DBFileExists(_fileName))
+                else if (DBFileExists(fileName))
                 {
                     MessageBox.Show(Resources.EnteredExistingName, "", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
 
                 List<string> _data = new List<string>() { "" };
-                CreateDBFile(_newName.Output, _data);
+                CreateDBFile(newName.Output, _data);
                 DecodeAll(data, objects, modules, addresses);
             }
             GetDeviceTypesFromFile();
@@ -339,102 +336,99 @@ namespace IO_list_automation_new
             if (Devices.Count < 1)
                 return;
 
-            Debug _debug = new Debug();
-            string _debugText = "Generating " + NameDB;
-            _debug.ToFile(_debugText, DebugLevels.High, DebugMessageType.Info);
-            Progress.RenameProgressBar(_debugText, Devices.Count);
+            Debug debug = new Debug();
+            string debugText = "Generating " + NameDB;
+            debug.ToFile(debugText, DebugLevels.High, DebugMessageType.Info);
+            Progress.RenameProgressBar(debugText, Devices.Count);
 
-            DBResultForm _DBResultForm = new DBResultForm(NameDB, false, Base, Directory, FileExtension);
-            List<string> _CPUList = GetCPUList(objects, modules, addresses);
+            DBResultForm dbResultForm = new DBResultForm(NameDB, false, Base, Directory, FileExtension);
+            List<string> cpuList = GetCPUList(objects, modules, addresses);
 
-            int _typeCount = 0;
+            int typeCount = 0;
+            int progress = 0;
             //go through all device types
-            for (int _deviceIndex = 0; _deviceIndex < Devices.Count; _deviceIndex++)
+            foreach (DBGeneralType device in Devices)
             {
-                for (int _CPUIndex = 0; _CPUIndex < _CPUList.Count; _CPUIndex++)
+                foreach (string cpu in cpuList)
                 {
-                    DataTable _decodedDevices = new DataTable();
-                    _typeCount = 0;
+                    DataTable decodedDevices = new DataTable();
+                    typeCount = 0;
                     switch (Base)
                     {
                         case BaseTypes.ModuleCPU:
-                            for (int _moduleIndex = 0; _moduleIndex < modules.Signals.Count; _moduleIndex++)
+                            foreach (ModuleSignal moduleSignal in modules.Signals)
                             {
-                                ModuleSignal _module = modules.Signals[_moduleIndex];
-
-                                if (_CPUList[_CPUIndex] != _module.CPU)
+                                if (cpu != moduleSignal.CPU)
                                     continue;
 
-                                Devices[_deviceIndex].Decode(_decodedDevices, ref _typeCount, data, null, _module, null, Base);
+                                device.Decode(decodedDevices, ref typeCount, data, null, moduleSignal, null, Base);
 
-                                addresses.PutDataToElement(_module.CPU, ResourcesUI.Modules, _module.ModuleType, _module.ModuleName,
-                                        Devices[_deviceIndex].ObjectVariableType, Devices[_deviceIndex].MemoryArea, Devices[_deviceIndex].Address, Devices[_deviceIndex].AddressSize);
+                                addresses.PutDataToElement(moduleSignal.CPU, ResourcesUI.Modules, moduleSignal.ModuleType, moduleSignal.ModuleName,
+                                        device.ObjectVariableType, device.MemoryArea, device.Address, device.AddressSize);
                             }
                             break;
 
                         case BaseTypes.ModuleSCADA:
-                            for (int _addressIndex = 0; _addressIndex < addresses.Signals.Count; _addressIndex++)
+                            foreach (AddressObject addressObject in addresses.Signals)
                             {
-                                AddressObject _address = addresses.Signals[_addressIndex];
-                                if (_CPUList[_CPUIndex] != _address.CPU)
+                                if (cpu != addressObject.CPU)
                                     continue;
 
-                                Devices[_deviceIndex].Decode(_decodedDevices, ref _typeCount, data, null, null, _address, Base);
+                                device.Decode(decodedDevices, ref typeCount, data, null, null, addressObject, Base);
 
-                                addresses.PutDataToElement(_address.CPU, ResourcesUI.Modules, _address.ObjectType, _address.ObjectName,
-                                        Devices[_deviceIndex].ObjectVariableType, Devices[_deviceIndex].MemoryArea, Devices[_deviceIndex].Address, Devices[_deviceIndex].AddressSize);
+                                addresses.PutDataToElement(addressObject.CPU, ResourcesUI.Modules, addressObject.ObjectType, addressObject.ObjectName,
+                                        device.ObjectVariableType, device.MemoryArea, device.Address, device.AddressSize);
                             }
                             break;
 
                         case BaseTypes.ObjectsCPU:
-                            for (int _objectIndex = 0; _objectIndex < objects.Signals.Count; _objectIndex++)
+                            foreach (ObjectSignal objectSignal in objects.Signals)
                             {
-                                ObjectSignal _object = objects.Signals[_objectIndex];
-                                if (_CPUList[_CPUIndex] != _object.CPU)
+                                if (cpu != objectSignal.CPU)
                                     continue;
 
-                                Devices[_deviceIndex].Decode(_decodedDevices, ref _typeCount, data, _object, null, null, Base);
+                                device.Decode(decodedDevices, ref typeCount, data, objectSignal, null, null, Base);
 
-                                addresses.PutDataToElement(_object.CPU, ResourcesUI.Objects, _object.ObjectType, _object.KKS,
-                                        Devices[_deviceIndex].ObjectVariableType, Devices[_deviceIndex].MemoryArea, Devices[_deviceIndex].Address, Devices[_deviceIndex].AddressSize);
+                                addresses.PutDataToElement(objectSignal.CPU, ResourcesUI.Objects, objectSignal.ObjectType, objectSignal.KKS,
+                                        device.ObjectVariableType, device.MemoryArea, device.Address, device.AddressSize);
                             }
                             break;
 
                         case BaseTypes.ObjectSCADA:
-                            for (int _addressIndex = 0; _addressIndex < addresses.Signals.Count; _addressIndex++)
+                            foreach (AddressObject addressObject in addresses.Signals)
                             {
-                                AddressObject _address = addresses.Signals[_addressIndex];
-                                if (_CPUList[_CPUIndex] != _address.CPU)
+                                if (cpu != addressObject.CPU)
                                     continue;
 
-                                Devices[_deviceIndex].Decode(_decodedDevices, ref _typeCount, data, null, null, _address, Base);
+                                device.Decode(decodedDevices, ref typeCount, data, null, null, addressObject, Base);
 
-                                addresses.PutDataToElement(_address.CPU, ResourcesUI.Objects, _address.ObjectType, _address.ObjectName,
-                                        Devices[_deviceIndex].ObjectVariableType, Devices[_deviceIndex].MemoryArea, Devices[_deviceIndex].Address, Devices[_deviceIndex].AddressSize);
+                                addresses.PutDataToElement(addressObject.CPU, ResourcesUI.Objects, addressObject.ObjectType, addressObject.ObjectName,
+                                        device.ObjectVariableType, device.MemoryArea, device.Address, device.AddressSize);
                             }
                             break;
 
                         default:
-                            _debugText = "DBGeneral.DecodeAll";
-                            _debug.ToFile(_debugText + " " + Resources.ParameterNotFound + ":" + nameof(Base), DebugLevels.None, DebugMessageType.Critical);
-                            throw new InvalidProgramException(_debugText + "." + nameof(Base) + " is not created for this element");
+                            debugText = "DBGeneral.DecodeAll";
+                            debug.ToFile(debugText + " " + Resources.ParameterNotFound + ":" + nameof(Base), DebugLevels.None, DebugMessageType.Critical);
+                            throw new InvalidProgramException(debugText + "." + nameof(Base) + " is not created for this element");
                     }
-                    DataGridView _grid = _DBResultForm.AddData(_CPUList[_CPUIndex],Devices[_deviceIndex].FullDBType, Devices[_deviceIndex].DBType);
+                    DataGridView grid = dbResultForm.AddData(cpu, device.FullDBType, device.DBType);
 
                     //add grid to form and update grid of device to match in form
-                    Devices[_deviceIndex].GridResult.ChangeGrid(_grid);
-                    Devices[_deviceIndex].GridResult.PutData(_decodedDevices);
+                    device.GridResult.ChangeGrid(grid);
+                    device.GridResult.PutData(decodedDevices);
                 }
-                Progress.UpdateProgressBar(_deviceIndex);
+                progress++;
+                Progress.UpdateProgressBar(progress);
             }
             Progress.HideProgressBar();
 
-            _debug.ToFile(_debugText + " - " + Resources.Finished, DebugLevels.High, DebugMessageType.Info);
+            debug.ToFile(debugText + " - " + Resources.Finished, DebugLevels.High, DebugMessageType.Info);
             //put updated data with used column
             data.PutDataToGrid(false);
             addresses.PutDataToGrid(true);
 
-            _DBResultForm.ShowDialog();
+            dbResultForm.ShowDialog();
         }
 
         /// <summary>
@@ -445,31 +439,31 @@ namespace IO_list_automation_new
         /// </summary>
         public void EditAll()
         {
-            string _fileName;
+            string fileName;
 
             if (!CheckDBFiles())
             {
-                DialogResult _result = MessageBox.Show(Resources.CreateNew + " " + NameDB + "?", Resources.CreateNew, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-                if (_result != DialogResult.Yes)
+                DialogResult result = MessageBox.Show(Resources.CreateNew + " " + NameDB + "?", Resources.CreateNew, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                if (result != DialogResult.Yes)
                     return;
 
-                NewName _newName = new NewName(Resources.CreateNew + ": " + ResourcesUI.IO + " " + Resources.Language, string.Empty, true);
+                NewName newName = new NewName(Resources.CreateNew + ": " + ResourcesUI.IO + " " + Resources.Language, string.Empty, true);
 
-                _newName.ShowDialog();
-                _fileName = _newName.Output;
-                if (string.IsNullOrEmpty(_fileName))
+                newName.ShowDialog();
+                fileName = newName.Output;
+                if (string.IsNullOrEmpty(fileName))
                 {
                     MessageBox.Show(Resources.EnteredEmptyName, "", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
-                else if (DBFileExists(_fileName))
+                else if (DBFileExists(fileName))
                 {
                     MessageBox.Show(Resources.EnteredExistingName, "", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
 
-                List<string> _data = new List<string>() { "" };
-                CreateDBFile(_newName.Output,_data);
+                List<string> data = new List<string>() { "" };
+                CreateDBFile(newName.Output, data);
                 EditAll();
             }
             GetDeviceTypesFromFile();
@@ -477,56 +471,58 @@ namespace IO_list_automation_new
             if (Devices.Count < 1)
                 return;
 
-            DataTable _deviceData;
+            DataTable deviceData;
 
             Debug debug = new Debug();
-            string _debugText = "Editing " + NameDB;
-            debug.ToFile(_debugText, DebugLevels.Development, DebugMessageType.Info);
-            Progress.RenameProgressBar(_debugText, Devices.Count);
+            string debugText = "Editing " + NameDB;
+            debug.ToFile(debugText, DebugLevels.Development, DebugMessageType.Info);
+            Progress.RenameProgressBar(debugText, Devices.Count);
 
-            DBResultForm _DBResultForm = new DBResultForm(NameDB + " Edit", true, Base, Directory, FileExtension);
+            DBResultForm dbResultForm = new DBResultForm(NameDB + " Edit", true, Base, Directory, FileExtension);
 
+            int progress = 0;
             //go through all device types
-            for (int _deviceIndex = 0; _deviceIndex < Devices.Count; _deviceIndex++)
+            foreach (DBGeneralType device in Devices)
             {
-                _deviceData = Devices[_deviceIndex].ConvertDataToList();
-                DataGridView _grid = _DBResultForm.AddData("",Devices[_deviceIndex].FullDBType, Devices[_deviceIndex].DBType);
+                deviceData = device.ConvertDataToList();
+                DataGridView grid = dbResultForm.AddData("", device.FullDBType, device.DBType);
 
                 //add grid to form and update grid of device to match in form
-                Devices[_deviceIndex].Grid.ChangeGrid(_grid);
-                Devices[_deviceIndex].Grid.PutData(_deviceData);
+                device.Grid.ChangeGrid(grid);
+                device.Grid.PutData(deviceData);
 
-                Progress.UpdateProgressBar(_deviceIndex);
+                progress++;
+                Progress.UpdateProgressBar(progress);
             }
             Progress.HideProgressBar();
 
-            debug.ToFile(_debugText + " - " + Resources.Finished, DebugLevels.Development, DebugMessageType.Info);
+            debug.ToFile(debugText + " - " + Resources.Finished, DebugLevels.Development, DebugMessageType.Info);
 
-            _DBResultForm.ShowDialog();
+            dbResultForm.ShowDialog();
 
-            GetDeviceTypesFromGrid(_DBResultForm.DBTabControlCPU);
+            GetDeviceTypesFromGrid(dbResultForm.DBTabControlCPU);
 
             //go through all device types
-            for (int _deviceIndex = 0; _deviceIndex < Devices.Count; _deviceIndex++)
+            foreach (DBGeneralType device in Devices)
             {
-                _fileName = Directory + "\\" + Devices[_deviceIndex].FullDBType + "." + FileExtension;
-                DataTable _data = Devices[_deviceIndex].Grid.GetData(false);
+                fileName = Directory + "\\" + device.FullDBType + "." + FileExtension;
+                DataTable data = device.Grid.GetData();
 
                 //remove empty columns
-                for (int column = _data.Columns.Count-1; column >=0 ; column--)
+                for (int column = data.Columns.Count - 1; column >= 0; column--)
                 {
-                    bool _isEmpty = true;
-                    for (int row = 0; row < _data.Rows.Count; row++)
+                    bool isEmpty = true;
+                    for (int row = 0; row < data.Rows.Count; row++)
                     {
-                        _isEmpty = string.IsNullOrEmpty(GeneralFunctions.GetDataTableValue(_data, row, column));
-                        if (!_isEmpty)
+                        isEmpty = string.IsNullOrEmpty(GeneralFunctions.GetDataTableValue(data, row, column));
+                        if (!isEmpty)
                             break;
                     }
 
-                    if (_isEmpty)
-                        _data.Columns.RemoveAt(column);
+                    if (isEmpty)
+                        data.Columns.RemoveAt(column);
                 }
-                Devices[_deviceIndex].File.SaveToFile(_fileName, _data);
+                device.File.SaveToFile(fileName, data);
             }
         }
     }

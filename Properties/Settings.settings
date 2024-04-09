@@ -2,19 +2,10 @@
 <SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="IO_list_automation_new.Properties" GeneratedClassName="Settings">
   <Profiles />
   <Settings>
-    <Setting Name="AplicationHeight" Type="System.UInt32" Scope="User">
-      <Value Profile="(Default)">1680</Value>
-    </Setting>
-    <Setting Name="AplicationWidth" Type="System.UInt32" Scope="User">
-      <Value Profile="(Default)">1080</Value>
-    </Setting>
     <Setting Name="DebugLevel" Type="System.UInt32" Scope="User">
       <Value Profile="(Default)">0</Value>
     </Setting>
     <Setting Name="IOLanguage" Type="System.String" Scope="User">
-      <Value Profile="(Default)">EN</Value>
-    </Setting>
-    <Setting Name="ApplicationLanguage" Type="System.String" Scope="User">
       <Value Profile="(Default)">EN</Value>
     </Setting>
     <Setting Name="SelectedCPU" Type="System.String" Scope="User">
@@ -31,6 +22,9 @@
     </Setting>
     <Setting Name="SettingsUpgrade" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="ApplicationLanguage" Type="System.String" Scope="User">
+      <Value Profile="(Default)">EN</Value>
     </Setting>
   </Settings>
 </SettingsFile>

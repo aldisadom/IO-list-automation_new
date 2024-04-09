@@ -1,12 +1,7 @@
-﻿using ExcelDataReader;
-using IO_list_automation_new.General;
-using IO_list_automation_new.Properties;
-using SwiftExcel;
+﻿using IO_list_automation_new.Properties;
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.Common;
-using System.IO;
 using System.Windows.Forms;
 
 namespace IO_list_automation_new
@@ -81,23 +76,15 @@ namespace IO_list_automation_new
         /// <returns>grid column list</returns>
         public List<GeneralColumn> GetColumns()
         {
-            int _columnNumber;
-            int _columnIndex;
-            string _keyword;
-            bool _canHide;
-
             Debug debug = new Debug();
             debug.ToFile("Getting columns from grid to memory(" + Grid.ColumnCount + ") to grid: " + Name, DebugLevels.Development, DebugMessageType.Info);
 
-            List<GeneralColumn> _columnList = new List<GeneralColumn>();
-            for (_columnNumber = 0; _columnNumber < Grid.ColumnCount; _columnNumber++)
-            {
-                _keyword = Grid.Columns[_columnNumber].Name;
-                _columnIndex = Grid.Columns[_columnNumber].DisplayIndex;
-                _canHide = true;
-                _columnList.Add(new GeneralColumn(_keyword, _columnIndex, _canHide));
-            }
-            return _columnList;
+            List<GeneralColumn> columnList = new List<GeneralColumn>();
+
+            foreach (DataGridViewColumn column in Grid.Columns)
+                columnList.Add(new GeneralColumn(column.Name, column.DisplayIndex, true));
+
+            return columnList;
         }
 
         /// <summary>
@@ -118,7 +105,7 @@ namespace IO_list_automation_new
             Grid.SuspendLayout();
             GridClear();
 
-            bool _supressColumnError = false;
+            bool suppressColumnError = false;
 
             switch (GridType)
             {
@@ -138,29 +125,28 @@ namespace IO_list_automation_new
                     break;
 
                 default:
-                    const string _debugText = "GeneralGrid.PutData";
-                    Debug _debug = new Debug();
-                    _debug.ToFile(_debugText + " " + Resources.ParameterNotFound + ":" + nameof(GridType), DebugLevels.None, DebugMessageType.Critical);
-                    throw new InvalidProgramException(_debugText + "." + nameof(GridType) + " is not created for this element");
+                    const string debugText = "GeneralGrid.PutData";
+                    debug.ToFile(debugText + " " + Resources.ParameterNotFound + ":" + nameof(GridType), DebugLevels.None, DebugMessageType.Critical);
+                    throw new InvalidProgramException(debugText + "." + nameof(GridType) + " is not created for this element");
             }
 
             if (GridType == GridTypes.DB || GridType == GridTypes.DBEditable || GridType == GridTypes.DBForceEdit || GridType == GridTypes.DataNoEdit)
-                _supressColumnError = true;
+                suppressColumnError = true;
 
             debug.ToFile(Resources.PutDataToGrid + ": " + Name, DebugLevels.Development, DebugMessageType.Info);
 
             Grid.DataSource = data;
-            for (int _columnNumber = 0; _columnNumber < data.Columns.Count; _columnNumber++)
+            for (int columnNumber = 0; columnNumber < data.Columns.Count; columnNumber++)
             {
                 if (Columns == null || Columns.Columns.Count == 0)
                 {
-                    data.Columns[_columnNumber].ColumnName = _columnNumber.ToString();
-                    Grid.Columns[_columnNumber].Name = _columnNumber.ToString();
+                    data.Columns[columnNumber].ColumnName = columnNumber.ToString();
+                    Grid.Columns[columnNumber].Name = columnNumber.ToString();
                 }
                 else
                 {
-                    data.Columns[_columnNumber].ColumnName = Columns.Columns[_columnNumber].GetColumnName(_supressColumnError);
-                    Grid.Columns[_columnNumber].Name = Columns.Columns[_columnNumber].Keyword;
+                    data.Columns[columnNumber].ColumnName = Columns.Columns[columnNumber].GetColumnName(suppressColumnError);
+                    Grid.Columns[columnNumber].Name = Columns.Columns[columnNumber].Keyword;
                 }
             }
             Grid.ResumeLayout(false);
@@ -172,9 +158,8 @@ namespace IO_list_automation_new
         /// <summary>
         /// Get all data from grid
         /// </summary>
-        /// <param name="suppressError">suppress error</param>
         /// <returns>grid data as list of list string</returns>
-        public DataTable GetData(bool suppressError)
+        public DataTable GetData()
         {
             Debug debug = new Debug();
             debug.ToFile(Resources.GetDataFromGrid + ": " + Name, DebugLevels.Development, DebugMessageType.Info);
@@ -188,26 +173,26 @@ namespace IO_list_automation_new
         /// <param name="baseColumns">base column list</param>
         public void RemoveNotBaseColumns(List<GeneralColumn> baseColumns)
         {
-            bool _found;
+            bool found;
             if (GridType == GridTypes.DataNoEdit)
                 return;
 
-            for (int _gridColumn = Grid.ColumnCount - 1; _gridColumn >= 0; _gridColumn--)
+            for (int gridColumn = Grid.ColumnCount - 1; gridColumn >= 0; gridColumn--)
             {
-                _found = false;
-                foreach (GeneralColumn _generalColumn in baseColumns)
+                found = false;
+                foreach (GeneralColumn generalColumn in baseColumns)
                 {
-                    if (Grid.Columns[_gridColumn].Name != _generalColumn.Keyword)
+                    if (Grid.Columns[gridColumn].Name != generalColumn.Keyword)
                         continue;
 
-                    _found = true;
+                    found = true;
                     break;
                 }
 
-                if (_found)
+                if (found)
                     continue;
 
-                Grid.Columns.RemoveAt(_gridColumn);
+                Grid.Columns.RemoveAt(gridColumn);
             }
         }
 

@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Windows.Forms;
-using System.Xml.Linq;
 
 namespace IO_list_automation_new.DB
 {
@@ -81,10 +80,10 @@ namespace IO_list_automation_new.DB
                     break;
 
                 default:
-                    const string _debugText = "DBGeneralType.Decode";
-                    Debug _debug = new Debug();
-                    _debug.ToFile(_debugText + " " + Resources.ParameterNotFound + ":" + nameof(inputBase), DebugLevels.None, DebugMessageType.Critical);
-                    throw new InvalidProgramException(_debugText + "." + nameof(inputBase) + " is not created for this element");
+                    const string debugText = "DBGeneralType.Decode";
+                    Debug debug = new Debug();
+                    debug.ToFile(debugText + " " + Resources.ParameterNotFound + ":" + nameof(inputBase), DebugLevels.None, DebugMessageType.Critical);
+                    throw new InvalidProgramException(debugText + "." + nameof(inputBase) + " is not created for this element");
             }
 
             for (int i = 0; i < Data.Count; i++)
@@ -111,23 +110,23 @@ namespace IO_list_automation_new.DB
         /// <returns>converted data</returns>
         public DataTable ConvertDataToList()
         {
-            DataTable _allData = new DataTable();
+            DataTable allData = new DataTable();
 
             //go through all data from all lines of one type
-            for (int i = 0; i < Data.Count; i++)
+            foreach (DBGeneralSignal dataRow in Data)
             {
                 //add columns to dataTable
-                for (int _column = _allData.Columns.Count; _column < Data[i].Line.Count; _column++)
-                    _allData.Columns.Add(_column.ToString());
+                for (int column = allData.Columns.Count; column < dataRow.Cell.Count; column++)
+                    allData.Columns.Add(column.ToString());
 
-                DataRow row = _allData.NewRow();
-                for (int j = 0; j < Data[i].Line.Count; j++)
-                    row[j] = (Data[i].Line[j]);
+                DataRow row = allData.NewRow();
 
-                _allData.Rows.Add(row);
+                for (int i = 0; i < dataRow.Cell.Count; i++)
+                    row[i] = dataRow.Cell[i];
+
+                allData.Rows.Add(row);
             }
-
-            return _allData;
+            return allData;
         }
 
         /// <summary>
@@ -143,14 +142,14 @@ namespace IO_list_automation_new.DB
 
             for (int row = 0; row < inputData.Rows.Count; row++)
             {
-                DBGeneralSignal _signal = new DBGeneralSignal();
+                DBGeneralSignal signal = new DBGeneralSignal();
 
-                List<string> _list = new List<string>();
+                List<string> list = new List<string>();
                 for (int column = 0; column < inputData.Columns.Count; column++)
-                    _list.Add(GeneralFunctions.GetDataTableValue(inputData,row,column));
+                    list.Add(GeneralFunctions.GetDataTableValue(inputData, row, column));
 
-                _signal.SetValue(_list);
-                Data.Add(_signal);
+                signal.SetValue(list);
+                Data.Add(signal);
             }
         }
     }

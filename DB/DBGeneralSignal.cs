@@ -3,13 +3,12 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using System.Xml.Linq;
 
 namespace IO_list_automation_new.DB
 {
     internal class DBGeneralSignal
     {
-        public List<string> Line { get; private set; }
+        public List<string> Cell { get; private set; }
         public string MemoryArea { get; private set; }
         public int BaseAddress { get; private set; }
         public int AddressSize { get; private set; }
@@ -26,7 +25,7 @@ namespace IO_list_automation_new.DB
             MemoryArea = string.Empty;
             BaseAddress = 0;
             AddressSize = 0;
-            Line = new List<string>();
+            Cell = new List<string>();
             Simulation = simulation;
             BaseAddressSet = false;
         }
@@ -36,7 +35,7 @@ namespace IO_list_automation_new.DB
             MemoryArea = string.Empty;
             AddressSize = 0;
             BaseAddress = 0;
-            Line = new List<string>();
+            Cell = new List<string>();
             BaseAddressSet = false;
         }
 
@@ -46,7 +45,7 @@ namespace IO_list_automation_new.DB
         /// <param name="newList">new data of signal</param>
         public void SetValue(List<string> newList)
         {
-            Line = newList;
+            Cell = newList;
         }
 
         /// <summary>
@@ -78,14 +77,14 @@ namespace IO_list_automation_new.DB
             switch (inputBase)
             {
                 case BaseTypes.ModuleCPU:
-                    if (!int.TryParse(dataSignal.Channel, out int _channel))
+                    if (!int.TryParse(dataSignal.Channel, out int channel))
                         return false;
-                    return (moduleSignal.ModuleName == dataSignal.ModuleName) && ((_channel == int.Parse(inputText)) || string.IsNullOrEmpty(inputText));
+                    return (moduleSignal.ModuleName == dataSignal.ModuleName) && ((channel == int.Parse(inputText)) || string.IsNullOrEmpty(inputText));
 
                 case BaseTypes.ModuleSCADA:
-                    if (!int.TryParse(dataSignal.Channel, out _channel))
+                    if (!int.TryParse(dataSignal.Channel, out channel))
                         return false;
-                    return (addressObject.ObjectName == dataSignal.ModuleName) && ((_channel == int.Parse(inputText)) || string.IsNullOrEmpty(inputText));
+                    return (addressObject.ObjectName == dataSignal.ModuleName) && ((channel == int.Parse(inputText)) || string.IsNullOrEmpty(inputText));
 
                 case BaseTypes.ObjectsCPU:
                     return (objectSignal.KKS == dataSignal.KKS) && ((dataSignal.Function == inputText) || (inputText == "*"));
@@ -94,10 +93,10 @@ namespace IO_list_automation_new.DB
                     return (addressObject.ObjectName == dataSignal.KKS) && ((dataSignal.Function == inputText) || (inputText == "*"));
 
                 default:
-                    const string _debugText = "DBGeneralSignal.CheckDataSignal";
-                    Debug _debug = new Debug();
-                    _debug.ToFile(_debugText + " " + Resources.ParameterNotFound + ":" + nameof(inputBase), DebugLevels.None, DebugMessageType.Critical);
-                    throw new InvalidProgramException(_debugText + "." + nameof(inputBase) + " is not created for this element");
+                    const string debugText = "DBGeneralSignal.CheckDataSignal";
+                    Debug debug = new Debug();
+                    debug.ToFile(debugText + " " + Resources.ParameterNotFound + ":" + nameof(inputBase), DebugLevels.None, DebugMessageType.Critical);
+                    throw new InvalidProgramException(debugText + "." + nameof(inputBase) + " is not created for this element");
             }
         }
 
@@ -112,11 +111,11 @@ namespace IO_list_automation_new.DB
             if (Simulation)
                 return "KKS.Area";
 
-            for (int i = 0; i < addressObject.Addresses.Count; i++)
+            foreach (AddressSingle addressSingle in addressObject.Addresses)
             {
-                if (Line[Index - 1] == addressObject.Addresses[i].ObjectVariableType)
+                if (Cell[Index - 1] == addressSingle.ObjectVariableType)
                 {
-                    Value = addressObject.Addresses[i].Area;
+                    Value = addressSingle.Area;
                     return Value;
                 }
             }
@@ -135,12 +134,12 @@ namespace IO_list_automation_new.DB
             if (Simulation)
                 return;
 
-            for (int i = 0; i < addressObject.Addresses.Count; i++)
+            foreach (AddressSingle addressSingle in addressObject.Addresses)
             {
-                if (Line[Index - 1] == addressObject.Addresses[i].ObjectVariableType)
+                if (Cell[Index - 1] == addressSingle.ObjectVariableType)
                 {
-                    Value = addressObject.Addresses[i].Area;
-                    UpdateBaseAddress(addressObject.Addresses[i].Area, int.Parse(addressObject.Addresses[i].AddressStart), int.Parse(addressObject.Addresses[i].AddressSize));
+                    Value = addressSingle.Area;
+                    UpdateBaseAddress(addressSingle.Area, int.Parse(addressSingle.AddressStart), int.Parse(addressSingle.AddressSize));
                     return;
                 }
             }
@@ -157,15 +156,15 @@ namespace IO_list_automation_new.DB
             Index += 3;
             if (Simulation)
             {
-                Value = "Data." + Line[Index - 2];
+                Value = "Data." + Cell[Index - 2];
                 return Value;
             }
-
-            for (int i = 0; i < data.Signals.Count; i++)
+            foreach (DataSignal dataSignal in data.Signals)
             {
-                if (CheckDataSignal(Line[Index - 1], data.Signals[i], objectSignal, moduleSignal, addressObject, inputBase))
+                if (CheckDataSignal(Cell[Index - 1], dataSignal, objectSignal, moduleSignal, addressObject, inputBase))
                 {
-                    Value = data.Signals[i].GetValueString(Line[Index - 2], false);
+                    Value = dataSignal.GetValueString(Cell[Index - 2], false);
+                    dataSignal.SetValueFromString("1", KeywordColumn.Used);
                     return Value;
                 }
             }
@@ -184,11 +183,11 @@ namespace IO_list_automation_new.DB
             Index += 2;
             if (Simulation)
             {
-                Value = "Object." + Line[Index - 1];
+                Value = "Object." + Cell[Index - 1];
                 return Value;
             }
 
-            Value = objectSignal.GetValueString(Line[Index - 1], false);
+            Value = objectSignal.GetValueString(Cell[Index - 1], false);
             return Value;
         }
 
@@ -239,11 +238,11 @@ namespace IO_list_automation_new.DB
 
             if (Simulation)
             {
-                Value = "Module." + Line[Index - 1];
+                Value = "Module." + Cell[Index - 1];
                 return Value;
             }
 
-            Value = moduleSignal.GetValueString(Line[Index - 1], false);
+            Value = moduleSignal.GetValueString(Cell[Index - 1], false);
             return Value;
         }
 
@@ -253,7 +252,7 @@ namespace IO_list_automation_new.DB
         private string DecodeText()
         {
             Index += 2;
-            Value = Line[Index - 1];
+            Value = Cell[Index - 1];
             return Value;
         }
 
@@ -276,14 +275,14 @@ namespace IO_list_automation_new.DB
         {
             Index += 4;
 
-            if (!int.TryParse(line[Index - 2], out int _addressSize))
+            if (!int.TryParse(line[Index - 2], out int addressSize))
                 return;
 
-            int _baseAddress = index * _addressSize;
-            if (int.TryParse(line[Index - 1], out int _value))
-                _baseAddress += _value;
+            int baseAddress = index * addressSize;
+            if (int.TryParse(line[Index - 1], out int value))
+                baseAddress += value;
 
-            UpdateBaseAddress(line[Index - 3], _baseAddress, _addressSize);
+            UpdateBaseAddress(line[Index - 3], baseAddress, addressSize);
         }
 
         /// <summary>
@@ -295,8 +294,8 @@ namespace IO_list_automation_new.DB
         {
             Index += 2;
 
-            if (int.TryParse(line[Index - 1], out int _value))
-                return (BaseAddress + _value).ToString();
+            if (int.TryParse(line[Index - 1], out int value))
+                return (BaseAddress + value).ToString();
 
             return BaseAddress.ToString();
         }
@@ -313,130 +312,126 @@ namespace IO_list_automation_new.DB
         private List<string> DecodeIf(int index, List<string> decodedLine, DataClass data, ObjectSignal objectSignal, ModuleSignal moduleSignal, AddressObject addressObject, BaseTypes inputBase, bool decodeReadOnly)
         {
             Index++;
-            string _text = Line[Index];
-            string _returnPart1;
-            int _newIndex;
-            Debug _debug = new Debug();
-            string _debugText;
+            string text = Cell[Index];
+            string returnPart1;
+            Debug debug = new Debug();
+            string debugText;
 
-            switch (_text)
+            switch (text)
             {
                 case KeywordDBChoices.Data:
-                    _returnPart1 = DecodeData(data, objectSignal, moduleSignal, addressObject, inputBase);
+                    returnPart1 = DecodeData(data, objectSignal, moduleSignal, addressObject, inputBase);
                     break;
 
                 case KeywordDBChoices.Object:
-                    _returnPart1 = DecodeObjects(objectSignal);
+                    returnPart1 = DecodeObjects(objectSignal);
                     break;
 
                 case KeywordDBChoices.Modules:
-                    _returnPart1 = DecodeModules(moduleSignal);
+                    returnPart1 = DecodeModules(moduleSignal);
                     break;
 
                 case KeywordDBChoices.CPU:
-                    _returnPart1 = DecodeCPU(addressObject);
+                    returnPart1 = DecodeCPU(addressObject);
                     break;
 
                 case KeywordDBChoices.ObjectName:
-                    _returnPart1 = DecodeObjectName(addressObject);
+                    returnPart1 = DecodeObjectName(addressObject);
                     break;
 
                 default:
-                    _debugText = "DBGeneralSignal.DecodeIf";
+                    debugText = "DBGeneralSignal.DecodeIf";
 
-                    _debug.ToFile(_debugText + " " + Resources.ParameterNotFound + ":" + _text, DebugLevels.None, DebugMessageType.Critical);
-                    throw new InvalidProgramException(_debugText + "." + _text + " is not created for this element");
+                    debug.ToFile(debugText + " " + Resources.ParameterNotFound + ":" + text, DebugLevels.None, DebugMessageType.Critical);
+                    throw new InvalidProgramException(debugText + "." + text + " is not created for this element");
             }
 
-            _text = Line[Index];
-            bool _ifTrue;
+            text = Cell[Index];
+            bool ifTrue;
 
             Index++;
-            switch (_text)
+            switch (text)
             {
                 case KeywordDBChoices.IsEmpty:
-                    _ifTrue = string.IsNullOrEmpty(_returnPart1);
+                    ifTrue = string.IsNullOrEmpty(returnPart1);
                     break;
 
                 case KeywordDBChoices.IsNotEmpty:
-                    _ifTrue = !string.IsNullOrEmpty(_returnPart1);
+                    ifTrue = !string.IsNullOrEmpty(returnPart1);
                     break;
 
                 default:
-                    string _value = Value;
-                    float _value1, _value2;
+                    string value = Value;
+                    float value1, value2;
 
                     // then it is variable
                     DecodeCell(Index, decodedLine, data, objectSignal, moduleSignal, addressObject, inputBase, true);
                     //then search for operation sign
-                    switch (_text)
+                    switch (text)
                     {
                         case KeywordDBChoices.Equal:
-                            _ifTrue = Value == _value;
+                            ifTrue = Value == value;
                             break;
 
                         case KeywordDBChoices.nEqual:
-                            _ifTrue = Value != _value;
+                            ifTrue = Value != value;
                             break;
 
                         case KeywordDBChoices.GreaterEqual:
-                            if (float.TryParse(_value, out _value1) && float.TryParse(Value, out _value2))
-                                _ifTrue = _value1 >= _value2;
+                            if (float.TryParse(value, out value1) && float.TryParse(Value, out value2))
+                                ifTrue = value1 >= value2;
                             else
-                                _ifTrue = false;
+                                ifTrue = false;
                             break;
 
                         case KeywordDBChoices.Greater:
-                            if (float.TryParse(_value, out _value1) && float.TryParse(Value, out _value2))
-                                _ifTrue = _value1 > _value2;
+                            if (float.TryParse(value, out value1) && float.TryParse(Value, out value2))
+                                ifTrue = value1 > value2;
                             else
-                                _ifTrue = false;
+                                ifTrue = false;
                             break;
 
                         case KeywordDBChoices.LessEqual:
-                            if (float.TryParse(_value, out _value1) && float.TryParse(Value, out _value2))
-                                _ifTrue = _value1 <= _value2;
+                            if (float.TryParse(value, out value1) && float.TryParse(Value, out value2))
+                                ifTrue = value1 <= value2;
                             else
-                                _ifTrue = false;
+                                ifTrue = false;
                             break;
 
                         case KeywordDBChoices.Less:
-                            if (float.TryParse(_value, out _value1) && float.TryParse(Value, out _value2))
-                                _ifTrue = _value1 < _value2;
+                            if (float.TryParse(value, out value1) && float.TryParse(Value, out value2))
+                                ifTrue = value1 < value2;
                             else
-                                _ifTrue = false;
+                                ifTrue = false;
                             break;
 
                         default:
-                            _debugText = "DBGeneralSignal.DecodeIf";
+                            debugText = "DBGeneralSignal.DecodeIf";
 
-                            _debug.ToFile(_debugText + " " + Resources.ParameterNotFound + ":" + _text, DebugLevels.None, DebugMessageType.Critical);
-                            throw new InvalidProgramException(_debugText + "." + _text + " is not created for this element");
+                            debug.ToFile(debugText + " " + Resources.ParameterNotFound + ":" + text, DebugLevels.None, DebugMessageType.Critical);
+                            throw new InvalidProgramException(debugText + "." + text + " is not created for this element");
                     }
                     break;
             }
 
-            List<string> _cellText;
+            List<string> cellText;
             //if = true
-            if (_ifTrue)
+            if (ifTrue)
             {
-                _cellText = DecodeCell(index, decodedLine, data, objectSignal, moduleSignal, addressObject, inputBase, decodeReadOnly);
+                cellText = DecodeCell(index, decodedLine, data, objectSignal, moduleSignal, addressObject, inputBase, decodeReadOnly);
 
                 //peek false statement and update index to skip it
-                _newIndex = DecodePeek(Index);
-                Index = _newIndex;
+                DecodeCell(index, decodedLine, data, objectSignal, moduleSignal, addressObject, inputBase, true);
             }
             //if = false
             else
             {
                 //peek true statement and update index to skip it
-                _newIndex = DecodePeek(Index);
-
-                Index = _newIndex;
-                _cellText = DecodeCell(index, decodedLine, data, objectSignal, moduleSignal, addressObject, inputBase, decodeReadOnly);
+                DecodeCell(index, decodedLine, data, objectSignal, moduleSignal, addressObject, inputBase, true);
+                cellText = DecodeCell(index, decodedLine, data, objectSignal, moduleSignal, addressObject, inputBase, decodeReadOnly);
             }
 
-            return _cellText;
+            return cellText;
         }
 
         /// <summary>
@@ -450,12 +445,12 @@ namespace IO_list_automation_new.DB
         private List<string> DecodeMultiline(int index, List<string> decodedLine, DataClass data, ObjectSignal objectSignal, ModuleSignal moduleSignal, AddressObject addressObject, BaseTypes inputBase)
         {
             Index++;
-            List<string> _cellText = new List<string>() { string.Empty };
+            List<string> cellText = new List<string>() { string.Empty };
 
-            while (Line[Index] != KeywordDBChoices.MultiLineEnd)
-                TransferCellTextToDecoded(DecodeCell(index, decodedLine, data, objectSignal, moduleSignal, addressObject, inputBase, false), _cellText);
+            while (Cell[Index] != KeywordDBChoices.MultiLineEnd)
+                TransferCellTextToDecoded(DecodeCell(index, decodedLine, data, objectSignal, moduleSignal, addressObject, inputBase, false), cellText);
 
-            return _cellText;
+            return cellText;
         }
 
         /// <summary>
@@ -463,21 +458,22 @@ namespace IO_list_automation_new.DB
         /// </summary>
         /// <param name="inIndex">index to search from</param>
         /// <returns>last index to of data</returns>
-        private int DecodePeek(int inIndex)
+ /*       private int DecodePeek(int inIndex)
         {
-            int _newIndex = inIndex;
-            string _text = Line[_newIndex];
-            Debug _debug = new Debug();
-            string _debugText;
+            int newIndex = inIndex;
+            string text = Line[newIndex];
+            Debug debug = new Debug();
+            string debugText;
 
-            switch (_text)
+            switch (text)
             {
                 case KeywordDBChoices.If:
                     //peek for variable
-                    _newIndex = DecodePeek(_newIndex);
+                    newIndex++;
+                    newIndex = DecodePeek(newIndex);
                     //peek operation
-                    _newIndex++;
-                    switch (Line[_newIndex])
+                    newIndex++;
+                    switch (Line[newIndex])
                     {
                         case KeywordDBChoices.IsEmpty:
                         case KeywordDBChoices.IsNotEmpty:
@@ -489,26 +485,26 @@ namespace IO_list_automation_new.DB
                         case KeywordDBChoices.Greater:
                         case KeywordDBChoices.LessEqual:
                         case KeywordDBChoices.Less:
-                            _newIndex = DecodePeek(_newIndex);
+                            newIndex = DecodePeek(newIndex);
                             break;
 
                         default:
-                            _debugText = "DBGeneralSignal.DecodePeek.Operation";
+                            debugText = "DBGeneralSignal.DecodePeek.Operation";
 
-                            _debug.ToFile(_debugText + " " + Resources.ParameterNotFound + ":" + _text, DebugLevels.None, DebugMessageType.Critical);
-                            throw new InvalidProgramException(_debugText + "." + _text + " is not created for this element");
+                            debug.ToFile(debugText + " " + Resources.ParameterNotFound + ":" + text, DebugLevels.None, DebugMessageType.Critical);
+                            throw new InvalidProgramException(debugText + "." + text + " is not created for this element");
                     }
                     //peek for true
-                    _newIndex = DecodePeek(_newIndex);
+                    newIndex = DecodePeek(newIndex);
                     //peek for false
-                    _newIndex = DecodePeek(_newIndex);
-                    return _newIndex++;
+                    newIndex = DecodePeek(newIndex);
+                    return newIndex++;
 
                 case KeywordDBChoices.Tab:
-                    return _newIndex++;
+                    return newIndex++;
 
-                case KeywordDBChoices.Data:
-                    return _newIndex += 3;
+                case KeywordDBChoices.Data_:
+                    return newIndex += 3;
 
                 case KeywordDBChoices.Object:
                 case KeywordDBChoices.Modules:
@@ -516,46 +512,48 @@ namespace IO_list_automation_new.DB
                 case KeywordDBChoices.Address:
                 case KeywordDBChoices.AddressArea:
                 case KeywordDBChoices.GetBaseAddress:
-                    return _newIndex += 2;
+                    return newIndex += 2;
 
                 case KeywordDBChoices.CPU:
                 case KeywordDBChoices.ObjectName:
-                    return _newIndex++;
+                    return newIndex++;
 
                 case KeywordDBChoices.BaseAddress:
-                    return _newIndex += 4;
+                    return newIndex += 4;
 
                 case KeywordDBChoices.MultiLine:
-                    int _layer = 1;
-                    _newIndex++;
-                    while (_layer > 0)
+                    int layer = 1;
+                    newIndex++;
+                    while (layer > 0)
                     {
-                        if (Line[_newIndex] == KeywordDBChoices.MultiLine)
-                            _layer++;
-                        else if (Line[_newIndex] == KeywordDBChoices.MultiLineEnd)
-                            _layer--;
+                        if (Line[newIndex] == KeywordDBChoices.MultiLine)
+                            layer++;
+                        else if (Line[newIndex] == KeywordDBChoices.MultiLineEnd)
+                            layer--;
 
-                        _newIndex++;
+                        newIndex++;
                     }
-                    return _newIndex;
+                    return newIndex;
 
                 default:
-                    _debugText = "DBGeneralSignal.DecodePeek.IF";
-                    _debug.ToFile(_debugText + " " + Resources.ParameterNotFound + ":" + _text, DebugLevels.None, DebugMessageType.Critical);
-                    throw new InvalidProgramException(_debugText + "." + _text + " is not created for this element");
+                    debugText = "DBGeneralSignal.DecodePeek.IF";
+                    debug.ToFile(debugText + " " + Resources.ParameterNotFound + ":" + text, DebugLevels.None, DebugMessageType.Critical);
+                    throw new InvalidProgramException(debugText + "." + text + " is not created for this element");
             }
         }
+ */
 
         /// <summary>
         /// Transfer one list elements to another, first element is replacing last
         /// </summary>
-        /// <param name="cellText"></param>
+        /// <param name="cellTexts"></param>
         /// <param name="decodedLine"></param>
-        private void TransferCellTextToDecoded(List<string> cellText, List<string> decodedLine)
+        private void TransferCellTextToDecoded(List<string> cellTexts, List<string> decodedLine)
         {
-            decodedLine[decodedLine.Count - 1] = cellText[0];
-            for (int i = 1; i < cellText.Count; i++)
-                decodedLine.Add(cellText[i]);
+            decodedLine[decodedLine.Count - 1] = cellTexts[0];
+
+            for (int i = 1; i < cellTexts.Count; i++)
+                decodedLine.Add(cellTexts[i]);
         }
 
         /// <summary>
@@ -569,30 +567,30 @@ namespace IO_list_automation_new.DB
         /// <param name="decodeReadOnly">do not put decoded cell to decode line</param>
         private List<string> DecodeCell(int index, List<string> decodedLine, DataClass data, ObjectSignal objectSignal, ModuleSignal moduleSignal, AddressObject addressObject, BaseTypes inputBase, bool decodeReadOnly)
         {
-            string _text = Line[Index];
-            List<string> _cellText = new List<string>() { decodedLine.Last() };
+            string text = Cell[Index];
+            List<string> cellText = new List<string>() { decodedLine.Last() };
 
-            switch (_text)
+            switch (text)
             {
                 case KeywordDBChoices.If:
-                    TransferCellTextToDecoded(DecodeIf(index, decodedLine, data, objectSignal, moduleSignal, addressObject, inputBase, decodeReadOnly), _cellText);
+                    TransferCellTextToDecoded(DecodeIf(index, decodedLine, data, objectSignal, moduleSignal, addressObject, inputBase, decodeReadOnly), cellText);
                     break;
 
                 case KeywordDBChoices.Tab:
                     Index++;
-                    _cellText.Add(string.Empty);
+                    cellText.Add(string.Empty);
                     break;
 
                 case KeywordDBChoices.Data:
-                    _cellText[_cellText.Count - 1] += DecodeData(data, objectSignal, moduleSignal, addressObject, inputBase);
+                    cellText[cellText.Count - 1] += DecodeData(data, objectSignal, moduleSignal, addressObject, inputBase);
                     break;
 
                 case KeywordDBChoices.BaseAddress:
-                    DecodeBaseAddress(index, Line);
+                    DecodeBaseAddress(index, Cell);
                     break;
 
                 case KeywordDBChoices.Address:
-                    _cellText[_cellText.Count - 1] += DecodeAddress(Line);
+                    cellText[cellText.Count - 1] += DecodeAddress(Cell);
                     break;
 
                 case KeywordDBChoices.GetBaseAddress:
@@ -600,31 +598,31 @@ namespace IO_list_automation_new.DB
                     break;
 
                 case KeywordDBChoices.AddressArea:
-                    _cellText[_cellText.Count - 1] += GetAreaAddress(addressObject);
+                    cellText[cellText.Count - 1] += GetAreaAddress(addressObject);
                     break;
 
                 case KeywordDBChoices.Object:
-                    _cellText[_cellText.Count - 1] += DecodeObjects(objectSignal);
+                    cellText[cellText.Count - 1] += DecodeObjects(objectSignal);
                     break;
 
                 case KeywordDBChoices.Modules:
-                    _cellText[_cellText.Count - 1] += DecodeModules(moduleSignal);
+                    cellText[cellText.Count - 1] += DecodeModules(moduleSignal);
                     break;
 
                 case KeywordDBChoices.Text:
-                    _cellText[_cellText.Count - 1] += DecodeText();
+                    cellText[cellText.Count - 1] += DecodeText();
                     break;
 
                 case KeywordDBChoices.CPU:
-                    _cellText[_cellText.Count - 1] += DecodeCPU(addressObject);
+                    cellText[cellText.Count - 1] += DecodeCPU(addressObject);
                     break;
 
                 case KeywordDBChoices.ObjectName:
-                    _cellText[_cellText.Count - 1] += DecodeObjectName(addressObject);
+                    cellText[cellText.Count - 1] += DecodeObjectName(addressObject);
                     break;
 
                 case KeywordDBChoices.MultiLine:
-                    _cellText = DecodeMultiline(index, decodedLine, data, objectSignal, moduleSignal, addressObject, inputBase);
+                    cellText = DecodeMultiline(index, decodedLine, data, objectSignal, moduleSignal, addressObject, inputBase);
                     break;
 
                 case KeywordDBChoices.MultiLineEnd:
@@ -633,15 +631,15 @@ namespace IO_list_automation_new.DB
                     break;
 
                 default:
-                    Debug _debug = new Debug();
-                    const string _debugText = "DBGeneralSignal.DecodeCell";
-                    _debug.ToFile(_debugText + " " + Resources.ParameterNotFound + ":" + _text, DebugLevels.None, DebugMessageType.Critical);
-                    throw new InvalidProgramException(_debugText + "." + _text + " is not created for this element");
+                    Debug debug = new Debug();
+                    const string debugText = "DBGeneralSignal.DecodeCell";
+                    debug.ToFile(debugText + " " + Resources.ParameterNotFound + ":" + text, DebugLevels.None, DebugMessageType.Critical);
+                    throw new InvalidProgramException(debugText + "." + text + " is not created for this element");
             }
             if (!decodeReadOnly)
-                TransferCellTextToDecoded(_cellText, decodedLine);
+                TransferCellTextToDecoded(cellText, decodedLine);
 
-            return _cellText;
+            return cellText;
         }
 
         /// <summary>
@@ -655,27 +653,27 @@ namespace IO_list_automation_new.DB
             Index = 0;
             List<string> decodedLine = new List<string>() { string.Empty };
 
-            int _count = 0;
-            while (Index < Line.Count)
+            int count = 0;
+            while (Index < Cell.Count)
             {
-                _count++;
+                count++;
                 DecodeCell(index, decodedLine, data, objectSignal, moduleSignal, addressObject, inputBase, false);
-                if (_count > 1000)
+                if (count > 1000)
                 {
-                    Debug _debug = new Debug();
-                    const string _debugText = "DBGeneralSignal.DecodeLine";
-                    _debug.ToFile(_debugText + ": infinite loop", DebugLevels.None, DebugMessageType.Critical);
-                    throw new InvalidProgramException(_debugText + ": infinite loop");
+                    Debug debug = new Debug();
+                    const string debugText = "DBGeneralSignal.DecodeLine";
+                    debug.ToFile(debugText + ": infinite loop", DebugLevels.None, DebugMessageType.Critical);
+                    throw new InvalidProgramException(debugText + ": infinite loop");
                 }
             }
-            for (int _column = dataTable.Columns.Count; _column < decodedLine.Count; _column++)
-                dataTable.Columns.Add(_column.ToString());
+            for (int column = dataTable.Columns.Count; column < decodedLine.Count; column++)
+                dataTable.Columns.Add(column.ToString());
 
-            DataRow _row = dataTable.NewRow();
+            DataRow row = dataTable.NewRow();
             for (int i = 0; i < decodedLine.Count; i++)
-                _row[i] = decodedLine[i];
+                row[i] = decodedLine[i];
 
-            dataTable.Rows.Add(_row);
+            dataTable.Rows.Add(row);
         }
     }
 }

@@ -55,10 +55,10 @@ namespace IO_list_automation_new
                     if (suppressError)
                         return string.Empty;
 
-                    const string _debugText = "DBLanguageTypeSignal.GetValueString";
-                    Debug _debug = new Debug();
-                    _debug.ToFile(_debugText + " " + Resources.ParameterNotFound + ":" + parameterName, DebugLevels.None, DebugMessageType.Critical);
-                    throw new InvalidProgramException(_debugText + "." + parameterName + " is not created for this element");
+                    const string debugText = "DBLanguageTypeSignal.GetValueString";
+                    Debug debug = new Debug();
+                    debug.ToFile(debugText + " " + Resources.ParameterNotFound + ":" + parameterName, DebugLevels.None, DebugMessageType.Critical);
+                    throw new InvalidProgramException(debugText + "." + parameterName + " is not created for this element");
             }
         }
 
@@ -83,13 +83,13 @@ namespace IO_list_automation_new
 
         protected override List<GeneralColumn> GeneralGenerateColumnsList()
         {
-            List<GeneralColumn> _columns = new List<GeneralColumn>()
+            List<GeneralColumn> columns = new List<GeneralColumn>()
             {
                 new GeneralColumn(KeywordColumn.DeviceTypeText, 0, true),
                 new GeneralColumn(KeywordColumn.ObjectType, 1, true),
             };
 
-            return _columns;
+            return columns;
         }
 
         public void LoadEdit()
@@ -109,6 +109,7 @@ namespace IO_list_automation_new
         public DBLanguageType(ProgressIndication progress, DataGridView grid) : base("DBLanguageType", nameof(FileExtensions.langTypeDB), progress, grid, true)
         {
             FileName = System.IO.Path.GetDirectoryName(System.Windows.Forms.Application.ExecutablePath) + "\\DB\\" + Settings.Default.IOLanguage;
+            Grid = new GeneralGrid(Name, GridTypes.DBForceEdit, grid, null);
         }
 
         /// <summary>
@@ -118,16 +119,16 @@ namespace IO_list_automation_new
         /// <returns>object type</returns>
         private string FindType(string inputText)
         {
-            string _search;
-            string _text = inputText.ToLower();
+            string search;
+            string text = inputText.ToLower();
 
             //go through all type texts
-            for (int i = 0; i < Signals.Count; i++)
+            foreach (DBLanguageTypeSignal objectTypeSignal in Signals)
             {
-                _search = Signals[i].DeviceTypeText.ToLower();
+                search = objectTypeSignal.DeviceTypeText.ToLower();
                 //if input text contains function return its function type
-                if (!string.IsNullOrEmpty(_search) && _text.Contains(_search))
-                    return Signals[i].ObjectType;
+                if (!string.IsNullOrEmpty(search) && text.Contains(search))
+                    return objectTypeSignal.ObjectType;
             }
             return string.Empty;
         }
@@ -138,25 +139,28 @@ namespace IO_list_automation_new
         /// <param name="objects">input objects</param>
         public void FindAllType(ObjectsClass objects)
         {
-            string _functionType;
+            string functionType;
 
             Debug debug = new Debug();
             debug.ToFile("Finding object type in objects", DebugLevels.High, DebugMessageType.Info);
 
-            string _fileName = System.IO.Path.GetDirectoryName(System.Windows.Forms.Application.ExecutablePath) + "\\DB\\" + Settings.Default.IOLanguage;
+            string fileName = System.IO.Path.GetDirectoryName(System.Windows.Forms.Application.ExecutablePath) + "\\DB\\" + Settings.Default.IOLanguage;
 
             //convert data from file to signals
-            if (!ListToSignals(File.LoadFromFile(_fileName), BaseColumns.Columns, false))
+            if (!ListToSignals(File.LoadFromFile(fileName), BaseColumns.Columns, false))
                 return;
 
             Progress.RenameProgressBar(Resources.FindObjectType, objects.Signals.Count);
 
-            for (int i = 0; i < objects.Signals.Count; i++)
-            {
-                _functionType = FindType(objects.Signals[i].ObjectName);
-                objects.Signals[i].SetValueFromString(_functionType, KeywordColumn.ObjectType);
+            int progress = 0;
 
-                Progress.UpdateProgressBar(i);
+            foreach (ObjectSignal objectSignal in objects.Signals)
+            {
+                functionType = FindType(objectSignal.ObjectName);
+                objectSignal.SetValueFromString(functionType, KeywordColumn.ObjectType);
+
+                progress++;
+                Progress.UpdateProgressBar(progress);
             }
             Progress.HideProgressBar();
 
@@ -242,10 +246,10 @@ namespace IO_list_automation_new
                     if (suppressError)
                         return string.Empty;
 
-                    const string _debugText = "DBLanguageFunctionSignal.GetValueString";
-                    Debug _debug = new Debug();
-                    _debug.ToFile(_debugText + " " + Resources.ParameterNotFound + ":" + parameterName, DebugLevels.None, DebugMessageType.Critical);
-                    throw new InvalidProgramException(_debugText + "." + parameterName + " is not created for this element");
+                    const string debugText = "DBLanguageFunctionSignal.GetValueString";
+                    Debug debug = new Debug();
+                    debug.ToFile(debugText + " " + Resources.ParameterNotFound + ":" + parameterName, DebugLevels.None, DebugMessageType.Critical);
+                    throw new InvalidProgramException(debugText + "." + parameterName + " is not created for this element");
             }
         }
 
@@ -262,9 +266,10 @@ namespace IO_list_automation_new
     internal class DBLanguageFunctionType : GeneralClass<DBLanguageFunctionSignal>
     {
         private string FileName = "";
+
         protected override List<GeneralColumn> GeneralGenerateColumnsList()
         {
-            List<GeneralColumn> _columns = new List<GeneralColumn>()
+            List<GeneralColumn> columns = new List<GeneralColumn>()
             {
                 new GeneralColumn(KeywordColumn.FunctionText1, 0, false),
                 new GeneralColumn(KeywordColumn.Function1, 1, false),
@@ -273,7 +278,7 @@ namespace IO_list_automation_new
                 new GeneralColumn(KeywordColumn.Function2, 4, false),
             };
 
-            return _columns;
+            return columns;
         }
 
         protected override void UpdateSettingsColumnsList()
@@ -283,6 +288,7 @@ namespace IO_list_automation_new
         public DBLanguageFunctionType(ProgressIndication progress, DataGridView grid) : base("DBFunctionLanguage", nameof(FileExtensions.langFuncDB), progress, grid, true)
         {
             FileName = System.IO.Path.GetDirectoryName(System.Windows.Forms.Application.ExecutablePath) + "\\DB\\" + Settings.Default.IOLanguage;
+            Grid = new GeneralGrid(Name, GridTypes.DBForceEdit, grid, null);
         }
 
         public void LoadEdit()
@@ -302,44 +308,44 @@ namespace IO_list_automation_new
         /// <returns>function type</returns>
         private string FindFunctionType(string inputText)
         {
-            string _textToSearch;
-            string _text = inputText.ToLower();
+            string textToSearch;
+            string text = inputText.ToLower();
 
             //first go through 2part function texts
             //go through all 1o2 function texts
-            for (int _signalIndex = 0; _signalIndex < Signals.Count; _signalIndex++)
+            foreach (DBLanguageFunctionSignal functionSignal1 in Signals)
             {
-                _textToSearch = Signals[_signalIndex].FunctionText1o2.ToLower();
-                if (string.IsNullOrEmpty(_textToSearch))
+                textToSearch = functionSignal1.FunctionText1o2.ToLower();
+                if (string.IsNullOrEmpty(textToSearch))
                     continue;
 
                 //if found 1o2 part then search for 2o2 part
-                if (!_text.Contains(_textToSearch))
+                if (!text.Contains(textToSearch))
                     continue;
 
                 //go through all 2o2 function texts
-                for (int _signalIndex2 = 0; _signalIndex2 < Signals.Count; _signalIndex2++)
+                foreach (DBLanguageFunctionSignal functionSignal2 in Signals)
                 {
-                    _textToSearch = Signals[_signalIndex2].FunctionText2o2.ToLower();
-                    if (string.IsNullOrEmpty(_textToSearch))
+                    textToSearch = functionSignal2.FunctionText2o2.ToLower();
+                    if (string.IsNullOrEmpty(textToSearch))
                         continue;
 
                     //if input text contains function return its function type
-                    if (_text.Contains(_textToSearch))
-                        return Signals[_signalIndex2].Function2;
+                    if (text.Contains(textToSearch))
+                        return functionSignal2.Function2;
                 }
             }
 
             //if not found in 2 parts then go through 1 part function text
-            for (int _signalIndex = 0; _signalIndex < Signals.Count; _signalIndex++)
+            foreach (DBLanguageFunctionSignal functionSignal in Signals)
             {
-                _textToSearch = Signals[_signalIndex].FunctionText1.ToLower();
-                if (string.IsNullOrEmpty(_textToSearch))
+                textToSearch = functionSignal.FunctionText1.ToLower();
+                if (string.IsNullOrEmpty(textToSearch))
                     continue;
 
                 //if input text contains function return its function type
-                if (_text.Contains(_textToSearch))
-                    return Signals[_signalIndex].Function1;
+                if (text.Contains(textToSearch))
+                    return functionSignal.Function1;
             }
 
             return string.Empty;
@@ -351,7 +357,7 @@ namespace IO_list_automation_new
         /// <param name="data">input data</param>
         public void FindAllFunctionType(DataClass data)
         {
-            string _functionType;
+            string functionType;
 
             Debug debug = new Debug();
             debug.ToFile("Finding function type in data", DebugLevels.High, DebugMessageType.Info);
@@ -362,12 +368,14 @@ namespace IO_list_automation_new
 
             Progress.RenameProgressBar(Resources.FindFunction, data.Signals.Count);
 
-            for (int i = 0; i < data.Signals.Count; i++)
+            int progress = 0;
+            foreach (DataSignal dataSignal in data.Signals)
             {
-                _functionType = FindFunctionType(data.Signals[i].IOText);
-                data.Signals[i].SetValueFromString(_functionType, KeywordColumn.Function);
+                functionType = FindFunctionType(dataSignal.IOText);
+                dataSignal.SetValueFromString(functionType, KeywordColumn.Function);
 
-                Progress.UpdateProgressBar(i);
+                progress++;
+                Progress.UpdateProgressBar(progress);
             }
 
             Progress.HideProgressBar();

@@ -25,7 +25,7 @@ namespace IO_list_automation_new.DB
         //for all--------------------------------------
         public List<string> ChoicesIfConditions { get; }
 
-        public List<string> DataColumns { get; }
+        public List<string> Data_Columns { get; }
         public List<string> ObjectColumns { get; }
         public List<string> ModuleColumns { get; }
 
@@ -148,20 +148,20 @@ namespace IO_list_automation_new.DB
                 KeywordDBChoices.LessEqual,
             };
 
-            DataClass Data = new DataClass();
-            DataColumns = new List<string>();
-            foreach (GeneralColumn _column in Data.BaseColumns.Columns)
-                DataColumns.Add(_column.Keyword);
+            DataClass Data_ = new DataClass();
+            Data_Columns = new List<string>();
+            foreach (GeneralColumn column in Data_.BaseColumns.Columns)
+                Data_Columns.Add(column.Keyword);
 
             ObjectsClass Objects = new ObjectsClass();
             ObjectColumns = new List<string>();
-            foreach (GeneralColumn _column in Objects.BaseColumns.Columns)
-                ObjectColumns.Add(_column.Keyword);
+            foreach (GeneralColumn column in Objects.BaseColumns.Columns)
+                ObjectColumns.Add(column.Keyword);
 
             ModuleClass Modules = new ModuleClass();
             ModuleColumns = new List<string>();
-            foreach (GeneralColumn _column in Modules.BaseColumns.Columns)
-                ModuleColumns.Add(_column.Keyword);
+            foreach (GeneralColumn column in Modules.BaseColumns.Columns)
+                ModuleColumns.Add(column.Keyword);
         }
     }
 }

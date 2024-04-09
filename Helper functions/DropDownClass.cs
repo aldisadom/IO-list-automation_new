@@ -1,5 +1,4 @@
-﻿using IO_list_automation_new.Forms;
-using System;
+﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -9,7 +8,7 @@ namespace IO_list_automation_new.General
     {
         Main,
         IfCondition,
-        Data,
+        Data_,
         Object,
         Module,
         Text,
@@ -46,15 +45,21 @@ namespace IO_list_automation_new.General
     internal class ComboBoxTag
     {
         public ComboBoxType Type { get; }
-        public string PreviousValue { get;}
+        public string PreviousValue { get; }
 
         public string Name { get; }
 
-        public ComboBoxTag(ComboBoxType type,string name, string previousValue)
+        public int X { get; }
+
+        public int Y { get; }
+
+        public ComboBoxTag(ComboBoxType type, string name, string previousValue, int x, int y)
         {
             Type = type;
             Name = name;
             PreviousValue = previousValue;
+            X = x;
+            Y = y;
         }
     }
 
@@ -146,9 +151,9 @@ namespace IO_list_automation_new.General
         /// <returns>Name of selected element</returns>
         public string SelectedName()
         {
-            var _item = Element.SelectedItem;
-            if (_item != null)
-                return ((DropDownElement)_item).Name;
+            var item = Element.SelectedItem;
+            if (item != null)
+                return ((DropDownElement)item).Name;
             else
                 return Element.Text;
         }
@@ -159,10 +164,10 @@ namespace IO_list_automation_new.General
         /// <returns>keyword of selected element</returns>
         public string SelectedKeyword()
         {
-            var _item = Element.SelectedItem;
+            var item = Element.SelectedItem;
 
-            if (_item != null)
-                return ((DropDownElement)_item).Keyword;
+            if (item != null)
+                return ((DropDownElement)item).Keyword;
             else
                 return Element.Text;
         }
@@ -173,10 +178,10 @@ namespace IO_list_automation_new.General
         /// <returns>modification of selected element</returns>
         public string SelectedMod()
         {
-            var _item = Element.SelectedItem;
+            var item = Element.SelectedItem;
 
-            if (_item != null)
-                return ((DropDownElement)_item).Mod;
+            if (item != null)
+                return ((DropDownElement)item).Mod;
             else
                 return Element.Text;
         }
@@ -187,8 +192,8 @@ namespace IO_list_automation_new.General
         /// <param name="text">name of item</param>
         public void AddItemText(string text)
         {
-            DropDownElement _element = new DropDownElement(string.Empty, Separator, text, text);
-            Element.Items.Add(_element);
+            DropDownElement element = new DropDownElement(string.Empty, Separator, text, text);
+            Element.Items.Add(element);
         }
 
         /// <summary>
@@ -198,9 +203,9 @@ namespace IO_list_automation_new.General
         /// <param name="keyword">keyword of item</param>
         public void AddItemFull(string mod, string keyword)
         {
-            DropDownElement _element = new DropDownElement(mod, Separator, keyword, ColumnNames.GetColumnOrChoicesName(keyword));
+            DropDownElement element = new DropDownElement(mod, Separator, keyword, ColumnNames.GetColumnOrChoicesName(keyword));
 
-            Element.Items.Add(_element);
+            Element.Items.Add(element);
         }
 
         /// <summary>
@@ -210,9 +215,9 @@ namespace IO_list_automation_new.General
         /// <param name="keyword">keyword of item</param>
         public void AddItemColumn(string mod, string keyword)
         {
-            DropDownElement _element = new DropDownElement(mod, Separator, keyword, ColumnNames.GetColumnName(keyword, false));
+            DropDownElement element = new DropDownElement(mod, Separator, keyword, ColumnNames.GetColumnName(keyword, false));
 
-            Element.Items.Add(_element);
+            Element.Items.Add(element);
         }
 
         /// <summary>
@@ -222,9 +227,9 @@ namespace IO_list_automation_new.General
         /// <param name="keyword">keyword of item</param>
         public void AddItemCustom(string mod, string keyword)
         {
-            DropDownElement _element = new DropDownElement(mod, Separator, keyword, keyword);
+            DropDownElement element = new DropDownElement(mod, Separator, keyword, keyword);
 
-            Element.Items.Add(_element);
+            Element.Items.Add(element);
         }
 
         /// <summary>

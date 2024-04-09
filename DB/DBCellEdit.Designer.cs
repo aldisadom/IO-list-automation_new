@@ -53,7 +53,7 @@
             this.Grid.RowTemplate.DefaultCellStyle.NullValue = null;
             this.Grid.Size = new System.Drawing.Size(1284, 661);
             this.Grid.TabIndex = 0;
-            this.Grid.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.Grid_CellClick);
+            this.Grid.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.GridCellClick);
             this.Grid.EditingControlShowing += new System.Windows.Forms.DataGridViewEditingControlShowingEventHandler(this.Grid_EditingControlShowing);
             // 
             // DBCellEdit

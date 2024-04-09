@@ -142,7 +142,7 @@ namespace IO_list_automation_new.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Function.
+        ///   Looks up a localized string similar to Function1.
         /// </summary>
         internal static string Function1 {
             get {
@@ -151,7 +151,7 @@ namespace IO_list_automation_new.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Function.
+        ///   Looks up a localized string similar to Function2.
         /// </summary>
         internal static string Function2 {
             get {

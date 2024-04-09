@@ -93,10 +93,10 @@ namespace IO_list_automation_new
                     if (suppressError)
                         return string.Empty;
 
-                    const string _debugText = "ObjectsSignal.GetValueString";
-                    Debug _debug = new Debug();
-                    _debug.ToFile(_debugText + " " + Resources.ParameterNotFound + ":" + parameterName, DebugLevels.None, DebugMessageType.Critical);
-                    throw new InvalidProgramException(_debugText + "." + parameterName + " is not created for this element");
+                    const string debugText = "ObjectsSignal.GetValueString";
+                    Debug debug = new Debug();
+                    debug.ToFile(debugText + " " + Resources.ParameterNotFound + ":" + parameterName, DebugLevels.None, DebugMessageType.Critical);
+                    throw new InvalidProgramException(debugText + "." + parameterName + " is not created for this element");
             }
         }
 
@@ -119,7 +119,7 @@ namespace IO_list_automation_new
     {
         protected override List<GeneralColumn> GeneralGenerateColumnsList()
         {
-            List<GeneralColumn> _columns = new List<GeneralColumn>()
+            List<GeneralColumn> columns = new List<GeneralColumn>()
             {
                 new GeneralColumn(KeywordColumn.ID, SettingsObject.Default.ColumnID,true),
                 new GeneralColumn(KeywordColumn.CPU, SettingsObject.Default.ColumnCPU, true),
@@ -129,19 +129,19 @@ namespace IO_list_automation_new
                 new GeneralColumn(KeywordColumn.ObjectName, SettingsObject.Default.ColumnObjectName, false),
             };
 
-            return _columns;
+            return columns;
         }
 
         protected override void UpdateSettingsColumnsList()
         {
-            ColumnList _columns = Columns;
+            ColumnList columns = Columns;
 
-            SettingsObject.Default.ColumnID = _columns.GetColumnNumberFromKeyword(KeywordColumn.ID);
-            SettingsObject.Default.ColumnCPU = _columns.GetColumnNumberFromKeyword(KeywordColumn.CPU);
-            SettingsObject.Default.ColumnKKS = _columns.GetColumnNumberFromKeyword(KeywordColumn.KKS);
-            SettingsObject.Default.ColumnOperative = _columns.GetColumnNumberFromKeyword(KeywordColumn.Operative);
-            SettingsObject.Default.ColumnObjectType = _columns.GetColumnNumberFromKeyword(KeywordColumn.ObjectType);
-            SettingsObject.Default.ColumnObjectName = _columns.GetColumnNumberFromKeyword(KeywordColumn.ObjectName);
+            SettingsObject.Default.ColumnID = columns.GetColumnNumberFromKeyword(KeywordColumn.ID);
+            SettingsObject.Default.ColumnCPU = columns.GetColumnNumberFromKeyword(KeywordColumn.CPU);
+            SettingsObject.Default.ColumnKKS = columns.GetColumnNumberFromKeyword(KeywordColumn.KKS);
+            SettingsObject.Default.ColumnOperative = columns.GetColumnNumberFromKeyword(KeywordColumn.Operative);
+            SettingsObject.Default.ColumnObjectType = columns.GetColumnNumberFromKeyword(KeywordColumn.ObjectType);
+            SettingsObject.Default.ColumnObjectName = columns.GetColumnNumberFromKeyword(KeywordColumn.ObjectName);
 
             SettingsObject.Default.Save();
         }
@@ -165,42 +165,42 @@ namespace IO_list_automation_new
 
             UpdateColumnNumbers(data.BaseColumns.Columns);
             Signals.Clear();
-            string _keyword;
-            string _getKeyword;
-            for (int _dataNumber = 0; _dataNumber < data.Signals.Count; _dataNumber++)
+            string keyword;
+            string getKeyword;
+            for (int dataNumber = 0; dataNumber < data.Signals.Count; dataNumber++)
             {
-                DataSignal _dataSignal = data.Signals[_dataNumber];
+                DataSignal dataSignal = data.Signals[dataNumber];
 
-                if (!_dataSignal.HasKKS())
+                if (!dataSignal.HasKKS())
                     continue;
 
-                ObjectSignal _objectSignal = new ObjectSignal();
+                ObjectSignal objectSignal = new ObjectSignal();
 
                 // go through all column in objects and send data to objects
-                foreach (GeneralColumn _column in Columns)
+                foreach (GeneralColumn column in Columns)
                 {
-                    _keyword = _column.Keyword;
+                    keyword = column.Keyword;
 
                     // IOText is transferred to object Name column
-                    _getKeyword = _keyword == KeywordColumn.ObjectName ? KeywordColumn.IOText : _keyword;
-                    _objectSignal.SetValueFromString(_dataSignal.GetValueString(_getKeyword, true), _keyword);
+                    getKeyword = keyword == KeywordColumn.ObjectName ? KeywordColumn.IOText : keyword;
+                    objectSignal.SetValueFromString(dataSignal.GetValueString(getKeyword, true), keyword);
                 }
 
-                if (_objectSignal.ValidateSignal())
-                    Signals.Add(_objectSignal);
+                if (objectSignal.ValidateSignal())
+                    Signals.Add(objectSignal);
 
-                Progress.UpdateProgressBar(_dataNumber);
+                Progress.UpdateProgressBar(dataNumber);
             }
 
             // go through all objects
-            for (int _objectNumber = Signals.Count - 1; _objectNumber >= 0; _objectNumber--)
+            for (int objectNumber = Signals.Count - 1; objectNumber >= 0; objectNumber--)
             {
                 //find if it repeats, if yes then delete element
-                for (int _findNumber = _objectNumber - 1; _findNumber >= 0; _findNumber--)
+                for (int findNumber = objectNumber - 1; findNumber >= 0; findNumber--)
                 {
-                    if (Signals[_findNumber].UniqueKKS == Signals[_objectNumber].UniqueKKS)
+                    if (Signals[findNumber].UniqueKKS == Signals[objectNumber].UniqueKKS)
                     {
-                        Signals.RemoveAt(_objectNumber);
+                        Signals.RemoveAt(objectNumber);
                         break;
                     }
                 }
@@ -222,38 +222,38 @@ namespace IO_list_automation_new
 
             Progress.RenameProgressBar(Resources.ObjectTransferToData, data.Signals.Count);
 
-            string _UniqueName;
-            string _keyword;
-            for (int _dataNumber = 0; _dataNumber < data.Signals.Count; _dataNumber++)
+            string uniqueName;
+            string keyword;
+            for (int dataNumber = 0; dataNumber < data.Signals.Count; dataNumber++)
             {
-                DataSignal _dataSignal = data.Signals[_dataNumber];
+                DataSignal dataSignal = data.Signals[dataNumber];
 
-                _UniqueName = _dataSignal.UniqueKKS;
+                uniqueName = dataSignal.UniqueKKS;
                 // if data signal has KKS
-                if (string.IsNullOrEmpty(_UniqueName))
+                if (string.IsNullOrEmpty(uniqueName))
                     continue;
 
-                for (int _objectNumber = Signals.Count - 1; _objectNumber >= 0; _objectNumber--)
+                for (int objectNumber = Signals.Count - 1; objectNumber >= 0; objectNumber--)
                 {
-                    ObjectSignal _objectSignal = Signals[_objectNumber];
+                    ObjectSignal objectsignal = Signals[objectNumber];
 
                     // and finds this KKS in objects in same cpu, then transfer all data from objects to data signals
-                    if ((_objectSignal.UniqueKKS) != _UniqueName)
+                    if ((objectsignal.UniqueKKS) != uniqueName)
                         continue;
 
                     // go through all column in objects and send data to objects
-                    foreach (GeneralColumn _column in Columns)
+                    foreach (GeneralColumn column in Columns)
                     {
-                        _keyword = _column.Keyword;
+                        keyword = column.Keyword;
                         //do not transfer ID
-                        if (_keyword == "ID")
+                        if (keyword == "ID")
                             continue;
 
-                        _dataSignal.SetValueFromString(_objectSignal.GetValueString(_keyword, false), _keyword);
+                        dataSignal.SetValueFromString(objectsignal.GetValueString(keyword, false), keyword);
                     }
                 }
 
-                Progress.UpdateProgressBar(_dataNumber);
+                Progress.UpdateProgressBar(dataNumber);
             }
             debug.ToFile(Resources.ObjectTransferToData + " - " + Resources.Finished, DebugLevels.High, DebugMessageType.Info);
         }

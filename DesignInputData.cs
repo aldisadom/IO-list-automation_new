@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Data;
 using System.Drawing;
 using System.Windows.Forms;
-using System.Xml.Linq;
 
 namespace IO_list_automation_new.Forms
 {
@@ -41,7 +40,7 @@ namespace IO_list_automation_new.Forms
             SettingsDesignInput.Default.Save();
         }
 
-        private void InputDataGridView_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
+        private void InputDataGridViewColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
         {
             Point relativePoint = PointToClient(Cursor.Position);
             ColumnIndex = e.ColumnIndex;
@@ -52,13 +51,13 @@ namespace IO_list_automation_new.Forms
                 return;
             }
 
-            Debug _debug = new Debug();
-            _debug.ToFile(Resources.ColumnAddDropDown + ": " + Resources.Created, DebugLevels.Minimum, DebugMessageType.Info);
+            Debug debug = new Debug();
+            debug.ToFile(Resources.ColumnAddDropDown + ": " + Resources.Created, DebugLevels.Minimum, DebugMessageType.Info);
 
             //change location to mouse press location and clear previous dropdown
             comboBoxColumn.Location = relativePoint;
             comboBoxColumn.Items.Clear();
-            List<string> _columnNames = GetAvailableColumns();
+            List<string> columnNames = GetAvailableColumns();
 
             //add remove item
             comboBoxColumn.Items.Add("---");
@@ -68,25 +67,25 @@ namespace IO_list_automation_new.Forms
                 comboBoxColumn.Items.Add(InputDataGridView.Columns[ColumnIndex].HeaderText);
 
             //add new columns selection
-            foreach (string _column in _columnNames)
-                comboBoxColumn.Items.Add(_column);
+            foreach (string column in columnNames)
+                comboBoxColumn.Items.Add(column);
 
             comboBoxColumn.Visible = true;
         }
 
-        private void ComboBoxColumn_SelectedValueChanged(object sender, EventArgs e)
+        private void ComboBoxColumnSelectedValueChanged(object sender, EventArgs e)
         {
             System.Windows.Forms.ComboBox comboBox = (System.Windows.Forms.ComboBox)sender;
 
             if (comboBox.SelectedIndex < 0 || !comboBox.Visible)
                 return;
 
-            string _columnName = comboBox.SelectedItem.ToString();
+            string columnName = comboBox.SelectedItem.ToString();
 
-            if (_columnName == "---")
+            if (columnName == "---")
                 InputDataGridView.Columns[ColumnIndex].HeaderText = (ColumnIndex.ToString());
             else
-                InputDataGridView.Columns[ColumnIndex].HeaderText = _columnName;
+                InputDataGridView.Columns[ColumnIndex].HeaderText = columnName;
 
             GetColumns();
             //after hide comboBox
@@ -96,21 +95,21 @@ namespace IO_list_automation_new.Forms
 
         private List<string> GetAvailableColumns()
         {
-            List<string> _columnNames = new List<string>();
+            List<string> columnNames = new List<string>();
             InitExcelColumnsList();
 
-            foreach (GeneralColumn _column in ExcelColumns)
+            foreach (GeneralColumn column in ExcelColumns)
             {
-                if (_column.Number == -1)
-                    _columnNames.Add(_column.GetColumnName(false));
+                if (column.Number == -1)
+                    columnNames.Add(column.GetColumnName(false));
             }
 
-            return _columnNames;
+            return columnNames;
         }
 
         public void InitExcelColumnsList()
         {
-            List<GeneralColumn> _excelColumn = new List<GeneralColumn>()
+            List<GeneralColumn> excelColumn = new List<GeneralColumn>()
             {
                 new GeneralColumn(KeywordColumn.ID, SettingsDesignInput.Default.ColumnID, true),
                 new GeneralColumn(KeywordColumn.CPU, SettingsDesignInput.Default.ColumnCPU, true),
@@ -132,7 +131,7 @@ namespace IO_list_automation_new.Forms
                 new GeneralColumn(KeywordColumn.Terminal, SettingsDesignInput.Default.ColumnTerminal, true),
             };
 
-            ExcelColumns.SetColumns(_excelColumn, false);
+            ExcelColumns.SetColumns(excelColumn, false);
         }
 
         public DesignInputData(DataTable data)
@@ -157,8 +156,8 @@ namespace IO_list_automation_new.Forms
         /// </summary>
         private void GetColumns()
         {
-            string _emptyName;
-            string _name;
+            string emptyName;
+            string name;
 
             //init all settings
             SettingsDesignInput.Default.ColumnID = -1;
@@ -183,47 +182,47 @@ namespace IO_list_automation_new.Forms
             //try to get all settings from columns
             for (int i = 0; i < InputDataGridView.Columns.Count; i++)
             {
-                _emptyName = "Col " + i.ToString();
-                _name = InputDataGridView.Columns[i].HeaderText;
+                emptyName = "Col " + i.ToString();
+                name = InputDataGridView.Columns[i].HeaderText;
                 //if column has no name selected skip
-                if (_name == _emptyName)
+                if (name == emptyName)
                     continue;
 
-                if (_name == ResourcesColumns.ID)
+                if (name == ResourcesColumns.ID)
                     SettingsDesignInput.Default.ColumnID = i;
-                else if (_name == ResourcesColumns.CPU)
+                else if (name == ResourcesColumns.CPU)
                     SettingsDesignInput.Default.ColumnCPU = i;
-                else if (_name == ResourcesColumns.KKS)
+                else if (name == ResourcesColumns.KKS)
                     SettingsDesignInput.Default.ColumnKKS = i;
-                else if (_name == ResourcesColumns.RangeMin)
+                else if (name == ResourcesColumns.RangeMin)
                     SettingsDesignInput.Default.ColumnRangeMin = i;
-                else if (_name == ResourcesColumns.RangeMax)
+                else if (name == ResourcesColumns.RangeMax)
                     SettingsDesignInput.Default.ColumnRangeMax = i;
-                else if (_name == ResourcesColumns.Units)
+                else if (name == ResourcesColumns.Units)
                     SettingsDesignInput.Default.ColumnUnits = i;
-                else if (_name == ResourcesColumns.FalseText)
+                else if (name == ResourcesColumns.FalseText)
                     SettingsDesignInput.Default.ColumnFalseText = i;
-                else if (_name == ResourcesColumns.TrueText)
+                else if (name == ResourcesColumns.TrueText)
                     SettingsDesignInput.Default.ColumnTrueText = i;
-                else if (_name == ResourcesColumns.Revision)
+                else if (name == ResourcesColumns.Revision)
                     SettingsDesignInput.Default.ColumnRevision = i;
-                else if (_name == ResourcesColumns.Cable)
+                else if (name == ResourcesColumns.Cable)
                     SettingsDesignInput.Default.ColumnCable = i;
-                else if (_name == ResourcesColumns.Cabinet)
+                else if (name == ResourcesColumns.Cabinet)
                     SettingsDesignInput.Default.ColumnCabinet = i;
-                else if (_name == ResourcesColumns.ModuleName)
+                else if (name == ResourcesColumns.ModuleName)
                     SettingsDesignInput.Default.ColumnModuleName = i;
-                else if (_name == ResourcesColumns.Pin)
+                else if (name == ResourcesColumns.Pin)
                     SettingsDesignInput.Default.ColumnPin = i;
-                else if (_name == ResourcesColumns.Channel)
+                else if (name == ResourcesColumns.Channel)
                     SettingsDesignInput.Default.ColumnChannel = i;
-                else if (_name == ResourcesColumns.IOText)
+                else if (name == ResourcesColumns.IOText)
                     SettingsDesignInput.Default.ColumnIOText = i;
-                else if (_name == ResourcesColumns.Page)
+                else if (name == ResourcesColumns.Page)
                     SettingsDesignInput.Default.ColumnPage = i;
-                else if (_name == ResourcesColumns.Changed)
+                else if (name == ResourcesColumns.Changed)
                     SettingsDesignInput.Default.ColumnChanged = i;
-                else if (_name == ResourcesColumns.Terminal)
+                else if (name == ResourcesColumns.Terminal)
                     SettingsDesignInput.Default.ColumnTerminal = i;
             }
             SettingsDesignInput.Default.Save();
@@ -238,13 +237,13 @@ namespace IO_list_automation_new.Forms
             for (int i = 0; i < InputDataGridView.Columns.Count; i++)
             {
                 InputDataGridView.Columns[i].HeaderText = "Col " + i.ToString();
-                foreach (GeneralColumn _column in ExcelColumns)
+                foreach (GeneralColumn column in ExcelColumns)
                 {
-                    if (_column.Number != i)
+                    if (column.Number != i)
                         continue;
 
-                    InputDataGridView.Columns[i].Name = _column.Keyword;
-                    InputDataGridView.Columns[i].HeaderText = _column.GetColumnName(false);
+                    InputDataGridView.Columns[i].Name = column.Keyword;
+                    InputDataGridView.Columns[i].HeaderText = column.GetColumnName(false);
                     break;
                 }
             }

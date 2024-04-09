@@ -64,8 +64,8 @@ namespace IO_list_automation_new
             //value in range of bar element
             if ((value < 0) || (value > Bar.Maximum))
             {
-                Debug _debug = new Debug();
-                _debug.ToFile(Resources.ProgressBarOutRange + " " + value.ToString() + " Max: " + Bar.Maximum, DebugLevels.None, DebugMessageType.Warning);
+                Debug debug = new Debug();
+                debug.ToFile(Resources.ProgressBarOutRange + " " + value.ToString() + " Max: " + Bar.Maximum, DebugLevels.None, DebugMessageType.Warning);
                 return;
             }
 
@@ -84,8 +84,8 @@ namespace IO_list_automation_new
         /// <param name="name">new progress bar label</param>
         public void RenameProgressBar(string name, int max)
         {
-            Debug _debug = new Debug();
-            _debug.ToFile("Progress bar renamed to " + name, DebugLevels.Development, DebugMessageType.Info);
+            Debug debug = new Debug();
+            debug.ToFile("Progress bar renamed to " + name, DebugLevels.Development, DebugMessageType.Info);
             BarLabel.Text = name;
             ShowProgressBar(max);
             Bar.Update();

@@ -1,13 +1,4 @@
 ﻿using IO_list_automation_new.General;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Diagnostics;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace IO_list_automation_new.DB
@@ -30,10 +21,10 @@ namespace IO_list_automation_new.DB
             if ((e.KeyCode == Keys.Delete) || (e.KeyCode == Keys.Back))
             {
                 this.SuspendLayout();
-                DataGridView _grid = DataGrid;
+                DataGridView grid = Data_Grid;
 
-                for (int i = 0; i < (_grid.SelectedCells.Count); i++)
-                    _grid.SelectedCells[i].Value = "";
+                foreach (DataGridViewCell cell in grid.SelectedCells)
+                    cell.Value = string.Empty;
 
                 this.ResumeLayout();
                 this.Update();
@@ -42,12 +33,12 @@ namespace IO_list_automation_new.DB
             else if ((e.Modifiers == Keys.Control) && (e.KeyCode == Keys.V))
             {
                 this.SuspendLayout();
-                DataGridView _grid = DataGrid;
+                DataGridView grid = Data_Grid;
 
-                if (_grid.SelectedCells.Count == 0)
+                if (grid.SelectedCells.Count == 0)
                     return;
 
-                GeneralFunctions.Paste(_grid);
+                GeneralFunctions.Paste(grid);
 
                 this.ResumeLayout();
                 this.Update();

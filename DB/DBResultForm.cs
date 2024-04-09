@@ -8,9 +8,6 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
-using System.Xml.Linq;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.Menu;
 
 namespace IO_list_automation_new.DB
 {
@@ -30,60 +27,60 @@ namespace IO_list_automation_new.DB
 
             //hide empty grids
 
-            for (int _cpuIndex = DBTabControlCPU.TabCount-1; _cpuIndex >= 0; _cpuIndex--)
+            for (int cpuIndex = DBTabControlCPU.TabCount - 1; cpuIndex >= 0; cpuIndex--)
             {
-                bool _found = false;
+                bool found = false;
 
-                TabControl _control = (TabControl)DBTabControlCPU.TabPages[_cpuIndex].Controls[0];
-                for (int _objectIndex = _control.TabCount-1; _objectIndex >= 0; _objectIndex--)
+                TabControl control = (TabControl)DBTabControlCPU.TabPages[cpuIndex].Controls[0];
+                for (int objectIndex = control.TabCount - 1; objectIndex >= 0; objectIndex--)
                 {
-                    TabPage _page = _control.TabPages[_objectIndex];
-                    DataGridView _grid = (DataGridView)_page.Controls[0];
+                    TabPage page = control.TabPages[objectIndex];
+                    DataGridView grid = (DataGridView)page.Controls[0];
 
-                    if (_grid.Rows.Count == 0)
-                        _control.TabPages.RemoveAt(_objectIndex);
+                    if (grid.Rows.Count == 0)
+                        control.TabPages.RemoveAt(objectIndex);
                     else
-                        _found = true;
+                        found = true;
                 }
 
-                if (!_found)
-                    DBTabControlCPU.TabPages.RemoveAt(_cpuIndex);
+                if (!found)
+                    DBTabControlCPU.TabPages.RemoveAt(cpuIndex);
             }
         }
 
         private void DeleteComboBox()
         {
-            foreach (var _item in this.Controls)
+            foreach (var item in this.Controls)
             {
-                if (!_item.GetType().Name.Contains("ComboBox"))
+                if (!item.GetType().Name.Contains("ComboBox"))
                     continue;
 
-                if (((System.Windows.Forms.ComboBox)_item).Name == "RowEditComboBox")
+                if (((System.Windows.Forms.ComboBox)item).Name == "RowEditComboBox")
                 {
-                    DropDownClass comboBox = new DropDownClass((System.Windows.Forms.ComboBox)_item)
+                    DropDownClass comboBox = new DropDownClass((System.Windows.Forms.ComboBox)item)
                     {
-                        IndexChangedEventRemove = RowEditComboBox_SelectedIndexChanged,
+                        IndexChangedEventRemove = RowEditComboBoxSelectedIndexChanged,
                     };
-                    this.Controls.Remove((System.Windows.Forms.Control)_item);
+                    this.Controls.Remove((System.Windows.Forms.Control)item);
                 }
-                else if (((System.Windows.Forms.ComboBox)_item).Name == "PageEditComboBox")
+                else if (((System.Windows.Forms.ComboBox)item).Name == "PageEditComboBox")
                 {
-                    DropDownClass comboBox = new DropDownClass((System.Windows.Forms.ComboBox)_item)
+                    DropDownClass comboBox = new DropDownClass((System.Windows.Forms.ComboBox)item)
                     {
-                        IndexChangedEventRemove = PageEditComboBox_SelectedIndexChanged,
+                        IndexChangedEventRemove = PageEditComboBoxSelectedIndexChanged,
                     };
-                    this.Controls.Remove((System.Windows.Forms.Control)_item);
+                    this.Controls.Remove((System.Windows.Forms.Control)item);
                 }
             }
         }
 
-        private void DBTabControl_SelectedIndexChanged(object sender, EventArgs e)
+        private void DBTabControlSelectedIndexChanged(object sender, EventArgs e)
         {
             DeleteComboBox();
             UpdateResult();
         }
 
-        private void DBTabControl_MouseClick(object sender, MouseEventArgs e)
+        private void DBTabControlMouseClick(object sender, MouseEventArgs e)
         {
             DeleteComboBox();
 
@@ -93,111 +90,112 @@ namespace IO_list_automation_new.DB
             if (e.Button != MouseButtons.Right)
                 return;
 
-            DropDownClass _dropDown = new DropDownClass("PageEditComboBox");
+            DropDownClass dropDown = new DropDownClass("PageEditComboBox");
 
-            _dropDown.Editable(false);
-            _dropDown.Location = PointToClient(Cursor.Position);
+            dropDown.Editable(false);
+            dropDown.Location = PointToClient(Cursor.Position);
 
-            _dropDown.AddItemCustom(string.Empty, string.Empty);
-            _dropDown.AddItemCustom(Resources.Add, string.Empty);
-            _dropDown.AddItemCustom(Resources.Copy, string.Empty);
+            dropDown.AddItemCustom(string.Empty, string.Empty);
+            dropDown.AddItemCustom(Resources.Add, string.Empty);
+            dropDown.AddItemCustom(Resources.Copy, string.Empty);
 
             if (DBTabControlCPU.TabPages.Count > 1)
             {
-                for (int i = 0; i < DBTabControlCPU.TabPages.Count; i++)
-                    _dropDown.AddItemCustom(Resources.Remove, DBTabControlCPU.TabPages[i].Text);
+                foreach (TabPage cpuPage in DBTabControlCPU.TabPages)
+                    dropDown.AddItemCustom(Resources.Remove, cpuPage.Text);
             }
 
-            this.Controls.Add(_dropDown.Element);
+            this.Controls.Add(dropDown.Element);
 
-            _dropDown.IndexChangedEvent = PageEditComboBox_SelectedIndexChanged;
-            _dropDown.BringToFront();
+            dropDown.IndexChangedEvent = PageEditComboBoxSelectedIndexChanged;
+            dropDown.BringToFront();
         }
 
-        private void PageEditComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        private void PageEditComboBoxSelectedIndexChanged(object sender, EventArgs e)
         {
             DropDownClass dropDown = new DropDownClass((System.Windows.Forms.ComboBox)sender);
-            string _text = dropDown.SelectedName();
-            string _mod = dropDown.SelectedMod();
-            string _fileName;
+            string text = dropDown.SelectedName();
+            string mod = dropDown.SelectedMod();
+            string fileName;
 
             DeleteComboBox();
-            if (_mod == Resources.Add)
+            if (mod == Resources.Add)
             {
-                NewName _newName = new NewName(Resources.CreateNew + " " + this.Text, string.Empty, true);
+                NewName newName = new NewName(Resources.CreateNew + " " + this.Text, string.Empty, true);
 
-                _newName.ShowDialog();
-                _fileName = _newName.Output;
-                if (string.IsNullOrEmpty(_fileName))
+                newName.ShowDialog();
+                fileName = newName.Output;
+                if (string.IsNullOrEmpty(fileName))
                 {
                     MessageBox.Show(Resources.EnteredEmptyName, "", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
-                for (int i = 0; i < DBTabControlCPU.TabPages.Count; i++)
+                foreach (TabPage cpuPage in DBTabControlCPU.TabPages)
                 {
-                    if (DBTabControlCPU.TabPages[i].Text == _fileName)
+                    if (cpuPage.Text == fileName)
                     {
                         MessageBox.Show(Resources.EnteredExistingName, "", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         return;
                     }
                 }
 
-                DataGridView _grid = AddData("", _newName.Output, _newName.Output);
+                DataGridView grid = AddData("", newName.Output, newName.Output);
                 DataTable dataTable = new DataTable();
 
                 dataTable.Columns.Add("0");
                 dataTable.Columns.Add("1");
-                dataTable.Rows.Add("","");
-                _grid.DataSource = dataTable;
+                dataTable.Rows.Add("", "");
+                grid.DataSource = dataTable;
 
                 DBTabControlCPU.SelectedIndex = DBTabControlCPU.TabCount - 1;
             }
-            else if (_mod == Resources.Remove)
+            else if (mod == Resources.Remove)
             {
                 for (int i = 0; i < DBTabControlCPU.TabPages.Count; i++)
                 {
-                    if (DBTabControlCPU.TabPages[i].Text != _text)
+                    if (DBTabControlCPU.TabPages[i].Text != text)
                         continue;
 
                     DBTabControlCPU.TabPages.RemoveAt(i);
-                    string _filePath = Directory + "\\" + _text + "." + FileExtension;
-                    File.Delete(_filePath);
+                    string filePath = Directory + "\\" + text + "." + FileExtension;
+                    File.Delete(filePath);
+                    break;
                 }
             }
-            else if (_mod == Resources.Copy)
+            else if (mod == Resources.Copy)
             {
-                NewName _newName = new NewName(Resources.CreateNew + " " + this.Text, DBTabControlCPU.SelectedTab.Name, true);
+                NewName newName = new NewName(Resources.CreateNew + " " + this.Text, DBTabControlCPU.SelectedTab.Name, true);
 
-                _newName.ShowDialog();
-                _fileName = _newName.Output;
-                if (string.IsNullOrEmpty(_fileName))
+                newName.ShowDialog();
+                fileName = newName.Output;
+                if (string.IsNullOrEmpty(fileName))
                 {
                     MessageBox.Show(Resources.EnteredEmptyName, "", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
-                for (int i = 0; i < DBTabControlCPU.TabPages.Count; i++)
+                foreach (TabPage cpuPage in DBTabControlCPU.TabPages)
                 {
-                    if (DBTabControlCPU.TabPages[i].Text == _fileName)
+                    if (cpuPage.Text == fileName)
                     {
                         MessageBox.Show(Resources.EnteredExistingName, "", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         return;
                     }
                 }
 
-                DataGridView _gridCopyFrom = (DataGridView)DBTabControlCPU.SelectedTab.Controls[0];
-                DataGridView _grid = AddData("", _newName.Output, _newName.Output);
+                DataGridView gridCopyFrom = (DataGridView)DBTabControlCPU.SelectedTab.Controls[0];
+                DataGridView grid = AddData("", newName.Output, newName.Output);
 
-                for (int i = 0; i < _gridCopyFrom.ColumnCount; i++)
-                    _grid.Columns.Add(i.ToString(), i.ToString());
+                for (int i = 0; i < gridCopyFrom.ColumnCount; i++)
+                    grid.Columns.Add(i.ToString(), i.ToString());
 
-                for (int i = 0; i < _gridCopyFrom.RowCount; i++)
-                    _grid.Rows.Add(_gridCopyFrom.Rows[i].Cells.Cast<DataGridViewCell>().Select(c => c.Value).ToArray());
+                for (int i = 0; i < gridCopyFrom.RowCount; i++)
+                    grid.Rows.Add(gridCopyFrom.Rows[i].Cells.Cast<DataGridViewCell>().Select(c => c.Value).ToArray());
 
                 DBTabControlCPU.SelectedIndex = DBTabControlCPU.TabCount - 1;
             }
         }
 
-        private void DataGridView_RowHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
+        private void DataGridViewRowHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
         {
             DeleteComboBox();
 
@@ -210,102 +208,91 @@ namespace IO_list_automation_new.DB
             comboBox.Location = PointToClient(Cursor.Position);
             comboBox.ChangeDisplayMember(DropDownElementType.Mod);
 
-            string _index = e.RowIndex.ToString();
-            comboBox.AddItemCustom(string.Empty, _index);
-            comboBox.AddItemCustom(Resources.Add, _index);
-            comboBox.AddItemCustom(Resources.AddBefore, _index);
-            comboBox.AddItemCustom(Resources.Copy, _index);
-            comboBox.AddItemCustom(Resources.CopyEnd, _index);
-            comboBox.AddItemCustom(Resources.Remove, _index);
+            string index = e.RowIndex.ToString();
+            comboBox.AddItemCustom(string.Empty, index);
+            comboBox.AddItemCustom(Resources.Add, index);
+            comboBox.AddItemCustom(Resources.AddBefore, index);
+            comboBox.AddItemCustom(Resources.Copy, index);
+            comboBox.AddItemCustom(Resources.CopyEnd, index);
+            comboBox.AddItemCustom(Resources.Remove, index);
 
             this.Controls.Add(comboBox.Element);
-            comboBox.IndexChangedEvent = RowEditComboBox_SelectedIndexChanged;
+            comboBox.IndexChangedEvent = RowEditComboBoxSelectedIndexChanged;
             comboBox.BringToFront();
         }
 
-        private void DataGridView_CellClick(object sender, EventArgs e)
+        private void DataGridViewCellClick(object sender, EventArgs e)
         {
             DeleteComboBox();
 
-            int _row = ((System.Windows.Forms.DataGridViewCellEventArgs)e).RowIndex;
-            List<string> _line = new List<string>();
+            int row = ((System.Windows.Forms.DataGridViewCellEventArgs)e).RowIndex;
+            List<string> line = new List<string>();
 
-            DataTable _dataTable = ((DataGridView)sender).DataSource as DataTable;
+            DataTable dataTable = ((DataGridView)sender).DataSource as DataTable;
 
             //put selected line to edit
-            for (int column = 0; column < _dataTable.Columns.Count; column++)
-                _line.Add(GeneralFunctions.GetDataTableValue(_dataTable, _row, column));
+            for (int column = 0; column < dataTable.Columns.Count; column++)
+                line.Add(GeneralFunctions.GetDataTableValue(dataTable, row, column));
 
-            DBCellEdit _DBCellEdit = new DBCellEdit(_line, Base);
-            _DBCellEdit.ShowDialog();
-            _line = _DBCellEdit.OutputData;
+            DBCellEdit dbCellEdit = new DBCellEdit(line, Base);
+            dbCellEdit.ShowDialog();
+            line = dbCellEdit.OutputData;
 
-            if (_line.Count > _dataTable.Columns.Count)
+            if (line.Count > dataTable.Columns.Count)
             {
-                DataGridViewTextBoxCell _cell = new DataGridViewTextBoxCell();
-
                 //add result columns if needed
-                for (int i = _dataTable.Columns.Count; i < _line.Count; i++)
-                {
-                    DataGridViewColumn _columnGridView = new DataGridViewColumn()
-                    {
-                        CellTemplate = _cell,
-                        SortMode = DataGridViewColumnSortMode.NotSortable,
-                        Name = i.ToString(),
-                        HeaderText = i.ToString(),
-                    };
-                    _dataTable.Columns.Add(i.ToString());
-                }
+                for (int i = dataTable.Columns.Count; i < line.Count; i++)
+                    dataTable.Columns.Add(i.ToString());
             }
 
-            for (int i = 0; i < _line.Count; i++)
-                _dataTable.Rows[_row][i] = _line[i];
+            for (int i = 0; i < line.Count; i++)
+                dataTable.Rows[row][i] = line[i];
 
             //clear other cells
-            for (int i = _line.Count; i < _dataTable.Columns.Count; i++)
-                _dataTable.Rows[_row][i] = string.Empty;
+            for (int i = line.Count; i < dataTable.Columns.Count; i++)
+                dataTable.Rows[row][i] = string.Empty;
 
             UpdateResult();
         }
 
-        private void RowEditComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        private void RowEditComboBoxSelectedIndexChanged(object sender, EventArgs e)
         {
-            TabControl _objectControl = (TabControl)DBTabControlCPU.TabPages[0].Controls[0];
-            DataGridView _grid = (DataGridView)_objectControl.TabPages[_objectControl.SelectedIndex].Controls[0];
+            TabControl objectControl = (TabControl)DBTabControlCPU.TabPages[0].Controls[0];
+            DataGridView grid = (DataGridView)objectControl.TabPages[objectControl.SelectedIndex].Controls[0];
 
-            DropDownClass _dropDown = new DropDownClass((System.Windows.Forms.ComboBox)sender);
-            string _mod = _dropDown.SelectedMod();
-            int _selectedRow = int.Parse(_dropDown.SelectedKeyword());
+            DropDownClass dropDown = new DropDownClass((System.Windows.Forms.ComboBox)sender);
+            string mod = dropDown.SelectedMod();
+            int selectedRow = int.Parse(dropDown.SelectedKeyword());
 
             DeleteComboBox();
 
-            DataTable _data = _grid.DataSource as DataTable;
+            DataTable data = grid.DataSource as DataTable;
             //add after selected row
-            if (_mod == Resources.Add)
+            if (mod == Resources.Add)
             {
-                _data.Rows.InsertAt(_data.NewRow(),_selectedRow+1);
+                data.Rows.InsertAt(data.NewRow(), selectedRow + 1);
             }
-            else if (_mod == Resources.AddBefore)
+            else if (mod == Resources.AddBefore)
             {
-                _data.Rows.InsertAt(_data.NewRow(), _selectedRow);
+                data.Rows.InsertAt(data.NewRow(), selectedRow);
             }
-            else if (_mod == Resources.Copy)
+            else if (mod == Resources.Copy)
             {
-                _data.Rows.InsertAt(_data.NewRow(), _selectedRow + 1);
+                data.Rows.InsertAt(data.NewRow(), selectedRow + 1);
 
-                for (int i = 0; i < _data.Columns.Count; i++)
-                    _data.Rows[_selectedRow + 1][i] = _data.Rows[_selectedRow][i];
+                for (int i = 0; i < data.Columns.Count; i++)
+                    data.Rows[selectedRow + 1][i] = data.Rows[selectedRow][i];
             }
-            else if (_mod == Resources.CopyEnd)
+            else if (mod == Resources.CopyEnd)
             {
-                _data.Rows.Add(_data.NewRow(), _selectedRow + 1);
+                data.Rows.Add(data.NewRow(), selectedRow + 1);
 
-                for (int i = 0; i < _data.Columns.Count; i++)
-                    _data.Rows[_data.Rows.Count - 1][i] = _data.Rows[_selectedRow][i];
+                for (int i = 0; i < data.Columns.Count; i++)
+                    data.Rows[data.Rows.Count - 1][i] = data.Rows[selectedRow][i];
             }
-            else if (_mod == Resources.Remove)
+            else if (mod == Resources.Remove)
             {
-                _data.Rows.RemoveAt(_selectedRow);
+                data.Rows.RemoveAt(selectedRow);
             }
             UpdateResult();
         }
@@ -314,37 +301,39 @@ namespace IO_list_automation_new.DB
         {
             DataGridView dataGridViewObject = new DataGridView();
             TabPage tabPageObject = new TabPage();
-            TabControl _objectTabControl;
+            TabControl objectTabControl;
 
-            int _foundIndex = -1;
+            int foundIndex = -1;
             for (int i = 0; i < DBTabControlCPU.TabCount; i++)
             {
                 if (DBTabControlCPU.TabPages[i].Name == nameCPU)
                 {
-                    _foundIndex = i;
+                    foundIndex = i;
                     break;
                 }
             }
 
-            if (_foundIndex == -1)
+            if (foundIndex == -1)
             {
                 //new CPU tab page
-                TabPage tabPageCPU = new TabPage();
-                tabPageCPU.Name = nameCPU;
-                tabPageCPU.Text = nameCPU;
+                TabPage tabPageCPU = new TabPage
+                {
+                    Name = nameCPU,
+                    Text = nameCPU
+                };
 
                 // new object tab page control
-                _objectTabControl = new TabControl();
-                _objectTabControl.Dock = System.Windows.Forms.DockStyle.Fill;
+                objectTabControl = new TabControl { Dock = System.Windows.Forms.DockStyle.Fill };
+
                 if (Editable)
-                    _objectTabControl.SelectedIndexChanged += DBTabControl_SelectedIndexChanged;
+                    objectTabControl.SelectedIndexChanged += DBTabControlSelectedIndexChanged;
 
                 DBTabControlCPU.TabPages.Add(tabPageCPU);
-                DBTabControlCPU.TabPages[DBTabControlCPU.TabCount-1].Controls.Add(_objectTabControl);
+                DBTabControlCPU.TabPages[DBTabControlCPU.TabCount - 1].Controls.Add(objectTabControl);
             }
             else
             {
-                _objectTabControl = (TabControl)DBTabControlCPU.TabPages[_foundIndex].Controls[0];
+                objectTabControl = (TabControl)DBTabControlCPU.TabPages[foundIndex].Controls[0];
             }
 
             dataGridViewObject.ColumnHeadersVisible = false;
@@ -362,8 +351,8 @@ namespace IO_list_automation_new.DB
 
             if (Editable)
             {
-                dataGridViewObject.CellClick += DataGridView_CellClick;
-                dataGridViewObject.RowHeaderMouseClick += DataGridView_RowHeaderMouseClick;
+                dataGridViewObject.CellClick += DataGridViewCellClick;
+                dataGridViewObject.RowHeaderMouseClick += DataGridViewRowHeaderMouseClick;
             }
             //
             // tabPage1
@@ -382,7 +371,7 @@ namespace IO_list_automation_new.DB
             //            Controls.Add(tabControl1);
             //            ((ISupportInitialize)(dataGridView1)).EndInit();
 
-            _objectTabControl.Controls.Add(tabPageObject);
+            objectTabControl.Controls.Add(tabPageObject);
 
             dataGridViewObject.AutoResizeColumns();
 
@@ -407,33 +396,35 @@ namespace IO_list_automation_new.DB
             if (!Editable)
                 return;
 
-            DBGeneralSignal _instance = new DBGeneralSignal(true);
+            DBGeneralSignal instance = new DBGeneralSignal(true);
 
             //get current grid
-            TabControl _control = (TabControl)DBTabControlCPU.TabPages[0].Controls[0];
-            TabPage _page = _control.SelectedTab;
-            DataGridView _grid = (DataGridView)_page.Controls[0];
+            TabControl control = (TabControl)DBTabControlCPU.TabPages[0].Controls[0];
+            TabPage _page = control.SelectedTab;
+            DataGridView grid = (DataGridView)_page.Controls[0];
 
             GeneralGrid resultGrid = new GeneralGrid(Name, GridTypes.DB, ResultDataGridView, null);
             DataTable dataTable = new DataTable();
 
             //go through all rows
-            for (int i = 0; i < _grid.RowCount; i++)
+            foreach (DataGridViewRow row in grid.Rows)
             {
                 //read grid data of configuration
-                List<string> _line = new List<string>();
-                for (int j = 0; j < _grid.ColumnCount; j++)
+                List<string> line = new List<string>();
+
+                foreach (DataGridViewCell cell in row.Cells)
                 {
-                    if (_grid.Rows[i].Cells[j].Value == null)
-                        _line.Add(string.Empty);
+                    if (cell.Value == null)
+                        line.Add(string.Empty);
                     else
-                        _line.Add(_grid.Rows[i].Cells[j].Value.ToString());
+                        line.Add(cell.Value.ToString());
                 }
 
                 //decode current line
-                _instance.SetValue(_line);
-                _instance.DecodeLine(dataTable,0, null, null, null, null, Base);
+                instance.SetValue(line);
+                instance.DecodeLine(dataTable, 0, null, null, null, null, Base);
             }
+
             resultGrid.PutData(dataTable);
         }
     }

@@ -1,10 +1,5 @@
 ﻿using IO_list_automation_new.Forms;
 using IO_list_automation_new.General;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace IO_list_automation_new.DB
 {
@@ -13,13 +8,18 @@ namespace IO_list_automation_new.DB
         public int X { get; }
         public int Y { get; }
 
-        public string Keyword { get; }
+        public string Keyword { get; private set; }
 
         public string UniqueName { get; }
 
         public ComboBoxType ComboType { get; }
 
         public RestrainLevel Restrain { get; }
+
+        public void UpdateKeyword(string keyword)
+        {
+            Keyword = keyword;
+        }
 
         public CellTag(string keyword, ComboBoxType comboBoxType, RestrainLevel restrain, int x, int y)
         {
@@ -28,7 +28,7 @@ namespace IO_list_automation_new.DB
             Keyword = keyword;
             ComboType = comboBoxType;
             Restrain = restrain;
-            UniqueName = "X" + X.ToString() + "Y" + Y.ToString() +"@"+ keyword;
+            UniqueName = "X" + X.ToString() + "Y" + Y.ToString() + "@" + keyword;
         }
     }
 }

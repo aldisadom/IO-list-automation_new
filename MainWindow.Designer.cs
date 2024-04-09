@@ -62,19 +62,30 @@ namespace IO_list_automation_new
             this.Project_CompareDesign = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.Project_CPU = new System.Windows.Forms.ToolStripMenuItem();
-            this.Project_CPU_Add = new System.Windows.Forms.ToolStripMenuItem();
+            this.Project_CPUAdd = new System.Windows.Forms.ToolStripMenuItem();
             this.Project_SCADA = new System.Windows.Forms.ToolStripMenuItem();
-            this.Project_SCADA_Add = new System.Windows.Forms.ToolStripMenuItem();
+            this.Project_SCADAAdd = new System.Windows.Forms.ToolStripMenuItem();
             this.Project_Language = new System.Windows.Forms.ToolStripMenuItem();
-            this.Project_Language_Add = new System.Windows.Forms.ToolStripMenuItem();
+            this.Project_LanguageAdd = new System.Windows.Forms.ToolStripMenuItem();
             this.Data_DropDown = new System.Windows.Forms.ToolStripDropDownButton();
             this.Data_GetDataFromProject = new System.Windows.Forms.ToolStripMenuItem();
-            this.DataFindFunctionMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.Data_FindFunctionMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.Data_KKSCombine = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator9 = new System.Windows.Forms.ToolStripSeparator();
             this.Data_EditFunctions = new System.Windows.Forms.ToolStripMenuItem();
-            this.IO_DropDown = new System.Windows.Forms.ToolStripDropDownButton();
-            this.IO_FindModules = new System.Windows.Forms.ToolStripMenuItem();
+            this.Objects_DropDown = new System.Windows.Forms.ToolStripDropDownButton();
+            this.Objects_Find = new System.Windows.Forms.ToolStripMenuItem();
+            this.Objects_FindTypeMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.Objects_TransferToData = new System.Windows.Forms.ToolStripMenuItem();
+            this.Objects_DeclareGenerate = new System.Windows.Forms.ToolStripMenuItem();
+            this.Objects_InstancesGenerate = new System.Windows.Forms.ToolStripMenuItem();
+            this.Objects_ClearAddresses = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
+            this.Objects_EditTypes = new System.Windows.Forms.ToolStripMenuItem();
+            this.Objects_DeclareEdit = new System.Windows.Forms.ToolStripMenuItem();
+            this.Objects_InstancesEdit = new System.Windows.Forms.ToolStripMenuItem();
+            this.IO_dropDown = new System.Windows.Forms.ToolStripDropDownButton();
+            this.IO_FndModules = new System.Windows.Forms.ToolStripMenuItem();
             this.IO_Generate = new System.Windows.Forms.ToolStripMenuItem();
             this.IO_ClearAddresses = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator8 = new System.Windows.Forms.ToolStripSeparator();
@@ -86,41 +97,30 @@ namespace IO_list_automation_new
             this.SCADA_EditObjects = new System.Windows.Forms.ToolStripMenuItem();
             this.SCADA_EditModules = new System.Windows.Forms.ToolStripMenuItem();
             this.MainTabControl = new System.Windows.Forms.TabControl();
-            this.DesignTab = new System.Windows.Forms.TabPage();
-            this.DesignGridView = new System.Windows.Forms.DataGridView();
-            this.DataTab = new System.Windows.Forms.TabPage();
-            this.DataGridView = new System.Windows.Forms.DataGridView();
-            this.ObjectTab = new System.Windows.Forms.TabPage();
-            this.ObjectsGridView = new System.Windows.Forms.DataGridView();
-            this.ModuleTab = new System.Windows.Forms.TabPage();
-            this.ModulesGridView = new System.Windows.Forms.DataGridView();
-            this.AddressTab = new System.Windows.Forms.TabPage();
-            this.AddressesGridView = new System.Windows.Forms.DataGridView();
+            this.Design_Tab = new System.Windows.Forms.TabPage();
+            this.Design_GridView = new System.Windows.Forms.DataGridView();
+            this.Data_Tab = new System.Windows.Forms.TabPage();
+            this.Data_GridView = new System.Windows.Forms.DataGridView();
+            this.Object_Tab = new System.Windows.Forms.TabPage();
+            this.Objects_GridView = new System.Windows.Forms.DataGridView();
+            this.Module_Tab = new System.Windows.Forms.TabPage();
+            this.Modules_GridView = new System.Windows.Forms.DataGridView();
+            this.Address_Tab = new System.Windows.Forms.TabPage();
+            this.Addresses_GridView = new System.Windows.Forms.DataGridView();
             this.FindTextBox = new System.Windows.Forms.TextBox();
             this.FindButton = new System.Windows.Forms.Button();
-            this.Objects_Find = new System.Windows.Forms.ToolStripMenuItem();
-            this.ObjectsFindTypeMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.Object_TransferToData = new System.Windows.Forms.ToolStripMenuItem();
-            this.Objects_DeclareGenerate = new System.Windows.Forms.ToolStripMenuItem();
-            this.Objects_InstancesGenerate = new System.Windows.Forms.ToolStripMenuItem();
-            this.Objects_ClearAddresses = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
-            this.Object_EditTypes = new System.Windows.Forms.ToolStripMenuItem();
-            this.Objects_DeclareEdit = new System.Windows.Forms.ToolStripMenuItem();
-            this.Objects_InstancesEdit = new System.Windows.Forms.ToolStripMenuItem();
-            this.Objects_DropDown = new System.Windows.Forms.ToolStripDropDownButton();
             this.MainToolStrip.SuspendLayout();
             this.MainTabControl.SuspendLayout();
-            this.DesignTab.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.DesignGridView)).BeginInit();
-            this.DataTab.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.DataGridView)).BeginInit();
-            this.ObjectTab.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.ObjectsGridView)).BeginInit();
-            this.ModuleTab.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.ModulesGridView)).BeginInit();
-            this.AddressTab.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.AddressesGridView)).BeginInit();
+            this.Design_Tab.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.Design_GridView)).BeginInit();
+            this.Data_Tab.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.Data_GridView)).BeginInit();
+            this.Object_Tab.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.Objects_GridView)).BeginInit();
+            this.Module_Tab.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.Modules_GridView)).BeginInit();
+            this.Address_Tab.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.Addresses_GridView)).BeginInit();
             this.SuspendLayout();
             // 
             // ProgressLabel
@@ -156,7 +156,7 @@ namespace IO_list_automation_new
             this.Project_DropDown,
             this.Data_DropDown,
             this.Objects_DropDown,
-            this.IO_DropDown,
+            this.IO_dropDown,
             this.SCADA_DropDown});
             this.MainToolStrip.Location = new System.Drawing.Point(0, 0);
             this.MainToolStrip.Name = "MainToolStrip";
@@ -180,7 +180,6 @@ namespace IO_list_automation_new
             this.File_About,
             this.toolStripSeparator2,
             this.File_Exit});
-            this.File_DropDown.Image = ((System.Drawing.Image)(resources.GetObject("File_DropDown.Image")));
             this.File_DropDown.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.File_DropDown.Name = "File_DropDown";
             this.File_DropDown.Size = new System.Drawing.Size(38, 22);
@@ -233,14 +232,14 @@ namespace IO_list_automation_new
             this.File_Language_EN.Name = "File_Language_EN";
             this.File_Language_EN.Size = new System.Drawing.Size(89, 22);
             this.File_Language_EN.Text = "EN";
-            this.File_Language_EN.Click += new System.EventHandler(this.FileLanguage_Click);
+            this.File_Language_EN.Click += new System.EventHandler(this.File_Language_Click);
             // 
             // File_Language_LT
             // 
             this.File_Language_LT.Name = "File_Language_LT";
             this.File_Language_LT.Size = new System.Drawing.Size(89, 22);
             this.File_Language_LT.Text = "LT";
-            this.File_Language_LT.Click += new System.EventHandler(this.FileLanguage_Click);
+            this.File_Language_LT.Click += new System.EventHandler(this.File_Language_Click);
             // 
             // File_DebugLevel
             // 
@@ -265,7 +264,7 @@ namespace IO_list_automation_new
             this.File_DebugLevel_Minimum.Name = "File_DebugLevel_Minimum";
             this.File_DebugLevel_Minimum.Size = new System.Drawing.Size(145, 22);
             this.File_DebugLevel_Minimum.Text = "Minimum";
-            this.File_DebugLevel_Minimum.Click += new System.EventHandler(this.File_DebugLevel_Minimum_Click);
+            this.File_DebugLevel_Minimum.Click += new System.EventHandler(this.File_DebugLevelMinimum_Click);
             // 
             // File_DebugLevel_High
             // 
@@ -328,7 +327,7 @@ namespace IO_list_automation_new
             // 
             this.Project_GetDataFromDesign.Name = "Project_GetDataFromDesign";
             this.Project_GetDataFromDesign.Size = new System.Drawing.Size(212, 22);
-            this.Project_GetDataFromDesign.Text = "Get Data From Design";
+            this.Project_GetDataFromDesign.Text = "Get Data_ From Design";
             this.Project_GetDataFromDesign.Click += new System.EventHandler(this.Project_GetDataFromDesign_Click);
             // 
             // Project_CompareDesign
@@ -346,57 +345,57 @@ namespace IO_list_automation_new
             // Project_CPU
             // 
             this.Project_CPU.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.Project_CPU_Add});
+            this.Project_CPUAdd});
             this.Project_CPU.Name = "Project_CPU";
             this.Project_CPU.Size = new System.Drawing.Size(212, 22);
             this.Project_CPU.Text = "CPU";
-            this.Project_CPU.DropDownItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.Project_CPU_DropDownItemClicked);
+            this.Project_CPU.DropDownItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.Project_CPUDropDownItemClicked);
             // 
-            // Project_CPU_Add
+            // Project_CPUAdd
             // 
-            this.Project_CPU_Add.Name = "Project_CPU_Add";
-            this.Project_CPU_Add.Size = new System.Drawing.Size(96, 22);
-            this.Project_CPU_Add.Tag = "Add";
-            this.Project_CPU_Add.Text = "Add";
+            this.Project_CPUAdd.Name = "Project_CPUAdd";
+            this.Project_CPUAdd.Size = new System.Drawing.Size(96, 22);
+            this.Project_CPUAdd.Tag = "Add";
+            this.Project_CPUAdd.Text = "Add";
             // 
             // Project_SCADA
             // 
             this.Project_SCADA.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.Project_SCADA_Add});
+            this.Project_SCADAAdd});
             this.Project_SCADA.Name = "Project_SCADA";
             this.Project_SCADA.Size = new System.Drawing.Size(212, 22);
             this.Project_SCADA.Text = "SCADA";
-            this.Project_SCADA.DropDownItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.Project_SCADA_DropDownItemClicked);
+            this.Project_SCADA.DropDownItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.Project_SCADADropDownItemClicked);
             // 
-            // Project_SCADA_Add
+            // Project_SCADAAdd
             // 
-            this.Project_SCADA_Add.Name = "Project_SCADA_Add";
-            this.Project_SCADA_Add.Size = new System.Drawing.Size(96, 22);
-            this.Project_SCADA_Add.Tag = "Add";
-            this.Project_SCADA_Add.Text = "Add";
+            this.Project_SCADAAdd.Name = "Project_SCADAAdd";
+            this.Project_SCADAAdd.Size = new System.Drawing.Size(96, 22);
+            this.Project_SCADAAdd.Tag = "Add";
+            this.Project_SCADAAdd.Text = "Add";
             // 
             // Project_Language
             // 
             this.Project_Language.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.Project_Language_Add});
+            this.Project_LanguageAdd});
             this.Project_Language.Name = "Project_Language";
             this.Project_Language.Size = new System.Drawing.Size(212, 22);
             this.Project_Language.Text = "Language";
-            this.Project_Language.DropDownItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.Project_Language_DropDownItemClicked);
+            this.Project_Language.DropDownItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.Project_LanguageDropDownItemClicked);
             // 
-            // Project_Language_Add
+            // Project_LanguageAdd
             // 
-            this.Project_Language_Add.Name = "Project_Language_Add";
-            this.Project_Language_Add.Size = new System.Drawing.Size(96, 22);
-            this.Project_Language_Add.Tag = "Add";
-            this.Project_Language_Add.Text = "Add";
+            this.Project_LanguageAdd.Name = "Project_LanguageAdd";
+            this.Project_LanguageAdd.Size = new System.Drawing.Size(96, 22);
+            this.Project_LanguageAdd.Tag = "Add";
+            this.Project_LanguageAdd.Text = "Add";
             // 
             // Data_DropDown
             // 
             this.Data_DropDown.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
             this.Data_DropDown.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.Data_GetDataFromProject,
-            this.DataFindFunctionMenuItem,
+            this.Data_FindFunctionMenuItem,
             this.Data_KKSCombine,
             this.toolStripSeparator9,
             this.Data_EditFunctions});
@@ -411,14 +410,14 @@ namespace IO_list_automation_new
             this.Data_GetDataFromProject.Name = "Data_GetDataFromProject";
             this.Data_GetDataFromProject.Size = new System.Drawing.Size(193, 22);
             this.Data_GetDataFromProject.Text = "Transfer design to data";
-            this.Data_GetDataFromProject.Click += new System.EventHandler(this.Data_GetDataFromProject_Click);
+            this.Data_GetDataFromProject.Click += new System.EventHandler(this.Data_GetDataFromProjectClick);
             // 
-            // DataFindFunctionMenuItem
+            // Data_FindFunctionMenuItem
             // 
-            this.DataFindFunctionMenuItem.Name = "DataFindFunctionMenuItem";
-            this.DataFindFunctionMenuItem.Size = new System.Drawing.Size(193, 22);
-            this.DataFindFunctionMenuItem.Text = "Find function";
-            this.DataFindFunctionMenuItem.Click += new System.EventHandler(this.DataFindFunctionMenuItem_Click);
+            this.Data_FindFunctionMenuItem.Name = "Data_FindFunctionMenuItem";
+            this.Data_FindFunctionMenuItem.Size = new System.Drawing.Size(193, 22);
+            this.Data_FindFunctionMenuItem.Text = "Find function";
+            this.Data_FindFunctionMenuItem.Click += new System.EventHandler(this.Data_FindFunctionMenuItem_Click);
             // 
             // Data_KKSCombine
             // 
@@ -439,51 +438,139 @@ namespace IO_list_automation_new
             this.Data_EditFunctions.Text = "EditFunctions";
             this.Data_EditFunctions.Click += new System.EventHandler(this.Data_EditFunctions_Click);
             // 
-            // IO_DropDown
+            // Objects_DropDown
             // 
-            this.IO_DropDown.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.IO_DropDown.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.IO_FindModules,
+            this.Objects_DropDown.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.Objects_DropDown.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.Objects_Find,
+            this.Objects_FindTypeMenuItem,
+            this.Objects_TransferToData,
+            this.Objects_DeclareGenerate,
+            this.Objects_InstancesGenerate,
+            this.Objects_ClearAddresses,
+            this.toolStripSeparator4,
+            this.Objects_EditTypes,
+            this.Objects_DeclareEdit,
+            this.Objects_InstancesEdit});
+            this.Objects_DropDown.Image = ((System.Drawing.Image)(resources.GetObject("Objects_DropDown.Image")));
+            this.Objects_DropDown.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.Objects_DropDown.Name = "Objects_DropDown";
+            this.Objects_DropDown.Size = new System.Drawing.Size(60, 22);
+            this.Objects_DropDown.Text = "Objects";
+            // 
+            // Objects_Find
+            // 
+            this.Objects_Find.Name = "Objects_Find";
+            this.Objects_Find.Size = new System.Drawing.Size(215, 22);
+            this.Objects_Find.Text = "Find Unique";
+            this.Objects_Find.Click += new System.EventHandler(this.Objects_Find_Click);
+            // 
+            // Objects_FindTypeMenuItem
+            // 
+            this.Objects_FindTypeMenuItem.Name = "Objects_FindTypeMenuItem";
+            this.Objects_FindTypeMenuItem.Size = new System.Drawing.Size(215, 22);
+            this.Objects_FindTypeMenuItem.Text = "Find object types";
+            this.Objects_FindTypeMenuItem.Click += new System.EventHandler(this.Objects_FindTypeMenuItem_Click);
+            // 
+            // Objects_TransferToData
+            // 
+            this.Objects_TransferToData.Name = "Objects_TransferToData";
+            this.Objects_TransferToData.Size = new System.Drawing.Size(215, 22);
+            this.Objects_TransferToData.Text = "Transfer to data";
+            this.Objects_TransferToData.Click += new System.EventHandler(this.Objects_TransferToData_Click);
+            // 
+            // Objects_DeclareGenerate
+            // 
+            this.Objects_DeclareGenerate.Name = "Objects_DeclareGenerate";
+            this.Objects_DeclareGenerate.Size = new System.Drawing.Size(215, 22);
+            this.Objects_DeclareGenerate.Text = "Objects_DeclareGenerate";
+            this.Objects_DeclareGenerate.Click += new System.EventHandler(this.Objects_DeclareGenerate_Click);
+            // 
+            // Objects_InstancesGenerate
+            // 
+            this.Objects_InstancesGenerate.Name = "Objects_InstancesGenerate";
+            this.Objects_InstancesGenerate.Size = new System.Drawing.Size(215, 22);
+            this.Objects_InstancesGenerate.Text = "Objects_InstancesGenerate";
+            this.Objects_InstancesGenerate.Click += new System.EventHandler(this.Objects_InstancesGenerate_Click);
+            // 
+            // Objects_ClearAddresses
+            // 
+            this.Objects_ClearAddresses.Name = "Objects_ClearAddresses";
+            this.Objects_ClearAddresses.Size = new System.Drawing.Size(215, 22);
+            this.Objects_ClearAddresses.Text = "ClearAddresses";
+            this.Objects_ClearAddresses.Click += new System.EventHandler(this.ClearAddresses_Click);
+            // 
+            // toolStripSeparator4
+            // 
+            this.toolStripSeparator4.Name = "toolStripSeparator4";
+            this.toolStripSeparator4.Size = new System.Drawing.Size(212, 6);
+            // 
+            // Objects_EditTypes
+            // 
+            this.Objects_EditTypes.Name = "Objects_EditTypes";
+            this.Objects_EditTypes.Size = new System.Drawing.Size(215, 22);
+            this.Objects_EditTypes.Text = "Edit object types";
+            this.Objects_EditTypes.Click += new System.EventHandler(this.Objects_EditTypes_Click);
+            // 
+            // Objects_DeclareEdit
+            // 
+            this.Objects_DeclareEdit.Name = "Objects_DeclareEdit";
+            this.Objects_DeclareEdit.Size = new System.Drawing.Size(215, 22);
+            this.Objects_DeclareEdit.Text = "Edit declare";
+            this.Objects_DeclareEdit.Click += new System.EventHandler(this.Objects_DeclareEdit_Click);
+            // 
+            // Objects_InstancesEdit
+            // 
+            this.Objects_InstancesEdit.Name = "Objects_InstancesEdit";
+            this.Objects_InstancesEdit.Size = new System.Drawing.Size(215, 22);
+            this.Objects_InstancesEdit.Text = "Edit instances";
+            this.Objects_InstancesEdit.Click += new System.EventHandler(this.Objects_InstancesEdit_Click);
+            // 
+            // IO_dropDown
+            // 
+            this.IO_dropDown.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.IO_dropDown.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.IO_FndModules,
             this.IO_Generate,
             this.IO_ClearAddresses,
             this.toolStripSeparator8,
             this.IO_Edit});
-            this.IO_DropDown.Image = ((System.Drawing.Image)(resources.GetObject("IO_DropDown.Image")));
-            this.IO_DropDown.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.IO_DropDown.Name = "IO_DropDown";
-            this.IO_DropDown.Size = new System.Drawing.Size(32, 22);
-            this.IO_DropDown.Text = "IO";
+            this.IO_dropDown.Image = ((System.Drawing.Image)(resources.GetObject("IO_dropDown.Image")));
+            this.IO_dropDown.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.IO_dropDown.Name = "IO_dropDown";
+            this.IO_dropDown.Size = new System.Drawing.Size(32, 22);
+            this.IO_dropDown.Text = "IO";
             // 
-            // IO_FindModules
+            // IO_FndModules
             // 
-            this.IO_FindModules.Name = "IO_FindModules";
-            this.IO_FindModules.Size = new System.Drawing.Size(180, 22);
-            this.IO_FindModules.Text = "Find Modules";
-            this.IO_FindModules.Click += new System.EventHandler(this.IO_FindModules_Click);
+            this.IO_FndModules.Name = "IO_FndModules";
+            this.IO_FndModules.Size = new System.Drawing.Size(154, 22);
+            this.IO_FndModules.Text = "Find Modules";
+            this.IO_FndModules.Click += new System.EventHandler(this.IO_FndModules_Click);
             // 
             // IO_Generate
             // 
             this.IO_Generate.Name = "IO_Generate";
-            this.IO_Generate.Size = new System.Drawing.Size(180, 22);
+            this.IO_Generate.Size = new System.Drawing.Size(154, 22);
             this.IO_Generate.Text = "IO Generate";
             this.IO_Generate.Click += new System.EventHandler(this.IO_Generate_Click);
             // 
             // IO_ClearAddresses
             // 
             this.IO_ClearAddresses.Name = "IO_ClearAddresses";
-            this.IO_ClearAddresses.Size = new System.Drawing.Size(180, 22);
+            this.IO_ClearAddresses.Size = new System.Drawing.Size(154, 22);
             this.IO_ClearAddresses.Text = "ClearAddresses";
             this.IO_ClearAddresses.Click += new System.EventHandler(this.ClearAddresses_Click);
             // 
             // toolStripSeparator8
             // 
             this.toolStripSeparator8.Name = "toolStripSeparator8";
-            this.toolStripSeparator8.Size = new System.Drawing.Size(177, 6);
+            this.toolStripSeparator8.Size = new System.Drawing.Size(151, 6);
             // 
             // IO_Edit
             // 
             this.IO_Edit.Name = "IO_Edit";
-            this.IO_Edit.Size = new System.Drawing.Size(180, 22);
+            this.IO_Edit.Size = new System.Drawing.Size(154, 22);
             this.IO_Edit.Text = "Edit IO";
             this.IO_Edit.Click += new System.EventHandler(this.IO_Edit_Click);
             // 
@@ -540,11 +627,11 @@ namespace IO_list_automation_new
             this.MainTabControl.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.MainTabControl.Controls.Add(this.DesignTab);
-            this.MainTabControl.Controls.Add(this.DataTab);
-            this.MainTabControl.Controls.Add(this.ObjectTab);
-            this.MainTabControl.Controls.Add(this.ModuleTab);
-            this.MainTabControl.Controls.Add(this.AddressTab);
+            this.MainTabControl.Controls.Add(this.Design_Tab);
+            this.MainTabControl.Controls.Add(this.Data_Tab);
+            this.MainTabControl.Controls.Add(this.Object_Tab);
+            this.MainTabControl.Controls.Add(this.Module_Tab);
+            this.MainTabControl.Controls.Add(this.Address_Tab);
             this.MainTabControl.Location = new System.Drawing.Point(0, 28);
             this.MainTabControl.Margin = new System.Windows.Forms.Padding(0);
             this.MainTabControl.Name = "MainTabControl";
@@ -554,119 +641,119 @@ namespace IO_list_automation_new
             this.MainTabControl.Click += new System.EventHandler(this.MainTabControl_Click);
             this.MainTabControl.KeyDown += new System.Windows.Forms.KeyEventHandler(this.KeyDown_Event);
             // 
-            // DesignTab
+            // Design_Tab
             // 
-            this.DesignTab.Controls.Add(this.DesignGridView);
-            this.DesignTab.Location = new System.Drawing.Point(4, 22);
-            this.DesignTab.Name = "DesignTab";
-            this.DesignTab.Size = new System.Drawing.Size(1276, 622);
-            this.DesignTab.TabIndex = 0;
-            this.DesignTab.Text = "Design";
-            this.DesignTab.UseVisualStyleBackColor = true;
+            this.Design_Tab.Controls.Add(this.Design_GridView);
+            this.Design_Tab.Location = new System.Drawing.Point(4, 22);
+            this.Design_Tab.Name = "Design_Tab";
+            this.Design_Tab.Size = new System.Drawing.Size(1276, 622);
+            this.Design_Tab.TabIndex = 0;
+            this.Design_Tab.Text = "Design";
+            this.Design_Tab.UseVisualStyleBackColor = true;
             // 
-            // DesignGridView
+            // Design_GridView
             // 
-            this.DesignGridView.AllowUserToOrderColumns = true;
-            this.DesignGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.DesignGridView.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.DesignGridView.Location = new System.Drawing.Point(0, 0);
-            this.DesignGridView.Name = "DesignGridView";
-            this.DesignGridView.Size = new System.Drawing.Size(1276, 622);
-            this.DesignGridView.TabIndex = 0;
-            this.DesignGridView.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.DesignGridView_CellClick);
-            this.DesignGridView.ColumnHeaderMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.DesignGridView_ColumnHeaderMouseClick);
+            this.Design_GridView.AllowUserToOrderColumns = true;
+            this.Design_GridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.Design_GridView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.Design_GridView.Location = new System.Drawing.Point(0, 0);
+            this.Design_GridView.Name = "Design_GridView";
+            this.Design_GridView.Size = new System.Drawing.Size(1276, 622);
+            this.Design_GridView.TabIndex = 0;
+            this.Design_GridView.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.Design_GridViewCell_Click);
+            this.Design_GridView.ColumnHeaderMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.Design_GridViewColumnHeaderMouseClick);
             // 
-            // DataTab
+            // Data_Tab
             // 
-            this.DataTab.Controls.Add(this.DataGridView);
-            this.DataTab.Location = new System.Drawing.Point(4, 22);
-            this.DataTab.Name = "DataTab";
-            this.DataTab.Size = new System.Drawing.Size(1276, 622);
-            this.DataTab.TabIndex = 1;
-            this.DataTab.Text = "Data";
-            this.DataTab.UseVisualStyleBackColor = true;
+            this.Data_Tab.Controls.Add(this.Data_GridView);
+            this.Data_Tab.Location = new System.Drawing.Point(4, 22);
+            this.Data_Tab.Name = "Data_Tab";
+            this.Data_Tab.Size = new System.Drawing.Size(1276, 622);
+            this.Data_Tab.TabIndex = 1;
+            this.Data_Tab.Text = "Data";
+            this.Data_Tab.UseVisualStyleBackColor = true;
             // 
-            // DataGridView
+            // Data_GridView
             // 
-            this.DataGridView.AllowUserToOrderColumns = true;
-            this.DataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.DataGridView.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.DataGridView.Location = new System.Drawing.Point(0, 0);
-            this.DataGridView.Name = "DataGridView";
-            this.DataGridView.Size = new System.Drawing.Size(1276, 622);
-            this.DataGridView.TabIndex = 1;
-            this.DataGridView.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.DataGridView_CellClick);
-            this.DataGridView.ColumnHeaderMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.DataGridView_ColumnHeaderMouseClick);
+            this.Data_GridView.AllowUserToOrderColumns = true;
+            this.Data_GridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.Data_GridView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.Data_GridView.Location = new System.Drawing.Point(0, 0);
+            this.Data_GridView.Name = "Data_GridView";
+            this.Data_GridView.Size = new System.Drawing.Size(1276, 622);
+            this.Data_GridView.TabIndex = 1;
+            this.Data_GridView.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.DataGridViewCell_Click);
+            this.Data_GridView.ColumnHeaderMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.DataGridViewColumnHeaderMouseClick);
             // 
-            // ObjectTab
+            // Object_Tab
             // 
-            this.ObjectTab.Controls.Add(this.ObjectsGridView);
-            this.ObjectTab.Location = new System.Drawing.Point(4, 22);
-            this.ObjectTab.Name = "ObjectTab";
-            this.ObjectTab.Size = new System.Drawing.Size(1276, 622);
-            this.ObjectTab.TabIndex = 2;
-            this.ObjectTab.Text = "Object";
-            this.ObjectTab.UseVisualStyleBackColor = true;
+            this.Object_Tab.Controls.Add(this.Objects_GridView);
+            this.Object_Tab.Location = new System.Drawing.Point(4, 22);
+            this.Object_Tab.Name = "Object_Tab";
+            this.Object_Tab.Size = new System.Drawing.Size(1276, 622);
+            this.Object_Tab.TabIndex = 2;
+            this.Object_Tab.Text = "Object";
+            this.Object_Tab.UseVisualStyleBackColor = true;
             // 
-            // ObjectsGridView
+            // Objects_GridView
             // 
-            this.ObjectsGridView.AllowUserToOrderColumns = true;
-            this.ObjectsGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.ObjectsGridView.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.ObjectsGridView.Location = new System.Drawing.Point(0, 0);
-            this.ObjectsGridView.Name = "ObjectsGridView";
-            this.ObjectsGridView.Size = new System.Drawing.Size(1276, 622);
-            this.ObjectsGridView.TabIndex = 1;
-            this.ObjectsGridView.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.ObjectsGridView_CellClick);
-            this.ObjectsGridView.ColumnHeaderMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.ObjectsGridView_ColumnHeaderMouseClick);
+            this.Objects_GridView.AllowUserToOrderColumns = true;
+            this.Objects_GridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.Objects_GridView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.Objects_GridView.Location = new System.Drawing.Point(0, 0);
+            this.Objects_GridView.Name = "Objects_GridView";
+            this.Objects_GridView.Size = new System.Drawing.Size(1276, 622);
+            this.Objects_GridView.TabIndex = 1;
+            this.Objects_GridView.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.ObjectsGridViewCell_Click);
+            this.Objects_GridView.ColumnHeaderMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.ObjectsGridViewColumnHeaderMouseClick);
             // 
-            // ModuleTab
+            // Module_Tab
             // 
-            this.ModuleTab.Controls.Add(this.ModulesGridView);
-            this.ModuleTab.Location = new System.Drawing.Point(4, 22);
-            this.ModuleTab.Name = "ModuleTab";
-            this.ModuleTab.Size = new System.Drawing.Size(1276, 622);
-            this.ModuleTab.TabIndex = 3;
-            this.ModuleTab.Text = "Module";
-            this.ModuleTab.UseVisualStyleBackColor = true;
+            this.Module_Tab.Controls.Add(this.Modules_GridView);
+            this.Module_Tab.Location = new System.Drawing.Point(4, 22);
+            this.Module_Tab.Name = "Module_Tab";
+            this.Module_Tab.Size = new System.Drawing.Size(1276, 622);
+            this.Module_Tab.TabIndex = 3;
+            this.Module_Tab.Text = "Module";
+            this.Module_Tab.UseVisualStyleBackColor = true;
             // 
-            // ModulesGridView
+            // Modules_GridView
             // 
-            this.ModulesGridView.AllowUserToOrderColumns = true;
-            this.ModulesGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.ModulesGridView.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.ModulesGridView.Location = new System.Drawing.Point(0, 0);
-            this.ModulesGridView.Name = "ModulesGridView";
-            this.ModulesGridView.Size = new System.Drawing.Size(1276, 622);
-            this.ModulesGridView.TabIndex = 2;
-            this.ModulesGridView.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.ModulesGridView_CellClick);
-            this.ModulesGridView.ColumnHeaderMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.ModulesGridView_ColumnHeaderMouseClick);
+            this.Modules_GridView.AllowUserToOrderColumns = true;
+            this.Modules_GridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.Modules_GridView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.Modules_GridView.Location = new System.Drawing.Point(0, 0);
+            this.Modules_GridView.Name = "Modules_GridView";
+            this.Modules_GridView.Size = new System.Drawing.Size(1276, 622);
+            this.Modules_GridView.TabIndex = 2;
+            this.Modules_GridView.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.Modules_GridViewCell_Click);
+            this.Modules_GridView.ColumnHeaderMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.Modules_GridViewColumnHeaderMouseClick);
             // 
-            // AddressTab
+            // Address_Tab
             // 
-            this.AddressTab.Controls.Add(this.AddressesGridView);
-            this.AddressTab.Location = new System.Drawing.Point(4, 22);
-            this.AddressTab.Name = "AddressTab";
-            this.AddressTab.Size = new System.Drawing.Size(1276, 622);
-            this.AddressTab.TabIndex = 4;
-            this.AddressTab.Text = "Address";
-            this.AddressTab.UseVisualStyleBackColor = true;
+            this.Address_Tab.Controls.Add(this.Addresses_GridView);
+            this.Address_Tab.Location = new System.Drawing.Point(4, 22);
+            this.Address_Tab.Name = "Address_Tab";
+            this.Address_Tab.Size = new System.Drawing.Size(1276, 622);
+            this.Address_Tab.TabIndex = 4;
+            this.Address_Tab.Text = "Address";
+            this.Address_Tab.UseVisualStyleBackColor = true;
             // 
-            // AddressesGridView
+            // Addresses_GridView
             // 
-            this.AddressesGridView.AllowUserToAddRows = false;
-            this.AddressesGridView.AllowUserToDeleteRows = false;
-            this.AddressesGridView.AllowUserToResizeColumns = false;
-            this.AddressesGridView.AllowUserToResizeRows = false;
-            this.AddressesGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.AddressesGridView.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.AddressesGridView.Location = new System.Drawing.Point(0, 0);
-            this.AddressesGridView.Name = "AddressesGridView";
-            this.AddressesGridView.ReadOnly = true;
-            this.AddressesGridView.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.AutoSizeToAllHeaders;
-            this.AddressesGridView.Size = new System.Drawing.Size(1276, 622);
-            this.AddressesGridView.TabIndex = 3;
-            this.AddressesGridView.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.AddressesGridView_CellClick);
+            this.Addresses_GridView.AllowUserToAddRows = false;
+            this.Addresses_GridView.AllowUserToDeleteRows = false;
+            this.Addresses_GridView.AllowUserToResizeColumns = false;
+            this.Addresses_GridView.AllowUserToResizeRows = false;
+            this.Addresses_GridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.Addresses_GridView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.Addresses_GridView.Location = new System.Drawing.Point(0, 0);
+            this.Addresses_GridView.Name = "Addresses_GridView";
+            this.Addresses_GridView.ReadOnly = true;
+            this.Addresses_GridView.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.AutoSizeToAllHeaders;
+            this.Addresses_GridView.Size = new System.Drawing.Size(1276, 622);
+            this.Addresses_GridView.TabIndex = 3;
+            this.Addresses_GridView.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.Addresses_GridViewCell_Click);
             // 
             // FindTextBox
             // 
@@ -687,94 +774,6 @@ namespace IO_list_automation_new
             this.FindButton.UseVisualStyleBackColor = true;
             this.FindButton.Click += new System.EventHandler(this.FindButton_Click);
             // 
-            // Objects_Find
-            // 
-            this.Objects_Find.Name = "Objects_Find";
-            this.Objects_Find.Size = new System.Drawing.Size(215, 22);
-            this.Objects_Find.Text = "Find Unique";
-            this.Objects_Find.Click += new System.EventHandler(this.Objects_Find_Click);
-            // 
-            // ObjectsFindTypeMenuItem
-            // 
-            this.ObjectsFindTypeMenuItem.Name = "ObjectsFindTypeMenuItem";
-            this.ObjectsFindTypeMenuItem.Size = new System.Drawing.Size(215, 22);
-            this.ObjectsFindTypeMenuItem.Text = "Find object types";
-            this.ObjectsFindTypeMenuItem.Click += new System.EventHandler(this.ObjectsFindTypeMenuItem_Click);
-            // 
-            // Object_TransferToData
-            // 
-            this.Object_TransferToData.Name = "Object_TransferToData";
-            this.Object_TransferToData.Size = new System.Drawing.Size(215, 22);
-            this.Object_TransferToData.Text = "Transfer to data";
-            this.Object_TransferToData.Click += new System.EventHandler(this.Object_TransferToData_Click);
-            // 
-            // Objects_DeclareGenerate
-            // 
-            this.Objects_DeclareGenerate.Name = "Objects_DeclareGenerate";
-            this.Objects_DeclareGenerate.Size = new System.Drawing.Size(215, 22);
-            this.Objects_DeclareGenerate.Text = "Objects_DeclareGenerate";
-            this.Objects_DeclareGenerate.Click += new System.EventHandler(this.Objects_DeclareGenerate_Click);
-            // 
-            // Objects_InstancesGenerate
-            // 
-            this.Objects_InstancesGenerate.Name = "Objects_InstancesGenerate";
-            this.Objects_InstancesGenerate.Size = new System.Drawing.Size(215, 22);
-            this.Objects_InstancesGenerate.Text = "Objects_InstancesGenerate";
-            this.Objects_InstancesGenerate.Click += new System.EventHandler(this.Objects_InstancesGenerate_Click);
-            // 
-            // Objects_ClearAddresses
-            // 
-            this.Objects_ClearAddresses.Name = "Objects_ClearAddresses";
-            this.Objects_ClearAddresses.Size = new System.Drawing.Size(215, 22);
-            this.Objects_ClearAddresses.Text = "ClearAddresses";
-            this.Objects_ClearAddresses.Click += new System.EventHandler(this.ClearAddresses_Click);
-            // 
-            // toolStripSeparator4
-            // 
-            this.toolStripSeparator4.Name = "toolStripSeparator4";
-            this.toolStripSeparator4.Size = new System.Drawing.Size(212, 6);
-            // 
-            // Object_EditTypes
-            // 
-            this.Object_EditTypes.Name = "Object_EditTypes";
-            this.Object_EditTypes.Size = new System.Drawing.Size(215, 22);
-            this.Object_EditTypes.Text = "Edit object types";
-            this.Object_EditTypes.Click += new System.EventHandler(this.Object_EditTypes_Click);
-            // 
-            // Objects_DeclareEdit
-            // 
-            this.Objects_DeclareEdit.Name = "Objects_DeclareEdit";
-            this.Objects_DeclareEdit.Size = new System.Drawing.Size(215, 22);
-            this.Objects_DeclareEdit.Text = "Edit declare";
-            this.Objects_DeclareEdit.Click += new System.EventHandler(this.Objects_DeclareEdit_Click);
-            // 
-            // Objects_InstancesEdit
-            // 
-            this.Objects_InstancesEdit.Name = "Objects_InstancesEdit";
-            this.Objects_InstancesEdit.Size = new System.Drawing.Size(215, 22);
-            this.Objects_InstancesEdit.Text = "Edit instances";
-            this.Objects_InstancesEdit.Click += new System.EventHandler(this.Objects_InstancesEdit_Click);
-            // 
-            // Objects_DropDown
-            // 
-            this.Objects_DropDown.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.Objects_DropDown.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.Objects_Find,
-            this.ObjectsFindTypeMenuItem,
-            this.Object_TransferToData,
-            this.Objects_DeclareGenerate,
-            this.Objects_InstancesGenerate,
-            this.Objects_ClearAddresses,
-            this.toolStripSeparator4,
-            this.Object_EditTypes,
-            this.Objects_DeclareEdit,
-            this.Objects_InstancesEdit});
-            this.Objects_DropDown.Image = ((System.Drawing.Image)(resources.GetObject("Objects_DropDown.Image")));
-            this.Objects_DropDown.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.Objects_DropDown.Name = "Objects_DropDown";
-            this.Objects_DropDown.Size = new System.Drawing.Size(60, 22);
-            this.Objects_DropDown.Text = "Objects";
-            // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -792,20 +791,20 @@ namespace IO_list_automation_new
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainWindow_FormClosing);
             this.Shown += new System.EventHandler(this.MainWindow_Shown);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.KeyDown_Event);
-            this.MouseClick += new System.Windows.Forms.MouseEventHandler(this.MainWindow_MouseClick);
+            this.MouseClick += new System.Windows.Forms.MouseEventHandler(this.MainWindowMouse_Click);
             this.MainToolStrip.ResumeLayout(false);
             this.MainToolStrip.PerformLayout();
             this.MainTabControl.ResumeLayout(false);
-            this.DesignTab.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.DesignGridView)).EndInit();
-            this.DataTab.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.DataGridView)).EndInit();
-            this.ObjectTab.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.ObjectsGridView)).EndInit();
-            this.ModuleTab.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.ModulesGridView)).EndInit();
-            this.AddressTab.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.AddressesGridView)).EndInit();
+            this.Design_Tab.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.Design_GridView)).EndInit();
+            this.Data_Tab.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.Data_GridView)).EndInit();
+            this.Object_Tab.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.Objects_GridView)).EndInit();
+            this.Module_Tab.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.Modules_GridView)).EndInit();
+            this.Address_Tab.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.Addresses_GridView)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -829,16 +828,16 @@ namespace IO_list_automation_new
         private System.Windows.Forms.ToolStripMenuItem Project_GetDataFromDesign;
         private System.Windows.Forms.ToolStripMenuItem Project_CompareDesign;
         private System.Windows.Forms.ToolStripMenuItem Data_GetDataFromProject;
-        private System.Windows.Forms.ToolStripMenuItem DataFindFunctionMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem Data_FindFunctionMenuItem;
         private System.Windows.Forms.TabControl MainTabControl;
-        private System.Windows.Forms.TabPage DesignTab;
-        private System.Windows.Forms.TabPage DataTab;
-        private System.Windows.Forms.TabPage ObjectTab;
+        private System.Windows.Forms.TabPage Design_Tab;
+        private System.Windows.Forms.TabPage Data_Tab;
+        private System.Windows.Forms.TabPage Object_Tab;
         private System.Windows.Forms.TextBox FindTextBox;
         private System.Windows.Forms.Button FindButton;
-        private System.Windows.Forms.DataGridView DesignGridView;
-        private DataGridView DataGridView;
-        private DataGridView ObjectsGridView;
+        private System.Windows.Forms.DataGridView Design_GridView;
+        private DataGridView Data_GridView;
+        private DataGridView Objects_GridView;
         private ToolStripMenuItem Data_KKSCombine;
         private ToolStripSeparator toolStripSeparator1;
         private ToolStripSeparator toolStripSeparator2;
@@ -849,21 +848,21 @@ namespace IO_list_automation_new
         private ToolStripMenuItem File_Language;
         private ToolStripMenuItem File_Language_EN;
         private ToolStripMenuItem File_Language_LT;
-        private ToolStripMenuItem Project_CPU_Add;
-        private ToolStripMenuItem Project_SCADA_Add;
-        private ToolStripMenuItem Project_Language_Add;
+        private ToolStripMenuItem Project_CPUAdd;
+        private ToolStripMenuItem Project_SCADAAdd;
+        private ToolStripMenuItem Project_LanguageAdd;
         private ToolStripSeparator toolStripSeparator5;
         private ToolStripMenuItem SCADA_EditModules;
-        private ToolStripDropDownButton IO_DropDown;
+        private ToolStripDropDownButton IO_dropDown;
         private ToolStripSeparator toolStripSeparator8;
         private ToolStripMenuItem IO_Edit;
-        private TabPage ModuleTab;
-        private DataGridView ModulesGridView;
-        private ToolStripMenuItem IO_FindModules;
+        private TabPage Module_Tab;
+        private DataGridView Modules_GridView;
+        private ToolStripMenuItem IO_FndModules;
         private ToolStripMenuItem IO_Generate;
         private ToolStripMenuItem SCADA_GenerateModules;
-        private TabPage AddressTab;
-        private DataGridView AddressesGridView;
+        private TabPage Address_Tab;
+        private DataGridView Addresses_GridView;
         private ToolStripMenuItem SCADA_GenerateObjects;
         private ToolStripMenuItem SCADA_EditObjects;
         private ToolStripSeparator toolStripSeparator9;
@@ -876,13 +875,13 @@ namespace IO_list_automation_new
         private ToolStripMenuItem IO_ClearAddresses;
         private ToolStripDropDownButton Objects_DropDown;
         private ToolStripMenuItem Objects_Find;
-        private ToolStripMenuItem ObjectsFindTypeMenuItem;
-        private ToolStripMenuItem Object_TransferToData;
+        private ToolStripMenuItem Objects_FindTypeMenuItem;
+        private ToolStripMenuItem Objects_TransferToData;
         private ToolStripMenuItem Objects_DeclareGenerate;
         private ToolStripMenuItem Objects_InstancesGenerate;
         private ToolStripMenuItem Objects_ClearAddresses;
         private ToolStripSeparator toolStripSeparator4;
-        private ToolStripMenuItem Object_EditTypes;
+        private ToolStripMenuItem Objects_EditTypes;
         private ToolStripMenuItem Objects_DeclareEdit;
         private ToolStripMenuItem Objects_InstancesEdit;
     }

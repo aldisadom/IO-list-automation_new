@@ -1,16 +1,8 @@
 ﻿using IO_list_automation_new.General;
 using IO_list_automation_new.Properties;
-using SwiftExcel;
-using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.Common;
-using System.IO;
-using System.Linq;
-using System.Reflection.Emit;
 using System.Windows.Forms;
-using System.Xml.Linq;
-using static System.Net.WebRequestMethods;
 
 namespace IO_list_automation_new
 {
@@ -78,28 +70,28 @@ namespace IO_list_automation_new
                 case GridTypes.Data:
                 case GridTypes.DataNoEdit:
                     //first line is columns keyword
-                    List<GeneralColumn> _columns= new List<GeneralColumn>();
-                    bool _canHide = false;
-                    bool _found = false;
+                    List<GeneralColumn> columns = new List<GeneralColumn>();
+                    bool canHide = false;
+                    bool found = false;
 
-                    for (int _column = inputData.Columns.Count-1; _column >=0 ; _column--)
+                    for (int column = inputData.Columns.Count - 1; column >= 0; column--)
                     {
-                        for (int i = 0; i < BaseColumns.Columns.Count; i++)
+                        foreach (GeneralColumn baseColumn in BaseColumns.Columns)
                         {
-                            if (GeneralFunctions.GetDataTableValue(inputData, 0, _column) == BaseColumns.Columns[i].Keyword)
+                            if (GeneralFunctions.GetDataTableValue(inputData, 0, column) == baseColumn.Keyword)
                             {
-                                _found = true;
-                                _canHide = BaseColumns.Columns[i].CanHide;
+                                found = true;
+                                canHide = baseColumn.CanHide;
                                 break;
                             }
                         }
-                        if (_found)
-                            _columns.Add(new GeneralColumn(GeneralFunctions.GetDataTableValue(inputData, 0, _column), _column,_canHide));
+                        if (found)
+                            columns.Add(new GeneralColumn(GeneralFunctions.GetDataTableValue(inputData, 0, column), column, canHide));
                         else
-                            inputData.Columns.RemoveAt(_column);
+                            inputData.Columns.RemoveAt(column);
                     }
                     inputData.Rows[0].Delete();
-                    Columns.SetColumns(_columns, true);
+                    Columns.SetColumns(columns, true);
                     break;
             }
         }
@@ -110,40 +102,38 @@ namespace IO_list_automation_new
         /// <param name="newList">new list with new column numbers</param>
         public void UpdateColumnNumbers(List<GeneralColumn> newList)
         {
-            string _keyword;
-            int _columnNumber;
-            bool _canHide;
+            string keyword;
+            int columnNumber;
+            bool canHide;
 
-            List<GeneralColumn> _tmpList = new List<GeneralColumn>();
-            for (int _index = 0; _index < BaseColumns.Columns.Count; _index++)
+            List<GeneralColumn> tmpList = new List<GeneralColumn>();
+            foreach (GeneralColumn baseColumn in BaseColumns.Columns)
             {
-                _keyword = BaseColumns.ElementAt(_index).Keyword;
-                _columnNumber = BaseColumns.ElementAt(_index).Number;
-                _canHide = BaseColumns.ElementAt(_index).CanHide;
+                keyword = baseColumn.Keyword;
+                columnNumber = baseColumn.Number;
+                canHide = baseColumn.CanHide;
 
-                foreach (GeneralColumn _newColumn in newList)
+                foreach (GeneralColumn newColumn in newList)
                 {
-                    if (_newColumn.Keyword != _keyword)
+                    if (newColumn.Keyword != keyword)
                         continue;
 
                     //if in new list column is used and in current list column is not used, add column to end
-                    if (_columnNumber == -1 && _newColumn.Number != -1)
-                        _columnNumber = 100;
+                    if (columnNumber == -1 && newColumn.Number != -1)
+                        columnNumber = 100;
                     break;
                 }
-                GeneralColumn _column = new GeneralColumn(_keyword, _columnNumber, _canHide);
-                _tmpList.Add(_column);
+                GeneralColumn column = new GeneralColumn(keyword, columnNumber, canHide);
+                tmpList.Add(column);
             }
 
             BaseColumns.Columns.Clear();
             Columns.Columns.Clear();
 
-            for (int _index = 0; _index < _tmpList.Count; _index++)
+            foreach (GeneralColumn column in tmpList)
             {
-                GeneralColumn _column = _tmpList[_index];
-
-                BaseColumns.Columns.Add(_column);
-                Columns.Columns.Add(_column);
+                BaseColumns.Columns.Add(column);
+                Columns.Columns.Add(column);
             }
 
             BaseColumns.SortColumnsList(false);
@@ -162,9 +152,9 @@ namespace IO_list_automation_new
             BaseColumns = new ColumnList();
             Progress = progress;
 
-            GridTypes _gridType = writableGrid ? GridTypes.Data : GridTypes.DataNoEdit;
+            GridTypes gridType = writableGrid ? GridTypes.Data : GridTypes.DataNoEdit;
             File = new ExcelFiles(name, fileExtension, progress);
-            Grid = new GeneralGrid(name, _gridType, grid, Columns);
+            Grid = new GeneralGrid(name, gridType, grid, Columns);
             BaseColumns.SetColumns(GenerateColumnsList(false), false);
 
             Columns.SetColumns(GenerateColumnsList(true), true);
@@ -184,42 +174,35 @@ namespace IO_list_automation_new
 
             Progress.RenameProgressBar(Resources.ConvertDataToList + ": " + Name, Signals.Count);
 
-            int _columnNumber;
-            string _keyword;
-            string _cellValue;
-
             //get list of columns that is used
-            List<GeneralColumn> _newColumnList = new List<GeneralColumn>();
-            foreach (GeneralColumn _column in Columns)
+            List<GeneralColumn> newColumnList = new List<GeneralColumn>();
+            foreach (GeneralColumn column in Columns)
             {
-                _columnNumber = _column.Number;
-                if (_columnNumber >= 0)
-                    _newColumnList.Add(_column);
+                if (column.Number >= 0)
+                    newColumnList.Add(column);
             }
 
-            DataTable _data = new DataTable();
+            DataTable data = new DataTable();
             //add columns to dataTable
-            for (int _column = 0; _column < Columns.Columns.Count; _column++)
-                _data.Columns.Add(Columns.Columns[_column].Keyword);
+            foreach (GeneralColumn column in Columns.Columns)
+                data.Columns.Add(column.Keyword);
 
-            for (int _signalNumber = 0; _signalNumber < Signals.Count; _signalNumber++)
+            int progress = 0;
+            foreach (T signal in Signals)
             {
-                DataRow row = _data.NewRow();
-                for (_columnNumber = 0; _columnNumber < _newColumnList.Count; _columnNumber++)
-                {
-                    //get value based on keyword
-                    _keyword = _newColumnList[_columnNumber].Keyword;
-                    _cellValue = Signals[_signalNumber].GetValueString(_keyword, false);
+                DataRow row = data.NewRow();
 
-                    row[_columnNumber] = _cellValue;
-                }
-                _data.Rows.Add(row);
-                Progress.UpdateProgressBar(_signalNumber);
+                foreach (GeneralColumn column in newColumnList)
+                    row[column.Number] = signal.GetValueString(column.Keyword, false);
+
+                data.Rows.Add(row);
+                progress++;
+                Progress.UpdateProgressBar(progress);
             }
             Progress.HideProgressBar();
             debug.ToFile(Resources.ConvertDataToList + ": " + Name + " - " + Resources.Finished, DebugLevels.Development, DebugMessageType.Info);
 
-            return _data;
+            return data;
         }
 
         /// <summary>
@@ -234,42 +217,42 @@ namespace IO_list_automation_new
 
             Signals.Clear();
 
-            int _signalCount = 0;
-            int _columnNumber;
-            string _keyword;
-            string _cellValue;
-            for (int _rowNumber = 0; _rowNumber < inputData.Rows.Count; _rowNumber++)
+            int signalCount = 0;
+            int columnNumber;
+            string keyword;
+            string cellValue;
+            for (int rowNumber = 0; rowNumber < inputData.Rows.Count; rowNumber++)
             {
-                T _signal = new T();
-                for (int _columnIndex = 0; _columnIndex < newColumnList.Count; _columnIndex++)
+                T signal = new T();
+                for (int columnIndex = 0; columnIndex < newColumnList.Count; columnIndex++)
                 {
-                    _columnNumber = newColumnList[_columnIndex].Number;
+                    columnNumber = newColumnList[columnIndex].Number;
 
-                    if (_columnNumber < 0)
+                    if (columnNumber < 0)
                         continue;
 
                     //put value based on keyword to memory
-                    _keyword = newColumnList[_columnIndex].Keyword;
-                    _cellValue = GeneralFunctions.GetDataTableValue(inputData, _rowNumber, _columnNumber);
+                    keyword = newColumnList[columnIndex].Keyword;
+                    cellValue = GeneralFunctions.GetDataTableValue(inputData, rowNumber, columnNumber);
 
-                    _signal.SetValueFromString(_cellValue, _keyword);
+                    signal.SetValueFromString(cellValue, keyword);
                 }
-                Progress.UpdateProgressBar(_rowNumber);
+                Progress.UpdateProgressBar(rowNumber);
 
-                if (_signal.ValidateSignal())
+                if (signal.ValidateSignal())
                 {
-                    _signalCount++;
-                    Signals.Add(_signal);
+                    signalCount++;
+                    Signals.Add(signal);
                 }
             }
             Progress.HideProgressBar();
 
             debug.ToFile(Resources.ConvertListToData + ": " + Name + " - " + Resources.Finished, DebugLevels.Development, DebugMessageType.Info);
 
-            if (_signalCount == 0 && !suppressError)
+            if (signalCount == 0 && !suppressError)
                 debug.ToPopUp(Resources.NoData + ": " + Name, DebugLevels.None, DebugMessageType.Warning);
 
-            return _signalCount > 0;
+            return signalCount > 0;
         }
 
         /// <summary>
@@ -286,9 +269,9 @@ namespace IO_list_automation_new
 
                 return;
             }
-            DataTable _data = SignalsToList();
+            DataTable data = SignalsToList();
 
-            Grid.PutData(_data);
+            Grid.PutData(data);
         }
 
         /// <summary>
@@ -298,7 +281,7 @@ namespace IO_list_automation_new
         /// <returns>there is data in grid</returns>
         public bool GetDataFromGrid(bool suppressError)
         {
-            return ListToSignals(Grid.GetData(suppressError), Grid.GetColumns(), suppressError);
+            return ListToSignals(Grid.GetData(), Grid.GetColumns(), suppressError);
         }
 
         /// <summary>
@@ -307,31 +290,31 @@ namespace IO_list_automation_new
         /// <returns>list of CPU</returns>
         public List<string> GetCPUList()
         {
-            bool _found;
-            List<string> _CPUList = new List<string>();
+            bool found;
+            List<string> cpuList = new List<string>();
 
             if (Signals.Count == 0)
-                return _CPUList;
+                return cpuList;
 
             //add first signal element CPU to CPU list
-            _CPUList.Add(Signals[0].GetValueString(KeywordColumn.CPU, false));
+            cpuList.Add(Signals[0].GetValueString(KeywordColumn.CPU, false));
 
             //find CPU list
-            for (int _signalIndex = 0; _signalIndex < Signals.Count; _signalIndex++)
+            foreach (T signal in Signals)
             {
-                _found = false;
-                for (int _CPUIndex = 0; _CPUIndex < _CPUList.Count; _CPUIndex++)
+                found = false;
+                foreach (string cpu in cpuList)
                 {
-                    if (_CPUList[_CPUIndex] == Signals[_signalIndex].GetValueString(KeywordColumn.CPU, false))
+                    if (cpu == signal.GetValueString(KeywordColumn.CPU, false))
                     {
-                        _found = true;
+                        found = true;
                         break;
                     }
                 }
-                if (!_found)
-                    _CPUList.Add(Signals[_signalIndex].GetValueString(KeywordColumn.CPU, false));
+                if (!found)
+                    cpuList.Add(signal.GetValueString(KeywordColumn.CPU, false));
             }
-            return _CPUList;
+            return cpuList;
         }
 
         /// <summary>
@@ -341,9 +324,9 @@ namespace IO_list_automation_new
         /// <returns>there is data to load</returns>
         public bool LoadFromFile(string fileName)
         {
-            DataTable _data =File.LoadFromFile(fileName);
-            GetColumnsFromData(_data);
-            return LoadToGrid(_data);
+            DataTable data = File.LoadFromFile(fileName);
+            GetColumnsFromData(data);
+            return LoadToGrid(data);
         }
 
         /// <summary>
@@ -352,9 +335,9 @@ namespace IO_list_automation_new
         /// <returns>there is data to load</returns>
         public bool LoadSelect()
         {
-            DataTable _data = File.LoadSelect();
-            GetColumnsFromData(_data);
-            return LoadToGrid(_data);
+            DataTable data = File.LoadSelect();
+            GetColumnsFromData(data);
+            return LoadToGrid(data);
         }
 
         /// <summary>
@@ -383,7 +366,7 @@ namespace IO_list_automation_new
         /// <param name="fileName">file name</param>
         public void SaveToFile(string fileName)
         {
-            File.SaveToFile(fileName, Grid.GetData(false));
+            File.SaveToFile(fileName, Grid.GetData());
         }
 
         /// <summary>
@@ -391,7 +374,7 @@ namespace IO_list_automation_new
         /// </summary>
         public void SaveSelect()
         {
-            File.SaveSelect(Grid.GetData(false));
+            File.SaveSelect(Grid.GetData());
         }
     }
 }

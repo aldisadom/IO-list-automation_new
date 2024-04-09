@@ -85,10 +85,10 @@ namespace IO_list_automation_new
                     if (suppressError)
                         return string.Empty;
 
-                    const string _debugText = "ModuleSignal.GetValueString";
-                    Debug _debug = new Debug();
-                    _debug.ToFile(_debugText + " " + Resources.ParameterNotFound + ":" + parameterName, DebugLevels.None, DebugMessageType.Critical);
-                    throw new InvalidProgramException(_debugText + "." + parameterName + " is not created for this element");
+                    const string debugText = "ModuleSignal.GetValueString";
+                    Debug debug = new Debug();
+                    debug.ToFile(debugText + " " + Resources.ParameterNotFound + ":" + parameterName, DebugLevels.None, DebugMessageType.Critical);
+                    throw new InvalidProgramException(debugText + "." + parameterName + " is not created for this element");
             }
         }
 
@@ -106,7 +106,7 @@ namespace IO_list_automation_new
     {
         protected override List<GeneralColumn> GeneralGenerateColumnsList()
         {
-            List<GeneralColumn> _columns = new List<GeneralColumn>()
+            List<GeneralColumn> columns = new List<GeneralColumn>()
             {
                 new GeneralColumn(KeywordColumn.ID, SettingsModule.Default.ColumnID, true),
                 new GeneralColumn(KeywordColumn.CPU, SettingsModule.Default.ColumnCPU, true),
@@ -115,18 +115,18 @@ namespace IO_list_automation_new
                 new GeneralColumn(KeywordColumn.Cabinet, SettingsModule.Default.ColumnCabinet, false),
             };
 
-            return _columns;
+            return columns;
         }
 
         protected override void UpdateSettingsColumnsList()
         {
-            ColumnList _columns = Columns;
+            ColumnList columns = Columns;
 
-            SettingsModule.Default.ColumnID = _columns.GetColumnNumberFromKeyword(KeywordColumn.ID);
-            SettingsModule.Default.ColumnCPU = _columns.GetColumnNumberFromKeyword(KeywordColumn.CPU);
-            SettingsModule.Default.ColumnModuleName = _columns.GetColumnNumberFromKeyword(KeywordColumn.ModuleName);
-            SettingsModule.Default.ColumnModuleType = _columns.GetColumnNumberFromKeyword(KeywordColumn.ModuleType);
-            SettingsModule.Default.ColumnCabinet = _columns.GetColumnNumberFromKeyword(KeywordColumn.Cabinet);
+            SettingsModule.Default.ColumnID = columns.GetColumnNumberFromKeyword(KeywordColumn.ID);
+            SettingsModule.Default.ColumnCPU = columns.GetColumnNumberFromKeyword(KeywordColumn.CPU);
+            SettingsModule.Default.ColumnModuleName = columns.GetColumnNumberFromKeyword(KeywordColumn.ModuleName);
+            SettingsModule.Default.ColumnModuleType = columns.GetColumnNumberFromKeyword(KeywordColumn.ModuleType);
+            SettingsModule.Default.ColumnCabinet = columns.GetColumnNumberFromKeyword(KeywordColumn.Cabinet);
 
             SettingsObject.Default.Save();
         }
@@ -150,38 +150,38 @@ namespace IO_list_automation_new
 
             UpdateColumnNumbers(data.BaseColumns.Columns);
             Signals.Clear();
-            string _keyword;
-            for (int _dataNumber = 0; _dataNumber < data.Signals.Count; _dataNumber++)
+            string keyword;
+            for (int dataNumber = 0; dataNumber < data.Signals.Count; dataNumber++)
             {
-                DataSignal _dataSignal = data.Signals[_dataNumber];
+                DataSignal dataSignal = data.Signals[dataNumber];
 
-                if (string.IsNullOrEmpty(_dataSignal.ModuleName))
+                if (string.IsNullOrEmpty(dataSignal.ModuleName))
                     continue;
 
-                ModuleSignal _objectSignal = new ModuleSignal();
+                ModuleSignal objectsignal = new ModuleSignal();
 
                 // go through all column in objects and send data to objects
-                foreach (GeneralColumn _column in Columns)
+                foreach (GeneralColumn column in Columns)
                 {
-                    _keyword = _column.Keyword;
-                    _objectSignal.SetValueFromString(_dataSignal.GetValueString(_keyword, true), _keyword);
+                    keyword = column.Keyword;
+                    objectsignal.SetValueFromString(dataSignal.GetValueString(keyword, true), keyword);
                 }
 
-                if (_objectSignal.ValidateSignal())
-                    Signals.Add(_objectSignal);
+                if (objectsignal.ValidateSignal())
+                    Signals.Add(objectsignal);
 
-                Progress.UpdateProgressBar(_dataNumber);
+                Progress.UpdateProgressBar(dataNumber);
             }
 
             // go through all objects
-            for (int _objectNumber = Signals.Count - 1; _objectNumber >= 0; _objectNumber--)
+            for (int objectNumber = Signals.Count - 1; objectNumber >= 0; objectNumber--)
             {
                 //find if it repeats, if yes then delete element
-                for (int _findNumber = _objectNumber - 1; _findNumber >= 0; _findNumber--)
+                for (int findNumber = objectNumber - 1; findNumber >= 0; findNumber--)
                 {
-                    if (Signals[_findNumber].UniqueModuleName == Signals[_objectNumber].UniqueModuleName)
+                    if (Signals[findNumber].UniqueModuleName == Signals[objectNumber].UniqueModuleName)
                     {
-                        Signals.RemoveAt(_objectNumber);
+                        Signals.RemoveAt(objectNumber);
                         break;
                     }
                 }

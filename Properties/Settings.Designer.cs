@@ -25,30 +25,6 @@ namespace IO_list_automation_new.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1680")]
-        public uint AplicationHeight {
-            get {
-                return ((uint)(this["AplicationHeight"]));
-            }
-            set {
-                this["AplicationHeight"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1080")]
-        public uint AplicationWidth {
-            get {
-                return ((uint)(this["AplicationWidth"]));
-            }
-            set {
-                this["AplicationWidth"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("0")]
         public uint DebugLevel {
             get {
@@ -68,18 +44,6 @@ namespace IO_list_automation_new.Properties {
             }
             set {
                 this["IOLanguage"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("EN")]
-        public string ApplicationLanguage {
-            get {
-                return ((string)(this["ApplicationLanguage"]));
-            }
-            set {
-                this["ApplicationLanguage"] = value;
             }
         }
         
@@ -140,6 +104,18 @@ namespace IO_list_automation_new.Properties {
             }
             set {
                 this["SettingsUpgrade"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("EN")]
+        public string ApplicationLanguage {
+            get {
+                return ((string)(this["ApplicationLanguage"]));
+            }
+            set {
+                this["ApplicationLanguage"] = value;
             }
         }
     }

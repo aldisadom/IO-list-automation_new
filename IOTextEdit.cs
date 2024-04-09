@@ -1,12 +1,5 @@
 ﻿using IO_list_automation_new.Properties;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace IO_list_automation_new
@@ -43,9 +36,9 @@ namespace IO_list_automation_new
             SettingsData.Default.Save();
         }
 
-        public void Update(string _IOText)
+        public void Update(string ioText)
         {
-            IOTextIn.Text = _IOText;
+            IOTextIn.Text = ioText;
             Parse();
         }
 
@@ -64,36 +57,36 @@ namespace IO_list_automation_new
         /// </summary>
         private void Parse()
         {
-            string _IOText = IOTextIn.Text;
+            string ioText = IOTextIn.Text;
 
-            int _objectSpecificsIndex = _IOText.IndexOf(ObjectSpecificsSeparator.Text);
-            int _functionTextIndex= _IOText.IndexOf(FunctionTextSeparator.Text,_objectSpecificsIndex);
+            int objectspecificsIndex = ioText.IndexOf(ObjectSpecificsSeparator.Text);
+            int functionTextIndex = ioText.IndexOf(FunctionTextSeparator.Text, objectspecificsIndex);
 
             // found object Specifics, found function Text
-            if ((_objectSpecificsIndex != -1) && (_functionTextIndex != -1))
+            if ((objectspecificsIndex != -1) && (functionTextIndex != -1))
             {
-                ObjectName.Text = _IOText.Substring(0, _objectSpecificsIndex).TrimEnd(' ');
-                ObjectSpecifics.Text = _IOText.Substring(_objectSpecificsIndex, _functionTextIndex).TrimEnd(' ').TrimStart(' ');
-                FunctionText.Text = _IOText.Substring(_functionTextIndex).TrimStart(' ');
+                ObjectName.Text = ioText.Substring(0, objectspecificsIndex).TrimEnd(' ');
+                ObjectSpecifics.Text = ioText.Substring(objectspecificsIndex, functionTextIndex).TrimEnd(' ').TrimStart(' ');
+                FunctionText.Text = ioText.Substring(functionTextIndex).TrimStart(' ');
             }
             // no object Specifics, found function Text
-            else if (_functionTextIndex != -1)
+            else if (functionTextIndex != -1)
             {
-                ObjectName.Text = _IOText.Substring(0, _objectSpecificsIndex).TrimEnd(' ');
-                ObjectSpecifics.Text = _IOText.Substring(_objectSpecificsIndex).TrimEnd(' ').TrimStart(' ');
+                ObjectName.Text = ioText.Substring(0, objectspecificsIndex).TrimEnd(' ');
+                ObjectSpecifics.Text = ioText.Substring(objectspecificsIndex).TrimEnd(' ').TrimStart(' ');
                 FunctionText.Text = "";
             }
             // found object Specifics, no function Text
-            else if (_objectSpecificsIndex != -1)
+            else if (objectspecificsIndex != -1)
             {
-                ObjectName.Text = _IOText.Substring(0, _functionTextIndex).TrimEnd(' ');
+                ObjectName.Text = ioText.Substring(0, functionTextIndex).TrimEnd(' ');
                 ObjectSpecifics.Text = "";
-                FunctionText.Text = _IOText.Substring(_functionTextIndex).TrimStart(' ');
+                FunctionText.Text = ioText.Substring(functionTextIndex).TrimStart(' ');
             }
             // no object Specifics, no function Text
             else
             {
-                ObjectName.Text = _IOText;
+                ObjectName.Text = ioText;
                 ObjectSpecifics.Text = "";
                 FunctionText.Text = "";
             }

@@ -3,7 +3,6 @@ using IO_list_automation_new.Properties;
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Drawing;
 using System.Windows.Forms;
 
 namespace IO_list_automation_new
@@ -162,10 +161,10 @@ namespace IO_list_automation_new
                     if (suppressError)
                         return string.Empty;
 
-                    const string _debugText = "AddressObject.GetValueString";
-                    Debug _debug = new Debug();
-                    _debug.ToFile(_debugText + " " + Resources.ParameterNotFound + ":" + parameterName, DebugLevels.None, DebugMessageType.Critical);
-                    throw new InvalidProgramException(_debugText + "." + parameterName + " is not created for this element");
+                    const string debugText = "AddressObject.GetValueString";
+                    Debug debug = new Debug();
+                    debug.ToFile(debugText + " " + Resources.ParameterNotFound + ":" + parameterName, DebugLevels.None, DebugMessageType.Critical);
+                    throw new InvalidProgramException(debugText + "." + parameterName + " is not created for this element");
             }
         }
 
@@ -195,10 +194,10 @@ namespace IO_list_automation_new
             return -1;
         }
 
-        public void Update(string id, string _CPU, string objectGeneralType, string objectType, string objectName)
+        public void Update(string id, string inCPU, string objectGeneralType, string objectType, string objectName)
         {
             ID = id;
-            CPU = _CPU;
+            CPU = inCPU;
             ObjectType = objectType;
             ObjectName = objectName;
             ObjectGeneralType = objectGeneralType;
@@ -206,11 +205,11 @@ namespace IO_list_automation_new
 
         public List<string> GetColumns()
         {
-            List<string> _columns = new List<string>();
-            for (int _addressIndex = 0; _addressIndex < Addresses.Count; _addressIndex++)
-                _columns.Add(Addresses[_addressIndex].ObjectVariableType);
+            List<string> columns = new List<string>();
+            foreach (AddressSingle addressSingle in Addresses)
+                columns.Add(addressSingle.ObjectVariableType);
 
-            return _columns;
+            return columns;
         }
 
         public bool CheckOverlap(AddressSingle address)
@@ -221,9 +220,9 @@ namespace IO_list_automation_new
             if (!int.TryParse(address.AddressSize, out int addressSize))
                 return false;
 
-            for (int i = 0; i < Addresses.Count; i++)
+            foreach (AddressSingle addressSingle in Addresses)
             {
-                if (Addresses[i].CheckOverlap(address.Area, addressStart, addressSize))
+                if (addressSingle.CheckOverlap(address.Area, addressStart, addressSize))
                     return true;
             }
             return false;
@@ -234,7 +233,7 @@ namespace IO_list_automation_new
     {
         protected override List<GeneralColumn> GeneralGenerateColumnsList()
         {
-            List<GeneralColumn> _columns = new List<GeneralColumn>()
+            List<GeneralColumn> columns = new List<GeneralColumn>()
             {
                 new GeneralColumn(KeywordColumn.ID, 0, false),
                 new GeneralColumn(KeywordColumn.CPU, 1, false),
@@ -242,48 +241,50 @@ namespace IO_list_automation_new
                 new GeneralColumn(KeywordColumn.ObjectType, 3,false),
                 new GeneralColumn(KeywordColumn.ObjectName, 4, false),
             };
-            return _columns;
+            return columns;
         }
 
         protected override void UpdateSettingsColumnsList()
         {
         }
 
-        public AddressesClass(ProgressIndication progress, DataGridView grid) : base("Address", nameof(FileExtensions.address), progress, grid,false)
+        public AddressesClass(ProgressIndication progress, DataGridView grid) : base("Address", nameof(FileExtensions.address), progress, grid, false)
         {
             Grid.UseKeywordAsName = true;
         }
 
-        public AddressesClass() : base("Address", nameof(FileExtensions.address), null, null,false)
+        public AddressesClass() : base("Address", nameof(FileExtensions.address), null, null, false)
         {
             Grid.UseKeywordAsName = true;
         }
 
         private void AddColumnToList(List<string> inList, List<string> outList)
         {
-            bool _found;
-            for (int i = 0; i < inList.Count; i++)
+            bool found;
+            foreach (string inColumn in inList)
             {
-                _found = false;
-                for (int j = 0; j < outList.Count; j++)
+                found = false;
+                foreach (string outColumn in outList)
                 {
-                    if (inList[i] == outList[j])
-                        _found = true;
+                    if (inColumn == outColumn)
+                    {
+                        found = true;
+                        break;
+                    }
                 }
-
-                if (!_found)
-                    outList.Add(inList[i]);
+                if (!found)
+                    outList.Add(inColumn);
             }
         }
 
         public List<string> GetColumns()
         {
-            List<string> _columns = new List<string>();
+            List<string> columns = new List<string>();
 
-            for (int _sigIndex = 0; _sigIndex < Signals.Count; _sigIndex++)
-                AddColumnToList(Signals[_sigIndex].GetColumns(), _columns);
+            foreach (AddressObject addressObject in Signals)
+                AddColumnToList(addressObject.GetColumns(), columns);
 
-            return _columns;
+            return columns;
         }
 
         public override DataTable SignalsToList()
@@ -293,71 +294,70 @@ namespace IO_list_automation_new
 
             Progress.RenameProgressBar(Resources.ConvertDataToList + ": " + Name, Signals.Count);
 
-            int _columnNumber;
+            int columnNumber;
 
             //get list of columns that is used
-            List<GeneralColumn> _newColumnList = new List<GeneralColumn>();
+            List<GeneralColumn> newColumnList = new List<GeneralColumn>();
 
             Columns.SetColumns(GeneralGenerateColumnsList(), false);
-            foreach (GeneralColumn _column in Columns)
+            foreach (GeneralColumn column in Columns)
             {
-                _columnNumber = _column.Number;
-                if (_columnNumber >= 0)
-                    _newColumnList.Add(_column);
+                columnNumber = column.Number;
+                if (columnNumber >= 0)
+                    newColumnList.Add(column);
             }
 
-            int _columnIndex = _newColumnList.Count;
+            int columnIndex = newColumnList.Count;
 
             List<string> addressColumns = GetColumns();
-            foreach (string _columnName in addressColumns)
+            foreach (string columnName in addressColumns)
             {
-                _newColumnList.Add(new GeneralColumn(ResourcesUI.Area + _columnName, _columnIndex, false));
-                _newColumnList.Add(new GeneralColumn(ResourcesUI.Start + _columnName, _columnIndex + 1, false));
-                _newColumnList.Add(new GeneralColumn(ResourcesUI.Size + _columnName, _columnIndex + 2, false));
-                _columnIndex += 3;
+                newColumnList.Add(new GeneralColumn(ResourcesUI.Area + columnName, columnIndex, false));
+                newColumnList.Add(new GeneralColumn(ResourcesUI.Start + columnName, columnIndex + 1, false));
+                newColumnList.Add(new GeneralColumn(ResourcesUI.Size + columnName, columnIndex + 2, false));
+                columnIndex += 3;
             }
 
-            Columns.SetColumns(_newColumnList, false);
-            DataTable _data = new DataTable();
+            Columns.SetColumns(newColumnList, false);
+            DataTable data = new DataTable();
 
             //add columns to dataTable
-            for (int _column = 0; _column < Columns.Columns.Count; _column++)
-                _data.Columns.Add(Columns.Columns[_column].Keyword);
+            foreach (GeneralColumn column in Columns.Columns)
+                data.Columns.Add(column.Keyword);
 
-            for (int _signalNumber = 0; _signalNumber < Signals.Count; _signalNumber++)
+            foreach (AddressObject signal in Signals)
             {
-                AddressObject _signal = Signals[_signalNumber];
-                DataRow row = _data.NewRow();
+                DataRow row = data.NewRow();
 
-                row[0] = _signal.ID;
-                row[1] = _signal.CPU;
-                row[2] = _signal.ObjectGeneralType;
-                row[3] = _signal.ObjectType;
-                row[4] = _signal.ObjectName;
-                _columnIndex = BaseColumns.Columns.Count;
+                row[0] = signal.ID;
+                row[1] = signal.CPU;
+                row[2] = signal.ObjectGeneralType;
+                row[3] = signal.ObjectType;
+                row[4] = signal.ObjectName;
+                columnIndex = BaseColumns.Columns.Count;
 
-                foreach (string _columnName in addressColumns)
+                foreach (string columnName in addressColumns)
                 {
-                    for (int i = 0; i < _signal.Addresses.Count; i++)
+                    foreach (AddressSingle addressSingle in signal.Addresses)
                     {
-                        if (_signal.Addresses[i].ObjectVariableType != _columnName)
+                        if (addressSingle.ObjectVariableType != columnName)
                             continue;
 
-                        row[_columnIndex] = _signal.Addresses[i].Area;
-                        row[_columnIndex+1] = _signal.Addresses[i].AddressStart;
-                        row[_columnIndex+2] = _signal.Addresses[i].AddressSize;
+                        row[columnIndex] = addressSingle.Area;
+                        row[columnIndex + 1] = addressSingle.AddressStart;
+                        row[columnIndex + 2] = addressSingle.AddressSize;
                         break;
                     }
-                    _columnIndex += 3;
+                    columnIndex += 3;
                 }
 
-                _data.Rows.Add(row);
-                Progress.UpdateProgressBar(_signalNumber);
+                data.Rows.Add(row);
+                Progress.UpdateProgressBar(data.Rows.Count);
             }
             Progress.HideProgressBar();
             debug.ToFile(Resources.ConvertDataToList + ": " + Name + " - " + Resources.Finished, DebugLevels.High, DebugMessageType.Info);
 
-            return _data;
+            return data;
         }
 
         /// <summary>
@@ -375,63 +375,64 @@ namespace IO_list_automation_new
 
             Signals.Clear();
 
-            int _signalCount = 0;
-            int _columnNumber;
-            string _keyword;
-            string _cellValue;
-            string _columnName;
-            int _indexText;
+            int signalCount = 0;
+            int columnNumber;
+            string keyword;
+            string cellValue;
+            string columnName;
+            int indexText;
 
             Progress.RenameProgressBar(Resources.ConvertListToData + ": " + Name, inputData.Rows.Count);
-            for (int _rowNumber = 0; _rowNumber < inputData.Rows.Count; _rowNumber++)
+            for (int rowNumber = 0; rowNumber < inputData.Rows.Count; rowNumber++)
             {
-                AddressObject _signal = new AddressObject();
-                for (int _columnIndex = 0; _columnIndex < BaseColumns.Columns.Count; _columnIndex++)
-                {
-                    _columnNumber = BaseColumns.Columns[_columnIndex].Number;
+                AddressObject signal = new AddressObject();
 
-                    if (_columnNumber < 0)
+                foreach (GeneralColumn baseColumn in BaseColumns.Columns)
+                {
+                    columnNumber = baseColumn.Number;
+
+                    if (columnNumber < 0)
                         continue;
 
                     //put value based on keyword to memory
-                    _keyword = BaseColumns.Columns[_columnIndex].Keyword;
-                    _cellValue = GeneralFunctions.GetDataTableValue(inputData,_rowNumber,_columnNumber);
+                    keyword = baseColumn.Keyword;
+                    cellValue = GeneralFunctions.GetDataTableValue(inputData, rowNumber, columnNumber);
 
-                    _signal.SetValueFromString(_cellValue, _keyword);
+                    signal.SetValueFromString(cellValue, keyword);
                 }
 
-                for (int _columnIndex = BaseColumns.Columns.Count; _columnIndex < newColumnList.Count; _columnIndex += 3)
+                for (int columnIndex = BaseColumns.Columns.Count; columnIndex < newColumnList.Count; columnIndex += 3)
                 {
-                    _columnNumber = newColumnList[_columnIndex].Number;
-                    if (string.IsNullOrEmpty(GeneralFunctions.GetDataTableValue(inputData, _rowNumber,_columnNumber)))
+                    columnNumber = newColumnList[columnIndex].Number;
+                    if (string.IsNullOrEmpty(GeneralFunctions.GetDataTableValue(inputData, rowNumber, columnNumber)))
                         continue;
 
-                    _indexText = newColumnList[_columnIndex].Keyword.IndexOf("(");
-                    _columnName = _indexText == -1 ? string.Empty : newColumnList[_columnIndex].Keyword.Substring(_indexText);
+                    indexText = newColumnList[columnIndex].Keyword.IndexOf("(");
+                    columnName = indexText == -1 ? string.Empty : newColumnList[columnIndex].Keyword.Substring(indexText);
 
-                    AddressSingle _addressSingle = new AddressSingle(GeneralFunctions.GetDataTableValue(inputData, _rowNumber, _columnNumber)
-                                                                    ,GeneralFunctions.GetDataTableValue(inputData, _rowNumber, _columnNumber + 1)
-                                                                    ,GeneralFunctions.GetDataTableValue(inputData, _rowNumber, _columnNumber + 2)
-                                                                    ,_columnName);
-                    _signal.Addresses.Add(_addressSingle);
+                    AddressSingle addressSingle = new AddressSingle(GeneralFunctions.GetDataTableValue(inputData, rowNumber, columnNumber)
+                                                                    , GeneralFunctions.GetDataTableValue(inputData, rowNumber, columnNumber + 1)
+                                                                    , GeneralFunctions.GetDataTableValue(inputData, rowNumber, columnNumber + 2)
+                                                                    , columnName);
+                    signal.Addresses.Add(addressSingle);
                 }
 
-                Progress.UpdateProgressBar(_rowNumber);
+                Progress.UpdateProgressBar(rowNumber);
 
-                if (_signal.ValidateSignal())
+                if (signal.ValidateSignal())
                 {
-                    _signalCount++;
-                    Signals.Add(_signal);
+                    signalCount++;
+                    Signals.Add(signal);
                 }
             }
             Progress.HideProgressBar();
 
             debug.ToFile(Resources.ConvertListToData + ": " + Name + " - " + Resources.Finished, DebugLevels.High, DebugMessageType.Info);
 
-            if (_signalCount == 0 && !suppressError)
+            if (signalCount == 0 && !suppressError)
                 debug.ToPopUp(Resources.NoData + ": " + Name, DebugLevels.None, DebugMessageType.Warning);
 
-            return _signalCount > 0;
+            return signalCount > 0;
         }
 
         /// <summary>
@@ -450,31 +451,31 @@ namespace IO_list_automation_new
             if (string.IsNullOrEmpty(addressStart))
                 return;
 
-            for (int _signalIndex = 0; _signalIndex < Signals.Count; _signalIndex++)
+            foreach (AddressObject addressObject in Signals)
             {
-                if (Signals[_signalIndex].ObjectName != objectName)
+                if (addressObject.ObjectName != objectName)
                     continue;
 
-                Signals[_signalIndex].SetValueFromString(cpu, KeywordColumn.CPU);
-                Signals[_signalIndex].SetValueFromString(objectName, KeywordColumn.ObjectName);
-                Signals[_signalIndex].SetValueFromString(objectGeneralType, KeywordColumn.ObjectGeneralType);
-                Signals[_signalIndex].SetValueFromString(objectType, KeywordColumn.ObjectType);
+                addressObject.SetValueFromString(cpu, KeywordColumn.CPU);
+                addressObject.SetValueFromString(objectName, KeywordColumn.ObjectName);
+                addressObject.SetValueFromString(objectGeneralType, KeywordColumn.ObjectGeneralType);
+                addressObject.SetValueFromString(objectType, KeywordColumn.ObjectType);
 
-                int _indexAddress = Signals[_signalIndex].FindAddressIndex(objectVariableType);
+                int indexAddress = addressObject.FindAddressIndex(objectVariableType);
                 // found, then update these
-                if (_indexAddress != -1)
-                    Signals[_signalIndex].Addresses[_indexAddress].Update(area, addressStart, addressSize, objectVariableType);
+                if (indexAddress != -1)
+                    addressObject.Addresses[indexAddress].Update(area, addressStart, addressSize, objectVariableType);
                 //add new address type
                 else
-                    Signals[_signalIndex].Addresses.Add(new AddressSingle(area, addressStart, addressSize, objectVariableType));
+                    addressObject.Addresses.Add(new AddressSingle(area, addressStart, addressSize, objectVariableType));
                 return;
             }
 
-            AddressObject _objects = new AddressObject();
-            _objects.Update(GeneralFunctions.AddZeroes(Signals.Count), cpu, objectGeneralType, objectType, objectName);
-            _objects.Addresses.Add(new AddressSingle(area, addressStart, addressSize, objectVariableType));
+            AddressObject objects = new AddressObject();
+            objects.Update(GeneralFunctions.AddZeroes(Signals.Count), cpu, objectGeneralType, objectType, objectName);
+            objects.Addresses.Add(new AddressSingle(area, addressStart, addressSize, objectVariableType));
 
-            Signals.Add(_objects);
+            Signals.Add(objects);
         }
 
         /// <summary>
@@ -485,25 +486,25 @@ namespace IO_list_automation_new
         /// <returns>overlapped</returns>
         private bool CheckOverlap(int checkIndex, int checkAddressIndex)
         {
-            AddressObject _signal = Signals[checkIndex];
-            AddressSingle _address = Signals[checkIndex].Addresses[checkAddressIndex];
+            AddressObject signal = Signals[checkIndex];
+            AddressSingle address = Signals[checkIndex].Addresses[checkAddressIndex];
 
             for (int i = checkAddressIndex + 1; i < Signals[checkIndex].Addresses.Count; i++)
             {
-                if (Signals[checkIndex].Addresses[i].CheckOverlapString(_address))
-                    _address.Overlap = true;
+                if (Signals[checkIndex].Addresses[i].CheckOverlapString(address))
+                    address.Overlap = true;
             }
 
-            for (int _signalIndex = checkIndex+1; _signalIndex < Signals.Count; _signalIndex++)
+            for (int signalIndex = checkIndex + 1; signalIndex < Signals.Count; signalIndex++)
             {
-                if (_signal.CPU != Signals[_signalIndex].CPU)
+                if (signal.CPU != Signals[signalIndex].CPU)
                     continue;
 
-                if (Signals[_signalIndex].CheckOverlap(_address))
-                    _address.Overlap = true;
+                if (Signals[signalIndex].CheckOverlap(address))
+                    address.Overlap = true;
             }
 
-            return _address.Overlap;
+            return address.Overlap;
         }
 
         public void CheckOverlapAll()
@@ -511,27 +512,27 @@ namespace IO_list_automation_new
             Debug debug = new Debug();
             debug.ToFile(Resources.CheckOverlap + ": " + Name, DebugLevels.High, DebugMessageType.Info);
             Progress.RenameProgressBar(Resources.CheckOverlap + ": " + Name, Signals.Count);
-            bool _overlap = false;
+            bool overlap = false;
 
             //clear overlap
-            for (int _signalIndex = 0; _signalIndex < Signals.Count; _signalIndex++)
+            foreach (AddressObject addressObject in Signals)
             {
-                for (int i = 0; i < Signals[_signalIndex].Addresses.Count; i++)
-                    Signals[_signalIndex].Addresses[i].Overlap = false;
+                foreach (AddressSingle addressSingle in addressObject.Addresses)
+                    addressSingle.Overlap = false;
             }
 
-            for (int _signalIndex = 0; _signalIndex < Signals.Count; _signalIndex++)
+            for (int signalIndex = 0; signalIndex < Signals.Count; signalIndex++)
             {
-                AddressObject _signal = Signals[_signalIndex];
+                AddressObject signal = Signals[signalIndex];
 
-                for (int i = 0; i < _signal.Addresses.Count; i++)
+                for (int i = 0; i < signal.Addresses.Count; i++)
                 {
-                    if (CheckOverlap(_signalIndex, i))
-                        _overlap = true;
+                    if (CheckOverlap(signalIndex, i))
+                        overlap = true;
                 }
-                Progress.UpdateProgressBar(_signalIndex);
+                Progress.UpdateProgressBar(signalIndex);
             }
-            if (_overlap)
+            if (overlap)
                 ColorOverlap();
 
             Progress.HideProgressBar();
@@ -543,30 +544,30 @@ namespace IO_list_automation_new
             Debug debug = new Debug();
             debug.ToFile("Color overlapping addresses: " + Name, DebugLevels.High, DebugMessageType.Info);
 
-            bool _overlap = false;
+            bool overlap = false;
 
-            for (int _signalIndex = 0; _signalIndex < Signals.Count; _signalIndex++)
+            for (int signalIndex = 0; signalIndex < Signals.Count; signalIndex++)
             {
-                for (int i = 0; i < Signals[_signalIndex].Addresses.Count; i++)
+                for (int i = 0; i < Signals[signalIndex].Addresses.Count; i++)
                 {
-                    if (!Signals[_signalIndex].Addresses[i].Overlap)
+                    if (!Signals[signalIndex].Addresses[i].Overlap)
                         continue;
 
-                    for (int _column = BaseColumns.Columns.Count; _column < Columns.Columns.Count; _column+=3)
+                    for (int column = BaseColumns.Columns.Count; column < Columns.Columns.Count; column += 3)
                     {
-                        if (Columns.Columns[_column].Keyword != (ResourcesUI.Area +Signals[_signalIndex].Addresses[i].ObjectVariableType))
+                        if (Columns.Columns[column].Keyword != (ResourcesUI.Area + Signals[signalIndex].Addresses[i].ObjectVariableType))
                             continue;
 
-                        _overlap = true;
-                        Grid.ColorCell(_signalIndex, _column);
-                        Grid.ColorCell(_signalIndex, _column + 1);
-                        Grid.ColorCell(_signalIndex, _column + 2);
+                        overlap = true;
+                        Grid.ColorCell(signalIndex, column);
+                        Grid.ColorCell(signalIndex, column + 1);
+                        Grid.ColorCell(signalIndex, column + 2);
                         break;
                     }
                 }
             }
 
-            if (_overlap)
+            if (overlap)
                 debug.ToPopUp(Resources.MemoryOverlap, DebugLevels.None, DebugMessageType.Warning);
 
             debug.ToFile("Color overlapping addresses: " + Name + " - " + Resources.Finished, DebugLevels.High, DebugMessageType.Info);

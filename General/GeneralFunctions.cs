@@ -1,7 +1,4 @@
-﻿using ExcelDataReader;
-using IO_list_automation_new.Properties;
-using System;
-using System.Collections.Generic;
+﻿using IO_list_automation_new.Properties;
 using System.Data;
 using System.Windows.Forms;
 
@@ -10,128 +7,113 @@ namespace IO_list_automation_new.General
     internal static class GeneralFunctions
     {
         /// <summary>
-        /// Copy one list to another
-        /// </summary>
-        /// <param name="input">input list</param>
-        /// <returns>new list</returns>
-        public static List<string> ListCopy(List<string> input)
-        {
-            List<string> _list = new List<string>();
-
-            for (int i = 0; i < input.Count; i++)
-                _list.Add(input[i]);
-
-            return _list;
-        }
-
-        /// <summary>
         /// add additional zeros before number for better sorting
         /// </summary>
-        /// <param name="_input">value</param>
+        /// <param name="input">value</param>
         /// <returns>formatted string</returns>
-        public static string AddZeroes(int _input)
+        public static string AddZeroes(int input)
         {
-            if (_input < 10)
-                return "000" + _input.ToString();
-            else if (_input < 100)
-                return "00" + _input.ToString();
-            else if (_input < 1000)
-                return "0" + _input.ToString();
+            if (input < 10)
+                return "000" + input.ToString();
+            else if (input < 100)
+                return "00" + input.ToString();
+            else if (input < 1000)
+                return "0" + input.ToString();
             else
-                return _input.ToString();
+                return input.ToString();
         }
 
         /// <summary>
         /// Paste data to grid
         /// </summary>
-        /// <param name="_grid"></param>
-        static public void Paste(DataGridView _grid)
+        /// <param name="grid"></param>
+        public static void Paste(DataGridView grid)
         {
-            Debug _debug = new Debug();
+            Debug debug = new Debug();
 
-            IDataObject _dataInClipboard = Clipboard.GetDataObject();
+            IDataObject dataInClipboard = Clipboard.GetDataObject();
 
-            string _stringInClipboard = _dataInClipboard.GetData(DataFormats.UnicodeText).ToString();
+            string stringInClipboard = dataInClipboard.GetData(DataFormats.UnicodeText).ToString();
 
             // no row data
-            if (_stringInClipboard == null)
+            if (stringInClipboard == null)
             {
-                _debug.ToPopUp(Resources.NoPasteData, DebugLevels.None, DebugMessageType.Alarm);
+                debug.ToPopUp(Resources.NoPasteData, DebugLevels.None, DebugMessageType.Alarm);
                 return;
             }
 
-            int _selRowMin = _grid.SelectedCells[0].RowIndex;
-            int _selColMin = _grid.SelectedCells[0].ColumnIndex;
+            int selRowMin = grid.SelectedCells[0].RowIndex;
+            int selColMin = grid.SelectedCells[0].ColumnIndex;
 
-            int _selRow;
-            int _selCol;
+            int selRow;
+            int selCol;
 
             //get selected min and max cells
-            for (int i = 0; i < _grid.SelectedCells.Count; i++)
+            for (int i = 0; i < grid.SelectedCells.Count; i++)
             {
-                _selRow = _grid.SelectedCells[i].RowIndex;
-                _selCol = _grid.SelectedCells[i].ColumnIndex;
+                selRow = grid.SelectedCells[i].RowIndex;
+                selCol = grid.SelectedCells[i].ColumnIndex;
 
-                if (_selRow < _selRowMin)
-                    _selRowMin = _selRow;
+                if (selRow < selRowMin)
+                    selRowMin = selRow;
 
-                if (_selCol < _selColMin)
-                    _selColMin = _selCol;
+                if (selCol < selColMin)
+                    selColMin = selCol;
             }
 
-            int _enableRowCount = _grid.RowCount - _selRowMin;
-            int _enableColumnCount = _grid.ColumnCount - _selColMin;
+            int enableRowCount = grid.RowCount - selRowMin;
+            int enableColumnCount = grid.ColumnCount - selColMin;
 
-            _stringInClipboard = _stringInClipboard.Replace("\r", "");
-            string[] _clipboardRows = _stringInClipboard.Split('\n');
+            stringInClipboard = stringInClipboard.Replace("\r", "");
+            string[] clipboardRows = stringInClipboard.Split('\n');
 
-            int _rowsInBoard = _clipboardRows.Length;
+            int rowsInBoard = clipboardRows.Length;
 
-            string[] _clipboardCells = _clipboardRows[0].Split('\t');
-            int _colsInBoard = _clipboardCells.Length;
+            string[] clipboardCells = clipboardRows[0].Split('\t');
+            int colsInBoard = clipboardCells.Length;
 
-            if (_rowsInBoard < 1)
+            if (rowsInBoard < 1)
             {
-                _debug.ToPopUp(Resources.NoPasteData + ": " + Resources.Row, DebugLevels.None, DebugMessageType.Alarm);
+                debug.ToPopUp(Resources.NoPasteData + ": " + Resources.Row, DebugLevels.None, DebugMessageType.Alarm);
                 return;
             }
-            else if (_colsInBoard < 1)
+            else if (colsInBoard < 1)
             {
-                _debug.ToPopUp(Resources.NoPasteData + ": " + Resources.Column, DebugLevels.None, DebugMessageType.Alarm);
+                debug.ToPopUp(Resources.NoPasteData + ": " + Resources.Column, DebugLevels.None, DebugMessageType.Alarm);
                 return;
             }
 
-            _debug.ToFile(Resources.PasteData + ": " + _grid.Name +
-                            " " + Resources.Row + "(" + _rowsInBoard + ")" +
-                            " " + Resources.Column + "(" + _colsInBoard + ")" +
-                            " " + Resources.PasteAt + "(" + _selRowMin + ":" + _selColMin + ")"
+            debug.ToFile(Resources.PasteData + ": " + grid.Name +
+                            " " + Resources.Row + "(" + rowsInBoard + ")" +
+                            " " + Resources.Column + "(" + colsInBoard + ")" +
+                            " " + Resources.PasteAt + "(" + selRowMin + ":" + selColMin + ")"
                             , DebugLevels.Development, DebugMessageType.Info);
 
-            if ((_enableRowCount < _rowsInBoard) || (_enableColumnCount < _colsInBoard))
+            if ((enableRowCount < rowsInBoard) || (enableColumnCount < colsInBoard))
             {
-                _debug.ToPopUp(Resources.ToMuchDataPaste, DebugLevels.None, DebugMessageType.Alarm);
+                debug.ToPopUp(Resources.ToMuchDataPaste, DebugLevels.None, DebugMessageType.Alarm);
                 return;
             }
 
-            int _row;
+            int row;
             //when only 1 row is copied, paste it in all selected rows
-            if (_rowsInBoard == 1)
+            if (rowsInBoard == 1)
             {
-                for (int i = 0; i < _grid.SelectedCells.Count; i++)
+                for (int i = 0; i < grid.SelectedCells.Count; i++)
                 {
-                    _row = _grid.SelectedCells[i].RowIndex;
-                    for (int _col = 0; _col < _clipboardCells.Length; _col++)
-                        _grid.Rows[_row].Cells[_selColMin + _col].Value = _clipboardCells[_col];
+                    row = grid.SelectedCells[i].RowIndex;
+                    for (int col = 0; col < clipboardCells.Length; col++)
+                        grid.Rows[row].Cells[selColMin + col].Value = clipboardCells[col];
                 }
             }
             //else paste to required amount
             else
             {
-                for (_row = 0; _row < _rowsInBoard; _row++)
+                for (row = 0; row < rowsInBoard; row++)
                 {
-                    _clipboardCells = _clipboardRows[_row].Split('\t');
-                    for (int _col = 0; _col < _clipboardCells.Length; _col++)
-                        _grid.Rows[_selRowMin + _row].Cells[_selColMin + _col].Value = _clipboardCells[_col];
+                    clipboardCells = clipboardRows[row].Split('\t');
+                    for (int col = 0; col < clipboardCells.Length; col++)
+                        grid.Rows[selRowMin + row].Cells[selColMin + col].Value = clipboardCells[col];
                 }
             }
         }
@@ -155,12 +137,12 @@ namespace IO_list_automation_new.General
             if (dataTable.Rows[row][column] is System.DBNull)
                 return string.Empty;
 
-            string _value = (string)dataTable.Rows[row][column];
+            string value = (string)dataTable.Rows[row][column];
 
-            if (string.IsNullOrEmpty(_value))
+            if (string.IsNullOrEmpty(value))
                 return string.Empty;
 
-            return _value;
+            return value;
         }
     }
 }

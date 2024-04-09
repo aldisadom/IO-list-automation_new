@@ -56,7 +56,7 @@
             this.InputDataGridView.Size = new System.Drawing.Size(998, 578);
             this.InputDataGridView.TabIndex = 0;
             this.InputDataGridView.Visible = false;
-            this.InputDataGridView.ColumnHeaderMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.InputDataGridView_ColumnHeaderMouseClick);
+            this.InputDataGridView.ColumnHeaderMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.InputDataGridViewColumnHeaderMouseClick);
             // 
             // RowOffsetInput
             // 
@@ -88,7 +88,7 @@
             this.comboBoxColumn.Size = new System.Drawing.Size(101, 21);
             this.comboBoxColumn.TabIndex = 43;
             this.comboBoxColumn.Visible = false;
-            this.comboBoxColumn.SelectedValueChanged += new System.EventHandler(this.ComboBoxColumn_SelectedValueChanged);
+            this.comboBoxColumn.SelectedValueChanged += new System.EventHandler(this.ComboBoxColumnSelectedValueChanged);
             // 
             // ElementHasChannelAndIsNumber
             // 

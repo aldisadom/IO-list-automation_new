@@ -58,18 +58,18 @@ namespace IO_list_automation_new.Forms
         /// <summary>
         /// Update input data and combine based on form data
         /// </summary>
-        /// <param name="_KKS">full kks before modification</param>
-        /// <param name="_KKSPlant">kks part1</param>
-        /// <param name="_KKSLocation">kks part 2</param>
-        /// <param name="_KKSDevice">kks part 3</param>
-        /// <param name="_KKSFunction">kks part 4</param>
-        public void UpdateKKS(string _KKS, string _KKSPlant, string _KKSLocation, string _KKSDevice, string _KKSFunction)
+        /// <param name="kks">full kks before modification</param>
+        /// <param name="kksPlant">kks part1</param>
+        /// <param name="kksLocation">kks part 2</param>
+        /// <param name="kksDevice">kks part 3</param>
+        /// <param name="kksFunction">kks part 4</param>
+        public void UpdateKKS(string kks, string kksPlant, string kksLocation, string kksDevice, string kksFunction)
         {
-            KKSIn.Text = _KKS;
-            KKSPart1.Text = _KKSPlant;
-            KKSPart2.Text = _KKSLocation;
-            KKSPart3.Text = _KKSDevice;
-            KKSPart4.Text = _KKSFunction;
+            KKSIn.Text = kks;
+            KKSPart1.Text = kksPlant;
+            KKSPart2.Text = kksLocation;
+            KKSPart3.Text = kksDevice;
+            KKSPart4.Text = kksFunction;
 
             Combine();
         }
@@ -89,40 +89,40 @@ namespace IO_list_automation_new.Forms
         /// </summary>
         private string Combine()
         {
-            string _returnValue = string.Empty;
-            string _KKSPlant = KKSPlant;
-            string _KKSLocation = KKSLocation;
-            string _KKSDevice = KKSDevice;
-            string _KKSFunction = KKSFunction;
+            string returnValue = string.Empty;
+            string kksPlant = KKSPlant;
+            string kksLocation = KKSLocation;
+            string kksDevice = KKSDevice;
+            string kksFunction = KKSFunction;
 
             if (!KKSPartCheck1.Checked)
-                _KKSPlant = string.Empty;
+                kksPlant = string.Empty;
             if (!KKSPartCheck2.Checked)
-                _KKSLocation = string.Empty;
+                kksLocation = string.Empty;
             if (!KKSPartCheck3.Checked)
-                _KKSDevice = string.Empty;
+                kksDevice = string.Empty;
             if (!KKSPartCheck4.Checked)
-                _KKSFunction = string.Empty;
+                kksFunction = string.Empty;
 
-            _returnValue += KKSBox01.Text;
-            _returnValue += _KKSPlant;
-            if (_KKSPlant.Length != 0 && (_KKSLocation.Length != 0 || _KKSDevice.Length != 0 || _KKSFunction.Length != 0))
-                _returnValue += KKSBox12.Text;
+            returnValue += KKSBox01.Text;
+            returnValue += kksPlant;
+            if (kksPlant.Length != 0 && (kksLocation.Length != 0 || kksDevice.Length != 0 || kksFunction.Length != 0))
+                returnValue += KKSBox12.Text;
 
-            _returnValue += _KKSLocation;
-            if (_KKSLocation.Length != 0 && (_KKSDevice.Length != 0 || _KKSFunction.Length != 0))
-                _returnValue += KKSBox23.Text;
+            returnValue += kksLocation;
+            if (kksLocation.Length != 0 && (kksDevice.Length != 0 || kksFunction.Length != 0))
+                returnValue += KKSBox23.Text;
 
-            _returnValue += _KKSDevice;
-            if (_KKSDevice.Length != 0 && (_KKSFunction.Length != 0))
-                _returnValue += KKSBox34.Text;
+            returnValue += kksDevice;
+            if (kksDevice.Length != 0 && (kksFunction.Length != 0))
+                returnValue += KKSBox34.Text;
 
-            _returnValue += _KKSFunction;
-            _returnValue += KKSBox45.Text;
+            returnValue += kksFunction;
+            returnValue += KKSBox45.Text;
 
-            KKSOut.Text = _returnValue;
+            KKSOut.Text = returnValue;
 
-            return _returnValue;
+            return returnValue;
         }
 
         /// <summary>

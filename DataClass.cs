@@ -286,10 +286,10 @@ namespace IO_list_automation_new
                     if (suppressError)
                         return string.Empty;
 
-                    const string _debugText = "DataSignals.GetValueString";
-                    Debug _debug = new Debug();
-                    _debug.ToFile(_debugText + " " + Resources.ParameterNotFound + ":" + parameterName, DebugLevels.None, DebugMessageType.Critical);
-                    throw new InvalidProgramException(_debugText + "." + parameterName + " is not created for this element");
+                    const string debugText = "DataSignals.GetValueString";
+                    Debug debug = new Debug();
+                    debug.ToFile(debugText + " " + Resources.ParameterNotFound + ":" + parameterName, DebugLevels.None, DebugMessageType.Critical);
+                    throw new InvalidProgramException(debugText + "." + parameterName + " is not created for this element");
             }
         }
 
@@ -390,12 +390,12 @@ namespace IO_list_automation_new
             if (string.IsNullOrEmpty(text))
                 return string.Empty;
 
-            int _indexLetter = 0;
-            int _countLetter;
-            int _countDigits;
+            int indexLetter = 0;
+            int countLetter;
+            int countDigits;
 
-            int _indexSpace1 = -1;
-            int _indexSpace2;
+            int indexSpace1 = -1;
+            int indexSpace2;
 
             //repeat not more than 50 times
             //find letter, then check if letter count is >= 2 and <=5
@@ -403,39 +403,39 @@ namespace IO_list_automation_new
             //assume that from space to end its KKS
             for (int i = 0; i < 50; i++)
             {
-                _indexLetter = LetterIndex(text, _indexLetter);
-                _indexSpace2 = text.IndexOf(" ", _indexSpace1 + 1);
+                indexLetter = LetterIndex(text, indexLetter);
+                indexSpace2 = text.IndexOf(" ", indexSpace1 + 1);
 
                 //KKS indication can be further in word, not first occurrence
-                if (_indexLetter > _indexSpace2)
+                if (indexLetter > indexSpace2)
                 {
-                    _indexSpace1 = text.IndexOf(" ", _indexSpace1 + 1);
-                    _indexLetter = _indexSpace1;
+                    indexSpace1 = text.IndexOf(" ", indexSpace1 + 1);
+                    indexLetter = indexSpace1;
 
-                    if (_indexSpace1 == -1)
+                    if (indexSpace1 == -1)
                         return string.Empty;
                 }
                 else
                 {
                     //no letter found
-                    if (_indexLetter < 0)
+                    if (indexLetter < 0)
                         return string.Empty;
 
-                    _countLetter = CountConsecutiveLetters(text, _indexLetter);
-                    if (_countLetter >= 2 && _countLetter <= 5)
+                    countLetter = CountConsecutiveLetters(text, indexLetter);
+                    if (countLetter >= 2 && countLetter <= 5)
                     {
-                        _countDigits = CountConsecutiveNumbers(text, _indexLetter + _countLetter);
+                        countDigits = CountConsecutiveNumbers(text, indexLetter + countLetter);
                         //Probably KKS
-                        if (_countDigits >= 2)
+                        if (countDigits >= 2)
                         {
-                            if (_indexSpace2 == -1)
-                                return text.Substring(_indexSpace1 + 1);
+                            if (indexSpace2 == -1)
+                                return text.Substring(indexSpace1 + 1);
                             else
-                                return text.Substring(_indexSpace1 + 1, _indexSpace2 - _indexSpace1 - 1);
+                                return text.Substring(indexSpace1 + 1, indexSpace2 - indexSpace1 - 1);
                         }
                     }
                     // shift
-                    _indexLetter += _countLetter;
+                    indexLetter += countLetter;
                 }
             }
             return string.Empty;
@@ -468,110 +468,110 @@ namespace IO_list_automation_new
              *      2 - AANNN   (CP001, AN001), based on experience it can failure in design phase, CP01, AN01
              *      3 - AANN    (XQ01, XB02)
              */
-            string _KKS = KKS;
+            string kks = KKS;
             KKSDevice = string.Empty;
             KKSFunction = string.Empty;
             KKSLocation = string.Empty;
             KKSPlant = string.Empty;
 
-            int _indexLetter = 0;
-            int _countLetter;
-            int _countDigits;
-            string _KKSAfter = string.Empty;
+            int indexLetter = 0;
+            int countLetter;
+            int countDigits;
+            string kksAfter = string.Empty;
 
-            int _lengthPartKKS;
+            int lengthPartKKS;
 
             //try finding part 1
             for (int i = 0; i < 50; i++)
             {
-                _indexLetter = LetterIndex(_KKS, _indexLetter);
+                indexLetter = LetterIndex(kks, indexLetter);
                 //no letter found
-                if (_indexLetter < 0)
+                if (indexLetter < 0)
                     break;
 
-                _countLetter = CountConsecutiveLetters(_KKS, _indexLetter);
-                if (_countLetter == 3)
+                countLetter = CountConsecutiveLetters(kks, indexLetter);
+                if (countLetter == 3)
                 {
-                    _countDigits = CountConsecutiveNumbers(_KKS, _indexLetter + _countLetter);
-                    if (_countDigits == 2)
+                    countDigits = CountConsecutiveNumbers(kks, indexLetter + countLetter);
+                    if (countDigits == 2)
                     {
-                        _lengthPartKKS = _countLetter + _countDigits;
-                        KKSLocation = _KKS.Substring(_indexLetter, _lengthPartKKS);
+                        lengthPartKKS = countLetter + countDigits;
+                        KKSLocation = kks.Substring(indexLetter, lengthPartKKS);
 
-                        if (_KKS.Length > (_indexLetter + _lengthPartKKS))
-                            _KKSAfter = _KKS.Substring(_indexLetter + _lengthPartKKS);
+                        if (kks.Length > (indexLetter + lengthPartKKS))
+                            kksAfter = kks.Substring(indexLetter + lengthPartKKS);
 
                         //found then break;
                         break;
                     }
                 }
                 // shift
-                _indexLetter += _countLetter;
+                indexLetter += countLetter;
             }
             // part 1 not found
             if (string.IsNullOrEmpty(KKSLocation))
-                _KKSAfter = _KKS;
+                kksAfter = kks;
 
-            _indexLetter = 0;
+            indexLetter = 0;
             //try find part 2
             for (int i = 0; i < 50; i++)
             {
-                _indexLetter = LetterIndex(_KKSAfter, _indexLetter);
+                indexLetter = LetterIndex(kksAfter, indexLetter);
 
                 //no letter found
-                if (_indexLetter < 0)
+                if (indexLetter < 0)
                     break;
 
-                _countLetter = CountConsecutiveLetters(_KKSAfter, _indexLetter);
-                if (_countLetter == 2)
+                countLetter = CountConsecutiveLetters(kksAfter, indexLetter);
+                if (countLetter == 2)
                 {
-                    _countDigits = CountConsecutiveNumbers(_KKSAfter, _indexLetter + _countLetter);
+                    countDigits = CountConsecutiveNumbers(kksAfter, indexLetter + countLetter);
                     //in account to design failure
-                    if (_countDigits == 2 || _countDigits == 3)
+                    if (countDigits == 2 || countDigits == 3)
                     {
-                        _lengthPartKKS = _countLetter + _countDigits;
-                        KKSDevice = _KKSAfter.Substring(_indexLetter, _lengthPartKKS);
+                        lengthPartKKS = countLetter + countDigits;
+                        KKSDevice = kksAfter.Substring(indexLetter, lengthPartKKS);
 
                         //what is left is part 3
-                        if (_KKSAfter.Length > (_indexLetter + _lengthPartKKS))
-                            KKSFunction = _KKSAfter.Substring(_indexLetter + _lengthPartKKS);
+                        if (kksAfter.Length > (indexLetter + lengthPartKKS))
+                            KKSFunction = kksAfter.Substring(indexLetter + lengthPartKKS);
 
                         //found then break;
                         break;
                     }
                 }
                 // shift
-                _indexLetter += _countLetter;
+                indexLetter += countLetter;
             }
 
-            _KKS = KKSLocation + KKSDevice + KKSFunction;
+            kks = KKSLocation + KKSDevice + KKSFunction;
 
             //what is left is part 0
-            if (string.IsNullOrEmpty(_KKS))
+            if (string.IsNullOrEmpty(kks))
             {
                 KKSPlant = KKS;
             }
             else
             {
-                int _index = KKS.IndexOf(_KKS);
-                if (_index > 0)
-                    KKSPlant = KKS.Substring(0, _index);
+                int index = KKS.IndexOf(kks);
+                if (index > 0)
+                    KKSPlant = KKS.Substring(0, index);
             }
         }
 
         public void ExtractNumberFromChannel()
         {
-            int _indexNumber = NumberIndex(Channel, 0);
+            int indexNumber = NumberIndex(Channel, 0);
 
             //no number found
-            if (_indexNumber < 0)
+            if (indexNumber < 0)
             {
                 Channel = string.Empty;
                 return;
             }
 
-            int _countNumbers = CountConsecutiveNumbers(Channel, _indexNumber);
-            Channel = Channel.Substring(_indexNumber, _countNumbers);
+            int countNumbers = CountConsecutiveNumbers(Channel, indexNumber);
+            Channel = Channel.Substring(indexNumber, countNumbers);
         }
     }
 
@@ -579,7 +579,7 @@ namespace IO_list_automation_new
     {
         protected override List<GeneralColumn> GeneralGenerateColumnsList()
         {
-            List<GeneralColumn> _columns = new List<GeneralColumn>()
+            List<GeneralColumn> columns = new List<GeneralColumn>()
             {
                 new GeneralColumn(KeywordColumn.ID, SettingsData.Default.ColumnID, true),
                 new GeneralColumn(KeywordColumn.CPU, SettingsData.Default.ColumnCPU, true),
@@ -610,48 +610,48 @@ namespace IO_list_automation_new
                 new GeneralColumn(KeywordColumn.Tag, SettingsData.Default.ColumnTag, false),
             };
 
-            return _columns;
+            return columns;
         }
 
         protected override void UpdateSettingsColumnsList()
         {
-            ColumnList _columns = Columns;
+            ColumnList columns = Columns;
 
-            SettingsData.Default.ColumnID = _columns.GetColumnNumberFromKeyword(KeywordColumn.ID);
-            SettingsData.Default.ColumnCPU = _columns.GetColumnNumberFromKeyword(KeywordColumn.CPU);
-            SettingsData.Default.ColumnKKS = _columns.GetColumnNumberFromKeyword(KeywordColumn.KKS);
-            SettingsData.Default.ColumnRangeMin = _columns.GetColumnNumberFromKeyword(KeywordColumn.RangeMin);
-            SettingsData.Default.ColumnRangeMax = _columns.GetColumnNumberFromKeyword(KeywordColumn.RangeMax);
-            SettingsData.Default.ColumnUnits = _columns.GetColumnNumberFromKeyword(KeywordColumn.Units);
-            SettingsData.Default.ColumnFalseText = _columns.GetColumnNumberFromKeyword(KeywordColumn.FalseText);
-            SettingsData.Default.ColumnTrueText = _columns.GetColumnNumberFromKeyword(KeywordColumn.TrueText);
-            SettingsData.Default.ColumnRevision = _columns.GetColumnNumberFromKeyword(KeywordColumn.Revision);
-            SettingsData.Default.ColumnCable = _columns.GetColumnNumberFromKeyword(KeywordColumn.Cable);
-            SettingsData.Default.ColumnCabinet = _columns.GetColumnNumberFromKeyword(KeywordColumn.Cabinet);
-            SettingsData.Default.ColumnModuleName = _columns.GetColumnNumberFromKeyword(KeywordColumn.ModuleName);
-            SettingsData.Default.ColumnPin = _columns.GetColumnNumberFromKeyword(KeywordColumn.Pin);
-            SettingsData.Default.ColumnChannel = _columns.GetColumnNumberFromKeyword(KeywordColumn.Channel);
-            SettingsData.Default.ColumnIOText = _columns.GetColumnNumberFromKeyword(KeywordColumn.IOText);
-            SettingsData.Default.ColumnPage = _columns.GetColumnNumberFromKeyword(KeywordColumn.Page);
-            SettingsData.Default.ColumnChanged = _columns.GetColumnNumberFromKeyword(KeywordColumn.Changed);
-            SettingsData.Default.ColumnKKSPlant = _columns.GetColumnNumberFromKeyword(KeywordColumn.KKSPlant);
-            SettingsData.Default.ColumnKKSLocation = _columns.GetColumnNumberFromKeyword(KeywordColumn.KKSLocation);
-            SettingsData.Default.ColumnKKSDevice = _columns.GetColumnNumberFromKeyword(KeywordColumn.KKSDevice);
-            SettingsData.Default.ColumnKKSFunction = _columns.GetColumnNumberFromKeyword(KeywordColumn.KKSFunction);
-            SettingsData.Default.ColumnUsed = _columns.GetColumnNumberFromKeyword(KeywordColumn.Used);
-            SettingsData.Default.ColumnObjectType = _columns.GetColumnNumberFromKeyword(KeywordColumn.ObjectType);
-            SettingsData.Default.ColumnFunction = _columns.GetColumnNumberFromKeyword(KeywordColumn.Function);
-            SettingsData.Default.ColumnTerminal = _columns.GetColumnNumberFromKeyword(KeywordColumn.Terminal);
-            SettingsData.Default.ColumnTag = _columns.GetColumnNumberFromKeyword(KeywordColumn.Tag);
+            SettingsData.Default.ColumnID = columns.GetColumnNumberFromKeyword(KeywordColumn.ID);
+            SettingsData.Default.ColumnCPU = columns.GetColumnNumberFromKeyword(KeywordColumn.CPU);
+            SettingsData.Default.ColumnKKS = columns.GetColumnNumberFromKeyword(KeywordColumn.KKS);
+            SettingsData.Default.ColumnRangeMin = columns.GetColumnNumberFromKeyword(KeywordColumn.RangeMin);
+            SettingsData.Default.ColumnRangeMax = columns.GetColumnNumberFromKeyword(KeywordColumn.RangeMax);
+            SettingsData.Default.ColumnUnits = columns.GetColumnNumberFromKeyword(KeywordColumn.Units);
+            SettingsData.Default.ColumnFalseText = columns.GetColumnNumberFromKeyword(KeywordColumn.FalseText);
+            SettingsData.Default.ColumnTrueText = columns.GetColumnNumberFromKeyword(KeywordColumn.TrueText);
+            SettingsData.Default.ColumnRevision = columns.GetColumnNumberFromKeyword(KeywordColumn.Revision);
+            SettingsData.Default.ColumnCable = columns.GetColumnNumberFromKeyword(KeywordColumn.Cable);
+            SettingsData.Default.ColumnCabinet = columns.GetColumnNumberFromKeyword(KeywordColumn.Cabinet);
+            SettingsData.Default.ColumnModuleName = columns.GetColumnNumberFromKeyword(KeywordColumn.ModuleName);
+            SettingsData.Default.ColumnPin = columns.GetColumnNumberFromKeyword(KeywordColumn.Pin);
+            SettingsData.Default.ColumnChannel = columns.GetColumnNumberFromKeyword(KeywordColumn.Channel);
+            SettingsData.Default.ColumnIOText = columns.GetColumnNumberFromKeyword(KeywordColumn.IOText);
+            SettingsData.Default.ColumnPage = columns.GetColumnNumberFromKeyword(KeywordColumn.Page);
+            SettingsData.Default.ColumnChanged = columns.GetColumnNumberFromKeyword(KeywordColumn.Changed);
+            SettingsData.Default.ColumnKKSPlant = columns.GetColumnNumberFromKeyword(KeywordColumn.KKSPlant);
+            SettingsData.Default.ColumnKKSLocation = columns.GetColumnNumberFromKeyword(KeywordColumn.KKSLocation);
+            SettingsData.Default.ColumnKKSDevice = columns.GetColumnNumberFromKeyword(KeywordColumn.KKSDevice);
+            SettingsData.Default.ColumnKKSFunction = columns.GetColumnNumberFromKeyword(KeywordColumn.KKSFunction);
+            SettingsData.Default.ColumnUsed = columns.GetColumnNumberFromKeyword(KeywordColumn.Used);
+            SettingsData.Default.ColumnObjectType = columns.GetColumnNumberFromKeyword(KeywordColumn.ObjectType);
+            SettingsData.Default.ColumnFunction = columns.GetColumnNumberFromKeyword(KeywordColumn.Function);
+            SettingsData.Default.ColumnTerminal = columns.GetColumnNumberFromKeyword(KeywordColumn.Terminal);
+            SettingsData.Default.ColumnTag = columns.GetColumnNumberFromKeyword(KeywordColumn.Tag);
 
             SettingsData.Default.Save();
         }
 
-        public DataClass(ProgressIndication progress, DataGridView grid) : base("Data", nameof(FileExtensions.data), progress, grid,true)
+        public DataClass(ProgressIndication progress, DataGridView grid) : base("Data", nameof(FileExtensions.data), progress, grid, true)
         {
         }
 
-        public DataClass() : base("Data", nameof(FileExtensions.data), null, null,true)
+        public DataClass() : base("Data", nameof(FileExtensions.data), null, null, true)
         {
         }
 
@@ -669,25 +669,25 @@ namespace IO_list_automation_new
             UpdateColumnNumbers(design.BaseColumns.Columns);
 
             Signals.Clear();
-            design.Grid.GetData(false);
-            string _keyword;
-            for (int _designNumber = 0; _designNumber < design.Signals.Count; _designNumber++)
+            design.Grid.GetData();
+            string keyword;
+
+            foreach (DesignSignal designSignal in design.Signals)
             {
-                DataSignal _dataSignal = new DataSignal();
-                DesignSignal _designSignal = design.Signals[_designNumber];
+                DataSignal dataSignal = new DataSignal();
 
                 // go through all column in design and send it to signals
-                foreach (GeneralColumn _column in design.Columns)
+                foreach (GeneralColumn column in design.Columns)
                 {
-                    _keyword = _column.Keyword;
-                    _dataSignal.SetValueFromString(_designSignal.GetValueString(_keyword, true), _keyword);
+                    keyword = column.Keyword;
+                    dataSignal.SetValueFromString(designSignal.GetValueString(keyword, true), keyword);
                 }
-                _dataSignal.FindKKSInSignal(false);
-                _dataSignal.KKSDecode();
-                _dataSignal.ExtractNumberFromChannel();
+                dataSignal.FindKKSInSignal(false);
+                dataSignal.KKSDecode();
+                dataSignal.ExtractNumberFromChannel();
 
-                Signals.Add(_dataSignal);
-                Progress.UpdateProgressBar(_designNumber);
+                Signals.Add(dataSignal);
+                Progress.UpdateProgressBar(Signals.Count);
             }
             Progress.HideProgressBar();
 
@@ -704,30 +704,31 @@ namespace IO_list_automation_new
 
             Progress.RenameProgressBar(Resources.KKSCombine, Signals.Count);
 
-            KKSEdit _KKSEdit = new KKSEdit();
+            KKSEdit kksEdit = new KKSEdit();
 
-            for (int _signalNumber = 0; _signalNumber < Signals.Count; _signalNumber++)
+            int progress = 0;
+            foreach (DataSignal dataSignal in Signals)
             {
-                DataSignal _signal = Signals[_signalNumber];
-                if (!_signal.HasKKS())
+                if (!dataSignal.HasKKS())
                     continue;
 
                 //transfer KKS to KKS edit form
-                _KKSEdit.UpdateKKS(_signal.KKS, _signal.KKSPlant, _signal.KKSLocation, _signal.KKSDevice, _signal.KKSFunction);
+                kksEdit.UpdateKKS(dataSignal.KKS, dataSignal.KKSPlant, dataSignal.KKSLocation, dataSignal.KKSDevice, dataSignal.KKSFunction);
 
                 //not configured
-                if (_KKSEdit.Configured == 0)
+                if (kksEdit.Configured == 0)
                 {
-                    _KKSEdit.ShowDialog();
+                    kksEdit.ShowDialog();
                     //canceled edit
-                    if (_KKSEdit.Configured == -1)
+                    if (kksEdit.Configured == -1)
                     {
                         debug.ToFile(Resources.KKSCombine + " - " + Resources.Canceled, DebugLevels.Minimum, DebugMessageType.Info);
                         break;
                     }
                 }
-                _signal.SetValueFromString(_KKSEdit.GetCombined(), KeywordColumn.KKS);
-                Progress.UpdateProgressBar(_signalNumber);
+                dataSignal.SetValueFromString(kksEdit.GetCombined(), KeywordColumn.KKS);
+                progress++;
+                Progress.UpdateProgressBar(progress);
             }
             Progress.HideProgressBar();
 

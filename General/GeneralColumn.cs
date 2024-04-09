@@ -19,15 +19,15 @@ namespace IO_list_automation_new
         /// <exception cref="InvalidProgramException"></exception>
         public string GetColumnOrChoicesName(string keyword)
         {
-            string _returnName = GetChoicesName(keyword, true) ?? GetColumnName(keyword, true);
+            string returnName = GetChoicesName(keyword, true) ?? GetColumnName(keyword, true);
 
-            if (_returnName != null)
-                return _returnName;
+            if (returnName != null)
+                return returnName;
 
-            const string _debugText = "GeneralColumn.GetColumnOrChoicesName";
-            Debug _debug = new Debug();
-            _debug.ToFile(_debugText + " " + Resources.ParameterNotFound + ":" + keyword, DebugLevels.None, DebugMessageType.Critical);
-            throw new InvalidProgramException(_debugText + "." + keyword + " is not created for this element");
+            const string debugText = "GeneralColumn.GetColumnOrChoicesName";
+            Debug debug = new Debug();
+            debug.ToFile(debugText + " " + Resources.ParameterNotFound + ":" + keyword, DebugLevels.None, DebugMessageType.Critical);
+            throw new InvalidProgramException(debugText + "." + keyword + " is not created for this element");
         }
 
         /// <summary>
@@ -156,10 +156,10 @@ namespace IO_list_automation_new
                     if (suppressError)
                         return string.Empty;
 
-                    const string _debugText = "GeneralColumn.GetColumnName";
-                    Debug _debug = new Debug();
-                    _debug.ToFile(_debugText + " " + Resources.ParameterNotFound + ":" + keyword, DebugLevels.None, DebugMessageType.Critical);
-                    throw new InvalidProgramException(_debugText + "." + keyword + " is not created for this element");
+                    const string debugText = "GeneralColumn.GetColumnName";
+                    Debug debug = new Debug();
+                    debug.ToFile(debugText + " " + Resources.ParameterNotFound + ":" + keyword, DebugLevels.None, DebugMessageType.Critical);
+                    throw new InvalidProgramException(debugText + "." + keyword + " is not created for this element");
             }
         }
 
@@ -187,7 +187,7 @@ namespace IO_list_automation_new
                     return ResourcesChoices.Text;
 
                 case KeywordDBChoices.Data:
-                    return ResourcesChoices.Data;
+                    return ResourcesChoices.Data_;
 
                 case KeywordDBChoices.Object:
                     return ResourcesChoices.Object;
@@ -241,10 +241,10 @@ namespace IO_list_automation_new
                     if (suppressError)
                         return null;
 
-                    const string _debugText = "GeneralColumn.GetChoicesName";
-                    Debug _debug = new Debug();
-                    _debug.ToFile(_debugText + " " + Resources.ParameterNotFound + ":" + keyword, DebugLevels.None, DebugMessageType.Critical);
-                    throw new InvalidProgramException(_debugText + "." + keyword + " is not created for this element");
+                    const string debugText = "GeneralColumn.GetChoicesName";
+                    Debug debug = new Debug();
+                    debug.ToFile(debugText + " " + Resources.ParameterNotFound + ":" + keyword, DebugLevels.None, DebugMessageType.Critical);
+                    throw new InvalidProgramException(debugText + "." + keyword + " is not created for this element");
             }
         }
     }
@@ -289,60 +289,56 @@ namespace IO_list_automation_new
         /// <returns>sorted list</returns>
         public void SortColumnsList(bool columnsFromZero)
         {
-            string _keyword;
-            int _columnNumber;
-            bool _canHide;
+            List<GeneralColumn> tmpList = new List<GeneralColumn>();
 
-            List<GeneralColumn> _tmpList = new List<GeneralColumn>();
-            for (int _index = 0; _index < Columns.Count; _index++)
+            foreach (GeneralColumn column in Columns)
             {
-                GeneralColumn _column = Columns[_index];
-
-                _keyword = _column.Keyword;
-                _columnNumber = _column.Number;
-                _canHide = _column.CanHide;
                 // if columnsFromZero and column number is -1 then do not add to array
-                if (!columnsFromZero || _columnNumber >= 0)
-                    _tmpList.Add(new GeneralColumn(_keyword, _columnNumber, _canHide));
+                if (!columnsFromZero || column.Number >= 0)
+                    tmpList.Add(new GeneralColumn(column.Keyword, column.Number, column.CanHide));
             }
             Columns.Clear();
 
             //set 0 index in list to minimum value
-            int _minIndex = 0;
-            int _minValue;
-            int _columnIndex = 0;
-            int _count = _tmpList.Count;
+            int minIndex = 0;
+            int minValue;
+            int columnIndex = 0;
+            int count = tmpList.Count;
+
+            int columnNumber;
+            string keyword;
+            bool canHide;
 
             //sorting from lower to higher
-            for (int _index = 0; _index < _count; _index++)
+            for (int index = 0; index < count; index++)
             {
-                _minValue = int.MaxValue;
-                for (int i = 0; i < _tmpList.Count; i++)
+                minValue = int.MaxValue;
+                for (int i = 0; i < tmpList.Count; i++)
                 {
-                    if (_tmpList[i].Number < _minValue)
+                    if (tmpList[i].Number < minValue)
                     {
-                        _minIndex = i;
-                        _minValue = _tmpList[i].Number;
+                        minIndex = i;
+                        minValue = tmpList[i].Number;
                     }
                 }
 
-                _columnNumber = _tmpList[_minIndex].Number;
+                columnNumber = tmpList[minIndex].Number;
 
                 if (columnsFromZero)
                 {
-                    if (_columnNumber < 0)
+                    if (columnNumber < 0)
                         continue;
 
-                    _columnNumber = _columnIndex;
-                    _columnIndex++;
+                    columnNumber = columnIndex;
+                    columnIndex++;
                 }
 
-                _keyword = _tmpList[_minIndex].Keyword;
-                _canHide = _tmpList[_minIndex].CanHide;
-                GeneralColumn _column = new GeneralColumn(_keyword, _columnNumber, _canHide);
+                keyword = tmpList[minIndex].Keyword;
+                canHide = tmpList[minIndex].CanHide;
+                GeneralColumn column = new GeneralColumn(keyword, columnNumber, canHide);
 
-                Columns.Add(_column);
-                _tmpList.RemoveAt(_minIndex);
+                Columns.Add(column);
+                tmpList.RemoveAt(minIndex);
             }
         }
 
@@ -360,36 +356,36 @@ namespace IO_list_automation_new
         {
             Columns.Clear();
 
-            foreach (GeneralColumn _column in listFrom)
+            foreach (GeneralColumn column in listFrom)
             {
-                GeneralColumn _newColumn = new GeneralColumn(_column.Keyword, _column.Number, _column.CanHide);
+                GeneralColumn newColumn = new GeneralColumn(column.Keyword, column.Number, column.CanHide);
 
-                Columns.Add(_newColumn);
+                Columns.Add(newColumn);
             }
             SortColumnsList(columnsFromZero);
         }
 
         public List<string> GetColumnsKeyword()
         {
-            List<string> _columns = new List<string>();
+            List<string> columns = new List<string>();
 
-            foreach (GeneralColumn _column in Columns)
-                _columns.Add(_column.Keyword);
+            foreach (GeneralColumn column in Columns)
+                columns.Add(column.Keyword);
 
-            return _columns;
+            return columns;
         }
 
         /// <summary>
         /// Find column with keyword and return its column number
         /// </summary>
-        /// <param name="_keyword">column keyword</param>
+        /// <param name="keyword">column keyword</param>
         /// <returns>column number</returns>
-        public int GetColumnNumberFromKeyword(string _keyword)
+        public int GetColumnNumberFromKeyword(string keyword)
         {
-            foreach (GeneralColumn _column in Columns)
+            foreach (GeneralColumn column in Columns)
             {
-                if (_keyword == _column.Keyword)
-                    return _column.Number;
+                if (keyword == column.Keyword)
+                    return column.Number;
             }
             return -1;
         }
@@ -402,6 +398,14 @@ namespace IO_list_automation_new
         IEnumerator IEnumerable.GetEnumerator()
         {
             throw new NotImplementedException();
+        }
+
+        public override string ToString()
+        {
+            List<string> texts = new List<string>();
+            foreach (GeneralColumn column in Columns)
+                texts.Add(column.Keyword);
+            return texts.ToString();
         }
     }
 }

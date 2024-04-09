@@ -229,7 +229,7 @@
     <value>No data to paste</value>
   </data>
   <data name="ObjectGenerateUniqueData" xml:space="preserve">
-    <value>Searching unique KKS signals in Data</value>
+    <value>Searching unique KKS signals in Data_</value>
   </data>
   <data name="ObjectTransferToData" xml:space="preserve">
     <value>Transfer object data to data signals </value>
@@ -301,7 +301,7 @@
     <value>Create new</value>
   </data>
   <data name="ModuleGenerateUniqueData" xml:space="preserve">
-    <value>Searching unique Modules signals in Data</value>
+    <value>Searching unique Modules signals in Data_</value>
   </data>
   <data name="CPU" xml:space="preserve">
     <value>CPU</value>

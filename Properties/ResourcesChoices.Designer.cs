@@ -88,9 +88,9 @@ namespace IO_list_automation_new.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Data.
+        ///   Looks up a localized string similar to Data_.
         /// </summary>
-        internal static string Data {
+        internal static string Data_ {
             get {
                 return ResourceManager.GetString("Data", resourceCulture);
             }
