@@ -1,4 +1,5 @@
-﻿using IO_list_automation_new.Properties;
+﻿using IO_list_automation_new.Helper_functions;
+using IO_list_automation_new.Properties;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -98,10 +99,10 @@ namespace IO_list_automation_new.Forms
             List<string> columnNames = new List<string>();
             InitExcelColumnsList();
 
-            foreach (GeneralColumn column in ExcelColumns)
+            foreach (var column in ExcelColumns.Columns)
             {
-                if (column.Number == -1)
-                    columnNames.Add(column.GetColumnName(false));
+                if (column.Value.NR == -1)
+                    columnNames.Add(TextHelper.GetColumnName(column.Key,false));
             }
 
             return columnNames;
@@ -109,29 +110,28 @@ namespace IO_list_automation_new.Forms
 
         public void InitExcelColumnsList()
         {
-            List<GeneralColumn> excelColumn = new List<GeneralColumn>()
-            {
-                new GeneralColumn(KeywordColumn.ID, SettingsDesignInput.Default.ColumnID, true),
-                new GeneralColumn(KeywordColumn.CPU, SettingsDesignInput.Default.ColumnCPU, true),
-                new GeneralColumn(KeywordColumn.KKS, SettingsDesignInput.Default.ColumnKKS, true),
-                new GeneralColumn(KeywordColumn.RangeMin, SettingsDesignInput.Default.ColumnRangeMin, true),
-                new GeneralColumn(KeywordColumn.RangeMax, SettingsDesignInput.Default.ColumnRangeMax, true),
-                new GeneralColumn(KeywordColumn.Units, SettingsDesignInput.Default.ColumnUnits, true),
-                new GeneralColumn(KeywordColumn.FalseText, SettingsDesignInput.Default.ColumnFalseText, true),
-                new GeneralColumn(KeywordColumn.TrueText, SettingsDesignInput.Default.ColumnTrueText, true),
-                new GeneralColumn(KeywordColumn.Revision, SettingsDesignInput.Default.ColumnRevision, true),
-                new GeneralColumn(KeywordColumn.Cable, SettingsDesignInput.Default.ColumnCable, true),
-                new GeneralColumn(KeywordColumn.Cabinet, SettingsDesignInput.Default.ColumnCabinet, true),
-                new GeneralColumn(KeywordColumn.ModuleName, SettingsDesignInput.Default.ColumnModuleName, false),
-                new GeneralColumn(KeywordColumn.Pin, SettingsDesignInput.Default.ColumnPin, false),
-                new GeneralColumn(KeywordColumn.Channel, SettingsDesignInput.Default.ColumnChannel, false),
-                new GeneralColumn(KeywordColumn.IOText, SettingsDesignInput.Default.ColumnIOText, false),
-                new GeneralColumn(KeywordColumn.Page, SettingsDesignInput.Default.ColumnPage, true),
-                new GeneralColumn(KeywordColumn.Changed, SettingsDesignInput.Default.ColumnChanged, true),
-                new GeneralColumn(KeywordColumn.Terminal, SettingsDesignInput.Default.ColumnTerminal, true),
-            };
+            ColumnList excelColumns = new ColumnList();
 
-            ExcelColumns.SetColumns(excelColumn, false);
+            excelColumns.Columns.Add(KeywordColumn.ID, new GeneralColumnParameters(0, false));
+            excelColumns.Columns.Add(KeywordColumn.CPU, new GeneralColumnParameters(1, true));
+            excelColumns.Columns.Add(KeywordColumn.KKS, new GeneralColumnParameters(2, false));
+            excelColumns.Columns.Add(KeywordColumn.RangeMin, new GeneralColumnParameters(3, true));
+            excelColumns.Columns.Add(KeywordColumn.RangeMax, new GeneralColumnParameters(4, true));
+            excelColumns.Columns.Add(KeywordColumn.Units, new GeneralColumnParameters(5, true));
+            excelColumns.Columns.Add(KeywordColumn.FalseText, new GeneralColumnParameters(6, true));
+            excelColumns.Columns.Add(KeywordColumn.TrueText, new GeneralColumnParameters(7, true));
+            excelColumns.Columns.Add(KeywordColumn.Revision, new GeneralColumnParameters(8, true));
+            excelColumns.Columns.Add(KeywordColumn.Cable, new GeneralColumnParameters(9, true));
+            excelColumns.Columns.Add(KeywordColumn.Cabinet, new GeneralColumnParameters(10, false));
+            excelColumns.Columns.Add(KeywordColumn.ModuleName, new GeneralColumnParameters(11, false));
+            excelColumns.Columns.Add(KeywordColumn.Pin, new GeneralColumnParameters(12, true));
+            excelColumns.Columns.Add(KeywordColumn.Channel, new GeneralColumnParameters(13, false));
+            excelColumns.Columns.Add(KeywordColumn.IOText, new GeneralColumnParameters(14, false));
+            excelColumns.Columns.Add(KeywordColumn.Page, new GeneralColumnParameters(15, true));
+            excelColumns.Columns.Add(KeywordColumn.Changed, new GeneralColumnParameters(16, true));
+            excelColumns.Columns.Add(KeywordColumn.Terminal, new GeneralColumnParameters(17, true));
+
+            ExcelColumns.SetColumns(excelColumns, false);
         }
 
         public DesignInputData(DataTable data)
@@ -142,7 +142,7 @@ namespace IO_list_automation_new.Forms
             InitExcelColumnsList();
 
             RowOffsetInput.Text = SettingsDesignInput.Default.RowOffset.ToString();
-            ExcelColumns.SortColumnsList(true);
+            ExcelColumns.SortColumns(true);
             Grid = new GeneralGrid(Name, GridTypes.DataNoEdit, InputDataGridView, ExcelColumns);
             Grid.PutData(data);
 
@@ -237,13 +237,13 @@ namespace IO_list_automation_new.Forms
             for (int i = 0; i < InputDataGridView.Columns.Count; i++)
             {
                 InputDataGridView.Columns[i].HeaderText = "Col " + i.ToString();
-                foreach (GeneralColumn column in ExcelColumns)
+                foreach (var column in ExcelColumns.Columns)
                 {
-                    if (column.Number != i)
+                    if (column.Value.NR != i)
                         continue;
 
-                    InputDataGridView.Columns[i].Name = column.Keyword;
-                    InputDataGridView.Columns[i].HeaderText = column.GetColumnName(false);
+                    InputDataGridView.Columns[i].Name = column.Key;
+                    InputDataGridView.Columns[i].HeaderText = TextHelper.GetColumnName(column.Key,false);
                     break;
                 }
             }

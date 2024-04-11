@@ -1,4 +1,5 @@
-﻿using System;
+﻿using IO_list_automation_new.Helper_functions;
+using System;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -102,8 +103,6 @@ namespace IO_list_automation_new.General
         public EventHandler IndexChangedEventRemove
         { set { Element.SelectedIndexChanged -= value; } }
 
-        private GeneralColumnName ColumnNames = new GeneralColumnName();
-
         public System.Windows.Forms.ComboBox Element { get; }
 
         public DropDownClass(System.Windows.Forms.ComboBox element)
@@ -203,7 +202,7 @@ namespace IO_list_automation_new.General
         /// <param name="keyword">keyword of item</param>
         public void AddItemFull(string mod, string keyword)
         {
-            DropDownElement element = new DropDownElement(mod, Separator, keyword, ColumnNames.GetColumnOrChoicesName(keyword));
+            DropDownElement element = new DropDownElement(mod, Separator, keyword, TextHelper.GetColumnOrChoicesName(keyword));
 
             Element.Items.Add(element);
         }
@@ -215,7 +214,7 @@ namespace IO_list_automation_new.General
         /// <param name="keyword">keyword of item</param>
         public void AddItemColumn(string mod, string keyword)
         {
-            DropDownElement element = new DropDownElement(mod, Separator, keyword, ColumnNames.GetColumnName(keyword, false));
+            DropDownElement element = new DropDownElement(mod, Separator, keyword, TextHelper.GetColumnName(keyword, false));
 
             Element.Items.Add(element);
         }

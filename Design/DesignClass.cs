@@ -263,30 +263,29 @@ namespace IO_list_automation_new
         //columns in excel
         private ColumnList ExcelColumns { get; }
 
-        protected override List<GeneralColumn> GeneralGenerateColumnsList()
+        protected override ColumnList GeneralGenerateColumnsList()
         {
-            List<GeneralColumn> columns = new List<GeneralColumn>()
-            {
-                new GeneralColumn(KeywordColumn.ID, SettingsDesign.Default.ColumnID,false),
-                new GeneralColumn(KeywordColumn.CPU, SettingsDesign.Default.ColumnCPU, true),
-                new GeneralColumn(KeywordColumn.KKS, SettingsDesign.Default.ColumnKKS, true),
-                new GeneralColumn(KeywordColumn.RangeMin, SettingsDesign.Default.ColumnRangeMin, true),
-                new GeneralColumn(KeywordColumn.RangeMax, SettingsDesign.Default.ColumnRangeMax, true),
-                new GeneralColumn(KeywordColumn.Units, SettingsDesign.Default.ColumnUnits, true),
-                new GeneralColumn(KeywordColumn.FalseText, SettingsDesign.Default.ColumnFalseText, true),
-                new GeneralColumn(KeywordColumn.TrueText, SettingsDesign.Default.ColumnTrueText, true),
-                new GeneralColumn(KeywordColumn.Revision, SettingsDesign.Default.ColumnRevision, true),
-                new GeneralColumn(KeywordColumn.Cable, SettingsDesign.Default.ColumnCable, true),
-                new GeneralColumn(KeywordColumn.Cabinet, SettingsDesign.Default.ColumnCabinet, false),
-                new GeneralColumn(KeywordColumn.ModuleName, SettingsDesign.Default.ColumnModuleName, false),
-                new GeneralColumn(KeywordColumn.Pin, SettingsDesign.Default.ColumnPin, false),
-                new GeneralColumn(KeywordColumn.Channel, SettingsDesign.Default.ColumnChannel, false),
-                new GeneralColumn(KeywordColumn.IOText, SettingsDesign.Default.ColumnIOText, false),
-                new GeneralColumn(KeywordColumn.Page, SettingsDesign.Default.ColumnPage, true),
-                new GeneralColumn(KeywordColumn.Changed, SettingsDesign.Default.ColumnChanged, true),
-                new GeneralColumn(KeywordColumn.Terminal, SettingsDesign.Default.ColumnTerminal, true),
-                new GeneralColumn(KeywordColumn.Tag, SettingsDesign.Default.ColumnTag, true),
-            };
+            ColumnList columns = new ColumnList();
+
+            columns.Columns.Add(KeywordColumn.ID, new GeneralColumnParameters(0, false));
+            columns.Columns.Add(KeywordColumn.CPU, new GeneralColumnParameters(1, true));
+            columns.Columns.Add(KeywordColumn.KKS, new GeneralColumnParameters(2, false));
+            columns.Columns.Add(KeywordColumn.RangeMin, new GeneralColumnParameters(3, true));
+            columns.Columns.Add(KeywordColumn.RangeMax, new GeneralColumnParameters(4, true));
+            columns.Columns.Add(KeywordColumn.Units, new GeneralColumnParameters(5, true));
+            columns.Columns.Add(KeywordColumn.FalseText, new GeneralColumnParameters(6, true));
+            columns.Columns.Add(KeywordColumn.TrueText, new GeneralColumnParameters(7, true));
+            columns.Columns.Add(KeywordColumn.Revision, new GeneralColumnParameters(8, true));
+            columns.Columns.Add(KeywordColumn.Cable, new GeneralColumnParameters(9, true));
+            columns.Columns.Add(KeywordColumn.Cabinet, new GeneralColumnParameters(10, false));
+            columns.Columns.Add(KeywordColumn.ModuleName, new GeneralColumnParameters(11, false));
+            columns.Columns.Add(KeywordColumn.Pin, new GeneralColumnParameters(12, true));
+            columns.Columns.Add(KeywordColumn.Channel, new GeneralColumnParameters(13, false));
+            columns.Columns.Add(KeywordColumn.IOText, new GeneralColumnParameters(14, false));
+            columns.Columns.Add(KeywordColumn.Page, new GeneralColumnParameters(15, true));
+            columns.Columns.Add(KeywordColumn.Changed, new GeneralColumnParameters(16, true));            
+            columns.Columns.Add(KeywordColumn.Terminal, new GeneralColumnParameters(17, true));
+            columns.Columns.Add(KeywordColumn.Tag, new GeneralColumnParameters(18, false));
 
             return columns;
         }
@@ -323,7 +322,7 @@ namespace IO_list_automation_new
         /// </summary>
         /// <param name="list">new GeneralColumn list</param>
         /// <param name="columnsFromZero">true, Columns start from zero</param>
-        public void SetExcelColumnList(List<GeneralColumn> list, bool columnsFromZero)
+        public void SetExcelColumnList(ColumnList list, bool columnsFromZero)
         {
             Debug debug = new Debug();
             debug.ToFile("Updating : " + Name + " Grid Columns", DebugLevels.Development, DebugMessageType.Info);
@@ -333,30 +332,29 @@ namespace IO_list_automation_new
 
         public void InitExcelColumnsList()
         {
-            List<GeneralColumn> excelColumn = new List<GeneralColumn>()
-            {
-                new GeneralColumn(KeywordColumn.ID, SettingsDesignInput.Default.ColumnID, true),
-                new GeneralColumn(KeywordColumn.CPU, SettingsDesignInput.Default.ColumnCPU, true),
-                new GeneralColumn(KeywordColumn.KKS, SettingsDesignInput.Default.ColumnKKS, true),
-                new GeneralColumn(KeywordColumn.RangeMin, SettingsDesignInput.Default.ColumnRangeMin, true),
-                new GeneralColumn(KeywordColumn.RangeMax, SettingsDesignInput.Default.ColumnRangeMax, true),
-                new GeneralColumn(KeywordColumn.Units, SettingsDesignInput.Default.ColumnUnits, true),
-                new GeneralColumn(KeywordColumn.FalseText, SettingsDesignInput.Default.ColumnFalseText, true),
-                new GeneralColumn(KeywordColumn.TrueText, SettingsDesignInput.Default.ColumnTrueText, true),
-                new GeneralColumn(KeywordColumn.Revision, SettingsDesignInput.Default.ColumnRevision, true),
-                new GeneralColumn(KeywordColumn.Cable, SettingsDesignInput.Default.ColumnCable, true),
-                new GeneralColumn(KeywordColumn.Cabinet, SettingsDesignInput.Default.ColumnCabinet, true),
-                new GeneralColumn(KeywordColumn.ModuleName, SettingsDesignInput.Default.ColumnModuleName, false),
-                new GeneralColumn(KeywordColumn.Pin, SettingsDesignInput.Default.ColumnPin, false),
-                new GeneralColumn(KeywordColumn.Channel, SettingsDesignInput.Default.ColumnChannel, false),
-                new GeneralColumn(KeywordColumn.IOText, SettingsDesignInput.Default.ColumnIOText, false),
-                new GeneralColumn(KeywordColumn.Page, SettingsDesignInput.Default.ColumnPage, true),
-                new GeneralColumn(KeywordColumn.Changed, SettingsDesignInput.Default.ColumnChanged, true),
-                new GeneralColumn(KeywordColumn.Terminal, SettingsDesignInput.Default.ColumnTerminal, true),
-                new GeneralColumn(KeywordColumn.Tag, SettingsDesignInput.Default.ColumnTag, true),
-            };
+            ColumnList excelColumns = new ColumnList();
 
-            SetExcelColumnList(excelColumn, false);
+            excelColumns.Columns.Add(KeywordColumn.ID, new GeneralColumnParameters(0, false));
+            excelColumns.Columns.Add(KeywordColumn.CPU, new GeneralColumnParameters(1, true));
+            excelColumns.Columns.Add(KeywordColumn.KKS, new GeneralColumnParameters(2, false));
+            excelColumns.Columns.Add(KeywordColumn.RangeMin, new GeneralColumnParameters(3, true));
+            excelColumns.Columns.Add(KeywordColumn.RangeMax, new GeneralColumnParameters(4, true));
+            excelColumns.Columns.Add(KeywordColumn.Units, new GeneralColumnParameters(5, true));
+            excelColumns.Columns.Add(KeywordColumn.FalseText, new GeneralColumnParameters(6, true));
+            excelColumns.Columns.Add(KeywordColumn.TrueText, new GeneralColumnParameters(7, true));
+            excelColumns.Columns.Add(KeywordColumn.Revision, new GeneralColumnParameters(8, true));
+            excelColumns.Columns.Add(KeywordColumn.Cable, new GeneralColumnParameters(9, true));
+            excelColumns.Columns.Add(KeywordColumn.Cabinet, new GeneralColumnParameters(10, false));
+            excelColumns.Columns.Add(KeywordColumn.ModuleName, new GeneralColumnParameters(11, false));
+            excelColumns.Columns.Add(KeywordColumn.Pin, new GeneralColumnParameters(12, true));
+            excelColumns.Columns.Add(KeywordColumn.Channel, new GeneralColumnParameters(13, false));
+            excelColumns.Columns.Add(KeywordColumn.IOText, new GeneralColumnParameters(14, false));
+            excelColumns.Columns.Add(KeywordColumn.Page, new GeneralColumnParameters(15, true));
+            excelColumns.Columns.Add(KeywordColumn.Changed, new GeneralColumnParameters(16, true));
+            excelColumns.Columns.Add(KeywordColumn.Terminal, new GeneralColumnParameters(17, true));
+            excelColumns.Columns.Add(KeywordColumn.Tag, new GeneralColumnParameters(18, false));
+
+            SetExcelColumnList(excelColumns, false);
         }
 
         public DesignClass(ProgressIndication progress, DataGridView grid) : base("Design", nameof(FileExtensions.design), progress, grid, true)
@@ -398,7 +396,7 @@ namespace IO_list_automation_new
             string cellValue;
             string columnName;
 
-            UpdateColumnNumbers(ExcelColumns.Columns);
+            UpdateColumnNumbers(ExcelColumns);
 
             Progress.RenameProgressBar(Resources.DesignImport, data.Rows.Count);
             debug.ToFile("Extracting data from input file", DebugLevels.High, DebugMessageType.Info);
@@ -407,13 +405,13 @@ namespace IO_list_automation_new
             {
                 //create signal and add corresponding Columns to each signal element
                 DesignSignal signalNew = new DesignSignal();
-                foreach (GeneralColumn column in ExcelColumns)
+                foreach (var column in ExcelColumns.Columns)
                 {
-                    columnNumber = column.Number;
+                    columnNumber = column.Value.NR;
                     if (columnNumber != -1 && columnNumber < data.Columns.Count)
                     {
                         cellValue = GeneralFunctions.GetDataTableValue(data, row, columnNumber);
-                        columnName = column.Keyword;
+                        columnName = column.Key;
 
                         signalNew.SetValueFromString(cellValue, columnName);
                     }

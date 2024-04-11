@@ -110,7 +110,7 @@ namespace IO_list_automation_new
         public bool DBFileExists(string fileName)
         {
             //get file in folder            
- //           string[] files = System.IO.Directory.GetFiles(Directory, fileName + "." + FileExtension);
+            //           string[] files = System.IO.Directory.GetFiles(Directory, fileName + "." + FileExtension);
             return File.Exists(fileName + "." + FileExtension);
         }
 

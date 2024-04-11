@@ -150,18 +150,18 @@ namespace IO_list_automation_new.DB
 
             DataClass Data_ = new DataClass();
             Data_Columns = new List<string>();
-            foreach (GeneralColumn column in Data_.BaseColumns.Columns)
-                Data_Columns.Add(column.Keyword);
+            foreach (var column in Data_.BaseColumns.Columns)
+                Data_Columns.Add(column.Key);
 
             ObjectsClass Objects = new ObjectsClass();
             ObjectColumns = new List<string>();
-            foreach (GeneralColumn column in Objects.BaseColumns.Columns)
-                ObjectColumns.Add(column.Keyword);
+            foreach (var column in Objects.BaseColumns.Columns)
+                ObjectColumns.Add(column.Key);
 
             ModuleClass Modules = new ModuleClass();
             ModuleColumns = new List<string>();
-            foreach (GeneralColumn column in Modules.BaseColumns.Columns)
-                ModuleColumns.Add(column.Keyword);
+            foreach (var column in Modules.BaseColumns.Columns)
+                ModuleColumns.Add(column.Key);
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using IO_list_automation_new.Properties;
+﻿using IO_list_automation_new.Helper_functions;
+using IO_list_automation_new.Properties;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -74,15 +75,15 @@ namespace IO_list_automation_new
         /// Get grid columns and add to columns list
         /// </summary>
         /// <returns>grid column list</returns>
-        public List<GeneralColumn> GetColumns()
+        public ColumnList GetColumns()
         {
             Debug debug = new Debug();
             debug.ToFile("Getting columns from grid to memory(" + Grid.ColumnCount + ") to grid: " + Name, DebugLevels.Development, DebugMessageType.Info);
 
-            List<GeneralColumn> columnList = new List<GeneralColumn>();
+            ColumnList columnList = new ColumnList();
 
             foreach (DataGridViewColumn column in Grid.Columns)
-                columnList.Add(new GeneralColumn(column.Name, column.DisplayIndex, true));
+                columnList.Columns.Add(column.Name, new GeneralColumnParameters(column.DisplayIndex, true));
 
             return columnList;
         }
@@ -138,15 +139,21 @@ namespace IO_list_automation_new
             Grid.DataSource = data;
             for (int columnNumber = 0; columnNumber < data.Columns.Count; columnNumber++)
             {
-                if (Columns == null || Columns.Columns.Count == 0)
+                if (Columns is null || Columns.Columns is null || Columns.Columns.Count == 0)
                 {
                     data.Columns[columnNumber].ColumnName = columnNumber.ToString();
                     Grid.Columns[columnNumber].Name = columnNumber.ToString();
                 }
                 else
                 {
-                    data.Columns[columnNumber].ColumnName = Columns.Columns[columnNumber].GetColumnName(suppressColumnError);
-                    Grid.Columns[columnNumber].Name = Columns.Columns[columnNumber].Keyword;
+                    foreach (var column in Columns.Columns)
+                    {
+                        if (column.Value.NR == columnNumber)
+                        {
+                            Grid.Columns[columnNumber].Name = column.Key;
+                            data.Columns[columnNumber].ColumnName = TextHelper.GetColumnName(column.Key,false);                            
+                        }
+                    }                    
                 }
             }
             Grid.ResumeLayout(false);
@@ -171,25 +178,14 @@ namespace IO_list_automation_new
         /// Remove columns from grid that are not in base column list
         /// </summary>
         /// <param name="baseColumns">base column list</param>
-        public void RemoveNotBaseColumns(List<GeneralColumn> baseColumns)
+        public void RemoveNotBaseColumns(ColumnList baseColumns)
         {
-            bool found;
             if (GridType == GridTypes.DataNoEdit)
                 return;
 
             for (int gridColumn = Grid.ColumnCount - 1; gridColumn >= 0; gridColumn--)
             {
-                found = false;
-                foreach (GeneralColumn generalColumn in baseColumns)
-                {
-                    if (Grid.Columns[gridColumn].Name != generalColumn.Keyword)
-                        continue;
-
-                    found = true;
-                    break;
-                }
-
-                if (found)
+                if (baseColumns.Columns.TryGetValue(Grid.Columns[gridColumn].Name, out var value))
                     continue;
 
                 Grid.Columns.RemoveAt(gridColumn);

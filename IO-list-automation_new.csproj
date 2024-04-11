@@ -53,6 +53,9 @@
     <Reference Include="ExcelDataReader, Version=3.6.0.0, Culture=neutral, PublicKeyToken=93517dbe6a4012fa, processorArchitecture=MSIL">
       <HintPath>packages\ExcelDataReader.3.6.0\lib\net45\ExcelDataReader.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>packages\Newtonsoft.Json.13.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="SharpCompress, Version=0.33.0.0, Culture=neutral, PublicKeyToken=afb0a02973931d96, processorArchitecture=MSIL">
       <HintPath>packages\SharpCompress.0.33.0\lib\net462\SharpCompress.dll</HintPath>
     </Reference>
@@ -135,6 +138,7 @@
     <Compile Include="General\GeneralClass.cs" />
     <Compile Include="General\GeneralFunctions.cs" />
     <Compile Include="Helper functions\Debug.cs" />
+    <Compile Include="Helper functions\TextHelper.cs" />
     <Compile Include="IOTextEdit.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -147,12 +151,12 @@
     <Compile Include="KKSEdit.Designer.cs">
       <DependentUpon>KKSEdit.cs</DependentUpon>
     </Compile>
-    <Compile Include="DesignClass.cs" />
-    <Compile Include="General\GeneralColumn.cs" />
+    <Compile Include="Design\DesignClass.cs" />
+    <Compile Include="General\GeneralColumnParameters.cs" />
     <Compile Include="AddressesClass.cs" />
-    <Compile Include="ModuleClass.cs" />
-    <Compile Include="ObjectsClass.cs" />
-    <Compile Include="DataClass.cs" />
+    <Compile Include="Modules\ModuleClass.cs" />
+    <Compile Include="Objects\ObjectsClass.cs" />
+    <Compile Include="Data\DataClass.cs" />
     <Compile Include="MainWindow.cs">
       <SubType>Form</SubType>
     </Compile>

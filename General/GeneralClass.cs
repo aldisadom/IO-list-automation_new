@@ -47,9 +47,9 @@ namespace IO_list_automation_new
 
         public ExcelFiles File { get; set; }
 
-        protected abstract List<GeneralColumn> GeneralGenerateColumnsList();
+        protected abstract ColumnList GeneralGenerateColumnsList();
 
-        private List<GeneralColumn> GenerateColumnsList(bool getFromGrid)
+        private ColumnList GenerateColumnsList(bool getFromGrid)
         {
             if (!getFromGrid)
                 return GeneralGenerateColumnsList();
@@ -70,23 +70,23 @@ namespace IO_list_automation_new
                 case GridTypes.Data:
                 case GridTypes.DataNoEdit:
                     //first line is columns keyword
-                    List<GeneralColumn> columns = new List<GeneralColumn>();
+                    ColumnList columns = new ColumnList();
                     bool canHide = false;
                     bool found = false;
 
                     for (int column = inputData.Columns.Count - 1; column >= 0; column--)
                     {
-                        foreach (GeneralColumn baseColumn in BaseColumns.Columns)
+                        foreach (var baseColumn in BaseColumns.Columns)
                         {
-                            if (GeneralFunctions.GetDataTableValue(inputData, 0, column) == baseColumn.Keyword)
+                            if (GeneralFunctions.GetDataTableValue(inputData, 0, column) == baseColumn.Key)
                             {
                                 found = true;
-                                canHide = baseColumn.CanHide;
+                                canHide = baseColumn.Value.CanHide;
                                 break;
                             }
                         }
                         if (found)
-                            columns.Add(new GeneralColumn(GeneralFunctions.GetDataTableValue(inputData, 0, column), column, canHide));
+                            columns.Columns.Add(GeneralFunctions.GetDataTableValue(inputData, 0, column),new GeneralColumnParameters(column, canHide));
                         else
                             inputData.Columns.RemoveAt(column);
                     }
@@ -100,44 +100,43 @@ namespace IO_list_automation_new
         /// Update current lists column numbers from new list
         /// </summary>
         /// <param name="newList">new list with new column numbers</param>
-        public void UpdateColumnNumbers(List<GeneralColumn> newList)
+        public void UpdateColumnNumbers(ColumnList newList)
         {
             string keyword;
             int columnNumber;
             bool canHide;
 
-            List<GeneralColumn> tmpList = new List<GeneralColumn>();
-            foreach (GeneralColumn baseColumn in BaseColumns.Columns)
+            ColumnList tmpList = new ColumnList();
+            foreach (var baseColumn in BaseColumns.Columns)
             {
-                keyword = baseColumn.Keyword;
-                columnNumber = baseColumn.Number;
-                canHide = baseColumn.CanHide;
+                keyword = baseColumn.Key;
+                columnNumber = baseColumn.Value.NR;
+                canHide = baseColumn.Value.CanHide;
 
-                foreach (GeneralColumn newColumn in newList)
+                foreach (var newColumn in newList.Columns)
                 {
-                    if (newColumn.Keyword != keyword)
+                    if (newColumn.Key != keyword)
                         continue;
 
                     //if in new list column is used and in current list column is not used, add column to end
-                    if (columnNumber == -1 && newColumn.Number != -1)
+                    if (columnNumber == -1 && newColumn.Value.NR != -1)
                         columnNumber = 100;
                     break;
                 }
-                GeneralColumn column = new GeneralColumn(keyword, columnNumber, canHide);
-                tmpList.Add(column);
+                tmpList.Columns.Add(keyword, new GeneralColumnParameters(columnNumber, canHide));
             }
 
             BaseColumns.Columns.Clear();
             Columns.Columns.Clear();
 
-            foreach (GeneralColumn column in tmpList)
+            foreach (var column in tmpList.Columns)
             {
-                BaseColumns.Columns.Add(column);
-                Columns.Columns.Add(column);
+                BaseColumns.Columns.Add(column.Key, column.Value);
+                Columns.Columns.Add(column.Key, column.Value);
             }
 
-            BaseColumns.SortColumnsList(false);
-            Columns.SortColumnsList(true);
+            BaseColumns.SortColumns(false);
+            Columns.SortColumns(true);
 
             UpdateSettingsColumnsList();
         }
@@ -158,7 +157,7 @@ namespace IO_list_automation_new
             BaseColumns.SetColumns(GenerateColumnsList(false), false);
 
             Columns.SetColumns(GenerateColumnsList(true), true);
-            Columns.SortColumnsList(true);
+            Columns.SortColumns(true);
 
             UpdateSettingsColumnsList();
         }
@@ -175,25 +174,25 @@ namespace IO_list_automation_new
             Progress.RenameProgressBar(Resources.ConvertDataToList + ": " + Name, Signals.Count);
 
             //get list of columns that is used
-            List<GeneralColumn> newColumnList = new List<GeneralColumn>();
-            foreach (GeneralColumn column in Columns)
+            ColumnList newColumnList = new ColumnList();
+            foreach (var column in Columns.Columns)
             {
-                if (column.Number >= 0)
-                    newColumnList.Add(column);
+                if (column.Value.NR >= 0)
+                    newColumnList.Columns.Add(column.Key, column.Value);
             }
 
             DataTable data = new DataTable();
             //add columns to dataTable
-            foreach (GeneralColumn column in Columns.Columns)
-                data.Columns.Add(column.Keyword);
+            foreach (var column in Columns.Columns)
+                data.Columns.Add(column.Key);
 
             int progress = 0;
             foreach (T signal in Signals)
             {
                 DataRow row = data.NewRow();
 
-                foreach (GeneralColumn column in newColumnList)
-                    row[column.Number] = signal.GetValueString(column.Keyword, false);
+                foreach (var column in newColumnList.Columns)
+                    row[column.Value.NR] = signal.GetValueString(column.Key, false);
 
                 data.Rows.Add(row);
                 progress++;
@@ -210,7 +209,7 @@ namespace IO_list_automation_new
         /// </summary>
         /// <param name="suppressError">suppress error</param>
         /// <returns>there is data in signals</returns>
-        public virtual bool ListToSignals(DataTable inputData, List<GeneralColumn> newColumnList, bool suppressError)
+        public virtual bool ListToSignals(DataTable inputData, ColumnList newColumnList, bool suppressError)
         {
             Debug debug = new Debug();
             debug.ToFile(Resources.ConvertListToData + ": " + Name, DebugLevels.Development, DebugMessageType.Info);
@@ -224,19 +223,20 @@ namespace IO_list_automation_new
             for (int rowNumber = 0; rowNumber < inputData.Rows.Count; rowNumber++)
             {
                 T signal = new T();
-                for (int columnIndex = 0; columnIndex < newColumnList.Count; columnIndex++)
+                foreach(var newColumn in newColumnList.Columns)
                 {
-                    columnNumber = newColumnList[columnIndex].Number;
+                    columnNumber = newColumn.Value.NR;
 
                     if (columnNumber < 0)
                         continue;
 
                     //put value based on keyword to memory
-                    keyword = newColumnList[columnIndex].Keyword;
+                    keyword = newColumn.Key;
                     cellValue = GeneralFunctions.GetDataTableValue(inputData, rowNumber, columnNumber);
 
                     signal.SetValueFromString(cellValue, keyword);
                 }
+
                 Progress.UpdateProgressBar(rowNumber);
 
                 if (signal.ValidateSignal())
@@ -354,7 +354,7 @@ namespace IO_list_automation_new
                 return false;
 
             Grid.PutData(data);
-            Grid.RemoveNotBaseColumns(BaseColumns.Columns);
+            Grid.RemoveNotBaseColumns(BaseColumns);
             UpdateSettingsColumnsList();
 
             return true;

@@ -577,38 +577,37 @@ namespace IO_list_automation_new
 
     internal class DataClass : GeneralClass<DataSignal>
     {
-        protected override List<GeneralColumn> GeneralGenerateColumnsList()
+        protected override ColumnList GeneralGenerateColumnsList()
         {
-            List<GeneralColumn> columns = new List<GeneralColumn>()
-            {
-                new GeneralColumn(KeywordColumn.ID, SettingsData.Default.ColumnID, true),
-                new GeneralColumn(KeywordColumn.CPU, SettingsData.Default.ColumnCPU, true),
-                new GeneralColumn(KeywordColumn.KKS, SettingsData.Default.ColumnKKS, false),
-                new GeneralColumn(KeywordColumn.RangeMin, SettingsData.Default.ColumnRangeMin, true),
-                new GeneralColumn(KeywordColumn.RangeMax, SettingsData.Default.ColumnRangeMax, true),
-                new GeneralColumn(KeywordColumn.Units, SettingsData.Default.ColumnUnits, true),
-                new GeneralColumn(KeywordColumn.FalseText, SettingsData.Default.ColumnFalseText, true),
-                new GeneralColumn(KeywordColumn.TrueText, SettingsData.Default.ColumnTrueText, true),
-                new GeneralColumn(KeywordColumn.Revision, SettingsData.Default.ColumnRevision, true),
-                new GeneralColumn(KeywordColumn.Cable, SettingsData.Default.ColumnCable, true),
-                new GeneralColumn(KeywordColumn.Cabinet, SettingsData.Default.ColumnCabinet, false),
-                new GeneralColumn(KeywordColumn.ModuleName, SettingsData.Default.ColumnModuleName, false),
-                new GeneralColumn(KeywordColumn.Pin, SettingsData.Default.ColumnPin, true),
-                new GeneralColumn(KeywordColumn.Channel, SettingsData.Default.ColumnChannel, false),
-                new GeneralColumn(KeywordColumn.IOText, SettingsData.Default.ColumnIOText, false),
-                new GeneralColumn(KeywordColumn.Page, SettingsData.Default.ColumnPage, true),
-                new GeneralColumn(KeywordColumn.Changed, SettingsData.Default.ColumnChanged, true),
-                new GeneralColumn(KeywordColumn.Operative, SettingsData.Default.ColumnOperative, true),
-                new GeneralColumn(KeywordColumn.KKSPlant, SettingsData.Default.ColumnKKSPlant, true),
-                new GeneralColumn(KeywordColumn.KKSLocation, SettingsData.Default.ColumnKKSLocation, true),
-                new GeneralColumn(KeywordColumn.KKSDevice, SettingsData.Default.ColumnKKSDevice, true),
-                new GeneralColumn(KeywordColumn.KKSFunction, SettingsData.Default.ColumnKKSFunction, true),
-                new GeneralColumn(KeywordColumn.Used, SettingsData.Default.ColumnUsed, false),
-                new GeneralColumn(KeywordColumn.ObjectType, SettingsData.Default.ColumnObjectType, false),
-                new GeneralColumn(KeywordColumn.Function, SettingsData.Default.ColumnFunction, false),
-                new GeneralColumn(KeywordColumn.Terminal, SettingsData.Default.ColumnTerminal, true),
-                new GeneralColumn(KeywordColumn.Tag, SettingsData.Default.ColumnTag, false),
-            };
+            ColumnList columns = new ColumnList();
+
+            columns.Columns.Add(KeywordColumn.ID, new GeneralColumnParameters(0, false));
+            columns.Columns.Add(KeywordColumn.CPU, new GeneralColumnParameters(1, true));
+            columns.Columns.Add(KeywordColumn.KKS, new GeneralColumnParameters(2, false));
+            columns.Columns.Add(KeywordColumn.RangeMin, new GeneralColumnParameters(3, true));
+            columns.Columns.Add(KeywordColumn.RangeMax, new GeneralColumnParameters(4, true));
+            columns.Columns.Add(KeywordColumn.Units, new GeneralColumnParameters(5, true));
+            columns.Columns.Add(KeywordColumn.FalseText, new GeneralColumnParameters(6, true));
+            columns.Columns.Add(KeywordColumn.TrueText, new GeneralColumnParameters(7, true));
+            columns.Columns.Add(KeywordColumn.Revision, new GeneralColumnParameters(8, true));
+            columns.Columns.Add(KeywordColumn.Cable, new GeneralColumnParameters(9, true));
+            columns.Columns.Add(KeywordColumn.Cabinet, new GeneralColumnParameters(10, false));
+            columns.Columns.Add(KeywordColumn.ModuleName, new GeneralColumnParameters(11, false));
+            columns.Columns.Add(KeywordColumn.Pin, new GeneralColumnParameters(12, true));
+            columns.Columns.Add(KeywordColumn.Channel, new GeneralColumnParameters(13, false));
+            columns.Columns.Add(KeywordColumn.IOText, new GeneralColumnParameters(14, false));
+            columns.Columns.Add(KeywordColumn.Page, new GeneralColumnParameters(15, true));
+            columns.Columns.Add(KeywordColumn.Changed, new GeneralColumnParameters(16, true));
+            columns.Columns.Add(KeywordColumn.Operative, new GeneralColumnParameters(17, true));
+            columns.Columns.Add(KeywordColumn.KKSPlant, new GeneralColumnParameters(18, true));
+            columns.Columns.Add(KeywordColumn.KKSLocation, new GeneralColumnParameters(19, true));
+            columns.Columns.Add(KeywordColumn.KKSDevice, new GeneralColumnParameters(20, true));
+            columns.Columns.Add(KeywordColumn.KKSFunction, new GeneralColumnParameters(21, true));
+            columns.Columns.Add(KeywordColumn.Used, new GeneralColumnParameters(22, false));
+            columns.Columns.Add(KeywordColumn.ObjectType, new GeneralColumnParameters(23, true));
+            columns.Columns.Add(KeywordColumn.Function, new GeneralColumnParameters(24, false));
+            columns.Columns.Add(KeywordColumn.Terminal, new GeneralColumnParameters(25, true));
+            columns.Columns.Add(KeywordColumn.Tag, new GeneralColumnParameters(26, false));
 
             return columns;
         }
@@ -666,7 +665,7 @@ namespace IO_list_automation_new
 
             Progress.RenameProgressBar(Resources.ExtractDataFromDesign, design.Signals.Count);
 
-            UpdateColumnNumbers(design.BaseColumns.Columns);
+            UpdateColumnNumbers(design.BaseColumns);
 
             Signals.Clear();
             design.Grid.GetData();
@@ -677,9 +676,9 @@ namespace IO_list_automation_new
                 DataSignal dataSignal = new DataSignal();
 
                 // go through all column in design and send it to signals
-                foreach (GeneralColumn column in design.Columns)
+                foreach (var column in design.Columns.Columns)
                 {
-                    keyword = column.Keyword;
+                    keyword = column.Key;
                     dataSignal.SetValueFromString(designSignal.GetValueString(keyword, true), keyword);
                 }
                 dataSignal.FindKKSInSignal(false);

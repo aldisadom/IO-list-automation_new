@@ -81,13 +81,11 @@ namespace IO_list_automation_new
     {
         private string FileName = "";
 
-        protected override List<GeneralColumn> GeneralGenerateColumnsList()
+        protected override ColumnList GeneralGenerateColumnsList()
         {
-            List<GeneralColumn> columns = new List<GeneralColumn>()
-            {
-                new GeneralColumn(KeywordColumn.DeviceTypeText, 0, true),
-                new GeneralColumn(KeywordColumn.ObjectType, 1, true),
-            };
+            ColumnList columns = new ColumnList();
+            columns.Columns.Add(KeywordColumn.DeviceTypeText, new GeneralColumnParameters(0, true));
+            columns.Columns.Add(KeywordColumn.ObjectType, new GeneralColumnParameters(1, true));
 
             return columns;
         }
@@ -147,7 +145,7 @@ namespace IO_list_automation_new
             string fileName = System.IO.Path.GetDirectoryName(System.Windows.Forms.Application.ExecutablePath) + "\\DB\\" + Settings.Default.IOLanguage;
 
             //convert data from file to signals
-            if (!ListToSignals(File.LoadFromFile(fileName), BaseColumns.Columns, false))
+            if (!ListToSignals(File.LoadFromFile(fileName), BaseColumns, false))
                 return;
 
             Progress.RenameProgressBar(Resources.FindObjectType, objects.Signals.Count);
@@ -267,17 +265,15 @@ namespace IO_list_automation_new
     {
         private string FileName = "";
 
-        protected override List<GeneralColumn> GeneralGenerateColumnsList()
+        protected override ColumnList GeneralGenerateColumnsList()
         {
-            List<GeneralColumn> columns = new List<GeneralColumn>()
-            {
-                new GeneralColumn(KeywordColumn.FunctionText1, 0, false),
-                new GeneralColumn(KeywordColumn.Function1, 1, false),
-                new GeneralColumn(KeywordColumn.FunctionText1o2, 2, false),
-                new GeneralColumn(KeywordColumn.FunctionText2o2, 3, false),
-                new GeneralColumn(KeywordColumn.Function2, 4, false),
-            };
-
+            ColumnList columns = new ColumnList();
+            columns.Columns.Add(KeywordColumn.FunctionText1, new GeneralColumnParameters(0, false));
+            columns.Columns.Add(KeywordColumn.Function1, new GeneralColumnParameters(1, false));
+            columns.Columns.Add(KeywordColumn.FunctionText1o2, new GeneralColumnParameters(2, false));
+            columns.Columns.Add(KeywordColumn.FunctionText2o2, new GeneralColumnParameters(3, false));
+            columns.Columns.Add(KeywordColumn.Function2, new GeneralColumnParameters(4, false));
+            
             return columns;
         }
 
@@ -363,7 +359,7 @@ namespace IO_list_automation_new
             debug.ToFile("Finding function type in data", DebugLevels.High, DebugMessageType.Info);
 
             //convert data from file to signals
-            if (!ListToSignals(File.LoadFromFile(FileName), BaseColumns.Columns, false))
+            if (!ListToSignals(File.LoadFromFile(FileName), BaseColumns, false))
                 return;
 
             Progress.RenameProgressBar(Resources.FindFunction, data.Signals.Count);

@@ -117,17 +117,16 @@ namespace IO_list_automation_new
 
     internal class ObjectsClass : GeneralClass<ObjectSignal>
     {
-        protected override List<GeneralColumn> GeneralGenerateColumnsList()
+        protected override ColumnList GeneralGenerateColumnsList()
         {
-            List<GeneralColumn> columns = new List<GeneralColumn>()
-            {
-                new GeneralColumn(KeywordColumn.ID, SettingsObject.Default.ColumnID,true),
-                new GeneralColumn(KeywordColumn.CPU, SettingsObject.Default.ColumnCPU, true),
-                new GeneralColumn(KeywordColumn.KKS, SettingsObject.Default.ColumnKKS, false),
-                new GeneralColumn(KeywordColumn.Operative, SettingsObject.Default.ColumnOperative, true),
-                new GeneralColumn(KeywordColumn.ObjectType, SettingsObject.Default.ColumnObjectType, false),
-                new GeneralColumn(KeywordColumn.ObjectName, SettingsObject.Default.ColumnObjectName, false),
-            };
+            ColumnList columns = new ColumnList();
+            
+            columns.Columns.Add(KeywordColumn.ID, new GeneralColumnParameters(0, true));
+            columns.Columns.Add(KeywordColumn.CPU, new GeneralColumnParameters(1, true));
+            columns.Columns.Add(KeywordColumn.KKS, new GeneralColumnParameters(2, false));
+            columns.Columns.Add(KeywordColumn.Operative, new GeneralColumnParameters(3, true));
+            columns.Columns.Add(KeywordColumn.ObjectType, new GeneralColumnParameters(4, false));
+            columns.Columns.Add(KeywordColumn.ObjectName, new GeneralColumnParameters(5, false));
 
             return columns;
         }
@@ -163,7 +162,7 @@ namespace IO_list_automation_new
 
             Progress.RenameProgressBar(Resources.ObjectGenerateUniqueData, data.Signals.Count);
 
-            UpdateColumnNumbers(data.BaseColumns.Columns);
+            UpdateColumnNumbers(data.BaseColumns);
             Signals.Clear();
             string keyword;
             string getKeyword;
@@ -177,9 +176,9 @@ namespace IO_list_automation_new
                 ObjectSignal objectSignal = new ObjectSignal();
 
                 // go through all column in objects and send data to objects
-                foreach (GeneralColumn column in Columns)
+                foreach (var column in Columns.Columns)
                 {
-                    keyword = column.Keyword;
+                    keyword = column.Key;
 
                     // IOText is transferred to object Name column
                     getKeyword = keyword == KeywordColumn.ObjectName ? KeywordColumn.IOText : keyword;
@@ -242,9 +241,9 @@ namespace IO_list_automation_new
                         continue;
 
                     // go through all column in objects and send data to objects
-                    foreach (GeneralColumn column in Columns)
+                    foreach (var column in Columns.Columns)
                     {
-                        keyword = column.Keyword;
+                        keyword = column.Key;
                         //do not transfer ID
                         if (keyword == "ID")
                             continue;

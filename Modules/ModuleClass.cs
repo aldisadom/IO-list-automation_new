@@ -104,16 +104,15 @@ namespace IO_list_automation_new
 
     internal class ModuleClass : GeneralClass<ModuleSignal>
     {
-        protected override List<GeneralColumn> GeneralGenerateColumnsList()
+        protected override ColumnList GeneralGenerateColumnsList()
         {
-            List<GeneralColumn> columns = new List<GeneralColumn>()
-            {
-                new GeneralColumn(KeywordColumn.ID, SettingsModule.Default.ColumnID, true),
-                new GeneralColumn(KeywordColumn.CPU, SettingsModule.Default.ColumnCPU, true),
-                new GeneralColumn(KeywordColumn.ModuleName, SettingsModule.Default.ColumnModuleName, false),
-                new GeneralColumn(KeywordColumn.ModuleType, SettingsModule.Default.ColumnModuleType, true),
-                new GeneralColumn(KeywordColumn.Cabinet, SettingsModule.Default.ColumnCabinet, false),
-            };
+            ColumnList columns = new ColumnList();
+
+            columns.Columns.Add(KeywordColumn.ID, new GeneralColumnParameters(0, true));
+            columns.Columns.Add(KeywordColumn.CPU, new GeneralColumnParameters(1, true));
+            columns.Columns.Add(KeywordColumn.ModuleName, new GeneralColumnParameters(2, false));
+            columns.Columns.Add(KeywordColumn.ModuleType, new GeneralColumnParameters(3, true));
+            columns.Columns.Add(KeywordColumn.Cabinet, new GeneralColumnParameters(4, false));
 
             return columns;
         }
@@ -148,7 +147,7 @@ namespace IO_list_automation_new
 
             Progress.RenameProgressBar(Resources.ModuleGenerateUniqueData, data.Signals.Count);
 
-            UpdateColumnNumbers(data.BaseColumns.Columns);
+            UpdateColumnNumbers(data.BaseColumns);
             Signals.Clear();
             string keyword;
             for (int dataNumber = 0; dataNumber < data.Signals.Count; dataNumber++)
@@ -161,9 +160,9 @@ namespace IO_list_automation_new
                 ModuleSignal objectsignal = new ModuleSignal();
 
                 // go through all column in objects and send data to objects
-                foreach (GeneralColumn column in Columns)
+                foreach (var column in Columns.Columns)
                 {
-                    keyword = column.Keyword;
+                    keyword = column.Key;
                     objectsignal.SetValueFromString(dataSignal.GetValueString(keyword, true), keyword);
                 }
 

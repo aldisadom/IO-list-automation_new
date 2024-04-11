@@ -163,11 +163,11 @@ namespace IO_list_automation_new
             IExcelDataReader excel = ExcelReaderFactory.CreateReader(stream);
 
             int rowCount = excel.RowCount;
-            int columnCount;
+            int columnCount = excel.FieldCount;
             Progress.RenameProgressBar(Resources.LoadDataFromFile + ": " + fullPath, rowCount);
 
             //add columns to dataTable
-            for (int column = 0; column < excel.FieldCount; column++)
+            for (int column = 0; column < columnCount; column++)
                 data.Columns.Add(column.ToString());
 
             //read all excel rows
@@ -176,8 +176,6 @@ namespace IO_list_automation_new
                 // if nothing to read exit
                 if (!excel.Read())
                     break;
-
-                columnCount = excel.FieldCount;
 
                 DataRow row = data.NewRow();
                 for (int column = 0; column < columnCount; column++)

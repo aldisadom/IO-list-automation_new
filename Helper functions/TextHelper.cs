@@ -1,23 +1,21 @@
 ﻿using IO_list_automation_new.Properties;
 using System;
-using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace IO_list_automation_new
+namespace IO_list_automation_new.Helper_functions
 {
-    internal class GeneralColumnName
+    public static class TextHelper
     {
-        public GeneralColumnName()
-        {
-        }
-
         /// <summary>
         /// Get name from column keyword and from DB choices
         /// </summary>
         /// <param name="keyword">column keyword</param>
         /// <returns>name of column</returns>
         /// <exception cref="InvalidProgramException"></exception>
-        public string GetColumnOrChoicesName(string keyword)
+        public static string GetColumnOrChoicesName(string keyword)
         {
             string returnName = GetChoicesName(keyword, true) ?? GetColumnName(keyword, true);
 
@@ -37,7 +35,7 @@ namespace IO_list_automation_new
         /// <param name="suppressError">suppress error if not found</param>
         /// <returns>name of column</returns>
         /// <exception cref="InvalidProgramException"></exception>
-        public string GetColumnName(string keyword, bool suppressError)
+        public static string GetColumnName(string keyword, bool suppressError)
         {
             switch (keyword)
             {
@@ -170,7 +168,7 @@ namespace IO_list_automation_new
         /// <param name="suppressError">suppress error if not found</param>
         /// <returns>name of choice</returns>
         /// <exception cref="InvalidProgramException"></exception>
-        public string GetChoicesName(string keyword, bool suppressError)
+        public static string GetChoicesName(string keyword, bool suppressError)
         {
             switch (keyword)
             {
@@ -248,164 +246,5 @@ namespace IO_list_automation_new
             }
         }
     }
-
-    internal class GeneralColumn
-    {
-        //column keyword
-        public string Keyword { get; }
-
-        //column number for sorting
-        public int Number { get; }
-
-        public bool CanHide { get; }
-
-        private GeneralColumnName ColumnName = new GeneralColumnName();
-
-        public GeneralColumn(string columnKeyword, int columnNumber, bool canHide)
-        {
-            Keyword = columnKeyword;
-            Number = columnNumber;
-            CanHide = canHide;
-        }
-
-        /// <summary>
-        /// Get column name based on software language
-        /// </summary>
-        /// <returns>column name of column based on language</returns>
-        public string GetColumnName(bool useKeywordAsName)
-        {
-            return useKeywordAsName ? Keyword : ColumnName.GetColumnName(Keyword, false);
-        }
-    }
-
-    internal class ColumnList : IEnumerable<GeneralColumn>
-    {
-        public List<GeneralColumn> Columns { get; }
-
-        /// <summary>
-        /// Sort all columns from lowest to highest
-        /// </summary>
-        /// <param name="columnsFromZero">for writing data to grid, to do not have empty columns</param>
-        /// <returns>sorted list</returns>
-        public void SortColumnsList(bool columnsFromZero)
-        {
-            List<GeneralColumn> tmpList = new List<GeneralColumn>();
-
-            foreach (GeneralColumn column in Columns)
-            {
-                // if columnsFromZero and column number is -1 then do not add to array
-                if (!columnsFromZero || column.Number >= 0)
-                    tmpList.Add(new GeneralColumn(column.Keyword, column.Number, column.CanHide));
-            }
-            Columns.Clear();
-
-            //set 0 index in list to minimum value
-            int minIndex = 0;
-            int minValue;
-            int columnIndex = 0;
-            int count = tmpList.Count;
-
-            int columnNumber;
-            string keyword;
-            bool canHide;
-
-            //sorting from lower to higher
-            for (int index = 0; index < count; index++)
-            {
-                minValue = int.MaxValue;
-                for (int i = 0; i < tmpList.Count; i++)
-                {
-                    if (tmpList[i].Number < minValue)
-                    {
-                        minIndex = i;
-                        minValue = tmpList[i].Number;
-                    }
-                }
-
-                columnNumber = tmpList[minIndex].Number;
-
-                if (columnsFromZero)
-                {
-                    if (columnNumber < 0)
-                        continue;
-
-                    columnNumber = columnIndex;
-                    columnIndex++;
-                }
-
-                keyword = tmpList[minIndex].Keyword;
-                canHide = tmpList[minIndex].CanHide;
-                GeneralColumn column = new GeneralColumn(keyword, columnNumber, canHide);
-
-                Columns.Add(column);
-                tmpList.RemoveAt(minIndex);
-            }
-        }
-
-        public ColumnList()
-        {
-            Columns = new List<GeneralColumn>();
-        }
-
-        /// <summary>
-        /// Create new GeneralColumn list
-        /// </summary>
-        /// <param name="listFrom">list to be copied</param>
-        /// <param name="columnsFromZero">true, Columns start from zero</param>
-        public void SetColumns(List<GeneralColumn> listFrom, bool columnsFromZero)
-        {
-            Columns.Clear();
-
-            foreach (GeneralColumn column in listFrom)
-            {
-                GeneralColumn newColumn = new GeneralColumn(column.Keyword, column.Number, column.CanHide);
-
-                Columns.Add(newColumn);
-            }
-            SortColumnsList(columnsFromZero);
-        }
-
-        public List<string> GetColumnsKeyword()
-        {
-            List<string> columns = new List<string>();
-
-            foreach (GeneralColumn column in Columns)
-                columns.Add(column.Keyword);
-
-            return columns;
-        }
-
-        /// <summary>
-        /// Find column with keyword and return its column number
-        /// </summary>
-        /// <param name="keyword">column keyword</param>
-        /// <returns>column number</returns>
-        public int GetColumnNumberFromKeyword(string keyword)
-        {
-            foreach (GeneralColumn column in Columns)
-            {
-                if (keyword == column.Keyword)
-                    return column.Number;
-            }
-            return -1;
-        }
-
-        IEnumerator<GeneralColumn> IEnumerable<GeneralColumn>.GetEnumerator()
-        {
-            return Columns.GetEnumerator();
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            throw new NotImplementedException();
-        }
-
-        public override string ToString()
-        {
-            List<string> texts = new List<string>();
-            foreach (GeneralColumn column in Columns)
-                texts.Add(column.Keyword);
-            return texts.ToString();
-        }
-    }
+    
 }

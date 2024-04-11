@@ -273,32 +273,20 @@ namespace IO_list_automation_new
             comboBox.Location = PointToClient(Cursor.Position);
 
             //current columns that are shown can be removed
-            foreach (GeneralColumn column in columnList)
+            foreach (var column in columnList.Columns)
             {
-                if (!column.CanHide)
+                if (!column.Value.CanHide)
                     continue;
 
-                comboBox.AddItemColumn(Resources.Remove, column.Keyword);
+                comboBox.AddItemColumn(Resources.Remove, column.Key);
             }
 
-            string keyword;
-            bool found;
             //current columns that are not visible can be added
-            foreach (GeneralColumn baseColumn in baseColumnList)
-            {
-                found = false;
-                keyword = baseColumn.Keyword;
-                foreach (GeneralColumn column in columnList)
-                {
-                    if (keyword == column.Keyword)
-                    {
-                        found = true;
-                        break;
-                    }
-                }
+            foreach (var baseColumn in baseColumnList.Columns)
+            {                
                 // when column list does not have keyword that is in base than column can be added
-                if (!found)
-                    comboBox.AddItemColumn(Resources.Add, keyword);
+                if (!columnList.Columns.TryGetValue(baseColumn.Key, out var value))
+                    comboBox.AddItemColumn(Resources.Add, baseColumn.Key);
             }
             comboBox.IndexChangedEvent = ColumnSelectComboBoxSelectedValueChanged;
 

@@ -1,5 +1,6 @@
 ﻿using IO_list_automation_new.DB;
 using IO_list_automation_new.General;
+using IO_list_automation_new.Helper_functions;
 using IO_list_automation_new.Properties;
 using System;
 using System.Collections.Generic;
@@ -699,8 +700,6 @@ namespace IO_list_automation_new.Forms
             if (labelText != null)
                 Grid.Rows[row].Cells[column].Value = labelText;
 
-            GeneralColumnName ccc = new GeneralColumnName();
-
             switch (elementType)
             {
                 case ComboBoxType.Main:
@@ -708,7 +707,7 @@ namespace IO_list_automation_new.Forms
                 case ComboBoxType.Data_:
                 case ComboBoxType.Object:
                 case ComboBoxType.Module:
-                    Grid.Rows[row + 1].Cells[column].Value = ccc.GetColumnOrChoicesName(comboBoxKeyword);
+                    Grid.Rows[row + 1].Cells[column].Value = TextHelper.GetColumnOrChoicesName(comboBoxKeyword);
                     Grid.Rows[row + 1].Cells[column].Style.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular);
                     Grid.Rows[row + 1].Cells[column].Style.Alignment = DataGridViewContentAlignment.MiddleLeft;
                     break;

@@ -3,6 +3,7 @@ using IO_list_automation_new.Properties;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Drawing;
 using System.Windows.Forms;
 
 namespace IO_list_automation_new
@@ -231,16 +232,16 @@ namespace IO_list_automation_new
 
     internal class AddressesClass : GeneralClass<AddressObject>
     {
-        protected override List<GeneralColumn> GeneralGenerateColumnsList()
+        protected override ColumnList GeneralGenerateColumnsList()
         {
-            List<GeneralColumn> columns = new List<GeneralColumn>()
-            {
-                new GeneralColumn(KeywordColumn.ID, 0, false),
-                new GeneralColumn(KeywordColumn.CPU, 1, false),
-                new GeneralColumn(KeywordColumn.ObjectGeneralType, 2,false),
-                new GeneralColumn(KeywordColumn.ObjectType, 3,false),
-                new GeneralColumn(KeywordColumn.ObjectName, 4, false),
-            };
+            ColumnList columns = new ColumnList();
+
+            columns.Columns.Add(KeywordColumn.ID, new GeneralColumnParameters(0, false));
+            columns.Columns.Add(KeywordColumn.CPU, new GeneralColumnParameters(1, false));
+            columns.Columns.Add(KeywordColumn.ObjectGeneralType, new GeneralColumnParameters(2, false));
+            columns.Columns.Add(KeywordColumn.ObjectType, new GeneralColumnParameters(3, false));
+            columns.Columns.Add(KeywordColumn.ObjectName, new GeneralColumnParameters(4, false));
+
             return columns;
         }
 
@@ -297,24 +298,24 @@ namespace IO_list_automation_new
             int columnNumber;
 
             //get list of columns that is used
-            List<GeneralColumn> newColumnList = new List<GeneralColumn>();
+            ColumnList newColumnList = new ColumnList();
 
             Columns.SetColumns(GeneralGenerateColumnsList(), false);
-            foreach (GeneralColumn column in Columns)
+            foreach (var column in Columns.Columns)
             {
-                columnNumber = column.Number;
+                columnNumber = column.Value.NR;
                 if (columnNumber >= 0)
-                    newColumnList.Add(column);
+                    newColumnList.Columns.Add(column.Key, column.Value);
             }
 
-            int columnIndex = newColumnList.Count;
+            int columnIndex = newColumnList.Columns.Count;
 
             List<string> addressColumns = GetColumns();
             foreach (string columnName in addressColumns)
             {
-                newColumnList.Add(new GeneralColumn(ResourcesUI.Area + columnName, columnIndex, false));
-                newColumnList.Add(new GeneralColumn(ResourcesUI.Start + columnName, columnIndex + 1, false));
-                newColumnList.Add(new GeneralColumn(ResourcesUI.Size + columnName, columnIndex + 2, false));
+                newColumnList.Columns.Add(ResourcesUI.Area + columnName, new GeneralColumnParameters(columnIndex, false));
+                newColumnList.Columns.Add(ResourcesUI.Area + ResourcesUI.Start + columnName, new GeneralColumnParameters( columnIndex + 1, false));
+                newColumnList.Columns.Add(ResourcesUI.Area + ResourcesUI.Size + columnName, new GeneralColumnParameters(columnIndex + 2, false));
                 columnIndex += 3;
             }
 
@@ -322,8 +323,8 @@ namespace IO_list_automation_new
             DataTable data = new DataTable();
 
             //add columns to dataTable
-            foreach (GeneralColumn column in Columns.Columns)
-                data.Columns.Add(column.Keyword);
+            foreach (var column in Columns.Columns)
+                data.Columns.Add(column.Key);
 
             foreach (AddressObject signal in Signals)
             {
@@ -365,7 +366,7 @@ namespace IO_list_automation_new
         /// </summary>
         /// <param name="suppressError">suppress error</param>
         /// <returns>there is data in signals</returns>
-        public override bool ListToSignals(DataTable inputData, List<GeneralColumn> newColumnList, bool suppressError)
+        public override bool ListToSignals(DataTable inputData, ColumnList newColumnList, bool suppressError)
         {
             if (inputData == null)
                 return false;
@@ -387,28 +388,42 @@ namespace IO_list_automation_new
             {
                 AddressObject signal = new AddressObject();
 
-                foreach (GeneralColumn baseColumn in BaseColumns.Columns)
+                foreach (var baseColumn in BaseColumns.Columns)
                 {
-                    columnNumber = baseColumn.Number;
+                    columnNumber = baseColumn.Value.NR;
 
                     if (columnNumber < 0)
                         continue;
 
                     //put value based on keyword to memory
-                    keyword = baseColumn.Keyword;
+                    keyword = baseColumn.Key;
                     cellValue = GeneralFunctions.GetDataTableValue(inputData, rowNumber, columnNumber);
 
                     signal.SetValueFromString(cellValue, keyword);
                 }
-
-                for (int columnIndex = BaseColumns.Columns.Count; columnIndex < newColumnList.Count; columnIndex += 3)
+                foreach (var column in BaseColumns.Columns)
                 {
-                    columnNumber = newColumnList[columnIndex].Number;
+                    columnNumber = column.Value.NR;
                     if (string.IsNullOrEmpty(GeneralFunctions.GetDataTableValue(inputData, rowNumber, columnNumber)))
                         continue;
 
-                    indexText = newColumnList[columnIndex].Keyword.IndexOf("(");
-                    columnName = indexText == -1 ? string.Empty : newColumnList[columnIndex].Keyword.Substring(indexText);
+                    indexText = column.Key.IndexOf("(");
+                    columnName = indexText == -1 ? string.Empty : column.Key.Substring(indexText);
+
+                    AddressSingle addressSingle = new AddressSingle(GeneralFunctions.GetDataTableValue(inputData, rowNumber, columnNumber)
+                                                                    , GeneralFunctions.GetDataTableValue(inputData, rowNumber, columnNumber + 1)
+                                                                    , GeneralFunctions.GetDataTableValue(inputData, rowNumber, columnNumber + 2)
+                                                                    , columnName);
+                    signal.Addresses.Add(addressSingle);
+                }
+                foreach (var column in newColumnList.Columns)
+                {
+                    columnNumber = column.Value.NR;
+                    if (string.IsNullOrEmpty(GeneralFunctions.GetDataTableValue(inputData, rowNumber, columnNumber)))
+                        continue;
+
+                    indexText = column.Key.IndexOf("(");
+                    columnName = indexText == -1 ? string.Empty : column.Key.Substring(indexText);
 
                     AddressSingle addressSingle = new AddressSingle(GeneralFunctions.GetDataTableValue(inputData, rowNumber, columnNumber)
                                                                     , GeneralFunctions.GetDataTableValue(inputData, rowNumber, columnNumber + 1)
@@ -553,15 +568,15 @@ namespace IO_list_automation_new
                     if (!Signals[signalIndex].Addresses[i].Overlap)
                         continue;
 
-                    for (int column = BaseColumns.Columns.Count; column < Columns.Columns.Count; column += 3)
+                    foreach (var column in Columns.Columns)
                     {
-                        if (Columns.Columns[column].Keyword != (ResourcesUI.Area + Signals[signalIndex].Addresses[i].ObjectVariableType))
+                        if (column.Key != (ResourcesUI.Area + Signals[signalIndex].Addresses[i].ObjectVariableType))
                             continue;
 
                         overlap = true;
-                        Grid.ColorCell(signalIndex, column);
-                        Grid.ColorCell(signalIndex, column + 1);
-                        Grid.ColorCell(signalIndex, column + 2);
+                        Grid.ColorCell(signalIndex, column.Value.NR);
+                        Grid.ColorCell(signalIndex, column.Value.NR + 1);
+                        Grid.ColorCell(signalIndex, column.Value.NR + 2);
                         break;
                     }
                 }

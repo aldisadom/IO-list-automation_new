@@ -154,6 +154,23 @@ namespace IO_list_automation_new
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
+
+            //Settings.Default.Reset();
+
+            SettingsObject.Default.Reset();
+            SettingsData.Default.Reset();
+            SettingsDesign.Default.Reset();
+            SettingsDesignInput.Default.Reset();
+            SettingsModule.Default.Reset();
+            SettingsObject.Default.Reset();
+
+            SettingsObject.Default.Save();
+            SettingsData.Default.Save();
+            SettingsDesign.Default.Save();
+            SettingsDesignInput.Default.Save();
+            SettingsModule.Default.Save();
+            SettingsObject.Default.Save();
+
             MainWindow mainWindow = new MainWindow();
             Application.Run(mainWindow);
         }
