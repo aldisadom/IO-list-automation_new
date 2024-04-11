@@ -96,6 +96,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Data\DataSignal.cs" />
     <Compile Include="DB\CellTag.cs" />
     <Compile Include="DB\DBChoices.cs" />
     <Compile Include="DB\DBForceEditForm.cs">
@@ -132,6 +133,7 @@
     <Compile Include="DesignInputData.Designer.cs">
       <DependentUpon>DesignInputData.cs</DependentUpon>
     </Compile>
+    <Compile Include="Design\DesignSignal.cs" />
     <Compile Include="General\ExcelClass.cs" />
     <Compile Include="General\GeneralGrid.cs" />
     <Compile Include="Helper functions\DropDownClass.cs" />
@@ -155,6 +157,7 @@
     <Compile Include="General\GeneralColumnParameters.cs" />
     <Compile Include="AddressesClass.cs" />
     <Compile Include="Modules\ModuleClass.cs" />
+    <Compile Include="Modules\ModuleSignal.cs" />
     <Compile Include="Objects\ObjectsClass.cs" />
     <Compile Include="Data\DataClass.cs" />
     <Compile Include="MainWindow.cs">
@@ -163,6 +166,7 @@
     <Compile Include="MainWindow.Designer.cs">
       <DependentUpon>MainWindow.cs</DependentUpon>
     </Compile>
+    <Compile Include="Objects\ObjectsSignals.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Helper functions\ProgressIndication.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

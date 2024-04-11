@@ -3,7 +3,6 @@ using IO_list_automation_new.Properties;
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Drawing;
 using System.Windows.Forms;
 
 namespace IO_list_automation_new
@@ -100,73 +99,6 @@ namespace IO_list_automation_new
             ObjectType = string.Empty;
             ObjectGeneralType = string.Empty;
             ObjectName = string.Empty;
-        }
-
-        /// <summary>
-        /// Parsing data from excel or grid, according to Column to signal element
-        /// </summary>
-        /// <param name="value">value to be passed</param>
-        /// <param name="parameterName">parameter to be set</param>
-        public override void SetValueFromString(string value, string parameterName)
-        {
-            switch (parameterName)
-            {
-                case KeywordColumn.ID:
-                    ID = value;
-                    break;
-
-                case KeywordColumn.CPU:
-                    CPU = value;
-                    break;
-
-                case KeywordColumn.ObjectType:
-                    ObjectType = value;
-                    break;
-
-                case KeywordColumn.ObjectName:
-                    ObjectName = value;
-                    break;
-
-                case KeywordColumn.ObjectGeneralType:
-                    ObjectGeneralType = value;
-                    break;
-            }
-        }
-
-        /// <summary>
-        /// Parsing data signal element to string for grid
-        /// </summary>
-        /// <param name="parameterName">parameter to be read</param>
-        /// <param name="suppressError">suppress alarm message, used only for transferring from one type to another type data classes</param>
-        /// <returns>value of parameter</returns>
-        public override string GetValueString(string parameterName, bool suppressError)
-        {
-            switch (parameterName)
-            {
-                case KeywordColumn.ID:
-                    return ID;
-
-                case KeywordColumn.CPU:
-                    return CPU;
-
-                case KeywordColumn.ObjectType:
-                    return ObjectType;
-
-                case KeywordColumn.ObjectName:
-                    return ObjectName;
-
-                case KeywordColumn.ObjectGeneralType:
-                    return ObjectGeneralType;
-
-                default:
-                    if (suppressError)
-                        return string.Empty;
-
-                    const string debugText = "AddressObject.GetValueString";
-                    Debug debug = new Debug();
-                    debug.ToFile(debugText + " " + Resources.ParameterNotFound + ":" + parameterName, DebugLevels.None, DebugMessageType.Critical);
-                    throw new InvalidProgramException(debugText + "." + parameterName + " is not created for this element");
-            }
         }
 
         /// <summary>
@@ -314,7 +246,7 @@ namespace IO_list_automation_new
             foreach (string columnName in addressColumns)
             {
                 newColumnList.Columns.Add(ResourcesUI.Area + columnName, new GeneralColumnParameters(columnIndex, false));
-                newColumnList.Columns.Add(ResourcesUI.Area + ResourcesUI.Start + columnName, new GeneralColumnParameters( columnIndex + 1, false));
+                newColumnList.Columns.Add(ResourcesUI.Area + ResourcesUI.Start + columnName, new GeneralColumnParameters(columnIndex + 1, false));
                 newColumnList.Columns.Add(ResourcesUI.Area + ResourcesUI.Size + columnName, new GeneralColumnParameters(columnIndex + 2, false));
                 columnIndex += 3;
             }

@@ -1,126 +1,17 @@
-﻿using IO_list_automation_new.Properties;
-using System;
-using System.Collections.Generic;
+﻿using IO_list_automation_new.Data;
+using IO_list_automation_new.Objects;
+using IO_list_automation_new.Properties;
 using System.Windows.Forms;
 
 namespace IO_list_automation_new
 {
-    internal class ObjectSignal : GeneralSignal
-    {
-        public string ID { get; private set; }
-        public string CPU { get; private set; }
-        public string Operative { get; private set; }
-        public string KKS { get; private set; }
-        public string ObjectType { get; private set; }
-        public string ObjectName { get; private set; }
-
-        public string UniqueKKS
-        { get { return KKS + "_" + CPU; } }
-
-        public ObjectSignal() : base()
-        {
-            CPU = string.Empty;
-            Operative = string.Empty;
-            KKS = string.Empty;
-            ObjectType = string.Empty;
-            ObjectName = string.Empty;
-        }
-
-        /// <summary>
-        /// Parsing data from excel or grid, according to Column to signal element
-        /// </summary>
-        /// <param name="value">value to be passed</param>
-        /// <param name="parameterName">parameter to be set</param>
-        public override void SetValueFromString(string value, string parameterName)
-        {
-            switch (parameterName)
-            {
-                case KeywordColumn.ID:
-                    ID = value;
-                    break;
-
-                case KeywordColumn.CPU:
-                    CPU = value;
-                    break;
-
-                case KeywordColumn.KKS:
-                    KKS = value;
-                    break;
-
-                case KeywordColumn.Operative:
-                    Operative = value;
-                    break;
-
-                case KeywordColumn.ObjectType:
-                    ObjectType = value;
-                    break;
-
-                case KeywordColumn.ObjectName:
-                    ObjectName = value;
-                    break;
-            }
-        }
-
-        /// <summary>
-        /// Parsing data signal element to string for grid
-        /// </summary>
-        /// <param name="parameterName">parameter to be read</param>
-        /// <param name="suppressError">suppress alarm message, used only for transferring from one type to another type data classes</param>
-        /// <returns>value of parameter</returns>
-        public override string GetValueString(string parameterName, bool suppressError)
-        {
-            switch (parameterName)
-            {
-                case KeywordColumn.ID:
-                    return ID;
-
-                case KeywordColumn.CPU:
-                    return CPU;
-
-                case KeywordColumn.KKS:
-                    return KKS;
-
-                case KeywordColumn.Operative:
-                    return Operative;
-
-                case KeywordColumn.ObjectType:
-                    return ObjectType;
-
-                case KeywordColumn.ObjectName:
-                    return ObjectName;
-
-                default:
-                    if (suppressError)
-                        return string.Empty;
-
-                    const string debugText = "ObjectsSignal.GetValueString";
-                    Debug debug = new Debug();
-                    debug.ToFile(debugText + " " + Resources.ParameterNotFound + ":" + parameterName, DebugLevels.None, DebugMessageType.Critical);
-                    throw new InvalidProgramException(debugText + "." + parameterName + " is not created for this element");
-            }
-        }
-
-        /// <summary>
-        /// Checks if design signal is valid:
-        /// </summary>
-        /// <returns>true if minimum signal requirements are met</returns>
-        public override bool ValidateSignal()
-        {
-            if (string.IsNullOrEmpty(KKS))
-                return false;
-            else if (string.IsNullOrEmpty(ObjectName))
-                return false;
-
-            return true;
-        }
-    }
 
     internal class ObjectsClass : GeneralClass<ObjectSignal>
     {
         protected override ColumnList GeneralGenerateColumnsList()
         {
             ColumnList columns = new ColumnList();
-            
+
             columns.Columns.Add(KeywordColumn.ID, new GeneralColumnParameters(0, true));
             columns.Columns.Add(KeywordColumn.CPU, new GeneralColumnParameters(1, true));
             columns.Columns.Add(KeywordColumn.KKS, new GeneralColumnParameters(2, false));

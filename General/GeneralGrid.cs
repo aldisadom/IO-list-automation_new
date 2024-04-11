@@ -1,7 +1,6 @@
 ﻿using IO_list_automation_new.Helper_functions;
 using IO_list_automation_new.Properties;
 using System;
-using System.Collections.Generic;
 using System.Data;
 using System.Windows.Forms;
 
@@ -151,9 +150,9 @@ namespace IO_list_automation_new
                         if (column.Value.NR == columnNumber)
                         {
                             Grid.Columns[columnNumber].Name = column.Key;
-                            data.Columns[columnNumber].ColumnName = TextHelper.GetColumnName(column.Key,false);                            
+                            data.Columns[columnNumber].ColumnName = TextHelper.GetColumnName(column.Key, false);
                         }
-                    }                    
+                    }
                 }
             }
             Grid.ResumeLayout(false);

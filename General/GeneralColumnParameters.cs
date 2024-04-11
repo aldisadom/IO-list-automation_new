@@ -1,7 +1,4 @@
 ﻿using IO_list_automation_new.Helper_functions;
-using IO_list_automation_new.Properties;
-using System;
-using System.Collections;
 using System.Collections.Generic;
 
 namespace IO_list_automation_new
@@ -102,7 +99,7 @@ namespace IO_list_automation_new
         /// <returns>column number</returns>
         public string GetColumnNameFromKeyword(string keyword)
         {
-            return TextHelper.GetColumnName(keyword, false);            
+            return TextHelper.GetColumnName(keyword, false);
         }
 
         public override string ToString()

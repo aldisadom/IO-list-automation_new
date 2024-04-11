@@ -1,26 +1,52 @@
 ﻿using IO_list_automation_new.General;
 using IO_list_automation_new.Properties;
+using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Reflection;
+using System.Reflection.Emit;
+using System.Runtime.Remoting.Channels;
 using System.Windows.Forms;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace IO_list_automation_new
 {
     public abstract class GeneralSignal
     {
         /// <summary>
-        /// Parsing data from excel or grid, according to Column to signal element
+        /// Set value of property
         /// </summary>
-        /// <param name="value">value to be passed</param>
-        /// <param name="parameterName">parameter to be set</param>
-        public abstract void SetValueFromString(string value, string parameterName);
+        /// <param name="value">value to sety</param>
+        /// <param name="parameterName">parameter name</param>
+        public void SetValueFromString(string value, string parameterName)
+        {
+            GetValueString(parameterName, false);
+
+            this.GetType().GetProperty(parameterName).SetValue(this, value);
+        }
 
         /// <summary>
         /// Parsing data signal element to string for grid
         /// </summary>
-        /// <param name="parameterName"></param>
+        /// <param name="parameterName">parameter to be read</param>
+        /// <param name="suppressError">suppress alarm message, used only for transferring from one type to another type data classes</param>
         /// <returns>value of parameter</returns>
-        public abstract string GetValueString(string parameterName, bool suppressError);
+        public string GetValueString(string parameterName, bool suppressError)
+        {
+            var a = this.GetType().GetProperty(parameterName).GetValue(this, null);
+            if (a is null)
+            {
+                if (suppressError)
+                    return string.Empty;
+
+                string debugText = this.GetType() + ".GetValueString ";
+                Debug debug = new Debug();
+                debug.ToFile(debugText + " " + Resources.ParameterNotFound + ":" + parameterName, DebugLevels.None, DebugMessageType.Critical);
+                throw new InvalidProgramException(debugText + "." + parameterName + " is not created for this element");
+            }
+            else
+                return a.ToString();                        
+        }
 
         /// <summary>
         /// Checks if signal is valid
@@ -86,7 +112,7 @@ namespace IO_list_automation_new
                             }
                         }
                         if (found)
-                            columns.Columns.Add(GeneralFunctions.GetDataTableValue(inputData, 0, column),new GeneralColumnParameters(column, canHide));
+                            columns.Columns.Add(GeneralFunctions.GetDataTableValue(inputData, 0, column), new GeneralColumnParameters(column, canHide));
                         else
                             inputData.Columns.RemoveAt(column);
                     }
@@ -223,7 +249,7 @@ namespace IO_list_automation_new
             for (int rowNumber = 0; rowNumber < inputData.Rows.Count; rowNumber++)
             {
                 T signal = new T();
-                foreach(var newColumn in newColumnList.Columns)
+                foreach (var newColumn in newColumnList.Columns)
                 {
                     columnNumber = newColumn.Value.NR;
 

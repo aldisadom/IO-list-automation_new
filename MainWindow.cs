@@ -283,7 +283,7 @@ namespace IO_list_automation_new
 
             //current columns that are not visible can be added
             foreach (var baseColumn in baseColumnList.Columns)
-            {                
+            {
                 // when column list does not have keyword that is in base than column can be added
                 if (!columnList.Columns.TryGetValue(baseColumn.Key, out var value))
                     comboBox.AddItemColumn(Resources.Add, baseColumn.Key);

@@ -102,7 +102,7 @@ namespace IO_list_automation_new.Forms
             foreach (var column in ExcelColumns.Columns)
             {
                 if (column.Value.NR == -1)
-                    columnNames.Add(TextHelper.GetColumnName(column.Key,false));
+                    columnNames.Add(TextHelper.GetColumnName(column.Key, false));
             }
 
             return columnNames;
@@ -243,7 +243,7 @@ namespace IO_list_automation_new.Forms
                         continue;
 
                     InputDataGridView.Columns[i].Name = column.Key;
-                    InputDataGridView.Columns[i].HeaderText = TextHelper.GetColumnName(column.Key,false);
+                    InputDataGridView.Columns[i].HeaderText = TextHelper.GetColumnName(column.Key, false);
                     break;
                 }
             }
