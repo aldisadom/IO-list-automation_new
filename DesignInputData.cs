@@ -1,4 +1,5 @@
-﻿using IO_list_automation_new.Helper_functions;
+﻿using IO_list_automation_new.General;
+using IO_list_automation_new.Helper_functions;
 using IO_list_automation_new.Properties;
 using System;
 using System.Collections.Generic;
@@ -15,6 +16,23 @@ namespace IO_list_automation_new.Forms
         private GeneralGrid Grid { get; set; }
 
         private ColumnList ExcelColumns { get; set; }
+
+        public DesignInputData(DataTable data, ColumnList excelColumns)
+        {
+            InitializeComponent();
+
+            RowOffsetInput.Text = SettingsDesignInput.Default.RowOffset.ToString();
+
+            ExcelColumns = excelColumns;
+            ExcelColumns.LoadColumnsParameters();
+            Grid = new GeneralGrid(Name, GridTypes.DataNoEdit, InputDataGridView, ExcelColumns);
+            Grid.PutData(data);
+            ExcelColumns.SaveColumnsParameters();
+
+            ElementHasChannelAndIsNumber.Text = ResourcesUI.ElementHasChannelAndIsNumber;
+            ElementHasIOText.Text = ResourcesUI.ElementHasIOText;
+            ElementHasModuleName.Text = ResourcesUI.ElementHasModuleName;
+        }
 
         /// <summary>
         /// ComboBox accept only numbers
@@ -86,9 +104,12 @@ namespace IO_list_automation_new.Forms
             if (columnName == "---")
                 InputDataGridView.Columns[ColumnIndex].HeaderText = (ColumnIndex.ToString());
             else
-                InputDataGridView.Columns[ColumnIndex].HeaderText = columnName;
+            {
+                InputDataGridView.Columns[ColumnIndex].Name = columnName;
+                InputDataGridView.Columns[ColumnIndex].HeaderText = TextHelper.GetColumnName(columnName, false);
+            }
 
-            GetColumns();
+            UpdateColumnFromGrid();
             //after hide comboBox
             comboBoxColumn.Visible = false;
             comboBoxColumn.SelectedIndex = -1;
@@ -97,156 +118,49 @@ namespace IO_list_automation_new.Forms
         private List<string> GetAvailableColumns()
         {
             List<string> columnNames = new List<string>();
-            InitExcelColumnsList();
-
+            bool found;
+            //jei yra toks vistiek prideda, ir jei pasirenku tam tikrus stulpelius tai juos ir reiktu i design butinai perduot
             foreach (var column in ExcelColumns.Columns)
             {
-                if (column.Value.NR == -1)
-                    columnNames.Add(TextHelper.GetColumnName(column.Key, false));
+                found = false;
+                for (int i = 0; i < InputDataGridView.Columns.Count; i++)
+                {
+                    if (InputDataGridView.Columns[i].Name == column.Key)
+                    {
+                        found = true;
+                        break;
+                    }
+                }
+
+                if (!found)
+                {
+                    column.Value.Hidden = false;
+                    columnNames.Add(column.Key);
+                }
             }
 
             return columnNames;
         }
 
-        public void InitExcelColumnsList()
-        {
-            ColumnList excelColumns = new ColumnList();
-
-            excelColumns.Columns.Add(KeywordColumn.ID, new GeneralColumnParameters(0, false));
-            excelColumns.Columns.Add(KeywordColumn.CPU, new GeneralColumnParameters(1, true));
-            excelColumns.Columns.Add(KeywordColumn.KKS, new GeneralColumnParameters(2, false));
-            excelColumns.Columns.Add(KeywordColumn.RangeMin, new GeneralColumnParameters(3, true));
-            excelColumns.Columns.Add(KeywordColumn.RangeMax, new GeneralColumnParameters(4, true));
-            excelColumns.Columns.Add(KeywordColumn.Units, new GeneralColumnParameters(5, true));
-            excelColumns.Columns.Add(KeywordColumn.FalseText, new GeneralColumnParameters(6, true));
-            excelColumns.Columns.Add(KeywordColumn.TrueText, new GeneralColumnParameters(7, true));
-            excelColumns.Columns.Add(KeywordColumn.Revision, new GeneralColumnParameters(8, true));
-            excelColumns.Columns.Add(KeywordColumn.Cable, new GeneralColumnParameters(9, true));
-            excelColumns.Columns.Add(KeywordColumn.Cabinet, new GeneralColumnParameters(10, false));
-            excelColumns.Columns.Add(KeywordColumn.ModuleName, new GeneralColumnParameters(11, false));
-            excelColumns.Columns.Add(KeywordColumn.Pin, new GeneralColumnParameters(12, true));
-            excelColumns.Columns.Add(KeywordColumn.Channel, new GeneralColumnParameters(13, false));
-            excelColumns.Columns.Add(KeywordColumn.IOText, new GeneralColumnParameters(14, false));
-            excelColumns.Columns.Add(KeywordColumn.Page, new GeneralColumnParameters(15, true));
-            excelColumns.Columns.Add(KeywordColumn.Changed, new GeneralColumnParameters(16, true));
-            excelColumns.Columns.Add(KeywordColumn.Terminal, new GeneralColumnParameters(17, true));
-
-            ExcelColumns.SetColumns(excelColumns, false);
-        }
-
-        public DesignInputData(DataTable data)
-        {
-            InitializeComponent();
-
-            ExcelColumns = new ColumnList();
-            InitExcelColumnsList();
-
-            RowOffsetInput.Text = SettingsDesignInput.Default.RowOffset.ToString();
-            ExcelColumns.SortColumns(true);
-            Grid = new GeneralGrid(Name, GridTypes.DataNoEdit, InputDataGridView, ExcelColumns);
-            Grid.PutData(data);
-
-            ElementHasChannelAndIsNumber.Text = ResourcesUI.ElementHasChannelAndIsNumber;
-            ElementHasIOText.Text = ResourcesUI.ElementHasIOText;
-            ElementHasModuleName.Text = ResourcesUI.ElementHasModuleName;
-        }
-
         /// <summary>
         /// update settings from grid
         /// </summary>
-        private void GetColumns()
+        private void UpdateColumnFromGrid()
         {
-            string emptyName;
-            string name;
-
-            //init all settings
-            SettingsDesignInput.Default.ColumnID = -1;
-            SettingsDesignInput.Default.ColumnCPU = -1;
-            SettingsDesignInput.Default.ColumnKKS = -1;
-            SettingsDesignInput.Default.ColumnRangeMin = -1;
-            SettingsDesignInput.Default.ColumnRangeMax = -1;
-            SettingsDesignInput.Default.ColumnUnits = -1;
-            SettingsDesignInput.Default.ColumnFalseText = -1;
-            SettingsDesignInput.Default.ColumnTrueText = -1;
-            SettingsDesignInput.Default.ColumnRevision = -1;
-            SettingsDesignInput.Default.ColumnCable = -1;
-            SettingsDesignInput.Default.ColumnCabinet = -1;
-            SettingsDesignInput.Default.ColumnModuleName = -1;
-            SettingsDesignInput.Default.ColumnPin = -1;
-            SettingsDesignInput.Default.ColumnChannel = -1;
-            SettingsDesignInput.Default.ColumnIOText = -1;
-            SettingsDesignInput.Default.ColumnPage = -1;
-            SettingsDesignInput.Default.ColumnChanged = -1;
-            SettingsDesignInput.Default.ColumnTerminal = -1;
+            string columnName;
 
             //try to get all settings from columns
             for (int i = 0; i < InputDataGridView.Columns.Count; i++)
             {
-                emptyName = "Col " + i.ToString();
-                name = InputDataGridView.Columns[i].HeaderText;
-                //if column has no name selected skip
-                if (name == emptyName)
-                    continue;
+                columnName = InputDataGridView.Columns[i].Name;
 
-                if (name == ResourcesColumns.ID)
-                    SettingsDesignInput.Default.ColumnID = i;
-                else if (name == ResourcesColumns.CPU)
-                    SettingsDesignInput.Default.ColumnCPU = i;
-                else if (name == ResourcesColumns.KKS)
-                    SettingsDesignInput.Default.ColumnKKS = i;
-                else if (name == ResourcesColumns.RangeMin)
-                    SettingsDesignInput.Default.ColumnRangeMin = i;
-                else if (name == ResourcesColumns.RangeMax)
-                    SettingsDesignInput.Default.ColumnRangeMax = i;
-                else if (name == ResourcesColumns.Units)
-                    SettingsDesignInput.Default.ColumnUnits = i;
-                else if (name == ResourcesColumns.FalseText)
-                    SettingsDesignInput.Default.ColumnFalseText = i;
-                else if (name == ResourcesColumns.TrueText)
-                    SettingsDesignInput.Default.ColumnTrueText = i;
-                else if (name == ResourcesColumns.Revision)
-                    SettingsDesignInput.Default.ColumnRevision = i;
-                else if (name == ResourcesColumns.Cable)
-                    SettingsDesignInput.Default.ColumnCable = i;
-                else if (name == ResourcesColumns.Cabinet)
-                    SettingsDesignInput.Default.ColumnCabinet = i;
-                else if (name == ResourcesColumns.ModuleName)
-                    SettingsDesignInput.Default.ColumnModuleName = i;
-                else if (name == ResourcesColumns.Pin)
-                    SettingsDesignInput.Default.ColumnPin = i;
-                else if (name == ResourcesColumns.Channel)
-                    SettingsDesignInput.Default.ColumnChannel = i;
-                else if (name == ResourcesColumns.IOText)
-                    SettingsDesignInput.Default.ColumnIOText = i;
-                else if (name == ResourcesColumns.Page)
-                    SettingsDesignInput.Default.ColumnPage = i;
-                else if (name == ResourcesColumns.Changed)
-                    SettingsDesignInput.Default.ColumnChanged = i;
-                else if (name == ResourcesColumns.Terminal)
-                    SettingsDesignInput.Default.ColumnTerminal = i;
-            }
-            SettingsDesignInput.Default.Save();
-            InitExcelColumnsList();
-        }
-
-        /// <summary>
-        /// rename grid columns from settings
-        /// </summary>
-        private void RenameColumns()
-        {
-            for (int i = 0; i < InputDataGridView.Columns.Count; i++)
-            {
-                InputDataGridView.Columns[i].HeaderText = "Col " + i.ToString();
-                foreach (var column in ExcelColumns.Columns)
+                if (ExcelColumns.Columns.TryGetValue(columnName, out ColumnParameters columnParameters))
                 {
-                    if (column.Value.NR != i)
-                        continue;
-
-                    InputDataGridView.Columns[i].Name = column.Key;
-                    InputDataGridView.Columns[i].HeaderText = TextHelper.GetColumnName(column.Key, false);
-                    break;
+                    columnParameters.Hidden = false;
+                    columnParameters.NR = i;
                 }
             }
+            ExcelColumns.SaveColumnsParameters();
         }
     }
 }

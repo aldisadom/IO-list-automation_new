@@ -218,9 +218,42 @@ namespace IO_list_automation_new
             if (!comboBox.ValidCheck())
                 return;
 
+            ColumnList columnList;
+            switch ((TabIndex)MainTabControl.SelectedIndex)
+            {
+                case IO_list_automation_new.TabIndex.Design:
+                    DesignClass design = new DesignClass(Progress, Design_GridView);
+                    columnList = design.Columns;
+                    break;
+
+                case IO_list_automation_new.TabIndex.Data:
+                    DataClass data = new DataClass(Progress, Data_GridView);
+                    columnList = data.Columns;
+                    break;
+
+                case IO_list_automation_new.TabIndex.Object:
+                    ObjectsClass objects = new ObjectsClass(Progress, Objects_GridView);
+                    columnList = objects.Columns;
+                    break;
+
+                case IO_list_automation_new.TabIndex.Modules:
+                    ModuleClass modules = new ModuleClass(Progress, Modules_GridView);
+                    columnList = modules.Columns;
+                    break;
+
+                case IO_list_automation_new.TabIndex.Address:
+                    AddressesClass address = new AddressesClass(Progress, Addresses_GridView);
+                    columnList = address.Columns;
+                    break;
+
+                default:
+                    throw new NotImplementedException();
+            }
+
             string keyword = comboBox.SelectedKeyword();
             DataGridView grid = (DataGridView)MainTabControl.SelectedTab.Controls[0];
 
+            columnList.Columns.TryGetValue(keyword, out ColumnParameters column);
             //if add column
             if (comboBox.SelectedMod().Contains(Resources.Add))
             {
@@ -231,6 +264,8 @@ namespace IO_list_automation_new
                     HeaderText = comboBox.SelectedName(),
                     SortMode = DataGridViewColumnSortMode.Automatic,
                 };
+                column.Hidden = false;
+                column.NR = grid.ColumnCount;
 
                 grid.Columns.Insert(grid.ColumnCount, columnGridView);
             }
@@ -238,15 +273,18 @@ namespace IO_list_automation_new
             else
             {
                 //get column name and number of column to remove
-                foreach (DataGridViewColumn column in grid.Columns)
+                foreach (DataGridViewColumn gridColumn in grid.Columns)
                 {
-                    if (column.Name != keyword)
+                    if (gridColumn.Name != keyword)
                         continue;
 
-                    grid.Columns.Remove(column);
+                    column.Hidden = true;
+
+                    grid.Columns.Remove(gridColumn);
                     break;
                 }
             }
+            columnList.SaveColumnsParameters();
             DeleteColumnComboBox();
         }
 
@@ -255,8 +293,7 @@ namespace IO_list_automation_new
         /// </summary>
         /// <param name="e">event arguments</param>
         /// <param name="columnList">column list visible</param>
-        /// <param name="baseColumnList">base column list</param>
-        private void GridViewColumn_Click(EventArgs e, ColumnList columnList, ColumnList baseColumnList)
+        private void GridViewColumn_Click(EventArgs e, ColumnList columnList)
         {
             MouseEventArgs mouse = (MouseEventArgs)e;
 
@@ -272,22 +309,17 @@ namespace IO_list_automation_new
             comboBox.Editable(false);
             comboBox.Location = PointToClient(Cursor.Position);
 
-            //current columns that are shown can be removed
+
             foreach (var column in columnList.Columns)
             {
-                if (!column.Value.CanHide)
-                    continue;
-
-                comboBox.AddItemColumn(Resources.Remove, column.Key);
+                //columns that are shown can be removed
+                if (column.Value.CanHide && !column.Value.Hidden)
+                    comboBox.AddItemColumn(Resources.Remove, column.Key);
+                //columns that are hidden can be added
+                else if (column.Value.Hidden)
+                    comboBox.AddItemColumn(Resources.Add, column.Key);
             }
 
-            //current columns that are not visible can be added
-            foreach (var baseColumn in baseColumnList.Columns)
-            {
-                // when column list does not have keyword that is in base than column can be added
-                if (!columnList.Columns.TryGetValue(baseColumn.Key, out var value))
-                    comboBox.AddItemColumn(Resources.Add, baseColumn.Key);
-            }
             comboBox.IndexChangedEvent = ColumnSelectComboBoxSelectedValueChanged;
 
             this.Controls.Add(comboBox.Element);
@@ -297,25 +329,25 @@ namespace IO_list_automation_new
         private void Design_GridViewColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
         {
             DesignClass design = new DesignClass(Progress, Design_GridView);
-            GridViewColumn_Click(e, design.Columns, design.BaseColumns);
+            GridViewColumn_Click(e, design.Columns);
         }
 
         private void DataGridViewColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
         {
             DataClass data = new DataClass(Progress, Data_GridView);
-            GridViewColumn_Click(e, data.Columns, data.BaseColumns);
+            GridViewColumn_Click(e, data.Columns);
         }
 
         private void ObjectsGridViewColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
         {
             ObjectsClass objects = new ObjectsClass(Progress, Objects_GridView);
-            GridViewColumn_Click(e, objects.Columns, objects.BaseColumns);
+            GridViewColumn_Click(e, objects.Columns);
         }
 
         private void Modules_GridViewColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
         {
             ModuleClass modules = new ModuleClass(Progress, Modules_GridView);
-            GridViewColumn_Click(e, modules.Columns, modules.BaseColumns);
+            GridViewColumn_Click(e, modules.Columns);
         }
 
         /// <summary>
@@ -376,7 +408,7 @@ namespace IO_list_automation_new
                     design.SaveSelect();
                     break;
 
-                case IO_list_automation_new.TabIndex.Data_:
+                case IO_list_automation_new.TabIndex.Data:
                     DataClass data = new DataClass(Progress, Data_GridView);
                     data.SaveSelect();
                     break;
@@ -453,7 +485,7 @@ namespace IO_list_automation_new
                     design.LoadSelect();
                     break;
 
-                case IO_list_automation_new.TabIndex.Data_:
+                case IO_list_automation_new.TabIndex.Data:
                     DataClass data = new DataClass(Progress, Data_GridView);
                     data.LoadSelect();
                     break;
@@ -761,7 +793,7 @@ namespace IO_list_automation_new
                 data.PutDataToGrid(false);
             }
 
-            SelectTab(IO_list_automation_new.TabIndex.Data_);
+            SelectTab(IO_list_automation_new.TabIndex.Data);
             ButtonFunctionFinished(sender);
         }
 
@@ -776,7 +808,7 @@ namespace IO_list_automation_new
                 data.PutDataToGrid(false);
             }
 
-            SelectTab(IO_list_automation_new.TabIndex.Data_);
+            SelectTab(IO_list_automation_new.TabIndex.Data);
             ButtonFunctionFinished(sender);
         }
 
@@ -793,7 +825,7 @@ namespace IO_list_automation_new
                 dbLanguage.FunctionType.FindAllFunctionType(data);
             }
 
-            SelectTab(IO_list_automation_new.TabIndex.Data_);
+            SelectTab(IO_list_automation_new.TabIndex.Data);
             ButtonFunctionFinished(sender);
         }
 
@@ -1101,7 +1133,7 @@ namespace IO_list_automation_new
                 MainTabControl.SelectedTab = tab;
                 ((DataGridView)tab.Controls[0]).AutoResizeColumns();
             }
-            MainTabControl.SelectedIndex = (int)IO_list_automation_new.TabIndex.Data_;
+            MainTabControl.SelectedIndex = (int)IO_list_automation_new.TabIndex.Data;
         }
 
         private void MainWindow_Shown(object sender, EventArgs e)

@@ -1,4 +1,5 @@
-﻿using IO_list_automation_new.Helper_functions;
+﻿using IO_list_automation_new.General;
+using IO_list_automation_new.Helper_functions;
 using IO_list_automation_new.Properties;
 using System;
 using System.Data;
@@ -23,16 +24,18 @@ namespace IO_list_automation_new
         //columns in software
         private ColumnList Columns { get; set; }
 
-        private DataGridView Grid { get; set; }
+        private DataGridView GridView { get; set; }
 
         public bool UseKeywordAsName = false;
 
-        public GeneralGrid(string name, GridTypes gridType, DataGridView grid, ColumnList columns)
+        public GeneralGrid(string name, GridTypes gridType, DataGridView gridView, ColumnList columns)
         {
             Name = name;
-            Grid = grid;
-            Columns = columns;
+            GridView = gridView;
+            Columns = columns ?? new ColumnList(name);
             GridType = gridType;
+
+            UpdateColumnsList();
         }
 
         /// <summary>
@@ -41,7 +44,7 @@ namespace IO_list_automation_new
         /// <param name="grid">new grid</param>
         public void ChangeGrid(DataGridView grid)
         {
-            Grid = grid;
+            GridView = grid;
         }
 
         /// <summary>
@@ -50,10 +53,10 @@ namespace IO_list_automation_new
         /// <returns>grid is empty</returns>
         public bool IsEmpty()
         {
-            if (Grid == null)
+            if (GridView == null)
                 return true;
 
-            return Grid.RowCount <= 1;
+            return GridView.RowCount <= 1;
         }
 
         /// <summary>
@@ -61,11 +64,11 @@ namespace IO_list_automation_new
         /// </summary>
         public void GridClear()
         {
-            Grid.DataSource = null;
-            Grid.Rows.Clear();
-            Grid.Columns.Clear();
+            GridView.DataSource = null;
+            GridView.Rows.Clear();
+            GridView.Columns.Clear();
 
-            Grid.DataSource = null;
+            GridView.DataSource = null;
             Debug debug = new Debug();
             debug.ToFile("Clearing all grid: " + Name, DebugLevels.Development, DebugMessageType.Info);
         }
@@ -74,17 +77,28 @@ namespace IO_list_automation_new
         /// Get grid columns and add to columns list
         /// </summary>
         /// <returns>grid column list</returns>
-        public ColumnList GetColumns()
+        public void UpdateColumnsList()
         {
+            if (GridView.Columns.Count <= 0)
+                return;
+
             Debug debug = new Debug();
-            debug.ToFile("Getting columns from grid to memory(" + Grid.ColumnCount + ") to grid: " + Name, DebugLevels.Development, DebugMessageType.Info);
+            debug.ToFile("Getting columns from grid to memory(" + GridView.ColumnCount + ") to grid: " + Name, DebugLevels.Development, DebugMessageType.Info);
 
-            ColumnList columnList = new ColumnList();
+            foreach (var column in Columns.Columns)
+                column.Value.Hidden = column.Value.CanHide;
 
-            foreach (DataGridViewColumn column in Grid.Columns)
-                columnList.Columns.Add(column.Name, new GeneralColumnParameters(column.DisplayIndex, true));
-
-            return columnList;
+            foreach (DataGridViewColumn column in GridView.Columns)
+            {
+                string columnKey = column.Name;
+                if (Columns.Columns.TryGetValue(columnKey, out ColumnParameters columnParameters))
+                {
+                    columnParameters.Hidden = false;
+                    columnParameters.NR = column.DisplayIndex;
+                }
+                else
+                    debug.ToFile($"{Resources.DeleteMe}: {Name} {columnKey} is incorrect", DebugLevels.Minimum, DebugMessageType.Warning);
+            }
         }
 
         /// <summary>
@@ -101,8 +115,8 @@ namespace IO_list_automation_new
             }
 
             //hide grid to speed up
-            Grid.Visible = false;
-            Grid.SuspendLayout();
+            GridView.Visible = false;
+            GridView.SuspendLayout();
             GridClear();
 
             bool suppressColumnError = false;
@@ -111,17 +125,17 @@ namespace IO_list_automation_new
             {
                 case GridTypes.Data:
                 case GridTypes.DBForceEdit:
-                    Grid.AllowUserToAddRows = true;
-                    Grid.AllowUserToDeleteRows = true;
-                    Grid.ReadOnly = false;
+                    GridView.AllowUserToAddRows = true;
+                    GridView.AllowUserToDeleteRows = true;
+                    GridView.ReadOnly = false;
                     break;
 
                 case GridTypes.DB:
                 case GridTypes.DBEditable:
                 case GridTypes.DataNoEdit:
-                    Grid.AllowUserToAddRows = false;
-                    Grid.AllowUserToDeleteRows = false;
-                    Grid.ReadOnly = true;
+                    GridView.AllowUserToAddRows = false;
+                    GridView.AllowUserToDeleteRows = false;
+                    GridView.ReadOnly = true;
                     break;
 
                 default:
@@ -134,31 +148,18 @@ namespace IO_list_automation_new
                 suppressColumnError = true;
 
             debug.ToFile(Resources.PutDataToGrid + ": " + Name, DebugLevels.Development, DebugMessageType.Info);
+            // kazkas negerai su vardu priskyrimu stulpeliams, visus hide o 
+            GridView.DataSource = data;
 
-            Grid.DataSource = data;
             for (int columnNumber = 0; columnNumber < data.Columns.Count; columnNumber++)
             {
-                if (Columns is null || Columns.Columns is null || Columns.Columns.Count == 0)
-                {
-                    data.Columns[columnNumber].ColumnName = columnNumber.ToString();
-                    Grid.Columns[columnNumber].Name = columnNumber.ToString();
-                }
-                else
-                {
-                    foreach (var column in Columns.Columns)
-                    {
-                        if (column.Value.NR == columnNumber)
-                        {
-                            Grid.Columns[columnNumber].Name = column.Key;
-                            data.Columns[columnNumber].ColumnName = TextHelper.GetColumnName(column.Key, false);
-                        }
-                    }
-                }
+                GridView.Columns[columnNumber].HeaderText = TextHelper.GetColumnName(data.Columns[columnNumber].ColumnName, suppressColumnError);
+                GridView.Columns[columnNumber].Name = data.Columns[columnNumber].ColumnName;
             }
-            Grid.ResumeLayout(false);
-            Grid.Refresh();
-            Grid.Visible = true;
-            Grid.AutoResizeColumns();
+            GridView.ResumeLayout(false);
+            GridView.Refresh();
+            GridView.Visible = true;
+            GridView.AutoResizeColumns();
         }
 
         /// <summary>
@@ -170,25 +171,7 @@ namespace IO_list_automation_new
             Debug debug = new Debug();
             debug.ToFile(Resources.GetDataFromGrid + ": " + Name, DebugLevels.Development, DebugMessageType.Info);
 
-            return Grid.DataSource as DataTable;
-        }
-
-        /// <summary>
-        /// Remove columns from grid that are not in base column list
-        /// </summary>
-        /// <param name="baseColumns">base column list</param>
-        public void RemoveNotBaseColumns(ColumnList baseColumns)
-        {
-            if (GridType == GridTypes.DataNoEdit)
-                return;
-
-            for (int gridColumn = Grid.ColumnCount - 1; gridColumn >= 0; gridColumn--)
-            {
-                if (baseColumns.Columns.TryGetValue(Grid.Columns[gridColumn].Name, out var value))
-                    continue;
-
-                Grid.Columns.RemoveAt(gridColumn);
-            }
+            return GridView.DataSource as DataTable;
         }
 
         /// <summary>
@@ -198,7 +181,7 @@ namespace IO_list_automation_new
         /// <param name="column">column of cell</param>
         public void ColorCell(int row, int column)
         {
-            Grid.Rows[row].Cells[column].Style.BackColor = System.Drawing.Color.FromArgb(0, 255, 255);
+            GridView.Rows[row].Cells[column].Style.BackColor = System.Drawing.Color.FromArgb(0, 255, 255);
         }
     }
 }

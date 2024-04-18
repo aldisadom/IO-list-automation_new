@@ -89,8 +89,11 @@ namespace IO_list_automation_new
             Progress.RenameProgressBar(Resources.SaveDataToFile + ": " + fullPath, data.Rows.Count);
 
             ExcelWriter excel = new ExcelWriter(fullPath);
-            int rowOffset = 1;
+            int rowOffset = 2;
             string cellValue;
+
+            for (int column = 0; column < data.Columns.Count; column++)
+                excel.Write(data.Columns[column].ColumnName, column + 1, 1);
 
             //write data to file
             for (int row = 0; row < data.Rows.Count; row++)
@@ -98,9 +101,7 @@ namespace IO_list_automation_new
                 for (int column = 0; column < data.Columns.Count; column++)
                 {
                     if (data.Rows[row][column] is System.DBNull)
-                    {
                         cellValue = string.Empty;
-                    }
                     else
                     {
                         cellValue = GeneralFunctions.GetDataTableValue(data, row, column);

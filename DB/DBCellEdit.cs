@@ -184,7 +184,7 @@ namespace IO_list_automation_new.Forms
                     return Choices.ChoicesIfConditions;
 
                 case ComboBoxType.Data_:
-                    return Choices.Data_Columns;
+                    return Choices.DataColumns;
 
                 case ComboBoxType.Object:
                     return Choices.ObjectColumns;
@@ -335,7 +335,7 @@ namespace IO_list_automation_new.Forms
                     OutputData.Add(currentValue);
                     //object
                     OutputData.Add(KeywordDBChoices.Data);
-                    OutputData.Add(Choices.Data_Columns[0]);
+                    OutputData.Add(Choices.DataColumns[0]);
                     OutputData.Add(GetIODefaultText());
                     //statement
                     OutputData.Add(Choices.ChoicesIfConditions[0]);
@@ -387,7 +387,7 @@ namespace IO_list_automation_new.Forms
 
                 case KeywordDBChoices.Data:
                     OutputData.Add(currentValue);
-                    OutputData.Add(Choices.Data_Columns[0]);
+                    OutputData.Add(Choices.DataColumns[0]);
                     OutputData.Add(GetIODefaultText());
                     break;
 

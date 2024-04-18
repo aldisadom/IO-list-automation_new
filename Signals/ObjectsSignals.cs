@@ -1,5 +1,4 @@
-﻿using IO_list_automation_new.Properties;
-using System;
+﻿using IO_list_automation_new.General;
 
 namespace IO_list_automation_new.Objects
 {

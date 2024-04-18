@@ -38,7 +38,7 @@
     <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+    <WarningLevel>5</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -96,7 +96,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Data\DataSignal.cs" />
+    <Compile Include="Address\AddressObject.cs" />
+    <Compile Include="General\ColumnList.cs" />
+    <Compile Include="Signals\GeneralSignal.cs" />
+    <Compile Include="Signals\DataSignal.cs" />
     <Compile Include="DB\CellTag.cs" />
     <Compile Include="DB\DBChoices.cs" />
     <Compile Include="DB\DBForceEditForm.cs">
@@ -133,12 +136,12 @@
     <Compile Include="DesignInputData.Designer.cs">
       <DependentUpon>DesignInputData.cs</DependentUpon>
     </Compile>
-    <Compile Include="Design\DesignSignal.cs" />
+    <Compile Include="Signals\DesignSignal.cs" />
     <Compile Include="General\ExcelClass.cs" />
     <Compile Include="General\GeneralGrid.cs" />
     <Compile Include="Helper functions\DropDownClass.cs" />
-    <Compile Include="General\GeneralClass.cs" />
-    <Compile Include="General\GeneralFunctions.cs" />
+    <Compile Include="Listsa\GeneralClass.cs" />
+    <Compile Include="Helper functions\GeneralFunctions.cs" />
     <Compile Include="Helper functions\Debug.cs" />
     <Compile Include="Helper functions\TextHelper.cs" />
     <Compile Include="IOTextEdit.cs">
@@ -153,20 +156,20 @@
     <Compile Include="KKSEdit.Designer.cs">
       <DependentUpon>KKSEdit.cs</DependentUpon>
     </Compile>
-    <Compile Include="Design\DesignClass.cs" />
-    <Compile Include="General\GeneralColumnParameters.cs" />
-    <Compile Include="AddressesClass.cs" />
-    <Compile Include="Modules\ModuleClass.cs" />
-    <Compile Include="Modules\ModuleSignal.cs" />
-    <Compile Include="Objects\ObjectsClass.cs" />
-    <Compile Include="Data\DataClass.cs" />
+    <Compile Include="Listsa\DesignClass.cs" />
+    <Compile Include="General\ColumnParameters.cs" />
+    <Compile Include="Address\AddressesClass.cs" />
+    <Compile Include="Listsa\ModuleClass.cs" />
+    <Compile Include="Signals\ModuleSignal.cs" />
+    <Compile Include="Listsa\ObjectsClass.cs" />
+    <Compile Include="Listsa\DataClass.cs" />
     <Compile Include="MainWindow.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="MainWindow.Designer.cs">
       <DependentUpon>MainWindow.cs</DependentUpon>
     </Compile>
-    <Compile Include="Objects\ObjectsSignals.cs" />
+    <Compile Include="Signals\ObjectsSignals.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Helper functions\ProgressIndication.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -195,23 +198,8 @@
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <Compile Include="Properties\SettingsModule.Designer.cs">
-      <DependentUpon>SettingsModule.settings</DependentUpon>
-      <AutoGen>True</AutoGen>
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
-    </Compile>
-    <Compile Include="Properties\SettingsObject.Designer.cs">
-      <DependentUpon>SettingsObject.settings</DependentUpon>
-      <AutoGen>True</AutoGen>
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
-    </Compile>
     <Compile Include="Properties\SettingsData.Designer.cs">
       <DependentUpon>SettingsData.settings</DependentUpon>
-      <AutoGen>True</AutoGen>
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
-    </Compile>
-    <Compile Include="Properties\SettingsDesign.Designer.cs">
-      <DependentUpon>SettingsDesign.settings</DependentUpon>
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
@@ -277,21 +265,9 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>SettingsDesignInput.Designer.cs</LastGenOutput>
     </None>
-    <None Include="Properties\SettingsModule.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>SettingsModule.Designer.cs</LastGenOutput>
-    </None>
-    <None Include="Properties\SettingsObject.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>SettingsObject.Designer.cs</LastGenOutput>
-    </None>
     <None Include="Properties\SettingsData.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>SettingsData.Designer.cs</LastGenOutput>
-    </None>
-    <None Include="Properties\SettingsDesign.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>SettingsDesign.Designer.cs</LastGenOutput>
     </None>
   </ItemGroup>
   <ItemGroup>

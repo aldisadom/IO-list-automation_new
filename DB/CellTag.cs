@@ -7,19 +7,10 @@ namespace IO_list_automation_new.DB
     {
         public int X { get; }
         public int Y { get; }
-
         public string Keyword { get; private set; }
-
         public string UniqueName { get; }
-
         public ComboBoxType ComboType { get; }
-
         public RestrainLevel Restrain { get; }
-
-        public void UpdateKeyword(string keyword)
-        {
-            Keyword = keyword;
-        }
 
         public CellTag(string keyword, ComboBoxType comboBoxType, RestrainLevel restrain, int x, int y)
         {
@@ -29,6 +20,11 @@ namespace IO_list_automation_new.DB
             ComboType = comboBoxType;
             Restrain = restrain;
             UniqueName = "X" + X.ToString() + "Y" + Y.ToString() + "@" + keyword;
+        }
+
+        public void UpdateKeyword(string keyword)
+        {
+            Keyword = keyword;
         }
     }
 }

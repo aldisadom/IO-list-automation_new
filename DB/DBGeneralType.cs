@@ -1,33 +1,44 @@
-﻿using IO_list_automation_new.General;
+﻿using ExcelDataReader;
+using IO_list_automation_new.Address;
+using IO_list_automation_new.General;
 using IO_list_automation_new.Modules;
 using IO_list_automation_new.Objects;
 using IO_list_automation_new.Properties;
+using Newtonsoft.Json;
+using SwiftExcel;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.IO;
 using System.Windows.Forms;
 
 namespace IO_list_automation_new.DB
 {
-    internal class DBGeneralType
+    internal class DBGeneralTypeNew
     {
         public string Name { get; }
-
         public string FullDBType { get; }
-
         public string ObjectVariableType { get; }
-
         public string DBType { get; }
-
         public string MemoryArea { get; private set; }
         public string Address { get; private set; }
         public string AddressSize { get; private set; }
 
         public List<DBGeneralSignal> Data;
+    }
+    internal class DBGeneralType
+    {
+        public string Name { get; }
+        public string FullDBType { get; }
+        public string ObjectVariableType { get; }
+        public string DBType { get; }
+        public string MemoryArea { get; private set; }
+        public string Address { get; private set; }
+        public string AddressSize { get; private set; }
 
+        public List<DBGeneralSignal> Data;
         public ProgressIndication Progress { get; set; }
         public GeneralGrid Grid { get; }
-        public ExcelFiles File { get; set; }
         public GeneralGrid GridResult { get; }
 
         public DBGeneralType(string name, string fullDBType, string dbType, string fileExtension, ProgressIndication progress, DataGridView grid)
@@ -45,7 +56,6 @@ namespace IO_list_automation_new.DB
             Progress = progress;
 
             Grid = new GeneralGrid(Name, GridTypes.DBEditable, grid, null);
-            File = new ExcelFiles(Name, fileExtension, Progress);
             GridResult = new GeneralGrid(Name, GridTypes.DB, new DataGridView(), null);
         }
 
@@ -153,6 +163,72 @@ namespace IO_list_automation_new.DB
                 signal.SetValue(list);
                 Data.Add(signal);
             }
+        }
+
+        /// <summary>
+        /// Create save file of current grid to excel
+        /// </summary>
+        /// <param name="fileName">file name</param>
+        public void SaveToFile(string fileName, DataTable data)
+        {
+            if (!GeneralFunctions.ValidDataTable(data))
+                return;
+
+            SetData(data);
+
+            string fullPath = fileName;
+
+            Debug debug = new Debug();
+            debug.ToFile(Resources.SaveDataToFile + ": " + fullPath, DebugLevels.Development, DebugMessageType.Info);
+
+            Progress.RenameProgressBar(Resources.SaveDataToFile + ": " + fullPath, 1);
+
+            string dataString = JsonConvert.SerializeObject(Data);
+            File.WriteAllText(fileName, dataString);
+
+            Progress.HideProgressBar();
+
+            debug.ToFile(Resources.SaveDataToFile + ": " + fullPath + " - " + Resources.Finished, DebugLevels.Development, DebugMessageType.Info);
+        }
+
+        /// <summary>
+        /// load data from excel to memory
+        /// </summary>
+        /// <param name="fileName">file name</param>
+        /// <returns>list of list string array of data</returns>
+        public DataTable LoadFromFile(string fileName)
+        {
+            string fullPath = fileName;
+
+            Debug debug = new Debug();
+            debug.ToFile(Resources.LoadDataFromFile + ": " + fullPath, DebugLevels.Development, DebugMessageType.Info);
+            Progress.RenameProgressBar(Resources.LoadDataFromFile + ": " + fullPath, 1);
+
+            if (!File.Exists(fullPath))
+            {
+                debug.ToPopUp(Resources.NoFile + ": " + fullPath, DebugLevels.None, DebugMessageType.Alarm);
+                return null;
+            }
+
+            string dataString = File.ReadAllText(fullPath);
+            Data = JsonConvert.DeserializeObject<List<DBGeneralSignal>>(dataString);
+
+            DataTable data = ConvertDataToList();
+            
+            debug.ToFile(Resources.LoadDataFromFile + ": " + fullPath + " - " + Resources.Finished, DebugLevels.Development, DebugMessageType.Info);
+            Progress.HideProgressBar();
+
+            if (data.Rows.Count == 0)
+            {
+                if (data.Columns.Count == 0)
+                    data.Columns.Add();
+
+                if (data.Rows.Count == 0)
+                    data.Rows.Add();
+                debug.ToPopUp(Resources.LoadDataFromFile + ": " + fullPath + " - " + Resources.NoData, DebugLevels.None, DebugMessageType.Info);
+            }
+
+            return data;
         }
     }
 }

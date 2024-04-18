@@ -1,4 +1,5 @@
 ﻿using IO_list_automation_new.Data;
+using IO_list_automation_new.General;
 using IO_list_automation_new.Objects;
 using IO_list_automation_new.Properties;
 using System.Windows.Forms;
@@ -8,38 +9,19 @@ namespace IO_list_automation_new
 
     internal class ObjectsClass : GeneralClass<ObjectSignal>
     {
-        protected override ColumnList GeneralGenerateColumnsList()
+        protected override void InitialCollumnList()
         {
-            ColumnList columns = new ColumnList();
+            Columns = new ColumnList(Name);
 
-            columns.Columns.Add(KeywordColumn.ID, new GeneralColumnParameters(0, true));
-            columns.Columns.Add(KeywordColumn.CPU, new GeneralColumnParameters(1, true));
-            columns.Columns.Add(KeywordColumn.KKS, new GeneralColumnParameters(2, false));
-            columns.Columns.Add(KeywordColumn.Operative, new GeneralColumnParameters(3, true));
-            columns.Columns.Add(KeywordColumn.ObjectType, new GeneralColumnParameters(4, false));
-            columns.Columns.Add(KeywordColumn.ObjectName, new GeneralColumnParameters(5, false));
-
-            return columns;
-        }
-
-        protected override void UpdateSettingsColumnsList()
-        {
-            ColumnList columns = Columns;
-
-            SettingsObject.Default.ColumnID = columns.GetColumnNumberFromKeyword(KeywordColumn.ID);
-            SettingsObject.Default.ColumnCPU = columns.GetColumnNumberFromKeyword(KeywordColumn.CPU);
-            SettingsObject.Default.ColumnKKS = columns.GetColumnNumberFromKeyword(KeywordColumn.KKS);
-            SettingsObject.Default.ColumnOperative = columns.GetColumnNumberFromKeyword(KeywordColumn.Operative);
-            SettingsObject.Default.ColumnObjectType = columns.GetColumnNumberFromKeyword(KeywordColumn.ObjectType);
-            SettingsObject.Default.ColumnObjectName = columns.GetColumnNumberFromKeyword(KeywordColumn.ObjectName);
-
-            SettingsObject.Default.Save();
+            Columns.Columns.Add(KeywordColumn.ID, new ColumnParameters(0, true, false));
+            Columns.Columns.Add(KeywordColumn.CPU, new ColumnParameters(1, true, false));
+            Columns.Columns.Add(KeywordColumn.KKS, new ColumnParameters(2, false, false));
+            Columns.Columns.Add(KeywordColumn.Operative, new ColumnParameters(3, true, false));
+            Columns.Columns.Add(KeywordColumn.ObjectType, new ColumnParameters(4, false, false));
+            Columns.Columns.Add(KeywordColumn.ObjectName, new ColumnParameters(5, false, false));
         }
 
         public ObjectsClass(ProgressIndication progress, DataGridView grid) : base("Object", nameof(FileExtensions.objects), progress, grid, true)
-        { }
-
-        public ObjectsClass() : base("Object", nameof(FileExtensions.objects), null, null, true)
         { }
 
         /// <summary>
@@ -53,7 +35,6 @@ namespace IO_list_automation_new
 
             Progress.RenameProgressBar(Resources.ObjectGenerateUniqueData, data.Signals.Count);
 
-            UpdateColumnNumbers(data.BaseColumns);
             Signals.Clear();
             string keyword;
             string getKeyword;

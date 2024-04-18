@@ -25,7 +25,7 @@ namespace IO_list_automation_new
     internal enum TabIndex
     {
         Design = 0,
-        Data_ = 1,
+        Data = 1,
         Object = 2,
         Modules = 3,
         Address = 4,
@@ -115,10 +115,7 @@ namespace IO_list_automation_new
             {
                 Settings.Default.Upgrade();
                 SettingsData.Default.Upgrade();
-                SettingsDesign.Default.Upgrade();
                 SettingsDesignInput.Default.Upgrade();
-                SettingsModule.Default.Upgrade();
-                SettingsObject.Default.Upgrade();
                 Settings.Default.SettingsUpgrade = false;
 
                 Settings.Default.Save();
@@ -157,19 +154,11 @@ namespace IO_list_automation_new
 
             //Settings.Default.Reset();
 
-            SettingsObject.Default.Reset();
             SettingsData.Default.Reset();
-            SettingsDesign.Default.Reset();
             SettingsDesignInput.Default.Reset();
-            SettingsModule.Default.Reset();
-            SettingsObject.Default.Reset();
 
-            SettingsObject.Default.Save();
             SettingsData.Default.Save();
-            SettingsDesign.Default.Save();
             SettingsDesignInput.Default.Save();
-            SettingsModule.Default.Save();
-            SettingsObject.Default.Save();
 
             MainWindow mainWindow = new MainWindow();
             Application.Run(mainWindow);

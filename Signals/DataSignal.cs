@@ -1,4 +1,4 @@
-﻿using IO_list_automation_new.Properties;
+﻿using IO_list_automation_new.General;
 using System;
 
 namespace IO_list_automation_new.Data

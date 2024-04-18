@@ -1,184 +1,24 @@
-﻿using IO_list_automation_new.General;
+﻿using IO_list_automation_new.Address;
+using IO_list_automation_new.General;
 using IO_list_automation_new.Properties;
-using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Windows.Forms;
 
 namespace IO_list_automation_new
 {
-    internal class AddressSingle
-    {
-        public string Area { get; private set; }
-        public string AddressStart { get; private set; }
-        public string AddressSize { get; private set; }
-        public string ObjectVariableType { get; private set; }
-
-        public bool Overlap;
-
-        public AddressSingle(string area, string addressStart, string addressSize, string objectVariableType)
-        {
-            Area = area;
-            AddressStart = addressStart;
-            AddressSize = addressSize;
-            ObjectVariableType = objectVariableType;
-            Overlap = false;
-        }
-
-        public void Update(string area, string addressStart, string addressSize, string objectVariableType)
-        {
-            Area = area;
-            AddressStart = addressStart;
-            AddressSize = addressSize;
-            ObjectVariableType = objectVariableType;
-        }
-
-        public bool CheckOverlapString(AddressSingle address)
-        {
-            if (address.Area != Area)
-                return false;
-
-            if (!int.TryParse(AddressStart, out int myAddress))
-                return false;
-
-            if (!int.TryParse(AddressSize, out int myAddressSize))
-                return false;
-
-            if (!int.TryParse(address.AddressStart, out int addressStart))
-                return false;
-
-            if (!int.TryParse(address.AddressSize, out int addressSize))
-                return false;
-
-            if (myAddress < addressStart + addressSize && addressStart < myAddress + myAddressSize)
-            {
-                Overlap = true;
-                return true;
-            }
-            return false;
-        }
-
-        public bool CheckOverlap(string area, int addressStart, int addressSize)
-        {
-            if (area != Area)
-                return false;
-
-            if (!int.TryParse(AddressStart, out int myAddress))
-                return false;
-
-            if (!int.TryParse(AddressSize, out int myAddressSize))
-                return false;
-
-            if (myAddress < addressStart + addressSize && addressStart < myAddress + myAddressSize)
-            {
-                Overlap = true;
-                return true;
-            }
-            return false;
-        }
-    }
-
-    internal class AddressObject : GeneralSignal
-    {
-        public string ID { get; private set; }
-        public string CPU { get; private set; }
-        public string ObjectType { get; private set; }
-        public string ObjectName { get; private set; }
-        public string ObjectGeneralType { get; private set; }
-
-        public List<AddressSingle> Addresses { get; }
-
-        public string UniqueModuleName
-        { get { return CPU + "_" + ObjectType + "_" + ObjectName; } }
-
-        public AddressObject() : base()
-        {
-            Addresses = new List<AddressSingle>();
-            ID = string.Empty;
-            CPU = string.Empty;
-            ObjectType = string.Empty;
-            ObjectGeneralType = string.Empty;
-            ObjectName = string.Empty;
-        }
-
-        /// <summary>
-        /// Checks if design signal is valid
-        /// </summary>
-        /// <returns>true if minimum signal requirements are met</returns>
-        public override bool ValidateSignal()
-        {
-            if (string.IsNullOrEmpty(ObjectType))
-                return false;
-            else if (string.IsNullOrEmpty(ObjectName))
-                return false;
-            else if (string.IsNullOrEmpty(ObjectGeneralType))
-                return false;
-
-            return true;
-        }
-
-        public int FindAddressIndex(string objectVariableType)
-        {
-            for (int i = 0; i < Addresses.Count; i++)
-            {
-                if (Addresses[i].ObjectVariableType == objectVariableType)
-                    return i;
-            }
-            return -1;
-        }
-
-        public void Update(string id, string inCPU, string objectGeneralType, string objectType, string objectName)
-        {
-            ID = id;
-            CPU = inCPU;
-            ObjectType = objectType;
-            ObjectName = objectName;
-            ObjectGeneralType = objectGeneralType;
-        }
-
-        public List<string> GetColumns()
-        {
-            List<string> columns = new List<string>();
-            foreach (AddressSingle addressSingle in Addresses)
-                columns.Add(addressSingle.ObjectVariableType);
-
-            return columns;
-        }
-
-        public bool CheckOverlap(AddressSingle address)
-        {
-            if (!int.TryParse(address.AddressStart, out int addressStart))
-                return false;
-
-            if (!int.TryParse(address.AddressSize, out int addressSize))
-                return false;
-
-            foreach (AddressSingle addressSingle in Addresses)
-            {
-                if (addressSingle.CheckOverlap(address.Area, addressStart, addressSize))
-                    return true;
-            }
-            return false;
-        }
-    }
-
     internal class AddressesClass : GeneralClass<AddressObject>
     {
-        protected override ColumnList GeneralGenerateColumnsList()
+        protected override void InitialCollumnList()
         {
-            ColumnList columns = new ColumnList();
+            Columns = new ColumnList(Name);
 
-            columns.Columns.Add(KeywordColumn.ID, new GeneralColumnParameters(0, false));
-            columns.Columns.Add(KeywordColumn.CPU, new GeneralColumnParameters(1, false));
-            columns.Columns.Add(KeywordColumn.ObjectGeneralType, new GeneralColumnParameters(2, false));
-            columns.Columns.Add(KeywordColumn.ObjectType, new GeneralColumnParameters(3, false));
-            columns.Columns.Add(KeywordColumn.ObjectName, new GeneralColumnParameters(4, false));
+            Columns.Columns.Add(KeywordColumn.ID, new ColumnParameters(0, false, false));
+            Columns.Columns.Add(KeywordColumn.CPU, new ColumnParameters(1, false, false));
+            Columns.Columns.Add(KeywordColumn.ObjectGeneralType, new ColumnParameters(2, false, false));
+            Columns.Columns.Add(KeywordColumn.ObjectType, new ColumnParameters(3, false, false));
+            Columns.Columns.Add(KeywordColumn.ObjectName, new ColumnParameters(4, false, false));
 
-            return columns;
-        }
-
-        protected override void UpdateSettingsColumnsList()
-        {
         }
 
         public AddressesClass(ProgressIndication progress, DataGridView grid) : base("Address", nameof(FileExtensions.address), progress, grid, false)
@@ -210,7 +50,7 @@ namespace IO_list_automation_new
             }
         }
 
-        public List<string> GetColumns()
+        public List<string> GetColumnsList()
         {
             List<string> columns = new List<string>();
 
@@ -220,7 +60,7 @@ namespace IO_list_automation_new
             return columns;
         }
 
-        public override DataTable SignalsToList()
+        public override DataTable SignalsToDataTable()
         {
             Debug debug = new Debug();
             debug.ToFile(Resources.ConvertDataToList + ": " + Name, DebugLevels.High, DebugMessageType.Info);
@@ -230,9 +70,8 @@ namespace IO_list_automation_new
             int columnNumber;
 
             //get list of columns that is used
-            ColumnList newColumnList = new ColumnList();
+            ColumnList newColumnList = new ColumnList(Name);
 
-            Columns.SetColumns(GeneralGenerateColumnsList(), false);
             foreach (var column in Columns.Columns)
             {
                 columnNumber = column.Value.NR;
@@ -242,16 +81,15 @@ namespace IO_list_automation_new
 
             int columnIndex = newColumnList.Columns.Count;
 
-            List<string> addressColumns = GetColumns();
+            List<string> addressColumns = GetColumnsList();
             foreach (string columnName in addressColumns)
             {
-                newColumnList.Columns.Add(ResourcesUI.Area + columnName, new GeneralColumnParameters(columnIndex, false));
-                newColumnList.Columns.Add(ResourcesUI.Area + ResourcesUI.Start + columnName, new GeneralColumnParameters(columnIndex + 1, false));
-                newColumnList.Columns.Add(ResourcesUI.Area + ResourcesUI.Size + columnName, new GeneralColumnParameters(columnIndex + 2, false));
+                newColumnList.Columns.Add(ResourcesUI.Area + columnName, new ColumnParameters(columnIndex, false, false));
+                newColumnList.Columns.Add(ResourcesUI.Area + ResourcesUI.Start + columnName, new ColumnParameters(columnIndex + 1, false, false));
+                newColumnList.Columns.Add(ResourcesUI.Area + ResourcesUI.Size + columnName, new ColumnParameters(columnIndex + 2, false, false));
                 columnIndex += 3;
             }
 
-            Columns.SetColumns(newColumnList, false);
             DataTable data = new DataTable();
 
             //add columns to dataTable
@@ -267,7 +105,7 @@ namespace IO_list_automation_new
                 row[2] = signal.ObjectGeneralType;
                 row[3] = signal.ObjectType;
                 row[4] = signal.ObjectName;
-                columnIndex = BaseColumns.Columns.Count;
+                columnIndex = Columns.Columns.Count;
 
                 foreach (string columnName in addressColumns)
                 {
@@ -298,7 +136,7 @@ namespace IO_list_automation_new
         /// </summary>
         /// <param name="suppressError">suppress error</param>
         /// <returns>there is data in signals</returns>
-        public override bool ListToSignals(DataTable inputData, ColumnList newColumnList, bool suppressError)
+        public override bool DataTableToSignals(DataTable inputData, bool suppressError)
         {
             if (inputData == null)
                 return false;
@@ -320,20 +158,20 @@ namespace IO_list_automation_new
             {
                 AddressObject signal = new AddressObject();
 
-                foreach (var baseColumn in BaseColumns.Columns)
+                foreach (var column in Columns.Columns)
                 {
-                    columnNumber = baseColumn.Value.NR;
+                    columnNumber = column.Value.NR;
 
                     if (columnNumber < 0)
                         continue;
 
                     //put value based on keyword to memory
-                    keyword = baseColumn.Key;
+                    keyword = column.Key;
                     cellValue = GeneralFunctions.GetDataTableValue(inputData, rowNumber, columnNumber);
 
                     signal.SetValueFromString(cellValue, keyword);
                 }
-                foreach (var column in BaseColumns.Columns)
+                foreach (var column in Columns.Columns)
                 {
                     columnNumber = column.Value.NR;
                     if (string.IsNullOrEmpty(GeneralFunctions.GetDataTableValue(inputData, rowNumber, columnNumber)))
@@ -348,7 +186,8 @@ namespace IO_list_automation_new
                                                                     , columnName);
                     signal.Addresses.Add(addressSingle);
                 }
-                foreach (var column in newColumnList.Columns)
+
+                foreach (var column in Columns.Columns)
                 {
                     columnNumber = column.Value.NR;
                     if (string.IsNullOrEmpty(GeneralFunctions.GetDataTableValue(inputData, rowNumber, columnNumber)))

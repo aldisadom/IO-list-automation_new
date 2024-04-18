@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
+using System.Windows.Forms;
 
 namespace IO_list_automation_new.DB
 {
@@ -6,26 +8,22 @@ namespace IO_list_automation_new.DB
     {
         //only for objects--------------------------------------
         public List<string> ChoicesObjectsMain { get; }
-
         public List<string> ChoicesObjectsIfStatement { get; }
         public List<string> ChoicesObjectsIfCondition { get; }
 
         //only for modules--------------------------------------
         public List<string> ChoicesModulesMain { get; }
-
         public List<string> ChoicesModulesIfStatement { get; }
         public List<string> ChoicesModulesIfCondition { get; }
 
         //only for address--------------------------------------
         public List<string> ChoicesSCADAMain { get; }
-
         public List<string> ChoicesSCADAIfStatement { get; }
         public List<string> ChoicesSCADAIfCondition { get; }
 
         //for all--------------------------------------
         public List<string> ChoicesIfConditions { get; }
-
-        public List<string> Data_Columns { get; }
+        public List<string> DataColumns { get; }
         public List<string> ObjectColumns { get; }
         public List<string> ModuleColumns { get; }
 
@@ -148,20 +146,17 @@ namespace IO_list_automation_new.DB
                 KeywordDBChoices.LessEqual,
             };
 
-            DataClass Data_ = new DataClass();
-            Data_Columns = new List<string>();
-            foreach (var column in Data_.BaseColumns.Columns)
-                Data_Columns.Add(column.Key);
+            DataGridView dataGrid = new DataGridView();
+            DataClass data = new DataClass(null, dataGrid);
+            DataColumns = data.Columns.Columns.Select(c => c.Key).ToList();
 
-            ObjectsClass Objects = new ObjectsClass();
-            ObjectColumns = new List<string>();
-            foreach (var column in Objects.BaseColumns.Columns)
-                ObjectColumns.Add(column.Key);
+            DataGridView objectsGrid = new DataGridView();
+            ObjectsClass objects = new ObjectsClass(null, objectsGrid);
+            ObjectColumns = objects.Columns.Columns.Select(c => c.Key).ToList();
 
-            ModuleClass Modules = new ModuleClass();
-            ModuleColumns = new List<string>();
-            foreach (var column in Modules.BaseColumns.Columns)
-                ModuleColumns.Add(column.Key);
+            DataGridView modulesGrid = new DataGridView();
+            ModuleClass modules = new ModuleClass(null, modulesGrid);
+            ModuleColumns = modules.Columns.Columns.Select(c => c.Key).ToList();
         }
     }
 }

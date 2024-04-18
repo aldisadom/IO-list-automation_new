@@ -1,7 +1,7 @@
 ﻿using IO_list_automation_new.Data;
+using IO_list_automation_new.General;
 using IO_list_automation_new.Objects;
 using IO_list_automation_new.Properties;
-using System;
 using System.Windows.Forms;
 
 namespace IO_list_automation_new
@@ -34,15 +34,13 @@ namespace IO_list_automation_new
 
     internal class DBLanguageType : GeneralClass<DBLanguageTypeSignal>
     {
-        private string FileName = "";
+        private readonly string FileName = "";
 
-        protected override ColumnList GeneralGenerateColumnsList()
+        protected override void InitialCollumnList()
         {
-            ColumnList columns = new ColumnList();
-            columns.Columns.Add(KeywordColumn.DeviceTypeText, new GeneralColumnParameters(0, true));
-            columns.Columns.Add(KeywordColumn.ObjectType, new GeneralColumnParameters(1, true));
-
-            return columns;
+            Columns = new ColumnList(Name);
+            Columns.Columns.Add(KeywordColumn.DeviceTypeText, new ColumnParameters(0, true, false));
+            Columns.Columns.Add(KeywordColumn.ObjectType, new ColumnParameters(1, true, false));
         }
 
         public void LoadEdit()
@@ -55,9 +53,6 @@ namespace IO_list_automation_new
             SaveToFile(FileName);
         }
 
-        protected override void UpdateSettingsColumnsList()
-        {
-        }
 
         public DBLanguageType(ProgressIndication progress, DataGridView grid) : base("DBLanguageType", nameof(FileExtensions.langTypeDB), progress, grid, true)
         {
@@ -100,7 +95,7 @@ namespace IO_list_automation_new
             string fileName = System.IO.Path.GetDirectoryName(System.Windows.Forms.Application.ExecutablePath) + "\\DB\\" + Settings.Default.IOLanguage;
 
             //convert data from file to signals
-            if (!ListToSignals(File.LoadFromFile(fileName), BaseColumns, false))
+            if (!DataTableToSignals(File.LoadFromFile(fileName), false))
                 return;
 
             Progress.RenameProgressBar(Resources.FindObjectType, objects.Signals.Count);
@@ -151,22 +146,16 @@ namespace IO_list_automation_new
 
     internal class DBLanguageFunctionType : GeneralClass<DBLanguageFunctionSignal>
     {
-        private string FileName = "";
+        private readonly string FileName = "";
 
-        protected override ColumnList GeneralGenerateColumnsList()
+        protected override void InitialCollumnList()
         {
-            ColumnList columns = new ColumnList();
-            columns.Columns.Add(KeywordColumn.FunctionText1, new GeneralColumnParameters(0, false));
-            columns.Columns.Add(KeywordColumn.Function1, new GeneralColumnParameters(1, false));
-            columns.Columns.Add(KeywordColumn.FunctionText1o2, new GeneralColumnParameters(2, false));
-            columns.Columns.Add(KeywordColumn.FunctionText2o2, new GeneralColumnParameters(3, false));
-            columns.Columns.Add(KeywordColumn.Function2, new GeneralColumnParameters(4, false));
-
-            return columns;
-        }
-
-        protected override void UpdateSettingsColumnsList()
-        {
+            Columns = new ColumnList(Name);
+            Columns.Columns.Add(KeywordColumn.FunctionText1, new ColumnParameters(0, false, false));
+            Columns.Columns.Add(KeywordColumn.Function1, new ColumnParameters(1, false, false));
+            Columns.Columns.Add(KeywordColumn.FunctionText1o2, new ColumnParameters(2, false, false));
+            Columns.Columns.Add(KeywordColumn.FunctionText2o2, new ColumnParameters(3, false, false));
+            Columns.Columns.Add(KeywordColumn.Function2, new ColumnParameters(4, false, false));
         }
 
         public DBLanguageFunctionType(ProgressIndication progress, DataGridView grid) : base("DBFunctionLanguage", nameof(FileExtensions.langFuncDB), progress, grid, true)
@@ -247,7 +236,7 @@ namespace IO_list_automation_new
             debug.ToFile("Finding function type in data", DebugLevels.High, DebugMessageType.Info);
 
             //convert data from file to signals
-            if (!ListToSignals(File.LoadFromFile(FileName), BaseColumns, false))
+            if (!DataTableToSignals(File.LoadFromFile(FileName), false))
                 return;
 
             Progress.RenameProgressBar(Resources.FindFunction, data.Signals.Count);

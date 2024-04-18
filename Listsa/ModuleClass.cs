@@ -1,4 +1,5 @@
 ﻿using IO_list_automation_new.Data;
+using IO_list_automation_new.General;
 using IO_list_automation_new.Modules;
 using IO_list_automation_new.Properties;
 using System.Windows.Forms;
@@ -7,36 +8,18 @@ namespace IO_list_automation_new
 {
     internal class ModuleClass : GeneralClass<ModuleSignal>
     {
-        protected override ColumnList GeneralGenerateColumnsList()
+        protected override void InitialCollumnList()
         {
-            ColumnList columns = new ColumnList();
+            Columns = new ColumnList(Name);
 
-            columns.Columns.Add(KeywordColumn.ID, new GeneralColumnParameters(0, true));
-            columns.Columns.Add(KeywordColumn.CPU, new GeneralColumnParameters(1, true));
-            columns.Columns.Add(KeywordColumn.ModuleName, new GeneralColumnParameters(2, false));
-            columns.Columns.Add(KeywordColumn.ModuleType, new GeneralColumnParameters(3, true));
-            columns.Columns.Add(KeywordColumn.Cabinet, new GeneralColumnParameters(4, false));
-
-            return columns;
-        }
-
-        protected override void UpdateSettingsColumnsList()
-        {
-            ColumnList columns = Columns;
-
-            SettingsModule.Default.ColumnID = columns.GetColumnNumberFromKeyword(KeywordColumn.ID);
-            SettingsModule.Default.ColumnCPU = columns.GetColumnNumberFromKeyword(KeywordColumn.CPU);
-            SettingsModule.Default.ColumnModuleName = columns.GetColumnNumberFromKeyword(KeywordColumn.ModuleName);
-            SettingsModule.Default.ColumnModuleType = columns.GetColumnNumberFromKeyword(KeywordColumn.ModuleType);
-            SettingsModule.Default.ColumnCabinet = columns.GetColumnNumberFromKeyword(KeywordColumn.Cabinet);
-
-            SettingsObject.Default.Save();
+            Columns.Columns.Add(KeywordColumn.ID, new ColumnParameters(0, true, false));
+            Columns.Columns.Add(KeywordColumn.CPU, new ColumnParameters(1, true, false));
+            Columns.Columns.Add(KeywordColumn.ModuleName, new ColumnParameters(2, false, false));
+            Columns.Columns.Add(KeywordColumn.ModuleType, new ColumnParameters(3, true, false));
+            Columns.Columns.Add(KeywordColumn.Cabinet, new ColumnParameters(4, false, false));
         }
 
         public ModuleClass(ProgressIndication progress, DataGridView grid) : base("Module", nameof(FileExtensions.modDB), progress, grid, true)
-        { }
-
-        public ModuleClass() : base("Module", nameof(FileExtensions.modDB), null, null, true)
         { }
 
         /// <summary>
@@ -50,7 +33,6 @@ namespace IO_list_automation_new
 
             Progress.RenameProgressBar(Resources.ModuleGenerateUniqueData, data.Signals.Count);
 
-            UpdateColumnNumbers(data.BaseColumns);
             Signals.Clear();
             string keyword;
             for (int dataNumber = 0; dataNumber < data.Signals.Count; dataNumber++)

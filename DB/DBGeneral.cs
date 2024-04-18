@@ -1,8 +1,10 @@
-﻿using IO_list_automation_new.DB;
+﻿using IO_list_automation_new.Address;
+using IO_list_automation_new.DB;
 using IO_list_automation_new.General;
 using IO_list_automation_new.Modules;
 using IO_list_automation_new.Objects;
 using IO_list_automation_new.Properties;
+using Newtonsoft.Json;
 using SwiftExcel;
 using System;
 using System.Collections.Generic;
@@ -226,7 +228,8 @@ namespace IO_list_automation_new
                 //assign dummy grid
                 DataGridView grid = new DataGridView();
                 DBGeneralType instance = new DBGeneralType(NameDB, fullType, type, FileExtension, Progress, grid);
-                DataTable fileData = instance.File.LoadFromFile(fileName);
+                DataTable fileData = instance.LoadFromFile(fileName);
+
                 instance.SetData(fileData);
 
                 Devices.Add(instance);
@@ -524,7 +527,7 @@ namespace IO_list_automation_new
                     if (isEmpty)
                         data.Columns.RemoveAt(column);
                 }
-                device.File.SaveToFile(fileName, data);
+                device.SaveToFile(fileName, data);
             }
         }
     }
